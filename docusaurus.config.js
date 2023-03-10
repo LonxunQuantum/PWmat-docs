@@ -138,7 +138,7 @@ module.exports = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} 北京龙讯旷腾科技有限公司 All rights reserved.京ICP备15057729号-1. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} 北京龙讯旷腾科技有限公司 All rights reserved.京ICP备15057729号.Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,
