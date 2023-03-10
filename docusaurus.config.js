@@ -1,11 +1,10 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require('prism-react-renderer/themes/github');
-const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+const lightCodeTheme = require("prism-react-renderer/themes/github");
+const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 const math = require("remark-math");
 const katex = require("rehype-katex");
-
 
 module.exports = {
   // ... Your other configurations.
@@ -155,6 +154,9 @@ module.exports = {
       crossorigin: "anonymous",
     },
   ],
+  markdown: {
+    mermaid: true,
+  },
   themes: [
     // ... Your other themes.
     [
@@ -172,6 +174,6 @@ module.exports = {
         // ```
       }),
     ],
+    "@docusaurus/theme-mermaid",
   ],
 };
-

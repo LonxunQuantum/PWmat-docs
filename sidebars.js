@@ -71,6 +71,29 @@ module.exports = {
             "PWmat/Module/2",
             "PWmat/Module/3",
             "PWmat/Module/4",
+            "PWmat/Module/74",
+          ],
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "MLFF",
+      link: {
+        type: "doc",
+        id: "MLFF/README",
+      },
+      collapsible: true,
+      collapsed: true,
+      items: [
+        "MLFF/Installation",
+        {
+          type: "category",
+          label: "Quickstart",
+          items: [
+            "MLFF/1",
+            "MLFF/2",
+            "MLFF/3",
           ],
         },
       ],
