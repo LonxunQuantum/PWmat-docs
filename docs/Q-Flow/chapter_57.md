@@ -15,7 +15,7 @@
 > 
 > step4: 查表得到熵值（例如[NIST-JANAF Thermochemical Tables](https://janaf.nist.gov/)）；
 > 
-> step5: 计算吉布斯自由能$G_x = E_x (总能) + ZPE_x (零点能) -TS_x (熵)$。
+> step5: 计算吉布斯自由能$G_x = E_x \text{(总能)=} + ZPE_x \text{(零点能)} -TS_x \text{(熵)}$。
 
 ---
 

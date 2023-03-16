@@ -71,9 +71,11 @@ module.exports = {
             "PWmat/Module/2",
             "PWmat/Module/3",
             "PWmat/Module/4",
+            "PWmat/Module/15",
             "PWmat/Module/74",
           ],
         },
+        "PWmat/Script",
       ],
     },
     {
@@ -87,15 +89,18 @@ module.exports = {
       collapsed: true,
       items: [
         "MLFF/Installation",
-        {
-          type: "category",
-          label: "Quickstart",
-          items: [
-            "MLFF/1",
-            "MLFF/2",
-            "MLFF/3",
-          ],
-        },
+        "MLFF/Quickstart",
+        "MLFF/Parameter details",
+        "MLFF/Appendix-1",
+        // {
+        //   type: "category",
+        //   label: "Quickstart",
+        //   items: [
+        //     "MLFF/1",
+        //     "MLFF/2",
+        //     "MLFF/3",
+        //   ],
+        // },
       ],
     },
     {
