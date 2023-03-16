@@ -20,10 +20,7 @@ $ git clone git@github.com:LonxunQuantum/pwkit.git
 
 2. Download a conda environment (**pwkit_env.tar.gz**) for PWkit
 
-```dotnetcli
-百度网盘链接：https://pan.baidu.com/s/14JEInTL9WSbLVP3LUqCK-A
-提取码：lxkt
-```
+[网盘链接](https://pan.baidu.com/s/1JHO24OZrrw-lR0JSr3Z8Lg)提取码：lxkt
 
 ## 在 MStation 上安装 Pwkit 的方法
 
