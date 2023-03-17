@@ -4,9 +4,7 @@
 
 ```bash
 module load intel/2020
-module load cuda/11.6
-module load mkl/2022.0.2
-module load mpi/2021.5.1
+module load cuda/11.3
 source /opt/rh/devtoolset-8/enable
 ```
 

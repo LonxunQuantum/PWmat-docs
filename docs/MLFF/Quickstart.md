@@ -299,7 +299,7 @@ if __name__ == "__main__":
     # create an instance. MUST BE DONE.
     dp_trainer = dp_network(atom_type = atom_type,
                             optimizer = "LKF",
-                            gpu_id = 1,
+                            gpu_id = 0,
                             #is_distributed = True, 
                             session_dir = "record",
                             Rmax = 5.0,

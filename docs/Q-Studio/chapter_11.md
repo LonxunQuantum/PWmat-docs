@@ -1,6 +1,8 @@
 # 文件菜单
 
-![文件菜单](nested/2.png)
+<!-- ![文件菜单](nested/2.png) -->
+<img src={require('./nested/2.png').default} alt="文件菜单" width="30%" />
+
 
 文件菜单栏下有四个选项，对应三个功能：
 
