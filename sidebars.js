@@ -69,13 +69,14 @@ module.exports = {
           items: [
             "PWmat/Module/1",
             "PWmat/Module/2",
-            "PWmat/Module/3",
             "PWmat/Module/4",
             "PWmat/Module/15",
+            "PWmat/Module/17",
+            "PWmat/Module/18",
             "PWmat/Module/74",
           ],
         },
-        "PWmat/Script",
+        // "PWmat/Script",
       ],
     },
     {
@@ -195,6 +196,19 @@ module.exports = {
         },
       ],
     },
-    "PWkit",
+    {
+      type: "category",
+      label: "PWkit",
+      link: {
+        type: "doc",
+        id: "PWkit/README",
+      },
+      collapsible: true,
+      collapsed: true,
+      items: [
+        "PWkit/下载与安装",
+        "PWkit/使用示例",
+      ],
+    },
   ],
 };

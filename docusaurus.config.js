@@ -119,8 +119,8 @@ module.exports = {
                 href: "http://www.pwmat.com/module-download",
               },
               {
-                label: "MCloud",
-                href: "https://mcloud.lonxun.com/",
+                label: "MCloud手册",
+                href: "http://mcloud-doc.lonxun.com/",
               },
             ],
           },

@@ -35,4 +35,4 @@ done
 ```
 
 * `chmod u+x xxx.sh`
-* 使用方式： `xxx.sh Pt Se ...`
+* 使用方式： `xxx.sh Pt Se ...` or `xxx.sh Pt.SG15`, `xxx.sh Pt.SG15.PBE.UPF`
