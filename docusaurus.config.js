@@ -10,7 +10,7 @@ module.exports = {
   // ... Your other configurations.
   title: "PWmat",
   tagline: "Dinosaurs are cool",
-  favicon: "img/favicon.ico",
+  favicon: "img/favicon.jpg",
 
   // Set the production url of your site here
   url: "http://doc.lonxun.com/",
