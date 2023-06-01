@@ -26,7 +26,8 @@
 - 颜色：指定正值等值面的颜色，若同时选择了negative或positive and negative模式，负值的等值面颜色将为正值的反色。
 - 透明度：调整等值面的透明度
 - 2D数据显示：打开后将会进行2D体积数据切面展示
-![display4](./nested/qstudio_manual_view_display4.png)
+  
+  ![display4](./nested/qstudio_manual_view_display4.png)
   - 刷新：每次更改2D数据显示设置后，点击刷新才会更新2D切面展示
   - 等高线：打开或关闭等高线
   - hkl：2D切面的hkl

@@ -9,6 +9,7 @@
 - 在空白处单击鼠标左键：取消选中
 - 按住鼠标左键拖拽鼠标：框选多个原子
 - 单击鼠标右键：弹出菜单
+  
 ![visual1](./nested/qstudio_visualization2.png)
   - [`剪切` `复制` `粘贴` `删除`](./qstudio_manual_edit)
   - [`显示样式`](./qstudio_manual_view_display)
