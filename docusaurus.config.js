@@ -144,6 +144,9 @@ module.exports = {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
       },
+      mermaid: {
+        theme: {light: 'default', dark: 'dark'},
+      },
     }),
   stylesheets: [
     {
