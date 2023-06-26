@@ -1,0 +1,14 @@
+{
+    "link.title.相关": {
+      "message": "Related Links",
+      "description": "Link title 'Related Links' in English"
+    },
+    "link.item.label.论坛": {
+      "message": "PWmat BBS",
+      "description": "Link label 'PWmat BBS' in English"
+    },
+    "link.item.label.MCloud手册": {
+      "message": "PWmat Mannual",
+      "description": "Link label 'PWmat Mannual' in English"
+    }
+  }

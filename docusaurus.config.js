@@ -31,7 +31,24 @@ module.exports = {
   // to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: "zh-Hans",
-    locales: ["zh-Hans"],
+    locales: ["zh-Hans", "en"],
+    path: "i18n",
+    localeConfigs: {
+      "zh-Hans": {
+        label: "中文（中国）",
+        direction: "ltr",
+        htmlLang: "zh-Hans",
+        // calendar: "gregory",
+        path: "zh-Hans",
+      },
+      "en": {
+        label: "English",
+        direction: "ltr",
+        htmlLang: "en-US",
+        // calendar: "gregory",
+        path: "en",
+      },
+    },
   },
 
   presets: [
@@ -93,6 +110,10 @@ module.exports = {
             label: "PWmat官网",
             position: "right",
           },
+          {
+            type: "localeDropdown",
+            position: "right",
+          }
         ],
       },
       footer: {

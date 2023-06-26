@@ -1,0 +1,10 @@
+{
+    "item.label.PWmat产品手册": {
+      "message": "PWmat Product Brochure",
+      "description": "Navbar item with label 'PWmat Product Brochure' in English"
+    },
+    "item.label.PWmat官网": {
+      "message": "PWmat Website",
+      "description": "Navbar item with label 'PWmat Website' in English"
+    }
+  }

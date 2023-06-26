@@ -67,13 +67,13 @@ module.exports = {
             id: "PWmat/Module/README",
           },
           items: [
-            "PWmat/Module/1",
-            "PWmat/Module/2",
-            "PWmat/Module/4",
-            "PWmat/Module/15",
-            "PWmat/Module/17",
-            "PWmat/Module/18",
-            "PWmat/Module/74",
+            // "PWmat/Module/1",
+            // "PWmat/Module/2",
+            // "PWmat/Module/4",
+            // "PWmat/Module/15",
+            // "PWmat/Module/17",
+            // "PWmat/Module/18",
+            // "PWmat/Module/74",
           ],
         },
         // "PWmat/Script",
@@ -116,7 +116,7 @@ module.exports = {
       items: [
         {
           type: "category",
-          label: "界面及功能",
+          label: "Interface and Functions",
           link: {
             type: "doc",
             id: "Q-Studio/qstudio_main",
@@ -124,7 +124,7 @@ module.exports = {
           items: [
             {
               type: "category",
-              label: "菜单",
+              label: "Menu",
               link: {
                 type: "doc",
                 id: "Q-Studio/qstudio_manual",
@@ -148,7 +148,7 @@ module.exports = {
         },
         {
           type: "category",
-          label: "建模示例",
+          label: "Modeling Example",
           link: {
             type: "doc",
             id: "Q-Studio/qstudio_example",
