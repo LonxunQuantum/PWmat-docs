@@ -81,27 +81,52 @@ module.exports = {
     },
     {
       type: "category",
-      label: "MLFF",
+      label: "PWMLFF",
       link: {
         type: "doc",
-        id: "MLFF/README",
+        id: "PWMLFF/README",
       },
       collapsible: true,
       collapsed: true,
       items: [
-        "MLFF/Installation",
-        "MLFF/Quickstart",
-        "MLFF/Parameter details",
+        "PWMLFF/Installation_v0.0.1",
+        // "PWMLFF/Quickstart",
+        "PWMLFF/Parameter details",
         {
           type: "category",
           label: "Simple examples",
+          link: {
+            type: "doc",
+            id: "PWMLFF/example",
+          },
           items: [
-            "MLFF/Cu",
-            // "MLFF/Methane",
-            //     "MLFF/3",
+            {
+              type: "category",
+              label: "Linear model",
+              items: [
+                "PWMLFF/Linear_SiC",
+              ],
+            },
+            {
+              type: "category",
+              label: "Neural Network model",
+              items: [
+                "PWMLFF/NN_EC",
+              ],
+            },
+            {
+              type: "category",
+              label: "Deep Potential model",
+              items: [
+                "PWMLFF/Cu",
+                "PWMLFF/Si",
+                // "PWMLFF/Methane",
+                //     "PWMLFF/3",
+              ],
+            },
           ],
         },
-        "MLFF/Appendix-1",
+        "PWMLFF/Appendix-1",
       ],
     },
     {

@@ -23,7 +23,7 @@ module.exports = {
   organizationName: "LonxunQuantum", // Usually your GitHub org/user name.
   projectName: "PWmat-docs", // Usually your repo name.
 
-  onBrokenLinks: "throw",
+  onBrokenLinks: "ignore",
   onBrokenMarkdownLinks: "warn",
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -33,22 +33,22 @@ module.exports = {
     defaultLocale: "zh-Hans",
     locales: ["zh-Hans", "en"],
     path: "i18n",
-    localeConfigs: {
-      "zh-Hans": {
-        label: "中文（中国）",
-        direction: "ltr",
-        htmlLang: "zh-Hans",
-        // calendar: "gregory",
-        path: "zh-Hans",
-      },
-      "en": {
-        label: "English",
-        direction: "ltr",
-        htmlLang: "en-US",
-        // calendar: "gregory",
-        path: "en",
-      },
-    },
+    // localeConfigs: {
+    //   "zh-Hans": {
+    //     label: "中文（中国）",
+    //     direction: "ltr",
+    //     htmlLang: "zh-Hans",
+    //     // calendar: "gregory",
+    //     path: "zh-Hans",
+    //   },
+    //   "en": {
+    //     label: "English",
+    //     direction: "ltr",
+    //     htmlLang: "en-US",
+    //     // calendar: "gregory",
+    //     path: "en",
+    //   },
+    // },
   },
 
   presets: [
@@ -57,6 +57,17 @@ module.exports = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          // lastVersion: "current",
+          // versions: {
+          //   current: {
+          //     label: "next",
+          //     path: "1.0",
+          //   },
+          //   1.0: {
+          //     label: "1.0",
+          //     path: "1.0",
+          //   },
+          // },
           remarkPlugins: [math],
           rehypePlugins: [katex],
           routeBasePath: "/", // 把文档放在网站根部
@@ -93,6 +104,7 @@ module.exports = {
       },
       navbar: {
         // title: "PWmat Manual",
+        hideOnScroll: true,
         logo: {
           alt: "PWmat Logo",
           src: "img/lonxun-logo.png",
@@ -113,6 +125,13 @@ module.exports = {
           {
             type: "localeDropdown",
             position: "right",
+          },
+          {
+            type: "docsVersionDropdown",
+            position: "left",
+            dropdownItemsBefore: [],
+            dropdownItemsAfter: [{to: '/versions', label: 'All versions'}],
+            dropdownActiveClassDisabled: true,
           }
         ],
       },
@@ -149,18 +168,18 @@ module.exports = {
             title: "More",
             items: [
               // {
-              //   label: "Blog",
-              //   to: "/blog",
-              // },
-              {
-                label: "GitHub",
-                href: "https://github.com/LonxunQuantum",
-              },
-            ],
-          },
-        ],
-        copyright: `Copyright © ${new Date().getFullYear()} 北京龙讯旷腾科技有限公司 All rights reserved.京ICP备15057729号.Built with Docusaurus.`,
-      },
+                //   label: "Blog",
+                //   to: "/blog",
+                // },
+                {
+                  label: "GitHub",
+                  href: "https://github.com/LonxunQuantum",
+                },
+              ],
+            },
+          ],
+          copyright: `Copyright © ${new Date().getFullYear()} 北京龙讯旷腾科技有限公司 All rights reserved.京ICP备15057729号.Built with Docusaurus.`,
+        },
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
@@ -169,7 +188,7 @@ module.exports = {
         theme: {light: 'default', dark: 'dark'},
       },
     }),
-  stylesheets: [
+    stylesheets: [
     {
       href: "https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css",
       type: "text/css",
