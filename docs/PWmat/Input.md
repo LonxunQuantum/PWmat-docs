@@ -1,3 +1,7 @@
+---
+sidebar_position: 3
+---
+
 # Input Files
 
 As a minimal setup, PWmat requires the user to prepare the following input files: 

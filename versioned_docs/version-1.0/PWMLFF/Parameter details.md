@@ -3,7 +3,7 @@
 This section introduces the user-definable parameters in all models. There are 2 types of parameters: **gloabl** and **local**.
 
 
-**Global parameters**: Most (but not all) gloabl parameters can either be passed in when creating the trainer class instance, or be altered via memebr function **.set_<name_of_parameter>()**. Example: for parameter called **mypara**, it can be passed in when the trainer class is created, 
+**Global parameters**: Most (but not all) gloabl parameters can either be passed in when creating the trainer class instance, or be altered via memebr function **.set_< name_of_parameter >()**. Example: for parameter called **mypara**, it can be passed in when the trainer class is created, 
 
 ```python
 my_trainer = trainer(

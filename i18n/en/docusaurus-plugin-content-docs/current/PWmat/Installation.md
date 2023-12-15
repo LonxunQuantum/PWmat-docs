@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # Installation
 
 After downloading the corresponding installation package, you can install it in the following way:

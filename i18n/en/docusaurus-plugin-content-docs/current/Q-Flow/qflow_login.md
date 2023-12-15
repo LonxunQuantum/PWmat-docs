@@ -1,3 +1,7 @@
+---
+sidebar_position: 0
+---
+
 # 登录系统
 
 登录[龙讯超算云页面](https://mcloud.lonxun.com)，未注册的用户可以点击立即注册通过手机号注册账户。

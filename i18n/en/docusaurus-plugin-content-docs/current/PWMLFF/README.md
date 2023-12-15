@@ -1,3 +1,8 @@
+---
+sidebar_position: 4
+title: PWMLFF
+---
+
 # Machine Learning Force Field
 
 PWmat Machine Learning Force Field (PWMLFF) is an open source software under GNU license. It aims at generating force fields with accuracy comparable to Ab Initio Molecular Dynamics (AIMD). It is compatible with AIMD data with either **PWmat** or **VASP** format. You can access the code from https://github.com/LonxunQuantum/PWMLFF.

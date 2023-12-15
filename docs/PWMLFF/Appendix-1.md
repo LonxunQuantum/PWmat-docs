@@ -1,3 +1,7 @@
+---
+sidebar_position: 3
+---
+
 # Appendix I: features Wiki
 
 This section provides a brief introduction on the features used in PWMLFF. The related literature is also listed, for readers' reference.

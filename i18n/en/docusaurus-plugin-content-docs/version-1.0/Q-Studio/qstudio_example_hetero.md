@@ -1,6 +1,6 @@
 # Heterostructures
 
-It is made of two or more different materials, divided into vertical and transverse heterojunctions, and the lattice mismatch between different materials is required to be <5%.
+It is made of two or more different materials, divided into vertical and transverse heterojunctions, and the lattice mismatch between different materials is required to be$<$ 5%.
 
 - Take GaAs/AlAs as (**Lattice constants are similar**):
 

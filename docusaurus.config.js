@@ -1,12 +1,16 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require("prism-react-renderer/themes/github");
-const darkCodeTheme = require("prism-react-renderer/themes/dracula");
-const math = require("remark-math");
-const katex = require("rehype-katex");
+// const lightCodeTheme = require("prism-react-renderer/themes/github");
+// const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+// const math = require("remark-math");
+// const katex = require("rehype-katex");
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import {themes as prismThemes} from 'prism-react-renderer';
 
-module.exports = {
+/** @type {import('@docusaurus/types').Config} */
+const config = {
   // ... Your other configurations.
   title: "PWmat",
   tagline: "Dinosaurs are cool",
@@ -22,6 +26,7 @@ module.exports = {
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "LonxunQuantum", // Usually your GitHub org/user name.
   projectName: "PWmat-docs", // Usually your repo name.
+  trailingSlash: false,
 
   onBrokenLinks: "ignore",
   onBrokenMarkdownLinks: "warn",
@@ -68,8 +73,8 @@ module.exports = {
           //     path: "1.0",
           //   },
           // },
-          remarkPlugins: [math],
-          rehypePlugins: [katex],
+          remarkPlugins: [remarkMath],
+          rehypePlugins: [rehypeKatex],
           routeBasePath: "/", // 把文档放在网站根部
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
@@ -181,8 +186,8 @@ module.exports = {
           copyright: `Copyright © ${new Date().getFullYear()} 北京龙讯旷腾科技有限公司 All rights reserved.京ICP备15057729号.Built with Docusaurus.`,
         },
       prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
+        theme: prismThemes.github,
+        darkTheme: prismThemes.dracula,
       },
       mermaid: {
         theme: {light: 'default', dark: 'dark'},
@@ -220,3 +225,5 @@ module.exports = {
     "@docusaurus/theme-mermaid",
   ],
 };
+
+export default config;

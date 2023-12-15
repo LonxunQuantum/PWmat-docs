@@ -1,3 +1,7 @@
+---
+sidebar_position: 4
+---
+
 # Output Files
 
 The main output file of PWmat is the **REPORT**. The **RELAXSTEPS** file contains the total energies of the electronic and ionic SCF steps, and it is useful for the monitoring of the calculations.
