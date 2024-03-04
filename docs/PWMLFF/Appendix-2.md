@@ -109,7 +109,7 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 > **EXAMPLES:**
 >
 > ```python
-> from pwdata import Configs
+> from pwdata import Config
 >
 > data_file = "./cp2k.out"
 > format = "cp2k/scf"
