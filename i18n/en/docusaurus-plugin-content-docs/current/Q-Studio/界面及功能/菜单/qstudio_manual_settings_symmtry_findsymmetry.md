@@ -1,7 +1,7 @@
-# 查找对称性
+# Find Symmetry
 
 ![qstudio_manual_settings_symmtry_findsymmetry](../../nested/qstudio_manual_settings_symmtry_findsymmetry.png)
 
-- 精确度：在查找对称性时使用的容忍距离，默认为Fine (0.01 埃)
-- 对称性信息：初始会展示当前的晶系类型、空间群、晶格常数，在点击查找对称性按钮后信息会进行更新
-- 载入：在对称性信息发生变化时，可以将查找对称性之后的结构加载替换原结构。
+- tolerance: The tolerated distance used when finding symmetry, defaulting to Fine (0.01 angstroms)
+- Symmetry info: The current crystal system, space group, and lattice parameters will be displayed initially, and the information will be updated after clicking the Find Symmetry button
+- Load: When the symmetry information changes, you can replace the original structure with the structure after finding symmetry.

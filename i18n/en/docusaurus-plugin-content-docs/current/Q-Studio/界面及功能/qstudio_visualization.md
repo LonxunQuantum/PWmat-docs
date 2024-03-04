@@ -2,66 +2,67 @@
 sidebar_position: 4
 ---
 
-# 可视化区域
+# Visualization area
 
 
 ![visual](../nested/qstudio_visualization.png)
 
-## 选择模式
+## When Selection Mode is activated
 
-- 在原子上单击鼠标左键：选中单个原子
-- 在空白处单击鼠标左键：取消选中
-- 按住鼠标左键拖拽鼠标：框选多个原子
-- 单击鼠标右键：弹出菜单
-  
+- Left mouse button on atoms: select individual atoms
+- Left mouse button on an empty space: unchecked
+- Hold down the left mouse button and drag the mouse: box to select multiple atoms
+- Right-click: pop-up menu
+
 ![visual1](../nested/qstudio_visualization2.png)
-  - [`剪切` `复制` `粘贴` `删除`](./菜单/qstudio_manual_edit)
-  - [`显示样式`](./菜单/qstudio_manual_view_display)
-  - [`晶格常数`](./菜单/qstudio_manual_settings_latticeconstant)
-  - [`限制原子移动`](./菜单/qstudio_manual_settings_fixatom)
-  - [`设置磁矩`](./菜单/qstudio_manual_settings_magmom)
-  - [`全选原子` `选择等价原子` `选择同种元素原子`](./菜单/qstudio_manual_select)
-- 按住鼠标右键移动鼠标：旋转视角
-- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](./qstudio_structtools)弹窗中定义
-- 键盘Delete：删除选中原子
 
-## 观察模式
+  - [Cut, Copy, Paste, Delete](./菜单/qstudio_manual_edit)
+  - [Display Style](./菜单/qstudio_manual_view_display)
+  - [Lattice Parameters](./菜单/qstudio_manual_settings_latticeconstant)
+  - [Edit Constraints](./菜单/qstudio_manual_settings_fixatom)
+  - [Edit Magnetic](./菜单/qstudio_manual_settings_magmom)
+  - [Select All, Select equivalent atoms, Select same element](./菜单/qstudio_manual_select)
+- Hold down the right mouse button to move the mouse: Rotate the viewing angle
+- Keyboard `↑` `↓` `←` `→`: rotate the viewing angle by a fixed angle, the angle of rotation is defined in the [Translation and Rotation](./qstudio_structtools) pop-up
+- Keyboard `Delete`: Deletes the selected atom
 
-- 在原子上单击鼠标左键：选中单个原子
-- 在空白处单击鼠标左键：取消选中
-- 按住鼠标左键拖拽鼠标：旋转视角
-- 单击鼠标右键：弹出菜单
-- 按住鼠标右键移动鼠标：旋转视角
-- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](./qstudio_structtools)弹窗中定义
-- 键盘Delete：删除选中原子
+## When Rotation Mode is activated
 
-## 平移模式
+- Left-click on an atom: Select a single atom
+- Left mouse button on an empty space: unchecked
+- Hold down the left mouse button and drag the mouse: rotate the viewing angle
+- Right-click: pop-up menu
+- Hold down the right mouse button to move the mouse: rotate the viewing angle
+- Keyboard `↑` `↓` `←` `→`: rotate the viewing angle by a fixed angle, the angle of rotation is defined in the [Translation and Rotation](./qstudio_structtools) pop-up
+- Keyboard `Delete`: Deletes the selected atom
 
-- 在原子上单击鼠标左键：选中单个原子
-- 在空白处单击鼠标左键：取消选中
-- 按住鼠标左键拖拽鼠标：平移视角
-- 单击鼠标右键：弹出菜单
-- 按住鼠标右键移动鼠标：旋转视角
-- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](./qstudio_structtools)弹窗中定义
-- 键盘Delete：删除选中原子
+## When Translation Mode is activated
 
-## 拖拽原子模式
+- Left-click on an atom: Select a single atom
+- Left mouse button on an empty space: unchecked
+- Hold down the left mouse button and drag the mouse: pan the viewing angle
+- Right-click: pop-up menu
+- Hold down the right mouse button to move the mouse: rotate the viewing angle
+- Keyboard `↑` `↓` `←` `→`: rotate the viewing angle by a fixed angle, the angle of rotation is defined in the [Translation and Rotation](./qstudio_structtools) pop-up
+- Keyboard `Delete`: Deletes the selected atom
 
-- 在原子上按住鼠标左键拖拽鼠标：拖拽原子移动
-- 在空白处按住鼠标左键移动鼠标：旋转视角
-- 按住鼠标右键移动鼠标：旋转视角
-- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](./qstudio_structtools)弹窗中定义
+## When Drag Atom Mode is activated
 
-## 拖拽分子模式
+- Hold down the left mouse button on the atom and drag the mouse: Drag the atom to move
+- Move the mouse by holding down the left mouse button in an empty space: rotate the viewing angle
+- Hold down the right mouse button to move the mouse: rotate the viewing angle
+- Keyboard `↑` `↓` `←` `→`: rotate the viewing angle by a fixed angle, the angle of rotation is defined in the [Translation and Rotation](./qstudio_structtools) pop-up
 
-- 在属于分子的某个原子上按住鼠标左键拖拽鼠标：拖拽分子移动
-- 在空白处按住鼠标左键移动鼠标：旋转视角
-- 按住鼠标右键移动鼠标：旋转视角
-- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](./qstudio_structtools)弹窗中定义
+## When Drag Molecule Mode is activated
 
-## 测量模式
+- Hold down the left mouse button on an atom belonging to the molecule and drag the mouse: Drag the molecule to move
+- Move the mouse by holding down the left mouse button in an empty space: rotate the viewing angle
+- Hold down the right mouse button to move the mouse: rotate the viewing angle
+- Keyboard `↑` `↓` `←` `→`: rotate the viewing angle by a fixed angle, the angle of rotation is defined in the [Translation and Rotation](./qstudio_structtools) pop-up
 
-- 在原子上单击鼠标左键：开始/结束测量
-- 在空白处按住鼠标左键移动鼠标：旋转视角
-- 按住鼠标右键移动鼠标：旋转视角
-- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](./qstudio_structtools)弹窗中定义
+## When Measure opeartion is activated
+
+- Left mouse button on the atom: start/end measurement
+- Move the mouse by holding down the left mouse button in an empty space: rotate the viewing angle
+- Hold down the right mouse button to move the mouse: rotate the viewing angle
+- Keyboard `↑` `↓` `←` `→`: rotate the viewing angle by a fixed angle, the angle of rotation is defined in the [Translation and Rotation](./qstudio_structtools) pop-up

@@ -1,10 +1,10 @@
-# 构建分子
+# Sketch Molecule
 
 ![build_crystal](../../nested/qstudio_manual_build_molecule.png)
 
-- 绘制界面：JSME分子绘制工具，访问[JSME官网](https://jsme-editor.github.io/help.html)查看详细说明
-- 预览界面：在左侧的JSME界面绘制后，右侧会出现用于预览的可视化模型
-- Get mol：将当前小分子导出为`.mol`格式的文件
-- Optimize：优化预览界面内的小分子结构并自动加氢
-- 新建：在Q-Studio中创建新窗口并将预览界面的小分子导入
-- 合并：将预览界面的小分子合并到Q-Studio当前激活窗口内的结构中
+- Drawing interface: JSME molecular mapping tool, visit [JSME official website](https://jsme-editor.github.io/help.html) for detailed instructions
+- Preview interface: After drawing on the JSME interface on the left, a visual model for preview will appear on the right
+- Get mol：Export the current small molecule to a file in `.mol` format
+- Optimize：Optimize the small molecule structure within the preview interface and automatically hydrogenate
+- Create: Create a new window in Q-Studio and import small molecules from the preview interface
+- Append: Merges small molecules from the preview interface into structures within Q-Studio's current active window

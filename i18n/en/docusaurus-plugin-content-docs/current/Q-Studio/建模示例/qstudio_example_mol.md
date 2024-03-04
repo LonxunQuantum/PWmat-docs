@@ -2,24 +2,23 @@
 sidebar_position: 5
 ---
 
-# 分子及无序结构
+# Molecules and disordered structures
 
-以水溶剂分子为例子：
 
-1. 构建分子：在菜单栏中依次点击`建模`→`构建分子`→`选择元素添加分子`→`Optimize`→`新建`;
-2. 构建无序结构：在菜单栏中依次点击`建模`→`构建无序结构`→ 打开`构建周期结构`→`选择分子结构`，以填充的方式往 box 里随机添加 n 个分子（或以固定的方式在对应的坐标中添加）→ 点击`预览`显示结构。
+1. Build molecules: Click `Build`→ `Sketch Molecule` in the menu, draw fragments to describe a molecule. Click`Optimize` → `Create` to put it in a new tab. You can build several molecules and then pack them into one structure, see step 2 below.
+2. Build a disordered structure: Click `Build` → `Build Amorphous` in the menu bar. Add molecules that you want to pack, including their behavior,  amount and packing region. You can also check `Add periodic boundary` to put the whole packing structure into a lattice. Click `Preview` to display the structure, then `Load` it into Q-Studio.
 
 <table><tr>
     <td> 
         <center>
             <img src={require('../nested/qstudio_example_mol1.png').default} alt="Drawing" />
-            <font>构建水分子</font>
+            <font>Build water molecules</font>
         </center>
     </td>
     <td> 
         <center>
             <img src={require('../nested/qstudio_example_mol2.png').default} alt="Drawing" />
-            <font>构建无序结构</font>
+            <font>Build an unordered structure</font>
         </center>
     </td>
 </tr></table>

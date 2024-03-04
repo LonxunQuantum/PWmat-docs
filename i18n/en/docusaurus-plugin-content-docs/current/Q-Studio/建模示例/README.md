@@ -1,17 +1,17 @@
 ---
 sidebar_position: 1
-title: 建模示例
+title: Modeling Example
 ---
 
-# 建模示例
+# Modeling Example
 
-以下是一些常见的结构种类建模，包括但不限于：
+The following are some common structural kinds of modeling, including but not limited to:
 
-- [体材料基本建模](./qstudio_example_crystal)
-- [表面结构及吸附建模](./qstudio_example_surface)
-- [二维材料](./qstudio_example_2d)
-- [异质结](./qstudio_example_hetero)
-- [摩尔纹](./qstudio_example_moire)
-- [构建分子及无序结构](./qstudio_example_mol)
-- [量子输运器件建模](./qstudio_example_transport)
-- [过渡态结构建模](./qstudio_example_neb)
+- [Bulk materials](./qstudio_example_crystal)
+- [Slab and surface adsorption](./qstudio_example_surface)
+- [Two-dimensional materials](./qstudio_example_2d)
+- [Heterostructures](./qstudio_example_hetero)
+- [Moiré superlattice structures](./qstudio_example_moire)
+- [Molecules and disordered structures](./qstudio_example_mol)
+- [Quantum transport device](./qstudio_example_transport)
+- [Transition state structure](./qstudio_example_neb)

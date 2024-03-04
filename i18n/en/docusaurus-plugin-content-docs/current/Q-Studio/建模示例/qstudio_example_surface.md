@@ -2,35 +2,35 @@
 sidebar_position: 1
 ---
 
-# 表面结构及吸附建模
+# Slab and surface adsorption
 
-以 Pt 为例，进行一系列建模：
+Take Platinum as an example, a series of modeling is performed:
 
-1. 从数据库导入文件：在菜单中依次点击`文件`→`从在线数据库导入`,在弹出的窗口中依次点击`Pt`→`Search`→`Load`；
-2. 扩胞；在菜单中依次点击`建模`→`建立超胞`，在弹出的窗口中设置扩胞大小；
-3. 切表面：在菜单中依次点击`建模`→`切表面`，在弹出的窗口中设置切面及切面位置和厚度，点击`切表面`，在弹出的窗口中设置真空层，点击`确定`进行预览（→ 调整位置）→`接受`；
-4. 固定底层原子：点击![图标1](../nested/qstudio_structtools_select.png)激活选择模式，拖拽选中底下几层原子 →`设置`→`限制原子移动`→`固定方向（X/Y/Z）`；
-5. 表面吸附单原子：`选择模式`下选中表面某个原子在其上方添加原子，此时只是为了得到该原子的坐标 →`建模`→`添加原子`→`选择原子及设置坐标`（或直接点击![图标3](../nested/qstudio_structtools_addatom.png)）；
-6. 表面吸附小分子：在菜单栏中依次点击`建模`→`构建分子`→`合并`，点击![drag](../nested/qstudio_structtools_dragmol.png)激活拖拽分子模式，拖拽分子到指定位置，点击![drag](../nested/qstudio_structtools_trans&rot.png)微调分子位置。
+1. Load file from database: click `File`→ `Load from Online Database` in the menu, click `Pt`→ `Search`→ `Load` in the pop-up window;
+2. Build supercell: Click `Modify` → `Build Supercell` in the menu, and set the supercell size in the pop-up window;
+3. Cleave surface: click `Build` → `Cleave Surface` in the menu, set the cleave plane and its position and slab thickness in the pop-up window, click `Cleave`, set the vacuum in the pop-up window, click `Apply` to preview (→ Adjust Position) → `Ok`;
+4. Fix the atoms away from surface: In the toolbar, click ![Icon 1](../nested/qstudio_structtools_select.png) to activate the selection mode, drag to select the layers of atoms which are away from surface → click `Modify`→`Edit Constraints` in the menu → Fix the X/Y/Z Position in the pop-up window;
+5. Surface adsorption of single atom: Click `Build`→ `Add Atoms` in the menu, select element and input coordinates of the atom which will be added ( you can also click ![Icon 3](../nested/qstudio_structtools_addatom.png) in the toolbar to add atoms)；
+6. Surface adsorption of small molecules: Click `Build` → `Sketch Molecule` in the menu, draw a molecule, then click `Optimize` → `Append` to append this molecule into current structure. In the toolbar, click ![drag](../nested/qstudio_structtools_dragmol.png) to activate the molecule dragging mode, drag the molecule to the specified position. You can also click![drag](../nested/qstudio_structtools_trans&rot.png) in the toolbar to fine-tune the position of the molecule.
 
 
 <table><tr>
     <td> 
         <center>
             <img src={require('../nested/qstudio_example_crystal1.png').default} alt="Drawing" />
-            <font>导入晶胞</font>
+            <font>Import the unit cell</font>
         </center>
     </td>
     <td> 
         <center>
             <img src={require('../nested/qstudio_example_crystal2.png').default} alt="Drawing" />
-            <font>扩胞</font>
+            <font>Dilation</font>
         </center>
     </td>
     <td> 
         <center>
             <img src={require('../nested/qstudio_example_surface1.png').default} alt="Drawing" />
-            <font>切表面</font>
+            <font>Cut the surface</font>
         </center>
     </td>
 </tr></table>
@@ -38,19 +38,19 @@ sidebar_position: 1
     <td> 
         <center>
             <img src={require('../nested/qstudio_example_surface2.png').default} alt="Drawing" />
-            <font>固定基矢</font>
+            <font>Fixed base vector</font>
         </center>
     </td>
     <td> 
         <center>
             <img src={require('../nested/qstudio_example_surface3.png').default} alt="Drawing" />
-            <font>吸附单原子</font>
+            <font>Adsorption of single atoms</font>
         </center>
     </td>
     <td> 
         <center>
             <img src={require('../nested/qstudio_example_surface4.png').default} alt="Drawing" />
-            <font>吸附小分子</font>
+            <font>Adsorbs small molecules</font>
         </center>
     </td>
 </tr></table>

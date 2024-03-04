@@ -2,12 +2,12 @@
 sidebar_position: 1
 ---
 
-# 编辑菜单
+# Edit menu
 
-![编辑菜单](../../nested/qstudio_manual_edit.png)
+![Edit menu](../../nested/qstudio_manual_edit.png)
 
-- 撤销：回到上一动作发生前的状态，快捷键Ctrl+z
-- 重做: 回到下一动作发生后的状态，快捷键Ctrl+y
-- 复制: 选择原子后可以将其复制，快捷键Ctrl+c
-- 粘贴: 将复制的原子粘贴至当前窗口，快捷键Ctrl+v；粘贴的原子将按照随机位置进行摆放
-- 删除: 删除当前选择的原子，快捷键Delete
+- `Undo`: Return to the state before the previous action, shortcut Ctrl+z
+- `Redo`: Go back to the state after the next action occurred, shortcut Ctrl+y
+- `Copy`: After selecting an atom, you can copy it, shortcut key Ctrl+c
+- `Paste`: Paste the copied atom to the current window, shortcut key Ctrl+v; The pasted atoms will be placed in random positions
+- `Delete`: Delete the currently selected atom, shortcut key Delete

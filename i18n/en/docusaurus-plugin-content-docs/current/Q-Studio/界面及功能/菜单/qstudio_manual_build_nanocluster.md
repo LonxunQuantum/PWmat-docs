@@ -1,11 +1,13 @@
-# 构建纳米团簇
+# Build Nanocluster
 
-：根据选择的结构文件和形状生成团簇结构；形状为Box时，需要设置团簇盒子的长宽高；形状为球形时，需要设置团簇球形的半径
+Generate cluster structures according to the selected structure file and shape; If the shape is Box, you need to set the length, width and height of the cluster box; If the shape is spherical, you need to set the radius of the cluster spherical shape
+
 ![build_crystal](../../nested/qstudio_manual_build_nanocluster.png)
 
-- 结构文件：必须为有晶格的结构
-- 形状：可以为Box（盒子）或Sphere（球）
-- 大小：
-  - 长宽高：当形状为Box时
-  - 半径：当形状为Sphere时
+- Structure: Must be a structure with lattice
+- Shape: Can be Box or Sphere
+- Size:
+  - Length, width and height: When the shape is Box
+  - Radius: When the shape is Sphere
+
   ![build_crystal](../../nested/qstudio_manual_build_nanocluster2.png)

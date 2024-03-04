@@ -1,11 +1,12 @@
-# 构建纳米管
+# Build nanotubes
 
 ![build_crystal](../../nested/qstudio_manual_build_nanotube.png)
 
-- 卷曲矢量：以碳纳米管为例，其结构为由石墨烯卷成的圆柱体，通过定义手性卷曲矢量来表征：*Ch*=*N*·*a* + *M*·*b*，矢量*a*和*b*是石墨烯的晶格矢量。下图中，矢量OA对应(N, M)=(5,2)时的卷曲矢量，矩形OAO'A是纳米管的重复单元，将其卷成圆柱体形成纳米管。
+- Chiral vector: Take carbon nanotubes as an example, their structure is a cylinder rolled from graphene, which is characterized by defining the chiral curl vector: *Ch*=*N*·*a* + *M*·*b*, the vectors *a* and *b* are lattice vectors of graphene. In the figure below, the vector OA corresponds to the curl vector when (N, M) = (5,2), and the rectangular OAO'A is a repeating unit of the nanotube, which is rolled into a cylinder to form the nanotube.
+  
 ![build_crystal](../../nested/qstudio_manual_build_nanotube2.png)
 
-- 键长：定义了C-C键长或B-N键长
-- 真空：纳米管将会被放置在周期性晶格中，相邻纳米管的间距将被设置为真空大小
-- 类型：可以为graphene或boron nitride
-- 直径：根据卷曲矢量和键长，计算展示出纳米管的直径，单位为埃。
+- Bond Length: Defines either the C-C bond length or the B-N bond length
+- Vacuum: The nanotubes will be placed in a periodic lattice, and the spacing of adjacent nanotubes will be set to the size of the vacuum
+- Type: Can be graphene or Boron Nitride
+- Diameter: Based on the curl vector and bond length, calculate the diameter of the nanotube in angstroms.

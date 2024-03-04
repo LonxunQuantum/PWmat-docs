@@ -2,17 +2,18 @@
 sidebar_position: 5
 ---
 
-# 选择菜单
+# Select Menu
 
 ![select](../../nested/qstudio_manual_select.png)
-- 全选原子
-- 反选原子
-- 选择等价原子：依据对称性，选中当前选择原子的所有等价原子
-- 选择同种元素原子：选中当前选择原子中涉及到的所有元素的原子
-- [高级原子选择](./qstudio_manual_select_advanced)
+
+- Select All: select all atoms
+- Invert Select: invert selection atoms
+- Select Equivalent Atoms: All equivalent atoms of the currently selected atom are selected according to the symmetry
+- Select Atoms of the Same Element: Selects atoms of all elements involved in the currently selected atom
+- [Atom Selection](./qstudio_manual_select_advanced)
 
 ---
 
-- 按元素选择：选中当前结构中某种元素的所有原子
-- 按组选择：选中某个新建组内的所有原子
+- Elements: Selects all atoms of an element in the current structure
+- Groups: Select all atoms in a newly created group
 

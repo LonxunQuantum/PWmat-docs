@@ -2,11 +2,11 @@
 sidebar_position: 7
 ---
 
-# 过渡态结构建模
+# Transition state structure
 
-以石墨烯上 hollow 位锂原子迁移为例：
+Take the transition of lithium atoms at the hollow position on graphene as an example:
 
-1. 将完成结构优化的初态结构和末态结构导入。
+1. The initial and final structure of the completed structure optimization will be imported.
    
 <table><tr>
     <td> 
@@ -21,11 +21,14 @@ sidebar_position: 7
         </td>
 </tr></table>
 
-1. 依次点击`建模`→`过渡态结构建模`，在弹出的窗口内选择初末态结构，点击`自动匹配`，设置插值点数为 5，点击`预览`。
-   ![neb1](../nested/qstudio_manual_build_neb1.png)
+2. Click `Build` → `Build Transition State Structure`, select the initial and final state structure in the pop-up window, click `Auto Find`, set the `Images` to 5, and click `preview`.
+   
+![neb1](../nested/qstudio_manual_build_neb1.png)
 
-2. 点击`播放`观察路径，确认无误后点击`载入`。
-   ![neb2](../nested/qstudio_manual_build_neb2.png)
+3. Play the path to observe, confirm that it is correct, and then click `Load`.
 
-3. 在新窗口内逐帧微调锂原子的位置
-   ![neb1](../nested/qstudio_example_neb3.png)
+![neb2](../nested/qstudio_manual_build_neb2.png)
+
+4. Fine-tune the position of lithium atoms frame by frame within the new window
+   
+![neb1](../nested/qstudio_example_neb3.png)

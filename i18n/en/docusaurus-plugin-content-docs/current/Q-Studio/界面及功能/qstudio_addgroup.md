@@ -2,25 +2,29 @@
 sidebar_position: 6
 ---
 
-# 建组信息
+# Group information
 
-- 选择一个或多个原子后，可以点击新建组按键为选中的原子创建组。
+- After selecting one or more atoms, you can click the New Group button to create a group for the selected atoms.
   
 ![addgroup](../nested/qstudio_addgroup.png)
 
-- 输入组名后点击接受，将会在建组信息区域出现新的组。
+- After entering the group name and clicking Accept, a new group will appear in the group information area.
+
 ![addgroup](../nested/qstudio_addgroup2.png)
+
 ![addgroup](../nested/qstudio_addgroup3.png)
 
-- 点击![addgroup](../nested/qstudio_addgroup7.png)将会删除组
-- 点击![addgroup](../nested/qstudio_addgroup8.png)将会在可视化界面快速选中组内全部原子
+- Click ![addgroup](../nested/qstudio_addgroup7.png) will delete the group
+- Click ![addgroup](../nested/qstudio_addgroup8.png) will quickly select all atoms in the group in the visual interface
 
-- 点击建组信息中某个组的![addgroup](../nested/qstudio_addgroup9.png)，可以展开该组。展开后可以查看该组内原子的元素、序号、固定原子、磁矩信息。
+- Click on a group in the group information ![addgroup](../nested/qstudio_addgroup9.png) to expand the group. After expanding, you can view the element, sequence number, fixed atom, and magnetic moment information of the atoms in the group.
+  
 ![addgroup](../nested/qstudio_addgroup4.png)![addgroup](../nested/qstudio_addgroup5.png)
-  - 在首行勾选![addgroup](../nested/qstudio_addgroup10.png)可以在可视化界面选中组内全部原子，也可以分别勾选组内原子使其在可视化界面被选中。
-  - 点击![addgroup](../nested/qstudio_addgroup6.png)可以限制原子移动或设置磁矩，也可以从[限制原子移动弹窗](./菜单/qstudio_manual_settings_fixatom)处或[设置磁矩弹窗](./菜单/qstudio_manual_settings_magmom)处分别设置
+
+  - Check the first line ![addgroup](../nested/qstudio_addgroup10.png) You can select all atoms in the group on the visual interface, or you can check the atoms in the group separately to make them selected in the visualization interface.
+  - Click ![addgroup](../nested/qstudio_addgroup6.png) can be set to restrict atomic movement or set magnetic moments, or from [Limit atomic movement pop-up](./菜单/qstudio_manual_settings_fixatom) or [Set magnetic moment pop-up](./菜单/qstudio_manual_settings_magmom).
 
 :::tip NOTE：
-点击快捷结构工具中的![movegroup](../nested/qstudio_structtools_movegroup.png)可进行整组移动功能
+Click on the Quick Structure tool ![movegroup](../nested/qstudio_structtools_movegroup.png) can perform a whole group of mobile functions
 :::
 

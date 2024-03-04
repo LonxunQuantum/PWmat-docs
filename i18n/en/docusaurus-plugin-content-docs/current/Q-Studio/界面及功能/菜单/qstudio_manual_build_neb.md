@@ -1,21 +1,23 @@
-# 过渡态结构建模
+# Build Transition State Structure
 
-## 设置等价原子
+## Set equivalent atoms
 ![neb1](../../nested/qstudio_manual_build_neb1.png)
-- 初态结构：必须为有格子的结构，晶格常数、各元素原子总数需要和末态结构一致
-- 末态结构：必须为有格子的结构，晶格常数、各元素原子总数需要和初态结构一致
-- 全部重置：将所有配对原子重置
-- 重置：将当前所选配对原子重置
-- 自动匹配：根据序号和元素自动配对原子
-- 配对：将当前所选原子配对
-- 插点数：过渡态中的插点个数，默认将采用线性插值
-- 预览：完成所有原子配对后可点击进入预览窗口
-  
-## 预览
-![neb2](../../nested/qstudio_manual_build_neb2.png)
-- 播放：点击上一帧、下一帧、播放按键或滑动滑块可以预览过渡态结构
-- 上一步：如果预览时发现匹配有误可返回上一步重新进行等价原子配对
-- 载入：确认无误后将过渡态结构导入新窗口
 
-## 微调结构
-  载入后的结构，可以逐帧微调各image中原子的位置，以调整初始迁移路径。初态和末态结构不允许调整
+- Initial state structure: must be a lattice structure, the lattice constant, the total number of atoms of each element need to be consistent with the final state structure
+- Final state structure: must be a lattice structure, the lattice constant, the total number of atoms of each element need to be consistent with the initial state structure
+- Reset All: Resets all paired atoms
+- Reset: Resets the currently selected paired atom
+- Auto Find: Automatically pairs atoms based on sequence number and element
+- Set Match: Pairs the currently selected atoms
+- Images: The number of images of Transition state structure, and Linear interpolation is used by default
+- Preview: After all atom pairings are completed, you can click to enter the preview window
+  
+## Preview
+![neb2](../../nested/qstudio_manual_build_neb2.png)
+
+- Playback: Tap the previous frame, the next frame, the play button, or slide the slider to preview the transition structure
+- Last Step: If you find that the match is wrong during the preview, you can go back to the previous step and re-match the equivalent atoms
+- Load: Import the transition structure into a new window after confirmation
+
+## Fine-tune the structure
+  After loading, the position of atoms in each image can be fine-tuned frame by frame to adjust the initial migration path. The initial and final state structures are not allowed to be adjusted

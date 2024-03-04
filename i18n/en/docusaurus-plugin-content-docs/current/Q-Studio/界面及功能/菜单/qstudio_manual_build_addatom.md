@@ -1,6 +1,7 @@
-# 添加原子
+# Add Atoms
 
 ![](../../nested/qstudio_manual_build_addatom.png)
-- 元素：支持从元素周期表选择元素
-- 分数坐标，笛卡尔坐标：当结构没有晶格时，仅可设置笛卡尔坐标
-- 计算键长：勾选时，新添加的原子会自动计算是否与周围原子成键
+
+- Element: Supports selecting elements from the periodic table
+- Fractional, Cartesian: When the structure does not have a lattice, only Cartesian coordinates can be set
+- Test for bonds as atoms are created: When selected, the added atom automatically calculates whether it bonds with surrounding atoms

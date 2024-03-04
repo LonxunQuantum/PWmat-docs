@@ -21,15 +21,15 @@ PWMLFF explore <input_file>
 
 1. Linear
 
-   - [bulk SiC](./linear/examples/Linear_SiC.md)
+   - [bulk SiC](./linear/examples/Linear_SiC)
 
 2. NN
 
-   - [molecure C3H4O3](./nn/examples/NN_EC.md)
+   - [molecure C3H4O3](./nn/examples/NN_EC)
 
 3. DP
-   - [bulk Cu](./dp/examples/Cu.md)
-   - [bulk Si](./dp/examples/Si.md)
+   - [bulk Cu](./dp/examples/Cu)
+   - [bulk Si](./dp/examples/Si)
 
 :::tip
 

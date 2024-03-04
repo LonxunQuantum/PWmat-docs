@@ -1,10 +1,12 @@
-# 对称性
-针对周期性结构，可以取消、查找对称性，进行晶格变换，生成布里渊区路径，某些空间群的结构还可以进行原胞-惯胞转换。
-![qstudio_manual_settings_symmtry](../../nested/qstudio_manual_settings_symmtry.png)
-- 取消对称性：即Make P1操作，会将周期性结构的空间群设为P1 (1)
-- [查找对称性](./qstudio_manual_settings_symmtry_findsymmetry)
-- [晶格变换](./qstudio_manual_settings_symmtry_latticetransform)
-- [布里渊区路径](./qstudio_manual_settings_symmtry_drawbrillouin)
-- 原胞惯胞转换：空间群名称第一位字母为'I', 'F', 'C'的结构，可以在原胞和惯胞之间进行转换，如果是菱方（三角）晶系，还需要满足a=b>c
+# Symmetry
 
-  
+For periodic structures, you can make it to P1, or try to find its symmetry, and generate the Brillouin zone path with high symmetry points according to its space group. Structures with specific space group can be transformed between primitive cell and conventional cell. You can also redefine the lattice of periodic structures.
+
+![qstudio_manual_settings_symmtry](../../nested/qstudio_manual_settings_symmtry.png)
+
+- Make P1: sets the space group of the periodic structure to P1 (1)
+- [Find Symmetry](./qstudio_manual_settings_symmtry_findsymmetry)
+- [Redefine Lattice](./qstudio_manual_settings_symmtry_latticetransform)
+- [Brillouin Zone Path](./qstudio_manual_settings_symmtry_drawbrillouin)
+- Primitive Cell and Conventional Cell: The structure of the first letter of the space group name is 'I', 'F', 'C', which can be converted between primitive cell and conventional cell, and if it is a rhombohedral (triangular) crystal system, it also needs to meet a=b>c
+

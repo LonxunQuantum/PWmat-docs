@@ -1,21 +1,22 @@
-# 输运器件建模
+# Build Transport Device
 
 
 ![build_crystal](../../nested/qstudio_manual_build_transport.png)
-- 元电极设置
-  - 左元电极结构：必须为有晶格的结构
-  - 左元电极个数：3-7，默认为5
-  - 右元电极结构：必须为有晶格的结构
-  - 右元电极个数：3-7，默认为5
-- 中心区设置
-  - 中心区结构：必须为有晶格的结构
-  - 中心区左边界：构建输运器件时，切除中心区结构内分数坐标小于中心区左边界的部分
-  - 中心区右边界：构建输运器件时，切除中心区结构内分数坐标大于中心区右边界的部分
-  - 保留中间区域左边界原子：保留中间区结构内所有分数坐标为(左边界, y, z)的原子。
-  - 保留中间区域右边界原子：保留中间区结构内所有分数坐标为(右边界, y, z)的原子。
-  - 外加电势左边界：偏压的左起始位置
-  - 外加电势右边界：偏压的右起始位置
+
+- Electrode Setting
+  - Left electrode: must be a structure with lattice
+  - Number of left electrode: 3-7, default is 5
+  - Right electrode: must be a structure with lattice
+  - Number of right electrode: 3-7, default is 5
+- Central Region Setting
+  - Central structure: must be a structure with lattice
+  - Left boundary of central region: When constructing the transport device, the part of the central structure which fractional coordinate is less than this value will be removed
+  - Right boundary of central region: When constructing the transport device, the part of the central structure which fractional coordinate is greater than this value will be removed
+  - Keep left boundary atoms: When selected, the atoms of the central structure which fractional coordinates are exactly equal to 'left boundary of central region' will be keeped
+  - Keep right boundary atoms: When selected, the atoms of the central structure which fractional coordinates are exactly equal to 'right boundary of central region' will be keeped
+  - Left boundary of external potential: The left starting position of the bias
+  - Right boundary of external potential: Right starting position of the bias
 
 :::tip NOTE：
-注意：拼接方向为沿晶格a矢量方向。电流方向沿-a矢量方向
+Note: The stitching direction is along the first lattice basis vector direction. The current direction follows the -a vector direction
 :::

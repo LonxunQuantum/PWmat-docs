@@ -2,11 +2,11 @@
 sidebar_position: 6
 ---
 
-# 量子输运器件建模
+# Quantum transport device
 
-以对苯二硫酚（DTB）与两个金电极表面构成的器件为例：
+Take a device composed of terephthalate thiol (DTB) and two gold electrode surfaces as an example:
 
-1. 分别构建左右元电极和中心区结构，并将其命名为electrode_left.config, electrode_right.config, central.config。中间区域结构的构建可参考分子建模和异质结构建模示例。
+1. The left and right element electrodes and central region structures were constructed and named electrode_left.config, electrode_right.config, and central.config. The construction of the structure of the intermediate region can refer to molecular modeling and heterostructure modeling examples.
 <table><tr>
     <td> 
         <center>
@@ -25,17 +25,18 @@ sidebar_position: 6
     </td>
 </tr></table>
 
-2. 在菜单栏中依次点击`建模`→`输运器件建模`，打开输运器件建模窗口。分别选中左右元电极结构、中心区结构。器件的构建方向为x方向，电流的传输方向为从右至左。点击预览按钮可以预先查看拼接后的器件结构，确认无误后点击载入按钮将器件模型载入到Q-Studio界面中。
+2. Click `Build` → `Build Transport Device` in the menu bar to open the Shipping Device Modeling window. Select the left and right element electrode structure and the center zone structure respectively. The device is built in the x direction and the current is transmitted from right to left. Click the preview button to view the spliced device structure in advance, and click the load button to load the device model into the Q-Studio interface after confirming that it is correct.
 
-![输运器件建模窗口](../nested/qstudio_example_transport4.png)
-![输运器件建模窗口](../nested/qstudio_example_transport6.png)
+![Transport device modeling window](../nested/qstudio_example_transport4.png)
 
-3. 中心区在后续计算中用于生成器件中间区域的势能函数，边界是截断势能函数的位置。外加电势的边界不能越过中心区边界。
+![Transport device modeling window](../nested/qstudio_example_transport6.png)
 
-![输运器件建模窗口](../nested/qstudio_example_transport5.png)
+3. The central region is used in subsequent calculations to generate the potential energy function in the middle region of the device, and the boundary is where the potential energy function is truncated. The boundary of the applied potential cannot cross the boundary of the central zone.
 
-4. 载入后，默认会显示器件的整体结构。在主界面点击<img src={require('../nested/qstudio_example_transport7.png').default} width="25px" />工具后，可以切换到中间区结构。
+![Transport device modeling window](../nested/qstudio_example_transport5.png)
+
+4. After loading, the overall structure of the device is displayed by default. Click <img src={require('../nested/qstudio_example_transport7.png').default} width="30px" /> tool on the main interface, you can switch to the middle zone structure.
    
-![输运器件建模窗口](../nested/qstudio_example_transport8.png)
+![Transport device modeling window](../nested/qstudio_example_transport8.png)
 
-5. 导出器件为PWmat格式到Q-Flow结构库中，可以进行后续的输运器件计算。
+5. Export the device in PWmat format to the Q-Flow structure library, which can be used for subsequent transport device calculations.
