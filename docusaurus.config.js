@@ -26,7 +26,7 @@ const config = {
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "LonxunQuantum", // Usually your GitHub org/user name.
   projectName: "PWmat-docs", // Usually your repo name.
-  trailingSlash: false,
+  trailingSlash: true,
 
   // onBrokenLinks: "throw",
   // onBrokenMarkdownLinks: "throw",
@@ -210,16 +210,10 @@ const config = {
     [
       require.resolve("@easyops-cn/docusaurus-search-local"),
       /** @type {import("@easyops-cn/docusaurus-search-local").PluginOptions} */
-      ({
-        // ... Your options.
-        // `hashed` is recommended as long-term-cache of index file is possible.
+      {
         hashed: true,
-        // blogRouteBasePath: "/",
-        // For Docs using Chinese, The `language` is recommended to set to:
-        // ```
-        language: ["en", "zh"],
-        // ```
-      }),
+        language: ["en", "zh"]
+      },
     ],
     "@docusaurus/theme-mermaid",
   ],
