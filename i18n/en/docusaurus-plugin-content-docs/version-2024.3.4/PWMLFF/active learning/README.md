@@ -1,7 +1,6 @@
 ---
 sidebar_position: 3
 title: Active Learning
-slug: /Active
 ---
 
 # active learning
@@ -107,18 +106,18 @@ AL-PWMLFF requires two input files, `param.json` and `resource.json`, for initia
 
 ### param.json
 
-[Initial Training Set Preparation - init_param.json](./init_param_zh#init_paramjson)
+[Initial Training Set Preparation - init_param.json](/PWMLFF/active%20learning/init_param_zh#参数列表)
 
 Configurations (VASP, PWMAT format) for relaxation, supercell, scaling, perturbation, and AIMD (DFTB, PWMAT, VASP) settings.
 
-[Active Learning - run_param.jso](./run_param_zh#init_paramjson)
+[Active Learning - run_param.jso](/PWMLFF/active%20learning/run_param_zh#参数列表)
 
 Training settings (network structure, optimizer), exploration settings (LAMMPS settings, sampling strategies), and labeling settings (VASP/PWMAT self-consistent calculation settings).
 
-### [Resource allocation - resource.json](./resource_zh#resource_json_zh)
+### [Resource allocation - resource.json](/PWMLFF/active%20learning/resource_zh#resourcejson)
 
 Settings for computational cluster resources, including computing nodes, CPU, GPU resources for training, molecular dynamics (MD), DFT calculations (SCF, Relax, AIMD), and corresponding software (LAMMPS, VASP, PWMAT, PWMLFF).
 
 ## Example
 
-### [example of Si](./example_si_init_zh)
+### [example of Si](/PWMLFF/active%20learning/example_si_init_zh)

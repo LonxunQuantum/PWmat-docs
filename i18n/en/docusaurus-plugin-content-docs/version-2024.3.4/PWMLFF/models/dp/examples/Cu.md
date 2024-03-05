@@ -90,7 +90,7 @@ OUT.STRESS = F
 ```
 
 - `datasets_path`: 标签文件存放路径。可以设置同时多个路径，路径下包含训练集和验证集子目录。请根据实际情况进行修改。
-- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](../../Parameter%20details)。
+- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](../../../Parameter%20details)。
 - `atom_type`：原子类型，Cu 的原子序数为 29。
 
 ### 2.3 运行
@@ -209,7 +209,7 @@ run             1000 #1ps
 
 1. 使用 GPU 运行 lammps 时，执行程序为`lmp_mpi_gpu`; 使用 CPU 运行 lammps 时，执行程序为`lmp_mpi`。
 
-2. 如果有多个力场文件（如[主动学习](./Si)时），(例如 4 个)可以修改为：
+2. 如果有多个力场文件（如[主动学习](../../../active%20learning/example_si_init_zh)时），(例如 4 个)可以修改为：
 
    ```bash
    pair_style      pwmlff 4 1.pt 2.pt 3.pt 4.pt

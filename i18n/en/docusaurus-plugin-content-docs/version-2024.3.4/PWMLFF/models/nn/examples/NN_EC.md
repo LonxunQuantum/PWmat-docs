@@ -71,7 +71,7 @@ IN.PSP3 = O.SG15.PBE.UPF
 ```
 
 - `train_movement_file`: `MOVEMENT`文件存放名。可以设置同时多个文件。请根据实际情况进行修改。
-- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](../../Parameter%20details)。
+- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](../../../Parameter%20details)。
 - `atom_type`：原子类型，8, 6 和 1 分别为 O, C 和 H 的原子序数.
 
 ### 2.3 运行
@@ -316,19 +316,19 @@ run             1000
 
 ```
 
-- `recover_train`: 是否从上次训练中断/完成处继续训练。如果为`true`，读取默认`model_load_path`和`model_name`，程序则会从上次训练中断/完成处继续训练。见[参数细节](../../Parameter%20details)。
+- `recover_train`: 是否从上次训练中断/完成处继续训练。如果为`true`，读取默认`model_load_path`和`model_name`，程序则会从上次训练中断/完成处继续训练。见[参数细节](../../../Parameter%20details)。
 - `work_dir`: 训练过程中的中间文件保存目录。训练完成后自动删除。`reserve_work_dir`为`true`时，训练完成后不删除该目录。
 - `train_movement_file`: `MOVEMENT`文件存放名。可以设置同时多个文件。请根据实际情况进行修改。
 - `forcefield_name`: 生成的力场文件名称。可不设置。
 - `forcefield_dir`: 生成的力场文件存放的目录。可不设置。
 - `test_movement_file`: 用于训练完成后验证模型的`MOVEMENT`文件。([详情见验证测试部分](#3-验证测试))
 - `test_dir_name`: 训练完成后验证模型的`MOVEMENT`文件的存放目录。
-- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](../../Parameter%20details)。
+- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](../../../Parameter%20details)。
 - `atom_type`：原子类型，8, 6 和 1 分别为 O, C 和 H 的原子序数.
 - `max_neigh_num`：最大近邻原子数。
-- `model`: 模型参数，具体参数配置参考[参数细节](../../Parameter%20details)。
+- `model`: 模型参数，具体参数配置参考[参数细节](../../../Parameter%20details)。
 - `Rmax`：特征的最大截断半径。
 - `Rmin`：特征的最小截断半径。
-- `feature_type`：特征类型，7 对应 DP-Chebyshev feature，详见[特征类型](../../Appendix-1)。
-- `optimizer`：优化器参数，推荐使用`LKF`。通常情况下，对于大体系大网络，使用`LKF`优化器可以加速训练。其他优化器及更多的参数配置参考[参数细节](../../Parameter%20details)。
+- `feature_type`：特征类型，7 对应 DP-Chebyshev feature，详见[特征类型](../../../Appendix-1)。
+- `optimizer`：优化器参数，推荐使用`LKF`。通常情况下，对于大体系大网络，使用`LKF`优化器可以加速训练。其他优化器及更多的参数配置参考[参数细节](../../../Parameter%20details)。
 - `epochs`：训练迭代次数。根据`MOVEMENT`总的 images 数量修改,images 少时可适当增加,如 30。

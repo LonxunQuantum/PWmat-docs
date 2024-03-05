@@ -28,8 +28,8 @@ const config = {
   projectName: "PWmat-docs", // Usually your repo name.
   trailingSlash: false,
 
-  onBrokenLinks: "ignore",
-  onBrokenMarkdownLinks: "warn",
+  // onBrokenLinks: "throw",
+  // onBrokenMarkdownLinks: "throw",
 
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
@@ -135,7 +135,7 @@ const config = {
             type: "docsVersionDropdown",
             position: "left",
             dropdownItemsBefore: [],
-            dropdownItemsAfter: [{to: '/versions', label: 'All versions'}],
+            // dropdownItemsAfter: [{to: '/versions', label: 'All versions'}],
             dropdownActiveClassDisabled: true,
           }
         ],
@@ -183,7 +183,7 @@ const config = {
               ],
             },
           ],
-          copyright: `Copyright © ${new Date().getFullYear()} 北京龙讯旷腾科技有限公司 All rights reserved.京ICP备15057729号.Built with Docusaurus.`,
+          copyright: `Copyright © ${new Date().getFullYear()} 北京龙讯旷腾科技有限公司 All rights reserved.京ICP备15057729号. Built with Docusaurus.`,
         },
       prism: {
         theme: prismThemes.github,
@@ -214,11 +214,10 @@ const config = {
         // ... Your options.
         // `hashed` is recommended as long-term-cache of index file is possible.
         hashed: true,
-        language: ["en", "zh"],
-        blogRouteBasePath: "/",
+        // blogRouteBasePath: "/",
         // For Docs using Chinese, The `language` is recommended to set to:
         // ```
-        // language: ["en", "zh"],
+        language: ["en", "zh"],
         // ```
       }),
     ],

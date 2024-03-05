@@ -71,7 +71,7 @@ IN.PSP2 = C.SG15.PBE.UPF
 ```
 
 - `train_movement_file`: `MOVEMENT`文件存放名。可以设置同时多个文件。
-- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](../../Parameter%20details)。
+- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](../../../Parameter%20details)。
 - `atom_type`：原子类型，14 和 6 分别为 Si 和 C 的原子序数
 
 ### 2.3 运行
@@ -270,11 +270,11 @@ run             1000
 - `forcefield_dir`: 生成的力场文件存放的目录。可不设置。
 - `test_movement_file`: 用于训练完成后验证模型的`MOVEMENT`文件。([详情见验证测试部分](#3-验证测试))
 - `test_dir_name`: 训练完成后验证模型的`MOVEMENT`文件的存放目录。
-- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](../../Parameter%20details)。
+- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](../../../Parameter%20details)。
 - `atom_type`：原子类型，14 和 6 分别为 Si 和 C 的原子序数
 - `max_neigh_num`：最大近邻原子数。
 - `etot_weight`：训练时总能量的权重。
 - `force_weight`：训练时原子力的权重。
 - `ei_weight`：训练时原子能量的权重，设置为 0 时表示不训练原子能量。
-- `model`: 模型参数，具体参数配置参考[参数细节](../../Parameter%20details)。
-- `feature_type`：特征类型，3,4 对应 2-body and 3-body Gaussian feature，详见[特征类型](../../Appendix-1)
+- `model`: 模型参数，具体参数配置参考[参数细节](../../../Parameter%20details)。
+- `feature_type`：特征类型，3,4 对应 2-body and 3-body Gaussian feature，详见[特征类型](../../../Appendix-1)
