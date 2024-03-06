@@ -1,9 +1,9 @@
 # Menu
 
 ![manual](./nested/qstudio_manual.png)
-- [File menu](./qstudio_manual_file.md)
-- [Edit menu](./qstudio_manual_edit.md)
-- [Display menu](./qstudio_manual_view.md)
-- [Modify menu](./qstudio_manual_setting.md)
-- [Build menu](./qstudio_manual_build.md)
-- [Select Menu](./qstudio_manual_select.md)
+- [File menu](/en/1.1/Q-Studio/qstudio_manual_file)
+- [Edit menu](/en/1.1/Q-Studio/qstudio_manual_edit)
+- [Display menu](/en/1.1/Q-Studio/qstudio_manual_view)
+- [Modify menu](/en/1.1/Q-Studio/qstudio_manual_setting)
+- [Build menu](/en/1.1/Q-Studio/qstudio_manual_build)
+- [Select Menu](/en/1.1/Q-Studio/qstudio_manual_select)
