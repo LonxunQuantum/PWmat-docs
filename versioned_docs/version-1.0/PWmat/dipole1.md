@@ -107,7 +107,7 @@ etot.input
 
 :::tip
 
-1.  How to get IN.VR and IN.KPT, please refer to the example [Bandstructure calculation](./Bandsctructure).
+1.  How to get IN.VR and IN.KPT, please refer to the example [Bandstructure calculation](/1.0/PWmat/Bandsctructure/).
 2.  The file gen.kpt:
 
 ```dotnetcli

@@ -159,7 +159,7 @@ dump            1 all custom 1 traj.xyz id type x y z  vx vy vz fx fy fz
 run             1000 
 ```
 :::info
-如果有多个力场文件（如[主动学习](./Si)时），(例如 4 个)可以修改为：
+如果有多个力场文件（如[主动学习](/1.1/PWMLFF/Si)时），(例如 4 个)可以修改为：
 
 ```bash
 pair_style      pwmatmlff

@@ -5,7 +5,7 @@
 - 反选原子
 - 选择等价原子：依据对称性，选中当前选择原子的所有等价原子
 - 选择同种元素原子：选中当前选择原子中涉及到的所有元素的原子
-- [高级原子选择](./qstudio_manual_select_advanced)
+- [高级原子选择](/1.0/Q-Studio/qstudio_manual_select_advanced)
 
 ---
 

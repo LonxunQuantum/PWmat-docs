@@ -2,14 +2,14 @@
 
 ![快捷菜单](nested/qstudio_structtools.png)
 
-- ![快捷菜单](nested/qstudio_structtools_addwindow.png)：[新建窗口](./qstudio_manual_file.md)
-- ![快捷菜单](nested/qstudio_structtools_import.png)：[导入结构](./qstudio_manual_file.md)
-- ![快捷菜单](nested/qstudio_structtools_undo.png)：[撤销](./qstudio_manual_edit.md)
-- ![快捷菜单](nested/qstudio_structtools_redo.png)：[重做](./qstudio_manual_edit.md)
+- ![快捷菜单](nested/qstudio_structtools_addwindow.png)：[新建窗口](/1.0/Q-Studio/qstudio_manual_file)
+- ![快捷菜单](nested/qstudio_structtools_import.png)：[导入结构](/1.0/Q-Studio/qstudio_manual_file)
+- ![快捷菜单](nested/qstudio_structtools_undo.png)：[撤销](/1.0/Q-Studio/qstudio_manual_edit)
+- ![快捷菜单](nested/qstudio_structtools_redo.png)：[重做](/1.0/Q-Studio/qstudio_manual_edit)
 
 ---
 
-- ![快捷菜单](nested/qstudio_structtools_display.png)：[显示样式](./qstudio_manual_view_display.md)
+- ![快捷菜单](nested/qstudio_structtools_display.png)：[显示样式](/1.0/Q-Studio/qstudio_manual_view_display)
 - ![快捷菜单](nested/qstudio_structtools_select.png)：选择模式
 - ![快捷菜单](nested/qstudio_structtools_rotate.png)：观察模式
 - ![快捷菜单](nested/qstudio_structtools_translate.png)：平移模式
@@ -17,16 +17,16 @@
 
 ---
 
-- ![快捷菜单](nested/qstudio_structtools_symmetry.png)：[查找对称性](./qstudio_manual_settings_symmtry_findsymmetry.md)
-- ![快捷菜单](nested/qstudio_structtools_lattice.png)：[晶格常数](./qstudio_manual_settings_latticeconstant.md)
-- ![快捷菜单](nested/qstudio_structtools_unbuild.png)：[拆除晶格](./qstudio_manual_settings_newlattice.md)
-- ![快捷菜单](nested/qstudio_structtools_rebuild.png)：[新建晶格](./qstudio_manual_settings_newlattice.md)
+- ![快捷菜单](nested/qstudio_structtools_symmetry.png)：[查找对称性](/1.0/Q-Studio/qstudio_manual_settings_symmtry_findsymmetry)
+- ![快捷菜单](nested/qstudio_structtools_lattice.png)：[晶格常数](/1.0/Q-Studio/qstudio_manual_settings_latticeconstant)
+- ![快捷菜单](nested/qstudio_structtools_unbuild.png)：[拆除晶格](/1.0/Q-Studio/qstudio_manual_settings_newlattice)
+- ![快捷菜单](nested/qstudio_structtools_rebuild.png)：[新建晶格](/1.0/Q-Studio/qstudio_manual_settings_newlattice)
 
 ---
 
-- ![快捷菜单](nested/qstudio_structtools_addatom.png)：[添加原子](./qstudio_manual_build_addatom.md)
-- ![快捷菜单](nested/qstudio_structtools_element.png)：[修改元素](./qstudio_manual_build.md)
-- ![快捷菜单](nested/qstudio_structtools_hydrogen.png)：[自动加氢](./qstudio_manual_build.md)
+- ![快捷菜单](nested/qstudio_structtools_addatom.png)：[添加原子](/1.0/Q-Studio/qstudio_manual_build_addatom)
+- ![快捷菜单](nested/qstudio_structtools_element.png)：[修改元素](/1.0/Q-Studio/qstudio_manual_build)
+- ![快捷菜单](nested/qstudio_structtools_hydrogen.png)：[自动加氢](/1.0/Q-Studio/qstudio_manual_build)
 
 ---
 
