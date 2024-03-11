@@ -19,6 +19,7 @@ pwdata 是 PWMLFF 的数据预处理工具，可用于提取特征和标签。�
 | LAMMPS   | dump             | True        | False | 'lammps/dump'    |
 | CP2K     | stdout, xyz, pdb | True        | True  | 'cp2k/md'        |
 | CP2K     | stdout           | False       | True  | 'cp2k/scf'       |
+| PWMLFF   | \*.npy           | True        | True  | 'pwmlff/npy'     |
 
 ## pwdata 调用方式
 
@@ -38,7 +39,7 @@ pwdata extract.json
   "valid_shuffle": false,
   "train_valid_ratio": 0.8,
   "raw_files": ["./MOVEMENT", "./MOVEMENT_alcho", "./MOVEMENT_ec"],
-  "format": "movement",
+  "format": "pwmat/movement",
   "trainSetDir": "PWdata",
   "trainDataPath": "train",
   "validDataPath": "valid"
@@ -49,7 +50,7 @@ pwdata extract.json
 - `valid_shuffle`: 是否对全部数据进行随机打乱。例如，存在 10 个 images，`valid_shuffle` 为 `true` 时，将对 10 个 images 进行随机打乱，然后按照 `train_valid_ratio` 的比例划分训练集和验证集。`valid_shuffle` 为 `false` 时，将按照 `train_valid_ratio` 的比例按顺序划分训练集和验证集。默认为 `True`
 - `train_valid_ratio`: 训练集和验证集的比例
 - `raw_files`: 原始数据的路径
-- `format`: 原始数据的格式，用于训练集的生成，所以支持的格式有 `movement`, `outcar`, `cp2k/md`
+- `format`: 原始数据的格式，用于训练集的生成，所以支持的格式有 `pwmat/movement`, `vasp/outcar`, `cp2k/md`
 - `trainSetDir`: 生成的数据集的保存路径
 - `trainDataPath`: 生成的训练集的保存路径
 - `validDataPath`: 生成的验证集的保存路径
@@ -58,7 +59,7 @@ pwdata extract.json
 
 pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接口来生成数据集或者进行数据转换。pwdata 的接口调用方式如下：
 
-> <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**Configs.read**</font> <font color='#2ecc71'>_(format: str, data_path: str, pbc = None, atom_names = None, index = ':', **kwargs)_</font> 
+> <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**Config**</font> <font color='#2ecc71'>_(self, format: str, data_path: str, pbc = None, atom_names = None, index = ':', **kwargs)_</font> 
 > [source](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/main.py#L110)</p>
 >
 > Read the data from the input file.
@@ -109,21 +110,19 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 > **EXAMPLES:**
 >
 > ```python
-> from pwdata import Configs
+> from pwdata import Config
 >
 > data_file = "./cp2k.out"
 > format = "cp2k/scf"
-> config = Configs.read(format, data_file)
+> config = Config(format, data_file)
 > ```
 
-> <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**Configs.to**</font> <font color='#2ecc71'>_(image, output_path, save_format = None, **kwargs)_</font>
-> [source](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/main.py#L162)</p>
+> <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**Config.to**</font> <font color='#2ecc71'>_(self, output_path, save_format = None, **kwargs)_</font>
+> [source](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/main.py#L178)</p>
 >
 > Write all images (>= 1) object to a new file.
 >
 > **Parameters:**
->
-> - **image**: dict, **required**. A list of Image objects. Each Image object contains the information of a configuration.
 >
 > - **output_path**: str, **required**. The path to save the file.
 >
@@ -155,22 +154,39 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 > **EXAMPLES:**
 >
 > ```python
-> from pwdata import Configs
+> from pwdata import Config
 >
 > data_file = "./POSCAR"
 > format = "vasp/poscar"
-> config = Configs.read(format, data_file)
-> Configs.to(config, output_path = "./", data_name = "lmp.init", file_format = "lammps/lmp", direct = False, sort = True)
+> config = Config(format, data_file)
+> config.to(output_path = "./", data_name = "lmp.init", save_format = "lammps/lmp", direct = False, sort = True)
 > ```
+>
+> :::tip
+> For the same configurations, the `.append()` method can be called to piece them together before calling the `.to()` method.
+>
+> For example:
+> ```python
+> from pwdata import Config
+> 
+> raw_data = ["./OUTCAR0", "./OUTCAR1", "./OUTCAR2"]    # the same atoms...
+> format = "vasp/outcar"
+> multi_data = Config(format, raw_data[0])
+> for data in raw_data[1:]:
+>    image_data = Config(format, data)
+>    multi_data.append(image_data)
+> multi_data.to(output_path = "./PWdata", save_format='pwmlff/npy', train_data_path='train', valid_data_path='valid', train_ratio=0.8, random=True, seed=2024, retain_raw=False)
+> ```
+> :::
 
-> <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**build.supercells.make_supercell**</font> <font color='#2ecc71'>_(image_data: Image, supercell_matrix: list, pbc: list = None, wrap=True, tol=1e-5)_</font>
+> <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**build.supercells.make_supercell**</font> <font color='#2ecc71'>_(image_data, supercell_matrix: list, pbc: list = None, wrap=True, tol=1e-5)_</font>
 > [source](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/build/supercells.py#L8)</p>
 >
 > Construct supercell from image_data and supercell_matrix
 >
 > **Parameters:**
 >
-> - **image_data**: Image, **required**. The list of Image objects. Each Image object contains the information of a original configuration.
+> - **image_data**: **required**. Image object or The list of Image objects. Each Image object contains the information of a original configuration.
 >
 > - **supercell_matrix**: list, **required**. The supercell matrix (3x3). For example, `[[2, 0, 0], [0, 2, 0], [0, 0, 2]]` means the supercell is 2x2x2.
 >
@@ -186,24 +202,23 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 > **EXAMPLES:**
 >
 > ```python
-> from pwdata import Configs
-> from pwdata.build.supercells import make_supercell
+> from pwdata import Config, make_supercell
 >
 > data_file = "./atom.config"
-> config = Configs.read('config', data_file)
+> config = Config('pwmat/config', data_file)
 > supercell_matrix = [[2, 0, 0], [0, 2, 0], [0, 0, 2]]
 > supercell = make_supercell(config, supercell_matrix, pbc=[1, 1, 1])
-> Configs.to(supercell, output_path = "./", data_name = "atom_2x2x2.config", file_format = "pwmat/config", sort = True)
+> supercell.to(output_path = "./", data_name = "atom_2x2x2.config", save_format = "pwmat/config", sort = True)
 > ```
 
-> <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**pertub.perturbation.perturb_structure**</font> <font color='#2ecc71'>_(image_data:Image, pert_num:int, cell_pert_fraction:float, atom_pert_distance:float)_</font>
-> [source](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/pertub/perturbation.py#L5)</p>
+> <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**pertub.perturbation.perturb_structure**</font> <font color='#2ecc71'>_(image_data, pert_num:int, cell_pert_fraction:float, atom_pert_distance:float)_</font>
+> [source](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/pertub/perturbation.py#L22)</p>
 >
 > Perturb the structure.
 >
 > **Parameters:**
 >
-> - **raw_obj**: Image, **required**. The list of Image objects. Each Image object contains the information of a original configuration.
+> - **image_data**: Include Image object, The system to be perturbed.
 >
 > - **pert_num**: int, **required**. The number of perturbed structures.
 >
@@ -217,31 +232,28 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 > **EXAMPLES:**
 >
 > ```python
-> from pwdata import Configs
-> from pwdata.pertub.perturbation import perturb_structure
+> from pwdata import Config, perturb_structure
 >
 > data_file = "./atom.config"
-> config = Configs.read('config', data_file)
+> config = Config('pwmat/config', data_file)
 > pert_num = 50
 > cell_pert_fraction = 0.03
 > atom_pert_distance = 0.01
 > save_format = "pwmat/config"
 > perturbed_structs = perturb_structure(config, pert_num, cell_pert_fraction, atom_pert_distance)
-> for i, perturbed_struct in enumerate(perturbed_structs):   # if pert_num > 1
->     Configs.to(perturbed_struct,
->                file_path = output_path,
->                file_name = "{0}_pertubed".format(tmp_perturbed_idx),
->                file_format = save_format,
->                direct = direct,
->                sort = sort)
+> perturbed_structs.to(output_path = "~/pwdata/test/pertubed/",
+>           data_name = "pertubed",
+>           save_format = save_format,
+>           direct = True,
+>           sort = True)
 > ```
 
-> <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**pertub.scale.scale_cell**</font> <font color='#2ecc71'>_(image_data:Image, scale_factor:float)_</font>
+> <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**pertub.scale.scale_cell**</font> <font color='#2ecc71'>_(image_data, scale_factor:float)_</font>
 > [source](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/pertub/scale.py#L5)</p>
 >
 > **Parameters:**
 >
-> - **raw_obj**: Image, **required**. The list of Image objects. Each Image object contains the information of a original configuration.
+> - **image_data**: Include Image object, The system to be scaled.
 >
 > - **scale_factor**: float, **required**. The scale factor of the cell.
 >
@@ -251,11 +263,15 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 > **EXAMPLES:**
 >
 > ```python
-> from pwdata import Configs
-> from pwdata.pertub.scale import scale_cell
+> from pwdata import Config, scale_cell
 >
 > data_file = "./atom.config"
-> config = Configs.read('config', data_file)
+> config = Config('pwmat/config', data_file)
 > scale_factor = 0.95
 > scaled_structs = scale_cell(config, scale_factor)
+> scaled_structs.to(output_path = "~/test/scaled/",
+>           data_name = "scaled",
+>           save_format = "pwmat/config",
+>           direct = True,
+>           sort = True)
 > ```

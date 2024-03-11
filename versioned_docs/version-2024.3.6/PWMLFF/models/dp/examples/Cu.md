@@ -287,4 +287,4 @@ run             1000 #1ps
 - `model`: 模型参数，具体参数配置参考[参数细节](/next/PWMLFF/Parameter%20details)。
 - `optimizer`：优化器参数，推荐使用`LKF`和`ADAM`。通常情况下，对于大体系大网络，使用`LKF`优化器可以加速训练。其他优化器及更多的参数配置参考[参数细节](/next/PWMLFF/Parameter%20details)。
 - `batch_size`：每批次用于训练的数据大小。如 1, 2, 5, 10。
-- `n_epoch`：训练迭代次数。根据总的动力学轨迹 images 数量修改,images 少时可适当增加,如 50。
+- `epochs`：训练迭代次数。根据总的动力学轨迹 images 数量修改,images 少时可适当增加,如 50。

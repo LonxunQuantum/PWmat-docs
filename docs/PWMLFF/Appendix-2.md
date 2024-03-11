@@ -19,6 +19,7 @@ pwdata 是 PWMLFF 的数据预处理工具，可用于提取特征和标签。�
 | LAMMPS   | dump             | True        | False | 'lammps/dump'    |
 | CP2K     | stdout, xyz, pdb | True        | True  | 'cp2k/md'        |
 | CP2K     | stdout           | False       | True  | 'cp2k/scf'       |
+| PWMLFF   | \*.npy           | True        | True  | 'pwmlff/npy'     |
 
 ## pwdata 调用方式
 
@@ -157,7 +158,7 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 >
 > data_file = "./POSCAR"
 > format = "vasp/poscar"
-> config = Config.read(format, data_file)
+> config = Config(format, data_file)
 > config.to(output_path = "./", data_name = "lmp.init", save_format = "lammps/lmp", direct = False, sort = True)
 > ```
 >
@@ -165,9 +166,10 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 > For the same configurations, the `.append()` method can be called to piece them together before calling the `.to()` method.
 >
 > For example:
+>
 > ```python
 > from pwdata import Config
-> 
+>
 > raw_data = ["./OUTCAR0", "./OUTCAR1", "./OUTCAR2"]    # the same atoms...
 > format = "vasp/outcar"
 > multi_data = Config(format, raw_data[0])
@@ -176,6 +178,7 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 >    multi_data.append(image_data)
 > multi_data.to(output_path = "./PWdata", save_format='pwmlff/npy', train_data_path='train', valid_data_path='valid', train_ratio=0.8, random=True, seed=2024, retain_raw=False)
 > ```
+>
 > :::
 
 > <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**build.supercells.make_supercell**</font> <font color='#2ecc71'>_(image_data, supercell_matrix: list, pbc: list = None, wrap=True, tol=1e-5)_</font>

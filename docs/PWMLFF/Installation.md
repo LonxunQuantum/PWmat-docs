@@ -2,30 +2,24 @@
 sidebar_position: 1
 ---
 
-# Installation
+# Load and install (In Mcloud)
 
-## PWMLFF 安装 (以 Mcloud 为例)
-
+## PWMLFF
 :::tip
 PWMLFF 包含 Fortran、Python 和 CUDA 加速等，需要在包含 Python 环境、gcc 编译器、GPU 硬件条件下进行安装
 :::
 
-### 方式一：使用 Mcloud 现有环境
+### Mcloud 直接加载
 
 mcloud 已有配置好的 conda 环境，可以直接调用，避免自己安装 anaconda, cudatoolkit, pytorch 等极度耗时的过程，具体步骤如下：
 
-1. 加载环境
-
 ```
-module load cuda/11.8-share intel/2020
-source /opt/rh/devtoolset-8/enable
+module load pwmlff
 source /share/app/anaconda3/etc/profile.d/conda.sh
-conda activate mlff
+conda activate PWMLFF
 ```
 
-2. [下载及编译安装](#%E4%B8%8B%E8%BD%BD%E5%8F%8A%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85)
-
-### 方式二：重新创建虚拟环境
+### 环境配置
 
 1. 首先加载编译 PWMLFF 所需的编译器(**intel ≥ 2016 , gcc ≥ 7.0**)和 cuda (推荐 **11.8**)
 
@@ -34,7 +28,7 @@ module load cuda/11.8-share intel/2020
 source /opt/rh/devtoolset-8/enable
 ```
 
-1. 在用户目录下创建一个新 python 虚拟环境，建议手动下载并使用 Anaconda3 进行环境管理（搜索引擎搜索 Linux 安装 anaconda3 教程）。
+2. 在用户目录下创建一个新 python 虚拟环境，建议手动下载并使用 Anaconda3 进行环境管理（搜索引擎搜索 Linux 安装 anaconda3 教程）。
 
 可以使用该命令直接下载 Anaconda3 到服务器目录中：
 
@@ -48,14 +42,14 @@ conda 安装完成后，创建虚拟环境，环境中需指定安装 python3.11
 conda create -n PWMLFF python=3.11
 ```
 
-1. 虚拟环境安装完成后重新激活该环境
+3. 虚拟环境安装完成后重新激活该环境
 
 ```
 conda deactivate
 conda activate PWMLFF
 ```
 
-2. 安装 PWMLFF 所需的第三方依赖包
+4. 安装 PWMLFF 所需的第三方依赖包
 
 ```python
 pip3 install numpy tqdm cmake pyyaml pandas scikit-learn-intelex matplotlib pwdata
@@ -67,9 +61,9 @@ pip3 install torch --force-reinstall --index-url https://download.pytorch.org/wh
 
 如需安装其他版本请查阅[Pytorch 官网](https://pytorch.org/get-started/previous-versions/)。
 
-3. 完成第三方依赖包安装后进行 PWMLFF 的编译安装。
+5. 完成第三方依赖包安装后进行 PWMLFF 的编译安装。
 
-### 下载及编译安装
+### 编译安装
 
 <!-- :::tip
 * (Mstation用户通过`nvidia-smi`可查看到GPU信息，可以跳过该步骤)。正式编译前使用srun -p GPU节点名(3090或3080ti) --pty /bin/bash 进入含有GPU的节点环境，如没有权限，需向工作人员申请。
@@ -133,7 +127,7 @@ source ~/.bashrc
 
 至此完成了 PWMLFF 的全部编译安装，后续使用时也要保证在 PWMLFF 的虚拟环境中，并加载完成 intel 编译器。
 
-## Lammps 安装 (Recompiled version for PWMLFF)
+## Lammps (Recompiled version for PWMLFF)
 
 :::tip
 当前版本 Lammps 适用于 DP model 提取的力场模型
@@ -141,15 +135,22 @@ source ~/.bashrc
 旧版 Linear, NN 和 DP model 提取的力场模型见 [Lammps for PWMLFF](http://doc.lonxun.com/PWMLFF/Installation_v0.0.1#lammps_for_pwmlff%E5%AE%89%E8%A3%85)
 :::
 
+### Mcloud 直接加载
+
+```bash
+module load lammps4pwmlff
+```
+
+### 编译安装
+
 使用 PWMLFF 完成力场模型构建后需使用配套的 Lammps 进行分子动力学模拟，以下是详细的安装步骤：
 
 1. 加载编译所需模块 （以 Mcloud 为例）
 
 ```
-module load intel/2020
-module load PWMLFF
+module load pwmlff lammps4pwmlff
 source /share/app/anaconda3/etc/profile.d/conda.sh
-conda activate mlff
+conda activate PWMLFF
 ```
 
 :::info
