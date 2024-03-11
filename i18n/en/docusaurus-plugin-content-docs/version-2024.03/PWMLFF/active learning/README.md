@@ -5,7 +5,7 @@ title: Active Learning
 
 # active learning
 
-"Machine learning force fields (MLFF), compared to traditional methods, can predict material properties and reaction mechanisms faster and more accurately. The current state-of-the-art deep learning-based molecular dynamics can simulate systems with billions of atoms. However, due to the interpolation nature of machine learning methods, MLFFs struggle to make accurate predictions in the phase space outside the training set. Since training data is usually generated using expensive first-principles calculations, it is challenging to obtain a large amount of ab initio data that is both representative and independent of extensive calculations. Improving the extrapolation capability of MLFF models without relying on a large amount of ab initio data is crucial. [`AL-PWMLFF`](https://github.com/LonxunQuantum/PWMLFF_AL/tree/main) (Active learning based on PWMAT Machine Learning Force Field) is an open-source automated active learning platform based on PWMLFF, designed for efficient data sampling."
+"Machine learning force fields (MLFF), compared to traditional methods, can predict material properties and reaction mechanisms faster and more accurately. The current state-of-the-art deep learning-based molecular dynamics can simulate systems with billions of atoms. However, due to the interpolation nature of machine learning methods, MLFFs struggle to make accurate predictions in the phase space outside the training set. Since training data is usually generated using expensive first-principles calculations, it is challenging to obtain a large amount of ab initio data that is both representative and independent of extensive calculations. Improving the extrapolation capability of MLFF models without relying on a large amount of ab initio data is crucial. [`PWact`](https://github.com/LonxunQuantum/PWact) (Active learning based on PWMAT Machine Learning Force Field) is an open-source automated active learning platform based on PWMLFF, designed for efficient data sampling."
 
 # AL-PWMLFF
 The AL-PWMLFF platform consists of two main components: the main task and the task scheduler, as shown in the architecture diagram.
@@ -44,64 +44,76 @@ It includes four sub-modules: relaxation (supporting PWMAT or VASP), supercell g
 
 4. AL-PWMLFF Lammps molecular dynamics simulation is based on [Lammps_for_pwmlff](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/tree/libtorch). Refer to the [`Lammps_for_pwmlff documentation`](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/blob/libtorch/README) for installation instructions.
 
-# Installation Process
+# Installation Guide
 
-### Code Download
+PWact supports two installation methods: pip command installation and source code installation.
 
-    git clone https://github.com/LonxunQuantum/PWMLFF_AL.git
-
-AL-PWMLFF is developed in Python and supports Python 3.9 and above. It is recommended to use the Python runtime environment provided by PWMLFF.
-
-### Required Libraries
-
-If you need to create a virtual environment for AL-PWMLFF separately, you only need to install the following dependent packages (compatible with your Python version, Python >= 3.9).
+### 1. Pip Command Installation
 ```bash
-    pip install matplotlib numpy pandas tqdm pwdata
+pip install pwact
 ```
 
-    
+### 2. GitHub Source Code Installation
+Source code download
+```bash
+git clone https://github.com/LonxunQuantum/PWact.git
+```
+
+After downloading the source code, you can use the `pwact` command by loading the following environment variable. Here, `~/codespace/al_pwmlff` is the path to your source code files.
+```bash
+export PATH=~/codespace/al_pwmlff/pwact/bin:$PATH
+```
+
+PWact is developed in Python and supports Python 3.9 and above. It is recommended to use the [Python runtime environment](http://doc.lonxun.com/PWMLFF/Installation) of PWMLFF directly.
+
+If you need to create a separate virtual environment for PWact, you only need to install the following dependencies (matching your Python version, supporting Python 3.9 and above).
+```bash
+pip install numpy pandas tqdm pwdata
+```
+
+
 # Command List
 
-AL-PWMLFF includes the following commands, which are not case sensitive. The starting command is `PWact`, and you can also write it as `pwact` or `PWACT`.
+PWact includes the following commands, starting with the command `pwact`.
 
-### 1. Display the available command list
+### 1. Output a list of available commands
 
 ```bash
-PWact  [ -h / --help / help ]
+pwact  [ -h / --help / help ]
+```
+You can also use this command to check if PWact is installed successfully.
+### 2. Output the parameter list for cmd_name
+
+```bash
+pwact cmd_name -h
 ```
 
-### 2. Display the parameter list for cmd_name:
+### 3. Prepare initial training set
 
 ```bash
-PWact cmd_name -h
-```
-
-### 3. Initial Training Set Preparation
-
-```bash
-PWact init_bulk param.json resource.json
+pwact init_bulk param.json resource.json
 ```
 
 ### 4. Active Learning
 
 ```bash
-PWact run param.json resource.json
+pwact run param.json resource.json
 ```
 
-For the 3-th and 4-th command above, the names of the JSON files can be modified by the user, but it is required that the input order of [`param.json`](#paramjson) and [`resouce.json`](#resourcejson) cannot be changed.
+For the above two commands, the names of the json files can be changed by the user, but the order of input for [`param.json`](#paramjson) and [`resouce.json`](#resourcejson) must remain the same.
 
-### 5. Tool Commands
+### 5. Utility Commands
 
 Convert MOVEMENT or OUTCAR to PWdata format
 
 ```bash
-PWact to_pwdata
+pwact to_pwdata
 ```
 
 Search for labeled datasets in the active learning directory
 
 ```bash
-PWact gather_pwdata
+pwact gather_pwdata
 ```
 
 ## Input Files

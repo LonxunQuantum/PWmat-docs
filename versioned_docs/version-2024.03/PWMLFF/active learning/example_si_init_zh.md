@@ -4,9 +4,9 @@ sidebar_position: 3
 
 # Example for Si active learning
 
-本案例为硅体系的主动学习过程，案例位于 [`example/si/init_bulk`](https://github.com/LonxunQuantum/PWMLFF_AL/tree/main/example) 首先通过 `INIT_BULK` 构造初始训练集，之后使用初始训练集训练模型，并使用在 INIT_BULK 中使用微扰产生的结构做为初始构型在 `300K` 、`500K` 和 `900K` 做主动学习采样。
+本案例为硅体系的主动学习过程，案例位于 [`pwact/example/si_pwmat/`](https://github.com/LonxunQuantum/PWact/tree/main/pwact/example/si_pwmat) 首先通过 `INIT_BULK` 构造初始训练集，之后使用初始训练集训练模型，并使用在 INIT_BULK 中使用微扰产生的结构做为初始构型在 `300K` 、`500K` 和 `900K` 做主动学习采样。
 
-以下案例使用的 DFT 计算软件为 PWMAT，我们也提供了 VASP 版本输入文件（请参考[`example/si_vasp`](https://github.com/LonxunQuantum/PWMLFF_AL/tree/main/example/si_vasp)）、CP2K版本输入文件（请参考[`example/si_cp2k`](https://github.com/LonxunQuantum/PWMLFF_AL/tree/main/example/si_cp2k)）和DFTB版本输入文件（请参考[`example/si_dftb`](https://github.com/LonxunQuantum/PWMLFF_AL/tree/main/example/si_dftb)）。
+以下案例使用的 DFT 计算软件为 PWMAT，我们也提供了 VASP 版本输入文件（请参考[`pwact/example/si_vasp`](https://github.com/LonxunQuantum/PWact/tree/main/pwact/example/si_vasp)）、CP2K版本输入文件（请参考[`pwact/example/si_cp2k`](https://github.com/LonxunQuantum/PWact/tree/main/pwact/example/si_cp2k)）和DFTB版本输入文件（请参考[`pwact/example/si_dftb`](https://github.com/LonxunQuantum/PWact/tree/main/pwact/example/si_dftb)）。
 
 请注意，案例中提供的DFT设置仅用于程序执行流程测试，不保证计算精度。
 
@@ -16,8 +16,9 @@ sidebar_position: 3
 
 ## 启动命令
 
+进入 `pwact/example/si_pwmat/init_bulk` 目录 
 ```JSON
-al_pwmlff init_bulk init_param.json resource.json
+pwact init_bulk init_param.json resource.json
 ```
 
 ## INIT_BULK 目录结构
@@ -46,10 +47,11 @@ example/init_bulk
 ├──init_param.json
 ├──relax_etot.input
 ├──relax_etot1.input
+├──relax_etot2.input
 ├──aimd_etot1.input
 ├──aimd_etot2.input
-├──pwdata
 └──collection
+    ├──pwdata
     ├──init_config_0
     │   ├──super_cell.config
     │   ├──0.9_scale.config
@@ -100,6 +102,12 @@ example/init_bulk
 # 主动学习
 
 我们使用 INIT_BULK 案例中的预训练数据和微扰后的结构，在 500K、800K 和 1100K 下做主动学习。
+
+启动命令：
+执行完毕 init_bulk 命令之后，进入 `pwact/example/si_pwmat/` 目录：
+```
+pwact run param.json resource.json
+```
 
 ## 主动学习文件目录
 
@@ -243,4 +251,5 @@ example
 ├──...
 ```
 
-# 力场性能
+
+
