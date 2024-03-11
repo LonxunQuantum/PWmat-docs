@@ -4,9 +4,11 @@ sidebar_position: 3
 
 # Example for Si active learning
 
-本案例为硅体系的主动学习过程，案例位于 [`example/si/init_bulk`](https://github.com/LonxunQuantum/PWMLFF_AL/tree/main/example) 首先通过 `INIT_BULK` 构造初始训练集，之后使用初始训练集训练模型，并使用经过 INIT_BULK 微扰后的结构做为初始构型在 `300K` 、`500K` 和 `900K` 做主动学习采样。
+本案例为硅体系的主动学习过程，案例位于 [`example/si/init_bulk`](https://github.com/LonxunQuantum/PWMLFF_AL/tree/main/example) 首先通过 `INIT_BULK` 构造初始训练集，之后使用初始训练集训练模型，并使用在 INIT_BULK 中使用微扰产生的结构做为初始构型在 `300K` 、`500K` 和 `900K` 做主动学习采样。
 
-以下案例使用的 DFT 计算软件为 PWMAT，我们也提供了 VASP 版本输入文件，请参考[`example/si/init_bulk_vasp`](https://github.com/LonxunQuantum/PWMLFF_AL/tree/main/example)
+以下案例使用的 DFT 计算软件为 PWMAT，我们也提供了 VASP 版本输入文件（请参考[`example/si_vasp`](https://github.com/LonxunQuantum/PWMLFF_AL/tree/main/example/si_vasp)）、CP2K版本输入文件（请参考[`example/si_cp2k`](https://github.com/LonxunQuantum/PWMLFF_AL/tree/main/example/si_cp2k)）和DFTB版本输入文件（请参考[`example/si_dftb`](https://github.com/LonxunQuantum/PWMLFF_AL/tree/main/example/si_dftb)）。
+
+请注意，案例中提供的DFT设置仅用于程序执行流程测试，不保证计算精度。
 
 ![SI_POSCAR](../models/dp/picture_wu/active_learning/SI_POSCAR.png)
 

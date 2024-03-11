@@ -18,6 +18,9 @@ Whether to randomly divide the prepared data into training and validation sets, 
 ### train_valid_ratio
 Sets the ratio for dividing the training and validation sets, default value is `0.8`, which divides the training set and validation set into 80% and 20% respectively.
 
+### interval
+Used to set the interval for selecting structures from the trajectory when extracting data, that is, to select a configuration every few structures in the trajectory, with a default value of `1`.
+
 ### sys_config_prefix
 Sets the path prefix for initial configurations, `optional parameter`, used in conjunction with [`sys_configs/config`](#config). It can be an absolute path or a relative path, where the relative path is relative to the current directory.
 
@@ -66,7 +69,21 @@ Sets the control file used for AIMD, used in conjunction with [aimd_input](#aimd
 Sets which DFT calculation software to use for [`Relax`](#relax) and [`AIMD`](#aimd), default value is `pwmat`, also supports VASP format. If it is VASP format, set it to `vasp`.
 
 ### pseudo 
-Sets the path to the pseudopotential files, in list format. The path to the pseudopotential file can be an absolute path or a relative path (relative to the current path).
+Sets the path to the pseudopotential files of `PWmat` or `VASP`, in list format. The path to the pseudopotential file can be an absolute path or a relative path (relative to the current path).
+
+### in_skf
+The `in_skf` parameter is used to set the path to the parent directory of the pseudopotential files for `DFTB` (Integrated by `PWMAT`). It should be specified as a string in either absolute or relative format (relative to the current directory).
+
+### basis_set_file
+Refer to [potential_file](#potential_file).
+
+### potential_file
+The `potential_file` parameter is used to set the path to the `BASIS_MOLOPT` and `POTENTIAL` files for `CP2K` pseudopotentials. For example:
+```json
+"basis_set_file": "~/datas/systems/cp2k/data/BASIS_MOLOPT",
+"potential_file": "~/datas/systems/cp2k/data/POTENTIAL"
+```
+
 
 ### relax_input
 Sets the input control file for Relax. If there are multiple relax control files, they are organized in list format. For cases where only a single file is used, it can also be set in dict format.
@@ -144,4 +161,41 @@ This parameter is an optional parameter for PWMAT, used to set the K points. For
 5. Perform AIMD simulations on the 40 perturbed structures.
 6. Automatically extract the AIMD trajectories as **PWdata** data format for pretraining data.
 
+### Supplementary Explanation for [relax_input](#relax_input) and [aimd_input](#aimd_input) Parameters
 
+The parameters [`kspacing`](#kspacing) and [`flag_symm`](#flag_symm) are used for setting the K-points in PWMAT. If the `MP_N123` parameter is not set in the `etot.input` file, the program will use these two parameters to set the K-points. Therefore, if you have already set the `MP_N123` parameter in the `etot.input` file, you can simplify the [relax_input](#relax_input) or [aimd_input](#aimd_input) parameters as follows:
+
+```json
+"relax_input": [
+  "relax_etot.input",
+  "relax_etot1.input",
+  "relax_etot2.input"
+],
+
+"aimd_input": [
+  "aimd_etot.input",
+  "aimd_etot1.input"
+]
+```
+
+If you are using the same relax or AIMD input for all structures in [sys_configs](#sys_configs), you can further simplify the parameters as follows:
+
+```json
+"relax_input": "relax_etot.input",
+"aimd_input": "aimd_etot.input"
+```
+
+In this case, you do not need to specify the [relax_input_idx](#relax_input_idx) or [aimd_input_idx](#aimd_input_idx) parameters in [sys_configs](#sys_configs). Your [sys_configs](#sys_configs) can be written as follows:
+
+```json
+"sys_configs": [{
+  "config": "atom.config",
+  "relax": true,
+  "super_cell": [1, 1, 2],
+  "scale": [0.9, 0.95],
+  "perturb": 20,
+  "cell_pert_fraction": 0.03,
+  "atom_pert_distance": 0.01,
+  "aimd": true
+}]
+```

@@ -40,9 +40,60 @@ sidebar_position: 2
 
 #### train_input_file
 
-可选参数，如果您有单独的 PWMLFF 输入文件，您可以使用该参数指定文件所在路径。
+可选参数，如果您有单独的 PWMLFF 输入文件，您可以使用该参数指定文件所在路径。否则您需要设置如下例中所示参数。参数的详细解释您在可以在 [PWMLFF 参数列表](../Parameter%20details.md)中查看。
 
-#
+```json
+    "train": {
+        "model_type": "DP",
+        "atom_type": [
+            14
+        ],
+        "max_neigh_num": 100,
+        "seed": 2023,
+        "data_shuffle":true,
+        "train_valid_ratio": 0.8,
+        "recover_train": true,
+        "model": {
+            "descriptor": {
+                "Rmax": 6.0,
+                "Rmin": 0.5,
+                "M2": 16,
+                "network_size": [25, 25, 25]
+            },
+            "fitting_net": {
+                "network_size": [50, 50, 50, 1]
+            }
+        },
+        "optimizer": {
+            "optimizer": "LKF",
+            "epochs": 30,
+            "batch_size": 4,
+            "print_freq": 10,
+            "block_size": 5120,
+            "kalman_lambda": 0.98,
+            "kalman_nue": 0.9987,
+            "train_energy": true,
+            "train_force": true,
+            "train_ei": false,
+            "train_virial": false,
+            "train_egroup": false,
+            "pre_fac_force": 2.0,
+            "pre_fac_etot": 1.0,
+            "pre_fac_ei": 1.0,
+            "pre_fac_virial": 1.0,
+            "pre_fac_egroup": 0.1
+        }
+    }
+```
+
+由于 PWMLFF 中设置的默认参数已经能够支持大部分的训练需求，因此，您可以简写为如下形式，将采用标准的 `DP` 模型 使用 `LKF 优化器`训练。
+```json
+  "train": {
+        "model_type": "DP",
+        "atom_type": [14],
+        "max_neigh_num": 100
+  }   
+```
 
 ### strategy
 
@@ -96,6 +147,45 @@ sidebar_position: 2
 
 该参数用于设置模型压缩是的网格大小，默认值为 `"Compress_dx":0.01`。
 
+
+#### 例子
+
+对于committee方式的选点策略
+```json
+    "strategy": {
+        "uncertainty":"committee",
+        "lower_model_deiv_f": 0.1,
+        "upper_model_deiv_f": 0.2,
+        "model_num": 4,
+        "max_select": 50,
+        "compress": false
+    }
+
+```
+
+对于KPU 方式选点策略
+```json
+    "strategy": {
+        "uncertainty":"KPU",
+        "max_select": 50,
+        "kpu_lower":0.5,
+        "kpu_upper":1.5
+    }
+```
+如果您需要开启模型压缩，则
+```json
+    "strategy": {
+        "uncertainty":"committee",
+        "lower_model_deiv_f": 0.1,
+        "upper_model_deiv_f": 0.2,
+        "model_num": 4,
+        "max_select": 50,
+        "compress": true,
+        "compress_order":3,
+        "Compress_dx":0.01
+    }
+```
+
 #
 
 ## explore
@@ -116,7 +206,7 @@ sidebar_position: 2
 
 ```json
     "sys_configs": [
-        {"config":"POSCAR", "format":"vasp"},
+        {"config":"POSCAR", "format":"vasp/poscar"},
         "atom1.config",
         "atom2.config"
     ]
@@ -170,7 +260,49 @@ sidebar_position: 2
 
 设置模拟系统的边界条件，默认值为 `true`，即采用 `p p p`， 设置为 `false` 则使用 `f f f`。
 
-#
+#### 例子
+
+```json
+"explore": {
+    "sys_config_prefix": "./init_bulk/collection/init_config_0",
+    "sys_configs": [
+        {"config":"0.95_scale.poscar", "format":"vasp/poscar"},
+        {"config":"0_pertub.poscar", "format":"vasp/poscar"},
+        {"config":"0_pertub.poscar", "format":"vasp/poscar"}
+    ],
+    "md_jobs": [
+        [{  
+            "ensemble": "npt",
+            "nsteps": 1000,
+            "md_dt": 0.002,
+            "trj_freq": 10,
+            "sys_idx": [0, 1],
+            "temps": [500, 800],
+            "taut":0.1,
+            "press" :[ 100,200],
+            "taup": 0.5,
+            "boundary":true
+            },{
+            "ensemble": "nvt",
+            "nsteps": 1000,
+            "md_dt": 0.002,
+            "trj_freq": 10,
+            "sys_idx": [2],
+            "temps": [400],
+            "taut":0.1,
+            "taup": 0.5,
+            "boundary":true
+        }]
+    ]
+}
+```
+
+在上例中，配置了一个轮次的主动学习，执行 `"md_jobs"`中两个 `dict` 中配置的lammps 模拟。
+
+对于第一个 dict, 使用 `npt` 系综，在 `sys_idx` 配置了两个构型，对应0.`95_scale.poscar`和 `0_pertub.poscar`。温度和压强的列表分别为 `[500, 800]` 和 `[100,200]`，意思是对这两个结构分别在温度、压强组合为 `[500, 100]`、`[500, 800]`、`[800, 100]`、`[800, 200]` 下执行`lammps`模拟，模拟 `1000` 步，输出频率 `10` 步，单步时间长度 `2` 飞秒。模拟结束后，会获得 `8` 条轨迹。
+
+对于第二个dict，使用 `nvt` 系综，在`sys_idx` 配置了`1`个构型，对应 `0_pertub.poscar`，温度为 `400`，即在 温度`400K` 下做`lammps`模拟。模拟结束后获得`1`条轨迹。
+
 
 ## DFT
 
@@ -194,11 +326,71 @@ sidebar_position: 2
 
 该参数为 PWMAT 的输入参数，用于设置 K 点，可选参数。对于 Relax 或者 SCF 计算，默认值为 `0`, 对于 AIMD 计算，默认值为 `3`。
 
-### pseudo
+### pseudo 
+设置 `PWMAT` 或 `VASP` 赝势文件所在路径，为list格式，赝势文件路径可以为绝对路径或相对路径（相对于当前路径）。
 
-设置赝势文件所在路径，为 list 格式，赝势文件路径可以为绝对路径或相对路径（相对于当前路径）。
+### in_skf
+设置 `DFTB`(PWMAT封装) 的赝势文件上一级目录所在路径，为string 格式，绝对路径或相对路径（相对于当前路径）。
 
-#
+### basis_set_file
+参考 [potential_file](#potential_file)。
+
+### potential_file
+设置 `CP2K` 赝势文件 `BASIS_MOLOPT` 和 `POTENTIAL` 文件所在路径。例如
+```josn
+    "basis_set_file":"~/datas/systems/cp2k/data/BASIS_MOLOPT",
+    "potential_file":"~/datas/systems/cp2k/data/POTENTIAL"
+```
+
+### 例子
+由于自洽计算任务使用的输入控制相同，因此只需要单文件的设置，对于不同的DFT软件，分别设置如下。
+
+对于PWMAT，设置与 [INIT_BULK](./init_param_zh.md) 中相似，如果您未在scf_etot.input中指定 "MP_N123" 参数，则您需要设置 kspacing 和 flag_symm 参数。
+```json
+    "DFT": {
+            "dft_style": "pwmat",
+            "input": "scf_etot.input",
+            "kspacing":0.3,
+            "flag_symm":0
+    }
+```
+
+您也可以不设置，将使用默认参数 kspacing=0.5， flag_symm = 0，此时设置如下
+```json
+"DFT": {
+      "dft_style": "pwmat",
+      "input": "scf_etot.input",
+      "pseudo":["~/NCPP-SG15-PBE/Si.SG15.PBE.UPF"]
+    }
+```
+
+如果您使用了集成在PWMAT中的DFTB，则设置为：
+```json
+"DFT": {
+      "dft_style": "pwmat",
+      "input": "scf_etot.input",
+      "in_skf": "./lisi_dftb_pseudo"
+    }
+```
+
+对于 VASP，设置如下：
+```json
+"DFT": {
+      "dft_style": "vasp",
+      "input": "scf_INCAR",
+      "pseudo":["~/Si/POTCAR"]
+    }
+```
+
+对于 CP2K，设置如下：
+```json
+"DFT": {
+    "dft_style": "cp2k",
+    "input": "scf_cp2k.inp",
+    "basis_set_file":"~/datas/systems/cp2k/data/BASIS_MOLOPT",
+    "potential_file":"~/datas/systems/cp2k/data/POTENTIAL"
+    }
+```
 
 ### 例子
 
@@ -276,7 +468,7 @@ sidebar_position: 2
   "explore": {
     "sys_config_prefix": "/path/structures",
     "sys_configs": [
-      { "config": "POSCAR", "format": "vasp" },
+      { "config": "POSCAR", "format": "vasp/poscar" },
       "atom1.config",
       "atom2.config",
       "atom3.config",

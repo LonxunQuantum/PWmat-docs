@@ -18,6 +18,9 @@ sidebar_position: 1
 ### train_valid_ratio
 用于设置训练集和验证集的划分比例，默认值为 `0.8` , 即把训练集和验证集按照80%和20%做划分。
 
+### interval
+用于设置提取数据时，从轨迹中选取结构的间隔，即在轨迹中，每隔多少个结构选取一个构型，默认值为`1`。
+
 ### sys_config_prefix
 用于设置初始构型的路径前缀，`可选参数`，与 [`sys_configs/config`](#config) 配合设置。可以是绝对路径或者相对路径，相对路径为当前目录。
 
@@ -68,7 +71,20 @@ sidebar_position: 1
 设置 [`Relax`](#relax) 和 [`AIMD`](#aimd) 使用哪种DFT计算软件，默认值为 `pwmat`, 也支持 VASP格式，如果是 VASP 格式，则设置为 `vasp`。
 
 ### pseudo 
-设置赝势文件所在路径，为list格式，赝势文件路径可以为绝对路径或相对路径（相对于当前路径）。
+设置 `PWMAT` 或 `VASP` 赝势文件所在路径，为list格式，赝势文件路径可以为绝对路径或相对路径（相对于当前路径）。
+
+### in_skf
+设置 `DFTB`(PWMAT封装) 的赝势文件上一级目录所在路径，为string 格式，绝对路径或相对路径（相对于当前路径）。
+
+### basis_set_file
+参考 [potential_file](#potential_file)。
+
+### potential_file
+设置 `CP2K` 赝势文件 `BASIS_MOLOPT` 和 `POTENTIAL` 文件所在路径。例如
+```josn
+    "basis_set_file":"~/datas/systems/cp2k/data/BASIS_MOLOPT",
+    "potential_file":"~/datas/systems/cp2k/data/POTENTIAL"
+```
 
 ### relax_input
 设置 Relax 的 输入控制文件。如果存在多个 relax 控制文件，则按照list 格式组织，对于只是用单个文件的情况，也可以设置为dict格式。
@@ -91,6 +107,7 @@ sidebar_position: 1
 该参数为PWMAT的输入参数，用于设置K点，可选参数。对于 Relax 或者 SCF 计算，默认值为 `0`, 对于 AIMD计算，默认值为 `3`。
 
 #
+
 ### 例子
 ```json
     {
@@ -147,5 +164,39 @@ sidebar_position: 1
 5. 对扰动后得到的40个结构做AIMD模拟；
 6. 将AIMD轨迹自动提取为 `PWdata` 数据格式作为预训练数据。
 
-#
+### 对 [relax_input](#relax_input) 和 [aimd_input](#aimd_input)参数的补充说明
 
+[kspacing](#kspacing)和[flag_symm](#flag_symm)是PWMAT的K点设置，如果没有在 etot.input文件中设置 MP_N123 参数，那么程序会使用这两个参数设置K点。因此，如果您已经etot.input设置了 MP_N123 ，那么，您可以将[relax_input](#relax_input) 和 [aimd_input] 简写为如下形式
+
+```json
+    "relax_input":[
+        "relax_etot.input",
+        "relax_etot1.input",
+        "relax_etot2.input"
+    ],
+
+    "aimd_input":[
+        "aimd_etot.input"
+        "aimd_etot1.input"
+    ]
+```
+
+如果您对在 [sys_configs](#sys_configs) 中的所有结构，都使用同一个relax或者aimd，那么您可以进一步将参数简写为
+```json
+    "relax_input":"relax_etot.input",
+    "aimd_input": "aimd_etot.input"
+```
+
+此时，在 [sys_configs](#sys_configs) 您不必再写 [relax_input_idx](#relax_input_idx) 和 [aimd_input_idx](#aimd_input_idx) 参数，此时您的 [sys_configs](#sys_configs)可以写为如下所示。
+```json
+    "sys_configs":[{
+        "config":"atom.config", 
+        "relax":true, 
+        "super_cell":[1, 1, 2], 
+        "scale":[0.9,0.95], 
+        "perturb":20, 
+        "cell_pert_fraction":0.03, 
+        "atom_pert_distance":0.01, 
+        "aimd":true
+    }]
+```

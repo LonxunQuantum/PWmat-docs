@@ -42,6 +42,61 @@ Parameters for model training, specifying the network structure and optimizer. F
 
 Optional parameter. If you have a separate PWMLFF input file, you can specify the path to the file using this parameter.
 
+Optional parameter, if you have a separate PWMLFF input file, you can use this parameter to specify the file path. Otherwise, you need to set the parameters as shown in the example below. Detailed explanations of the parameters can be found in the [PWMLFF parameter list](../Parameter%20details.md).
+
+```json
+    "train": {
+        "model_type": "DP",
+        "atom_type": [
+            14
+        ],
+        "max_neigh_num": 100,
+        "seed": 2023,
+        "data_shuffle":true,
+        "train_valid_ratio": 0.8,
+        "recover_train": true,
+        "model": {
+            "descriptor": {
+                "Rmax": 6.0,
+                "Rmin": 0.5,
+                "M2": 16,
+                "network_size": [25, 25, 25]
+            },
+            "fitting_net": {
+                "network_size": [50, 50, 50, 1]
+            }
+        },
+        "optimizer": {
+            "optimizer": "LKF",
+            "epochs": 30,
+            "batch_size": 4,
+            "print_freq": 10,
+            "block_size": 5120,
+            "kalman_lambda": 0.98,
+            "kalman_nue": 0.9987,
+            "train_energy": true,
+            "train_force": true,
+            "train_ei": false,
+            "train_virial": false,
+            "train_egroup": false,
+            "pre_fac_force": 2.0,
+            "pre_fac_etot": 1.0,
+            "pre_fac_ei": 1.0,
+            "pre_fac_virial": 1.0,
+            "pre_fac_egroup": 0.1
+        }
+    }
+```
+
+Since the default parameters set in PWMLFF are already capable of supporting most training requirements, you can simplify it as shown below, which will use the standard `DP` model trained with the `LKF optimizer`.
+```json
+  "train": {
+        "model_type": "DP",
+        "atom_type": [14],
+        "max_neigh_num": 100
+  }   
+```
+
 #
 
 ### strategy
@@ -96,8 +151,46 @@ This parameter is used to set the compression method for the model, with a defau
 
 This parameter is used to set the grid size for model compression, with a default value of `"Compress_dx":0.01`.
 
-#
+#### example
 
+The selection strategy for the commit method
+```json
+    "strategy": {
+        "uncertainty":"committee",
+        "lower_model_deiv_f": 0.1,
+        "upper_model_deiv_f": 0.2,
+        "model_num": 4,
+        "max_select": 50,
+        "compress": false
+    }
+
+```
+
+The selection strategy for the KPU method
+```json
+    "strategy": {
+        "uncertainty":"KPU",
+        "max_select": 50,
+        "kpu_lower":0.5,
+        "kpu_upper":1.5
+    }
+```
+
+If you need to enable model compression, then
+```json
+    "strategy": {
+        "uncertainty":"committee",
+        "lower_model_deiv_f": 0.1,
+        "upper_model_deiv_f": 0.2,
+        "model_num": 4,
+        "max_select": 50,
+        "compress": true,
+        "compress_order":3,
+        "Compress_dx":0.01
+    }
+```
+
+#
 ## explore
 
 Used to configure the molecular dynamics settings for the exploration process in active learning.
@@ -172,7 +265,48 @@ Coupling time of thermostat (ps), the default value is `0.1`.
 
 Sets the boundary conditions for the simulated system, with a default value of `true`, which corresponds to `p p p`. Setting it to `false` uses `f f f`.
 
-#
+
+#### example
+
+```json
+"explore": {
+    "sys_config_prefix": "./init_bulk/collection/init_config_0",
+    "sys_configs": [
+        {"config":"0.95_scale.poscar", "format":"vasp/poscar"},
+        {"config":"0_pertub.poscar", "format":"vasp/poscar"},
+        {"config":"0_pertub.poscar", "format":"vasp/poscar"}
+    ],
+    "md_jobs": [
+        [{  
+            "ensemble": "npt",
+            "nsteps": 1000,
+            "md_dt": 0.002,
+            "trj_freq": 10,
+            "sys_idx": [0, 1],
+            "temps": [500, 800],
+            "taut":0.1,
+            "press" :[ 100,200],
+            "taup": 0.5,
+            "boundary":true
+            },{
+            "ensemble": "nvt",
+            "nsteps": 1000,
+            "md_dt": 0.002,
+            "trj_freq": 10,
+            "sys_idx": [2],
+            "temps": [400],
+            "taut":0.1,
+            "taup": 0.5,
+            "boundary":true
+        }]
+    ]
+}
+```
+In the example above, a single round of active learning is configured to perform LAMMPS simulations specified in the two dictionaries in `"md_jobs"`. 
+
+For the first dictionary, the `npt` ensemble is used, and two configurations are specified in `sys_idx`, corresponding to `0.95_scale.poscar` and `0_pertub.poscar`. The lists of temperature and pressure are `[500, 800]` and `[100, 200]` respectively. This means that LAMMPS simulations will be performed for these two structures under temperature and pressure combinations of `[500, 100]`, `[500, 800]`, `[800, 100]`, and `[800, 200]`. The simulations will run for `1000` steps with an output frequency of `10` steps and a time step of `2` femtoseconds. After the simulations, a total of `8` trajectories will be obtained.
+
+For the second dictionary, the `nvt` ensemble is used, and a single configuration is specified in `sys_idx`, corresponding to `0_pertub.poscar`. The temperature is set to `400`, meaning that a LAMMPS simulation will be performed at a temperature of `400K`. After the simulation, a single trajectory will be obtained.
 
 ## DFT
 
@@ -198,9 +332,72 @@ If `MP_N123` is not set in the etot.input file and `kspacing` is not set, the de
 
 This parameter is specific to PWMAT and is used to set the K points. It is an optional parameter. The default value is `0` for Relax or SCF calculations, and `3` for AIMD calculations.
 
-### pseudo
 
-Set the path to the pseudopotential files. It should be in list format, and the paths can be absolute or relative to the current directory.
+### pseudo 
+Sets the path to the pseudopotential files of `PWmat` or `VASP`, in list format. The path to the pseudopotential file can be an absolute path or a relative path (relative to the current path).
+
+### in_skf
+The `in_skf` parameter is used to set the path to the parent directory of the pseudopotential files for `DFTB` (Integrated by `PWMAT`). It should be specified as a string in either absolute or relative format (relative to the current directory).
+
+### basis_set_file
+Refer to [potential_file](#potential_file).
+
+### potential_file
+The `potential_file` parameter is used to set the path to the `BASIS_MOLOPT` and `POTENTIAL` files for `CP2K` pseudopotentials. For example:
+```json
+"basis_set_file": "~/datas/systems/cp2k/data/BASIS_MOLOPT",
+"potential_file": "~/datas/systems/cp2k/data/POTENTIAL"
+```
+
+### Example
+Since the input controls for the self-consistent calculation tasks are the same, only a single-file configuration is needed. For different DFT software, the settings are as follows:
+
+For `PWMAT`, the settings are similar to [INIT_BULK](./init_param_zh.md). If you haven't specified the "MP_N123" parameter in `scf_etot.input`, you need to set the `kspacing` and `flag_symm` parameters.
+```json
+"DFT": {
+    "dft_style": "pwmat",
+    "input": "scf_etot.input",
+    "kspacing": 0.3,
+    "flag_symm": 0
+}
+```
+
+Alternatively, you can omit the settings, and the default parameters will be used (kspacing=0.5, flag_symm=0). In this case, the settings are as follows:
+```json
+"DFT": {
+    "dft_style": "pwmat",
+    "input": "scf_etot.input",
+    "pseudo": ["~/NCPP-SG15-PBE/Si.SG15.PBE.UPF"]
+}
+```
+
+If you are using the `DFTB integrated in PWMAT`, the settings are as follows:
+```json
+"DFT": {
+    "dft_style": "pwmat",
+    "input": "scf_etot.input",
+    "in_skf": "./lisi_dftb_pseudo"
+}
+```
+
+For `VASP`, the settings are as follows:
+```json
+"DFT": {
+    "dft_style": "vasp",
+    "input": "scf_INCAR",
+    "pseudo": ["~/Si/POTCAR"]
+}
+```
+
+For `CP2K`, the settings are as follows:
+```json
+"DFT": {
+    "dft_style": "cp2k",
+    "input": "scf_cp2k.inp",
+    "basis_set_file": "~/datas/systems/cp2k/data/BASIS_MOLOPT",
+    "potential_file": "~/datas/systems/cp2k/data/POTENTIAL"
+}
+```
 
 #
 

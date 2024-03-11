@@ -8,7 +8,7 @@ sidebar_position: 0
 
 设置计算集群资源，包括对训练、分子动力学（MD）、DFT 计算（SCF、Relax、AIMD）使用的计算节点、CPU、GPU 资源以及对应的运行软件（Lammps、VASP、PWMAT、PWMLFF）。
 
-分为三个模块参数， `train`, `explore` 和 `DFT`，对于初始训练集制备（init_bulk）只需要设置 `DFT` 即可。
+分为三个模块参数， `train`, `explore` 和 `DFT`，对于初始训练集制备（init_bulk）只需要 `DFT` 模块即可。
 
 ```json
 {
@@ -22,7 +22,8 @@ sidebar_position: 0
     "queue_name": "new3080ti,3080ti,3090",
     "custom_flags": [],
     "source_list": [],
-    "module_list": []
+    "module_list": [],
+    "env_list":[]
   },
   "explore": {
     "command": "mpirun -np 8 lmp_mpi -in in.lammps",
@@ -33,7 +34,8 @@ sidebar_position: 0
     "queue_name": "new3080ti,3080ti,3090",
     "custom_flags": [],
     "source_list": [],
-    "module_list": []
+    "module_list": [],
+    "env_list":[]
   },
   "DFT": {
     "command": "mpirun -np 4 PWmat",
@@ -44,7 +46,8 @@ sidebar_position: 0
     "queue_name": "3080ti,new3080ti,3090",
     "custom_flags": [],
     "source_list": [],
-    "module_list": []
+    "module_list": [],
+    "env_list":[]
   }
 }
 ```
@@ -55,21 +58,32 @@ sidebar_position: 0
 
 必选参数，设置模块对应命令。
 
-#### DFT 计算
+不同任务的设置，例子：
 
-如果使用 PWMAT，则设置为 PWMAT 运行命令，如 "command":"mpirun -np 4 PWmat" ；
+对于DFT计算设置
+```json
+    
+    PWmat 设置：
+    "command":"mpirun -np 4 PWmat"
+    DFTB(Pwmat)设置：
+    "command":"PWmat"
+    VASP设置：
+    "command":"vasp_std"
+    cp2k设置：
+    "command":"mpirun -np $SLURM_NTASKS cp2k.popt"
+```
 
-如果使用 VASP，则设置为 VASP 对应命令，如 "command":"vasp_std"。
+对于 Lammps 计算设置（GPU版本和CPU版本）：
+```
+    "command":"mpirun -np 1 lmp_mpi_gpu" 
+    "command":"mpirun -np 10 lmp_mpi"
+```
+-np 后面为使用的 GPU 或者 CPU 数量，需要与 [`gpu_per_node`](#gpu_per_node)或[`cpu_per_node`](#cpu_per_node) 设置保持一致。
 
-#### explore MD
-
-如果使用 GPU 版本的 lammps，则设置为 "command":"mpirun -np 1 lmp_mpi_gpu -in in.lammps"。 -np 后面为使用的 GPU 数量，需要与 [`gpu_per_node`](#gpu_per_node) 设置保持一致。
-
-如果使用 CPU 版本的 lammps，则设置为 "command":"mpirun -np 8 lmp_mpi -in in.lammps"。-np 后面为使用的 CPU 数量，需要与 [`cpu_per_node`](#cpu_per_node) 设置保持一致。
-
-#### train
-
-如按照 [PWMLFF 文档](http://doc.lonxun.com/PWMLFF/) 安装，请设置为 `"command":"PWMLFF"`。
+对于 [PWMLFF 文档](http://doc.lonxun.com/PWMLFF/) 模型训练设置：
+```
+    "command":"PWMLFF"
+```
 
 #
 
@@ -121,19 +135,17 @@ sidebar_position: 0
 
 ```json
     "source_list": [
-        "source /opt/rh/devtoolset-8/enable",
-        "export PATH=/path/PWMLFF/src/bin:$PATH"
+        "~/anaconda3/etc/profile.d/conda.sh"
     ]
 ```
 
-在执行时，将把字符串 "source /opt/rh/devtoolset-8/enable" 和 "export PATH=/path/PWMLFF/src/bin:$PATH" 自动写入 slrum 脚本中。
+在执行时，把字符串自动拼接前缀 "source "后，将"source /opt/rh/devtoolset-8/enable" 自动写入 slrum 脚本中。
 
 ### module_list
 
 用于设置 slurm 脚本在运行时需要加载的软件模块，可选参数，list 格式。
 
 例如，对于
-
 ```json
     "module_list": [
         "cuda/11.6",
@@ -141,4 +153,176 @@ sidebar_position: 0
     ]
 ```
 
+
 在执行时，将会把字符串 "module load cuda/11.6" 和 "module load intel/2020" 自动写入 slurm 脚本中。
+
+### env_list
+用于设置slurm脚本在运行时需要加载的环境信息，可选参数，list格式。
+
+例如，对于
+```json
+    "env_list": [
+        "export PATH=~/codespace/PWMLFF_feat/src/bin:$PATH",
+        "export PYTHONPATH=~/codespace/PWMLFF_feat/src/:$PYTHONPATH",
+    ]
+```
+
+
+在执行时，会将两条字符串完整写入slurm脚本中。
+
+按照上述 [queue_name](#queue_name)、[custom_flags](#custom_flags)、[source_list](#queue_name)、[module_list](#module_list)、[env_list](#env_list) 中的设置，生成的slurm脚本内容如下：
+
+```bash
+
+#SBATCH --partition=3080ti,new3080ti,3090
+#SBATCH -x gn43,gn66,login
+
+source /opt/rh/devtoolset-8/enable
+module load cuda/11.6
+module load intel/2020
+export PATH=~/codespace/PWMLFF_feat/src/bin:$PATH
+export PYTHONPATH=~/codespace/PWMLFF_feat/src/:$PYTHONPATH
+```
+
+# 配置案例详解
+
+## train模块
+
+对于 `train` 模块，需要加载 PWMLFF的Python运行环境，如果使用 [MCLOUD](#https://mcloud.lonxun.com/) 上已安装的 PWMLFF 做训练，对应的设置如下：
+```json
+  "train": {
+    "command": "PWMLFF",
+    "group_size": 1,
+    "number_node": 1,
+    "gpu_per_node": 1,
+    "cpu_per_node": 1,
+    "queue_name": "new3080ti,3080ti,3090",
+    "custom_flags": [
+    ],
+    "source_list": [
+    "/share/app/anaconda3/etc/profile.d/conda.sh"
+    ],
+    "env_list": [
+    "conda activate PWMLFF"
+    ],
+    "module_list": [
+
+    ]
+  }
+```
+
+这里使用`1`个计算节点，使用该节点的`1`张GPU,`1`个CPU，该节点位于分区`new3080ti`、`3080ti` 或 `3090`。
+
+如果从 PWMLFF 源码编译安装，这里以笔者的计算机群环境配置为例，对应的设置如下：
+
+```json
+  "train":{
+    "command": "PWMLFF",
+    "group_size": 1,
+    "number_node": 1,
+    "gpu_per_node": 1,
+    "cpu_per_node": 1,
+    "queue_name": "new3080ti,3080ti,3090",
+    "custom_flags": [
+    ],
+    "source_list": [
+        "~/anaconda3/etc/profile.d/conda.sh"
+    ],
+    "env_list": [
+        "conda activate torch2_feat",
+        "export PATH=~/codespace/PWMLFF_feat/src/bin:$PATH",
+        "export PYTHONPATH=~/codespace/PWMLFF_feat/src/:$PYTHONPATH"
+    ],
+    "module_list": [
+        "cuda/11.6",
+        "intel/2020"
+    ]
+  }
+
+```
+
+这里 `"~/anaconda3/etc/profile.d/conda.sh"`为笔者计算集群中的conda加载路径，`torch2_feat` 为PWMLFF的Python环境，`~/codespace/PWMLFF_feat`为源码所在路径。
+
+## explore模块
+
+对于explore模块，如果使用 MCLOUD 已安装的 LAMMPS 为例，直接加载`lammps4pwmlff` 软件即可，完整的设置如下：
+```json
+    "explore": {
+      "command": "mpirun -np 1 lmp_mpi_gpu",
+      "group_size": 2,
+      "number_node": 1,
+      "gpu_per_node": 1,
+      "cpu_per_node": 1,
+      "queue_name": "new3080ti,3080ti,3090",
+      "custom_flags": [
+      ],
+      "source_list": [
+
+      ],
+      "module_list": [
+          "lammps4pwmlff"
+      ],
+      "env_list":[
+
+      ]
+    }
+``` 
+
+这里使用`1`个计算节点，使用该节点的`1`张GPU,`1`个CPU，每 `2` 个lammps任务分为1个组。
+
+如果从 LAMMPS 源码编译安装，这里以笔者的计算机群环境配置为例，对应的设置如下：
+```json
+  "explore": {
+    "command": "mpirun -np 1 lmp_mpi_gpu",
+    "group_size": 2,
+    "number_node": 1,
+    "gpu_per_node": 1,
+    "cpu_per_node": 1,
+    "queue_name": "new3080ti,3080ti,3090",
+    "custom_flags": [
+    ],
+    "source_list": [
+        "~/anaconda3/etc/profile.d/conda.sh"
+    ],
+    "module_list": [
+        "cuda/11.6",
+        "intel/2020"
+    ],
+    "env_list":[
+        "conda activate torch2_feat",
+        "export PATH=~/codespace/PWMLFF_feat/src/bin:$PATH",
+        "export PYTHONPATH=~/codespace/PWMLFF_feat/src/:$PYTHONPATH",
+        "export PATH=~/codespace/lammps_torch/src:$PATH",
+        "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(python3 -c \"import torch; print(torch.__path__[0])\")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib"
+    ]
+    }
+
+``` 
+这里 `"~/anaconda3/etc/profile.d/conda.sh"`为笔者计算集群中的conda加载路径，`torch2_feat` 为PWMLFF的Python环境，`~/codespace/PWMLFF_feat`为源码所在路径， `lammps_torch`为lammps源码所在路径。
+
+## DFT 模块
+
+对于DFT 模块，这里以加载PWMAT为例，设置如下。
+```json
+  "DFT": {
+      "command":"PWmat",
+      "number_node": 1,
+      "cpu_per_node": 4,
+      "gpu_per_node": 4,
+      "group_size": 5,
+      "queue_name": "3080ti,new3080ti,1080ti,3090",
+      "custom_flags": [
+      "#SBATCH -x gn18,gn17"
+      ],
+      "module_list": [
+          "compiler/2022.0.2",
+          "mkl/2022.0.2",
+          "mpi/2021.5.1"
+
+      ],
+      "env_list":[
+          "module load cuda/11.6"
+      ]
+  }
+```
+这里使用`1`个计算节点，使用该节点的`1`张GPU,`1`个CPU，每 `5` 个DFT任务分为1个组。
