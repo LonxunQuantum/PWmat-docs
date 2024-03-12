@@ -206,7 +206,7 @@ export PYTHONPATH=~/codespace/PWMLFF_feat/src/:$PYTHONPATH
     "conda activate PWMLFF"
     ],
     "module_list": [
-
+      "pwmlff"
     ]
   }
 ```
