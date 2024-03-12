@@ -200,13 +200,13 @@ export PYTHONPATH=~/codespace/PWMLFF_feat/src/:$PYTHONPATH
     "custom_flags": [
     ],
     "source_list": [
-    "/share/app/anaconda3/etc/profile.d/conda.sh"
+      "/share/app/anaconda3/etc/profile.d/conda.sh"
     ],
     "env_list": [
-    "conda activate PWMLFF"
+      "conda activate PWMLFF"
     ],
     "module_list": [
-
+      "pwmlff"
     ]
   }
 ```

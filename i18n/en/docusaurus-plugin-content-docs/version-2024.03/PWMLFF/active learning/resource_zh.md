@@ -199,7 +199,9 @@ For the `train` module, it is necessary to load the Python runtime environment o
   "env_list": [
     "conda activate PWMLFF"
   ],
-  "module_list": []
+  "module_list": [
+    "pwmlff"
+  ]
 }
 ```
 
