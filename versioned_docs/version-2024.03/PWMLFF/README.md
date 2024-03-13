@@ -24,12 +24,11 @@ PWmat Machine Learning Force Field (PWMLFF) 是一套在 GNU 许可下的开源�
         8. DP-Gaussian(dp2)
 ```
 
-`4` 种训练模型
+`3` 种训练模型
 ```
         1. Linear Model
         2. Deep Neural Netowrk (NN)
         3. DP-torch Network (DP) 及其优化版本 model compress 和 type embedding
-        4. Graphic Neural Netowrk (GNN)
 ```
 `2` 种高效的训练优化器
 ```

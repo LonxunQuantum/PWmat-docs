@@ -13,12 +13,12 @@ After the model is trained, we can get the model file, which is a `.ckpt` file.
 then we can execute the following command to predict the properties of a new configuration:
 
 ```bash
-PWMLFF infer dp_model.ckpt atom.config config
+PWMLFF infer dp_model.ckpt atom.config pwmat/config
 ```
 
-where `dp_model.ckpt` is the model file, `atom.config` is the atom configuration file, and `config` is the format of the atom configuration file.
+where `dp_model.ckpt` is the model file, `atom.config` is the atom configuration file, and `pwmat/config` is the format of the atom configuration file.
 
-otherwise, POSCAR file with the format of poscar.
+otherwise, POSCAR file with the format of `vasp/poscar`.
 
 > <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**mods.infer.Inference**</font> <font color='#2ecc71'>_(self, ckpt_file: str, device: torch.device)_</font> 
 > [source](https://github.com/LonxunQuantum/PWMLFF/blob/dev_feature/src/mods/infer.py#L9)</p>

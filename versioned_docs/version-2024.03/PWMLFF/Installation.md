@@ -5,6 +5,7 @@ sidebar_position: 1
 # Load and install (In Mcloud)
 
 ## PWMLFF
+
 :::tip
 PWMLFF 包含 Fortran、Python 和 CUDA 加速等，需要在包含 Python 环境、gcc 编译器、GPU 硬件条件下进行安装
 :::
@@ -19,7 +20,57 @@ source /share/app/anaconda3/etc/profile.d/conda.sh
 conda activate PWMLFF
 ```
 
-### 环境配置
+### 离线安装
+
+对于非联网设备，可以直接下载已经配置好的 conda 环境及程序包：
+
+#### 1. 下载
+
+```bash
+https://pan.baidu.com/s/1FIm6KzW1cqY_tTNQnlGS2g?pwd=pwmt
+```
+
+#### 2. 解压
+
+```bash
+gzip -d pwmlff.sh.gz
+```
+
+解压后得到 `pwmlff.sh` 文件，执行该文件即可完成环境的安装。
+
+:::caution
+运行 `pwmlff.sh` 前，仍然需要加载编译所需要的模块，即 intel, cuda 和 gcc.
+:::
+
+```bash
+./pwmlff.sh
+```
+
+运行完成后，会在运行目录下生成一个名为 `PWMLFF-March2024` 的文件夹，内含所有的环境配置（`env`）和程序包（`PWMLFF`）。
+
+解压及编译完成后，更新环境变量：
+
+```bash
+source ~/.bashrc
+```
+
+#### 3. 使用
+
+激活环境
+
+```bash
+source /PWMLFF-March2024/env/bin/activate
+```
+
+退出环境
+
+```bash
+source /PWMLFF-March2024/env/bin/deactivate
+```
+
+### 在线安装
+
+#### 环境配置
 
 1. 首先加载编译 PWMLFF 所需的编译器(**intel ≥ 2016 , gcc ≥ 7.0**)和 cuda (推荐 **11.8**)
 
@@ -52,7 +103,7 @@ conda activate PWMLFF
 4. 安装 PWMLFF 所需的第三方依赖包
 
 ```python
-pip3 install numpy tqdm cmake pyyaml pandas scikit-learn-intelex matplotlib pwdata
+pip3 install numpy tqdm cmake pyyaml pandas scikit-learn-intelex matplotlib charset_normalizer pwdata
 ```
 
 ```python
@@ -63,32 +114,7 @@ pip3 install torch --force-reinstall --index-url https://download.pytorch.org/wh
 
 5. 完成第三方依赖包安装后进行 PWMLFF 的编译安装。
 
-### 编译安装
-
-<!-- :::tip
-* (Mstation用户通过`nvidia-smi`可查看到GPU信息，可以跳过该步骤)。正式编译前使用srun -p GPU节点名(3090或3080ti) --pty /bin/bash 进入含有GPU的节点环境，如没有权限，需向工作人员申请。
-
-    ```bash
-    $ srun -p 3090 --pty /bin/bash
-    ```
-
-* 进入GPU节点后需要重新加载所需要的环境(`PWMLFF`)以及编译器：
-    ```bash
-    module load cuda/11.6 intel/2020
-    source /opt/rh/devtoolset-8/enable
-    ```
-
-* 再次检查torch是否可以读取到GPU信息
-
-    ```python
-    python
-    >> import torch
-    >> torch.cuda.is_available()
-    #如果返还True，则表明已有GPU硬件环境
-    ```
-
-
-::: -->
+#### 编译安装
 
 - 在线安装:
 
@@ -98,10 +124,8 @@ pip3 install torch --force-reinstall --index-url https://download.pytorch.org/wh
   $ git clone https://gitee.com/pfsuo/PWMLFF.git
 
   $ cd PWMLFF/src
-  $ srun -p 3090 --gres=gpu:1 sh build.sh
+  $ sh build.sh
   ```
-
-  **(Mstation 用户通过`nvidia-smi`可查看到 GPU 信息，将`srun -p 3090 sh build.sh`替换为`sh build.sh`)**。
 
   - 源码下载:
     - https://github.com/LonxunQuantum/PWMLFF
@@ -116,7 +140,7 @@ pip3 install torch --force-reinstall --index-url https://download.pytorch.org/wh
 
   $ unzip master.zip
   $ cd PWMLFF-master/src
-  $ srun -p 3090 --gres=gpu:1 sh build.sh
+  $ sh build.sh
   ```
 
 - 编译完成后环境变量需更新，直接执行以下命令：
@@ -148,7 +172,7 @@ module load lammps4pwmlff
 1. 加载编译所需模块 （以 Mcloud 为例）
 
 ```
-module load pwmlff lammps4pwmlff
+module load pwmlff
 source /share/app/anaconda3/etc/profile.d/conda.sh
 conda activate PWMLFF
 ```
@@ -203,6 +227,10 @@ source ~/.bashrc
 echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.__path__[0])")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib" >> ~/.bashrc
 ```
 
+**加载`pwmlff`和虚拟环境的目的是为了获取`LD_LIBRARY_PATH`。**
+
+**lammps 运行时必须包含`LD_LIBRARY_PATH`环境变量，否则无法调用特定库。**
+
 ---
 
 :::caution
@@ -210,9 +238,10 @@ echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(python3 -c "import torch; print
 
 ```
 module load intel/2020
-source /opt/rh/devtoolset-8/enable
 source /share/app/anaconda3/etc/profile.d/conda.sh
-conda activate mlff
+conda activate PWMLFF
+
+# 以下是一些针对可能存在的问题的一种解决方式
 export MKL_SERVICE_FORCE_INTEL=1
 export MKL_THREADING_LAYER=GNU
 export I_MPI_HYDRA_BOOTSTRAP=slurm

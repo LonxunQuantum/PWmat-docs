@@ -23,12 +23,11 @@ It includes `8` feature types with translational, rotational, and permutation in
         8. DP-Gaussian(dp2)
 ```
 
-`4` training models:
+`3` training models:
 ```
         1. Linear Model
         2. Deep Neural Netowrk (NN)
         3. DP-torch Network (DP) 及其优化版本 model compress 和 type embedding
-        4. Graphic Neural Netowrk (GNN)
 ```
 `2` efficient training optimizers:
 ```
