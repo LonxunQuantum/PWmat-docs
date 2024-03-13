@@ -121,7 +121,7 @@ PWact 包括两个输入文件 `param.json` 和 `resource.json`，用于初始�
 
 [初始训练集制备 init_param.josn](./init_param_zh#参数列表)
 
-对构型（VASP、PWmat 格式）进行驰豫、阔胞、缩放、微扰和 AIMD（DFTB、PWMAT、VASP、DFTB）设置。
+对构型（VASP、PWmat 格式）进行驰豫、扩胞、缩放、微扰和 AIMD（DFTB、PWMAT、VASP、DFTB）设置。
 
 [主动学习 run_param.josn](./run_param_zh#参数列表)
 
