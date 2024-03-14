@@ -204,11 +204,11 @@ make clean-all && make mpi -j4
     或者使用以下命令下载源码到用户目录下并解压安装：
 
 ```bash
-$ wget https://github.com/LonxunQuantum/Lammps_for_PWMLFF/archive/refs/tags/v2024.03.01.zip
+$ wget https://github.com/LonxunQuantum/Lammps_for_PWMLFF/archive/refs/tags/2024.3.zip
 或
-$ wget https://gitee.com/pfsuo/Lammps_for_PWMLFF/repository/archive/v2024.03.01.zip
+$ wget https://gitee.com/pfsuo/Lammps_for_PWMLFF/repository/archive/2024.3.zip
 
-$ unzip v2024.03.01.zip    #解压后进入源码目录，完成上述编译安装步骤
+$ unzip Lammps_for_PWMLFF-2024.3.zip    #解压后进入源码目录，完成上述编译安装步骤
 ```
 
 2. 将 Lammps 执行文件写入环境变量中
