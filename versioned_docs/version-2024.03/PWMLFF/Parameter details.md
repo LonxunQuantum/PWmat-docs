@@ -58,7 +58,7 @@ Error! maxNeighborNum too small
 
 1. 注意，**work_dir**，**reserve_work_dir**, **train_movement_file** 和 **test_movement_file** 参数目前版本中仅用于 LINEAR 和 NN 模型。
 2. 对于 DP 模型：
-   - **raw_files** 参数用于指定训练任务的分子动力学轨迹文件所在的路径。支持的文件格式有 PWmat, VASP, CP2K (对应 `format` 参数为 `movement`, `outcar`, `cp2k/md`)
+   - **raw_files** 参数用于指定训练任务的分子动力学轨迹文件所在的路径。支持的文件格式有 PWmat, VASP, CP2K (对应 `format` 参数为 `pwmat/movement`, `vasp/outcar`, `cp2k/md`)
    - **format** 参数用于指定原始轨迹文件的格式。默认值为 `None`。 使用 `raw_files`参数时，必须指定`format`参数。
    - **datasets_path** 参数用于指定测试任务的数据集所在的路径。这些数据集经过 [`PWDATA`](/next/PWMLFF/Appendix-2) 预处理，包括特征提取和标签生成。可代替`raw_files`参数及`format`参数。
 

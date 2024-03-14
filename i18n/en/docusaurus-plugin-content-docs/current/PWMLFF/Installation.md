@@ -154,7 +154,7 @@ source ~/.bashrc
 :::tip
 当前版本 Lammps 适用于 DP model 提取的力场模型
 
-旧版 Linear, NN 和 DP model 提取的力场模型见 [Lammps for PWMLFF](http://doc.lonxun.com/PWMLFF/Installation_v0.0.1#lammps_for_pwmlff%E5%AE%89%E8%A3%85)
+旧版 Linear, NN 和 DP model 提取的力场模型见 [Lammps for PWMLFF](http://doc.lonxun.com/en/1.1/PWMLFF/Installation_v0.0.1/#lammps_for_pwmlff%E5%AE%89%E8%A3%85)
 :::
 
 ### Mcloud 直接加载

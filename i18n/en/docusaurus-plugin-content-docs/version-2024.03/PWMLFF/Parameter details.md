@@ -58,7 +58,7 @@ This parameter is used to specify whether to keep the working directory **work_d
 
 1. Note，**work_dir**，**reserve_work_dir**, **train_movement_file** and **test_movement_file** Parameters are only used in the Linear and NN models in curren version.
 2. For DP model:
-   - The **raw_files** are used to specify the path of the molecular dynamics trajectory files for the training task. Supported file formats include PWmat, VASP, and CP2K (corresponding to the `format` parameter as `movement`, `outcar`, `cp2k/md`).
+   - The **raw_files** are used to specify the path of the molecular dynamics trajectory files for the training task. Supported file formats include PWmat, VASP, and CP2K (corresponding to the `format` parameter as `pwmat/movement`, `vasp/outcar`, `cp2k/md`).
    - The **format** parameter is used to specify the format of the original trajectory file. The default value is `None`. When using the `raw_files` parameter, the `format` parameter must be specified.
    - The **datasets_path** parameter is used to specify the path where the datasets for the test task are located. These datasets are preprocessed by [`PWDATA`](/en/next/PWMLFF/Appendix-2), including feature extraction and label generation. It can replace the `raw_files` and `format` parameters.
 
