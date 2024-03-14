@@ -26,9 +26,7 @@ conda activate PWMLFF
 
 #### 1. 下载
 
-```bash
-https://pan.baidu.com/s/1FIm6KzW1cqY_tTNQnlGS2g?pwd=pwmt
-```
+👉[百度云链接](https://pan.baidu.com/s/1K4TrZuh4WVzSwfu2ZzL5mg?pwd=pwmt)
 
 #### 2. 解压
 

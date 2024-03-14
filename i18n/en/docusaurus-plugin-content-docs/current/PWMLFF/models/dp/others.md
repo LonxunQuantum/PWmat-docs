@@ -32,11 +32,12 @@ otherwise, POSCAR file with the format of `vasp/poscar`.
 >
 > **Example:**
 > ```python
-> from src.mods.infer import Inference
+> from mods.infer import Inference
+> import torch
 >
 > ckpt_file = "dp_model.ckpt"
 > structrues_file = "atom.config"
-> format = "config"
+> format = "pwmat/config"
 > device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 > infer = Inference(ckpt_file, device)
 > infer.inference(structrues_file, format)
