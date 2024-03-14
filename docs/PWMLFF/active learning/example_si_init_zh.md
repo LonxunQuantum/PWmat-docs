@@ -117,6 +117,13 @@ pwact run param.json resource.json
 
 `si.al` 为主动学习流程记录文件，记录已执行的主动学习流程。
 
+`iter_result.txt` 为主动学习每个轮次中探索和选取结构用于标注的记录。内容如下例所示：
+```txt
+iter.0000  Total structures 404    accurate 122 rate 30.20%    selected 187 rate 46.29%    error 95 rate 23.51%
+
+iter.0001  Total structures 404    accurate 334 rate 82.67%    selected 70 rate 17.33%    error 0 rate 0%
+```
+
 `iter.0000` 为第一轮次的主动学习目录，`iter.0001`为第二轮次的主动学习目录，以此类推。
 
 `train`、`explore`、`label` 为主动学习轮次中对应的模型训练、探索、标记三个任务所在目录。
@@ -188,6 +195,7 @@ example
 ├──resource.json
 ├──scf_etot.input
 ├──si.al
+├──iter_result.txt
 ├──iter.0000
 │    ├──train
 │    │   ├──0-train.job

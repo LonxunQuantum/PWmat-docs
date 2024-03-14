@@ -114,6 +114,14 @@ The [directory structure](#directory2) of active learning is as follows.
 
 `si.al` is the record file for the active learning process, documenting the executed active learning steps.
 
+`iter_result.txt` is a record of active learning that explores and selects structures for annotation in each round. The content is shown in the following example.
+
+```txt
+iter.0000  Total structures 404    accurate 122 rate 30.20%    selected 187 rate 46.29%    error 95 rate 23.51%
+
+iter.0001  Total structures 404    accurate 334 rate 82.67%    selected 70 rate 17.33%    error 0 rate 0%
+```
+
 `iter.0000` is the directory for the first iteration of active learning, `iter.0001` is for the second iteration, and so on.
 
 `train`, `explore`, and `label` are the directories for the training, exploration, and labeling tasks, respectively, in each iteration of active learning.
@@ -189,6 +197,7 @@ example
 ├──resource.json
 ├──scf_etot.input
 ├──si.al
+├──iter_result.txt
 ├──iter.0000
 │    ├──train
 │    │   ├──0-train.job

@@ -133,7 +133,24 @@ This parameter needs to be used with [`"uncertainty":"kpu"`](#uncertainty) and s
 
 #### max_select
 
-This parameter sets the maximum number of labeled structures in each active learning iteration. When the number of unlabeled structures exceeds this value, `max_select` structures are randomly selected for labeling. The default value is `200`.
+This parameter is used to set the maximum number of configurations to be selected for labeling in each round of active learning for each initial exploration structure that does not have the [`select_sys`](#select_sys) parameter set. If the number of structures to be labeled exceeds this value, `max_select` structures will be randomly selected from the structures to be labeled. The default is not set, meaning there is no limitation.
+
+For example, in the following MD exploration setting, since the [`select_sys`](#select_sys) is not set, if `max_select` is set, a maximum of `max_select` configurations will be collected for each of the two structures specified in [`sys_idx`](#sys_idx). Therefore, for this MD exploration setting, a maximum of $2 \times max\_select $ structures will be collected for labeling.
+
+```json
+{  
+  "ensemble": "nvt",
+  "nsteps": 1000,
+  "md_dt": 0.002,
+  "trj_freq": 10,
+  "sys_idx": [0, 1],
+  "temps": [500, 800],
+  "taut":0.1,
+  "press": [ 1.0],
+  "taup": 0.5,
+  "boundary":true
+}
+```
 
 <!--
 #### md_type
@@ -241,9 +258,33 @@ Sets the trajectory sampling frequency (`thermo`), with a default value of `10`,
 
 #### sys_idx
 
-Sets the initial structures for md, which is in list format and corresponds to the indices of structures in [`sys_configs`](#sys_configs). Multiple structures can be specified here. During exploration, each configuration will be explored with the pressure and temperature specified in [`"press"`](#press) and [`"temps"`](#temps) respectively.
+This parameter is used to set the initial structures for MD simulations. It is specified as a list of indices referring to the structures in [`sys_configs`](#sys_configs). Multiple structures can be specified here. During the exploration, each configuration will be explored at the pressures and temperatures specified in [`"press"`](#press) and [`"temps"`](#temps) respectively.
 
-For example, `"sys_idx":[0, 1]`, `"press":[100, 200]`, `"temps":[300, 400]` will perform md on the structures with indices 0 and 1, at [pressures, temperatures] of [100, 300], [100, 400], [200, 300], and [200, 400], resulting in `8` trajectories.
+For example, with the following settings: `"sys_idx": [0, 1]`, `"press": [100, 200]`, `"temps": [300, 400]`, the MD simulations will be performed on the structures with indices 0 and 1, at pressures and temperatures of [100, 300], [100, 400], [200, 300], and [200, 400] respectively. This will result in a total of `8` trajectories.
+
+```json
+{  
+  "ensemble": "npt",
+  "nsteps": 1000,
+  "md_dt": 0.002,
+  "trj_freq": 10,
+  "sys_idx": [0, 1],
+  "select_sys":[20, 30],
+  "temps": [300, 400],
+  "taut":0.1,
+  "press": [100, 200],
+  "taup": 0.5,
+  "boundary":true
+}
+```
+
+#### select_sys
+
+This parameter works in conjunction with [`sys_idx`](#sys_idx) and is used to limit the maximum number of configurations to be labeled for each initial exploration structure specified in `sys_idx`. By default, it is not set and will use the value specified in [`max_select`](#max_select). If `max_select` is also not set, the default value of `100` will be used.
+
+For example, in the case of [`sys_idx`](#sys_idx) mentioned earlier, setting `"select_sys": [20, 30]` means that a maximum of `20` configurations will be selected for labeling from the `4` trajectories of structure 0, and a maximum of `30` configurations will be selected for labeling from the `4` trajectories of structure 1.
+
+You can also set it as `"select_sys": 20`, which is equivalent to `"select_sys": [20, 20]`.
 
 #### press
 
