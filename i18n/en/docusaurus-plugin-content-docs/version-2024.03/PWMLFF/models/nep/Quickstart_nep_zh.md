@@ -111,6 +111,46 @@ After training is completed, a model_record directory will be created in the cur
 
 Please note that these descriptions provide an overview of the purpose and content of each file.
 
+## Python inference
+This section explains how to use a trained NEP model to predict properties for new atomic structures. A trained model can be used to predict properties such as energy, forces, and stresses for new atomic structures.
+
+The procedure is similar to DP, Linear, or NN models. Users need to prepare a JSON file with the following contents and then use the `PWMLFF test jsonfile` command to start the inference.
+
+```json
+{
+    "model_type": "NEP",
+    "atom_type": [28, 44, 45, 46, 77],
+    "nep_in_file":"nep.in",
+    "model_load_file":"nep.txt",
+    "format": "pwmat/movement",
+    "raw_files":[
+        "movement_0",
+        "movement_1"
+    ],
+    "datasets_path":[
+        "PWdata/mvm_files_11",
+        "PWdata/mvm_files_12/train"
+    ]
+}
+
+```
+`model_load_file` specifies the path to the trained `nep.txt` file.
+
+`format` specifies the structure file format in `raw_files`.
+
+Users can also directly use directories containing `pwmlff/npy` format files in `datasets_path`.
+
+For example, for the following `pwmlff/npy` files, if the user sets "datasets_path": ['pathA'], all structures in the `train` and `valid` directories will be used for inference. If the user sets "datasets_path": ['pathA/valid'], only the structures in the `pathA/valid` directory will be used for inference.
+
+You can also mix the usage of `raw_files` and `datasets_path`.
+```txt
+pathA
+    ├── train
+    │   └── ei.npy, forces.npy, ...
+    └── valid
+        └── ei.npy, forces.npy, ...
+```
+
 ## GPUMD
 
 For performing NEP molecular dynamics with GPUMD, the input files are similar to those for Linear\NN\DP models.

@@ -113,6 +113,46 @@ PWMLFF train nep.json
 
 `nep.in` 文件用于启动 NEP 训练，为系统自动生成文件
 
+## Python inference
+本部分介绍如何使用训练好的 NEP 模型对新的原子结构进行性质预测。训练好的模型可以用来预测新的原子结构的性质，如系统的能量、力和应力等。
+
+操作类似 DP、Linear 或者 NN 模型，用户需要准备如下内容的 json 文件，之后使用 `PWMLFF test jsonfile` 命令即可开始推理。
+
+```json
+{
+    "model_type": "NEP",
+    "atom_type": [28, 44, 45, 46, 77],
+    "nep_in_file":"nep.in",
+    "model_load_file":"nep.txt",
+    "format": "pwmat/movement",
+    "raw_files":[
+        "movement_0",
+        "movement_1"
+    ],
+    "datasets_path":[
+        "PWdata/mvm_files_11",
+        "PWdata/mvm_files_12/train"
+    ]
+}
+
+```
+`model_load_file` 为 训练好的 `nep.txt` 文件所在路径;
+
+`format` 为 `raw_files` 中的结构文件格式;
+
+用户也可以直接在 `datasets_path` 中使用 `pwmlff/npy` 格式的文件所在目录。
+
+例如对于如下的`pwmlff/npy`文件结构，如果用户设置 "datasets_path":['pathA']，那么`train`和`valid`所在目录下的所有结构都会用于推理；如果用户设置 "datasets_path":['pathA/valid']，那么只使用p`athA/valid`下的结构做推理。
+
+您也可以混合使用 `raw_files`、`datasets_path`。
+```txt
+pathA
+    ├──train
+    │   └──ei.npy,forces.npy,...
+    └──valid
+        └──ei.npy,forces.npy,...
+```
+
 ## GPUMD
 
 做 GPUMD 的 NEP 分子动力学，输入文件与 Linear\NN\DP 模型输入类似。
