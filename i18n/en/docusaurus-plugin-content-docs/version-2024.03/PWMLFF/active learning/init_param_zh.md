@@ -34,7 +34,7 @@ Sets the file paths for configurations, relaxation, supercell, scaling lattice, 
 Sets the file path for configurations. If [`sys_config_prefix`](#sys_config_prefix) is set, the path is concatenated. Otherwise, the path set in the config is used as the config path.
 
 ### format
-Sets the file type for configurations, supporting `POSCAR` format for `VASP` or `atom.config` format for `PWMAT`. If it is a `POSCAR` file, the value is `"vasp"`, default value is `"pwmat"`.
+Sets the file type for configurations, supporting `POSCAR` format for `VASP` or `atom.config` format for `PWMAT`. If it is a `POSCAR` file, the value is `"vasp/poscar"`, default value is `"pwmat/config"`.
 
 ### relax
 Whether to perform relaxation for the config, default value is `"true"`.

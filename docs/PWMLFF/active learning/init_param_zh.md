@@ -34,7 +34,7 @@ sidebar_position: 1
 设置构型的文件路径，如果设置了 [`sys_config_prefix`](#sys_config_prefix) 则进行路径拼接，否则使用 config 中设置的路径作为config路径。
 
 ### format
-设置构型的文件类型，支持 `VASP` 的 `POSCAR` 或者 `PWMAT` 的 `atom.config` 格式。如果是 `POSCAR` 文件，则值为 `"vasp"`, 默认值为 `"pwmat"`。
+设置构型的文件类型，支持 `VASP` 的 `POSCAR` 或者 `PWMAT` 的 `atom.config` 格式。如果是 `POSCAR` 文件，则值为 `"vasp/poscar"`, 默认值为 `"pwmat/config"`。
 
 ### relax
 是否对 config 做驰豫，默认值为 `"true"`。
