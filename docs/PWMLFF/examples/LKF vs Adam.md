@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# LKF vs ADAM
+# 2. LKF And ADAM
 
 [文章](https://arxiv.org/abs/2212.06989)
 

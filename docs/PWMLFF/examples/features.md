@@ -2,7 +2,7 @@
 sidebar_position: 0
 ---
 
-# Comparison of Features
+# 1. Comparison of Features
 
 #
 [文章 Accuracy evaluation of different machine learning force field features](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb/pdf)
