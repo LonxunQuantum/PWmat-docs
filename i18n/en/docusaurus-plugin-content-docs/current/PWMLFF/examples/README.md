@@ -16,11 +16,6 @@ title: PWMLFF Examples
 PWMFF中实现了 [重组层扩展卡尔曼滤波（RLEKF）优化器](https://arxiv.org/abs/2212.06989)，旨在加速训练神经网络力场。RLEKF是全局扩展卡尔曼滤波（GEKF）的改进版本，通过采用分割大层和聚集小层的策略来降低计算成本。该策略利用稀疏对角块矩阵逼近密集权重误差协方差矩阵，从而提高了计算效率。作者在`13`个常见体系上进行了数值实验，并与 ADAM 优化器进行了比较。
 <!-- 实验结果表明，RLEKF 相对于 ADAM `收敛更快且精度稍高`。此外，作者还从理论上证明了权值的更新是收敛的，从而克服了梯度爆炸问题。总体而言，RLEKF对权值初始化不敏感，对神经网络力场的训练具有较好的效果。 -->
 
-<!-- ### [四、Si](./Si.md)
-
-### [五、Fe](./Fe.md)
-
-### [六、ZWT](./wzt.md) -->
 
 ### [三、Active Learning](./Active%20Learning.md)
 [PWact](../active%20learning/README.md) (Active learning based on PWMLFF) 是我们开发的一款开源的基于 PWMLFF 的一套自动化主动学习平台，用于高效的数据采样。在PWact中实现了常用的基于多模型委员会查询（Committee Query）的主动学习策略，以及我们基于卡尔曼滤波算法提出的不确定性度量算法（Kalman Prediction Uncertainty， KPU）。基于 KPU 的主动学习还在内测阶段，暂未开放给用户访问。在本例中，我们做了两种主动学习采样的对比。
@@ -60,7 +55,7 @@ PWMFF中实现了 [重组层扩展卡尔曼滤波（RLEKF）优化器](https://a
   </div>
 </div>
 
-### 七、基于机器学习力场的分子动力学模拟揭示锂枝晶的形态演化（案例）
+### [七、基于机器学习力场的分子动力学模拟揭示锂枝晶的形态演化（案例）](./Li.md)
 
 案例细节可以参考 [龙讯公众号文章](https://mp.weixin.qq.com/s/kapzIrPvL2AcGTUzdHgglg) 以及 [文献 Accuracy evaluation of different machine learning force field features ](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb)
 
@@ -72,8 +67,6 @@ PWMFF中实现了 [重组层扩展卡尔曼滤波（RLEKF）优化器](https://a
     <img src={require("./pictures/li.gif").default} alt="cu_ffc_333" width="400" />
   </div>
 </div>
-
-
 
 <!-- #### GNN
 

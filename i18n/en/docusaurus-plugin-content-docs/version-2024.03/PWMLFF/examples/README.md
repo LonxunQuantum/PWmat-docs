@@ -60,7 +60,7 @@ PWMFF中实现了 [重组层扩展卡尔曼滤波（RLEKF）优化器](https://a
   </div>
 </div>
 
-### [七、基于机器学习力场的分子动力学模拟揭示锂枝晶的形态演化（案例）](./li.md)
+### [七、基于机器学习力场的分子动力学模拟揭示锂枝晶的形态演化（案例）](./Li.md)
 
 案例细节可以参考 [龙讯公众号文章](https://mp.weixin.qq.com/s/kapzIrPvL2AcGTUzdHgglg) 以及 [文献 Accuracy evaluation of different machine learning force field features ](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb)
 
@@ -72,8 +72,6 @@ PWMFF中实现了 [重组层扩展卡尔曼滤波（RLEKF）优化器](https://a
     <img src={require("./pictures/li.gif").default} alt="cu_ffc_333" width="400" />
   </div>
 </div>
-
-
 
 <!-- #### GNN
 
