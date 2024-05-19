@@ -3,7 +3,7 @@ sidebar_position: 7
 ---
 
 # 7. Morphology Evolution of Lithium Dendrites
-For case details, please refer to the [[LongXun official account article]](https://mp.weixin.qq.com/s/kapzIrPvL2AcGTUzdHgglg) and the [[Paper Literature on accuracy evaluation of different machine learning force field features]](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb).
+For case details, please refer to the [[LongXun official account article]](https://mp.weixin.qq.com/s/kapzIrPvL2AcGTUzdHgglg) and the [[Revealing Morphology Evolution of Lithium Dendrites by Large-Scale Simulation Based on Machine Learning Force Field ]](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb)
 
 Lithium-ion batteries, known for their high energy density, are widely used in electric vehicles, large-scale energy storage systems, and more. Lithium metal anodes, due to their lowest chemical potential and high capacity, are promising for next-generation batteries with higher energy densities. However, during charging and discharging cycles, lithium metal anodes tend to develop dendritic growth and experience significant volume changes, severely affecting their application. In practical use, lithium dendrite growth can greatly reduce the Coulombic efficiency, energy density, and stability of batteries. When the dendrites grow long enough, they can pierce the separator, directly contacting the cathode and causing short circuits, which may lead to serious incidents such as fires. Therefore, solving the dendrite growth problem is crucial in the development of lithium metal anode materials.
 

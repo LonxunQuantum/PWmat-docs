@@ -3,7 +3,7 @@ sidebar_position: 6
 ---
 
 # 6. MLFF for Fe-H system
-[[Revealing Morphology Evolution of Lithium Dendrites by Large-Scale Simulation Based on Machine Learning Force Field]](https://onlinelibrary.wiley.com/doi/abs/10.1002/aenm.202202892) 
+[[Machine learning force field for Fe-H system and investigation on role of hydrogen on the crack propagation in α-Fe ]](https://www.osti.gov/pages/biblio/1882447-machine-learning-force-field-fe-system-investigation-role-hydrogen-crack-propagation-fe)
 
 The artical mainly discusses the use of machine learning force fields to study the effects of hydrogen on crack propagation in α-iron. The specific content includes:
 
@@ -39,4 +39,4 @@ Volume strain distribution in the system with 1.097% total hydrogen concentratio
 
 ### More Experimental Results
 
-For more experimental results, refer to the [paper "Revealing Morphology Evolution of Lithium Dendrites by Large-Scale Simulation Based on Machine Learning Force Field"](https://onlinelibrary.wiley.com/doi/abs/10.1002/aenm.202202892).
+For more experimental results, refer to the [[paper Machine learning force field for Fe-H system and investigation on role of hydrogen on the crack propagation in α-Fe ]](https://www.osti.gov/pages/biblio/1882447-machine-learning-force-field-fe-system-investigation-role-hydrogen-crack-propagation-fe).
