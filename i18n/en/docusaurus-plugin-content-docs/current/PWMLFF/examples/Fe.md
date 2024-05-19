@@ -3,26 +3,40 @@ sidebar_position: 6
 ---
 
 # 6. MLFF for Fe-H system
+[[Revealing Morphology Evolution of Lithium Dendrites by Large-Scale Simulation Based on Machine Learning Force Field]](https://onlinelibrary.wiley.com/doi/abs/10.1002/aenm.202202892) 
 
-[文献地址 Revealing Morphology Evolution of Lithium Dendrites by Large-Scale Simulation Based on Machine Learning Force Field](https://onlinelibrary.wiley.com/doi/abs/10.1002/aenm.202202892)
+The artical mainly discusses the use of machine learning force fields to study the effects of hydrogen on crack propagation in α-iron. The specific content includes:
 
-案例主要介绍了使用机器学习力场来研究氢对α-铁裂纹传播影响的研究。具体内容包括： 1. 基于密度泛函理论计算结果，构建了铁-氢体系的机器学习力场，该力场采用了神经网络模型，并训练了原子能量。该力场表现出了良好的统计和动力学性质。 2. 通过分子动力学模拟，研究氢浓度对含裂纹的α-铁模型试样裂纹传播的影响。研究发现氢浓度在裂纹尖端处越高，裂纹传播速度越快，这表明氢对裂纹的传播具有促进作用。 3. 在含有晶界的试样中，观察到裂纹尖端处形成了微孔洞，这有助于释放裂纹尖端的拉伸应力，从而促进裂纹的传播。但微孔洞的形成似乎与氢的存在关系不大。 4. 研究还发现，在x方向周期性较短的结构中，裂纹传播速度较快，这可能是由于x方向的协同效应导致的。 5. 与嵌入原子力场的结果相比，机器学习力场显示出了氢对裂纹传播的显著影响，这表明准确描述氢-金属相互作用的力场的重要性。 6. 研究结果表明，氢在裂纹尖端聚集对氢脆性裂纹的传播起着关键作用，需要进一步深入研究不同条件下氢脆性的行为。
+1. **Development of MLFF for Fe-H System**: Based on density functional theory (DFT) calculations, a machine learning force field for the iron-hydrogen system was constructed using a neural network model, which was trained on atomic energies. This force field exhibited good statistical and dynamic properties.
 
-# 
+2. **Molecular Dynamics Simulations**: The influence of hydrogen concentration on crack propagation in an α-iron sample with a crack was studied through molecular dynamics simulations. It was found that higher hydrogen concentration at the crack tip resulted in faster crack propagation, indicating that hydrogen promotes crack growth.
+
+3. **Observation of Microvoid Formation**: In samples containing grain boundaries, microvoids were observed to form at the crack tip, which helped relieve the tensile stress at the crack tip and thus promoted crack propagation. However, the formation of microvoids did not seem to be significantly related to the presence of hydrogen.
+
+4. **Effect of Shorter Periodicity in x-Direction**: In structures with shorter periodicity in the x-direction, the crack propagation speed was faster, likely due to the synergistic effects in the x-direction.
+
+5. **Comparison with Embedded Atom Method (EAM)**: The machine learning force field showed a significant impact of hydrogen on crack propagation compared to results obtained with the embedded atom method (EAM), highlighting the importance of accurately describing hydrogen-metal interactions in force fields.
+
+6. **Hydrogen Accumulation and Brittle Fracture**: The study showed that hydrogen accumulation at the crack tip plays a crucial role in the propagation of hydrogen-induced brittle fractures, suggesting a need for further investigation into hydrogen embrittlement under various conditions.
+
+### Model Fitting Accuracy
 
 ![proportion_time](./pictures/exp_6_1.png)
-模型拟合精度
+Accuracy of the model fitting.
 
-#
+### Molecular Dynamics Simulations of Systems with Tilt Grain Boundaries
+
 ![proportion_time](./pictures/exp_6_5.png)
+Molecular dynamics simulations of systems with tilt grain boundaries. (a, a1) Initial and final frames of the system without hydrogen; (b, b1) Initial and final frames of the system with 0.709% total hydrogen concentration; (c, c1) Initial and final frames of the system with 1.097% total hydrogen concentration; (d, d1) Initial and final frames of the system with 1.856% total hydrogen concentration.
 
-具有倾斜晶界的系统的分子动力学模拟。 (a, a1) 无氢系统的初始和最终框架； (b, b1) 含0.709%总氢浓度的系统的初始和最终框架； (c, c1) 含1.097%总氢浓度的系统的初始和最终框架； (d, d1) 含1.856%总氢浓度的系统的初始和最终框架。
+### Volume Strain Distribution
 
 ![proportion_time](./pictures/exp_6_6.png)
-含有1.097%总氢浓度的系统的体积应变分布; (a) 初始框架; (b) 大约6000 fs时的框架。
+Volume strain distribution in the system with 1.097% total hydrogen concentration: (a) Initial frame; (b) Frame at approximately 6000 fs.
 
 ![proportion_time](./pictures/exp_6_7.png)
-含有1.097%总氢浓度的系统的体积应变分布; (a) 初始框架; (b) 大约6000 fs的框架。
+Volume strain distribution in the system with 1.097% total hydrogen concentration: (a) Initial frame; (b) Frame at approximately 6000 fs.
 
-# 
-更多实验结果参考 [文献 Revealing Morphology Evolution of Lithium Dendrites by Large-Scale Simulation Based on Machine Learning Force Field](https://onlinelibrary.wiley.com/doi/abs/10.1002/aenm.202202892)
+### More Experimental Results
+
+For more experimental results, refer to the [paper "Revealing Morphology Evolution of Lithium Dendrites by Large-Scale Simulation Based on Machine Learning Force Field"](https://onlinelibrary.wiley.com/doi/abs/10.1002/aenm.202202892).

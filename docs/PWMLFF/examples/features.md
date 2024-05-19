@@ -5,7 +5,7 @@ sidebar_position: 0
 # 1. Comparison of Features
 
 #
-[文章 Accuracy evaluation of different machine learning force field features](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb/pdf)
+[[文章 Accuracy evaluation of different machine learning force field features]](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb/pdf)
 
 #
 这项工作比较了 `PWMLFF 中的特征类型` 在描述物理系统能力方面的差异。这些特征类型包括`余弦特征`、`高斯特征`、`矩张量势(MTP)特征`、`光谱邻域分析势特征`、具有`切比雪夫多项式特征`和`高斯多项式特征`的简化光滑深势以及原子簇展开特征。特征的详细介绍请参考[Feature Wiki](../Appendix-1.md)。

@@ -4,7 +4,7 @@ sidebar_position: 7
 
 # 7. Morphology Evolution of Lithium Dendrites
 
-案例细节可以参考 [龙讯公众号文章](https://mp.weixin.qq.com/s/kapzIrPvL2AcGTUzdHgglg) 以及 [文献 Accuracy evaluation of different machine learning force field features ](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb)
+案例细节可以参考 [[龙讯公众号文章]](https://mp.weixin.qq.com/s/kapzIrPvL2AcGTUzdHgglg) 以及 [[文献 Accuracy evaluation of different machine learning force field features ]](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb)
 
 锂离子电池具有高能量密度特性，在电动汽车、大规模储能系统等领域得到了广泛应用。锂金属负极由于同时具备最低化学势与高容量特性，有望成为下一代更高比能量密度电池中的重要组成部分。然而，在循环充放电中，锂金属负极易出现枝晶生长问题和体积剧烈变化问题，严重影响了锂金属负极的应用。在实际工作环境中，锂枝晶生长会大大降低电池的库仑效率、能量密度与稳定性。当枝晶生长到一定长度之后，还会刺穿隔膜，从而直接与正极接触，造成短路，可能导致火灾等严重事故。因此在锂金属负极材料的开发中，解决枝晶生长的问题至关重要。
 

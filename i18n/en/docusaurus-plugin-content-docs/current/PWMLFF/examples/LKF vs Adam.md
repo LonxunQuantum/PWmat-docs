@@ -3,20 +3,18 @@ sidebar_position: 1
 ---
 
 # 2. LKF And ADAM
+[[Paper RLKEKF]](https://arxiv.org/abs/2212.06989)
 
-[文章](https://arxiv.org/abs/2212.06989)
+The article proposes a `Recurrent Layer Extended Kalman Filter (RLEKF)` optimizer aimed at accelerating the training of neural network force fields. RLEKF is an improved version of the Global Extended Kalman Filter (GEKF), employing a strategy of splitting large layers and aggregating small layers to reduce computational cost. This approach uses a sparse diagonal block matrix to approximate the dense weight error covariance matrix, thereby enhancing computational efficiency. The authors conducted numerical experiments on `13` common systems and compared RLEKF with the ADAM optimizer. The experimental results demonstrate that RLEKF `converges faster and is slightly more accurate` than ADAM. Additionally, the authors theoretically proved the convergence of the weight updates, overcoming the problem of gradient explosion. Overall, RLEKF is insensitive to weight initialization and performs well in training neural network force fields.
 
-文章提出了一种 `重组层扩展卡尔曼滤波（RLEKF）` 优化器，旨在加速训练神经网络力场。RLEKF是全局扩展卡尔曼滤波（GEKF）的改进版本，通过采用分割大层和聚集小层的策略来降低计算成本。该策略利用稀疏对角块矩阵逼近密集权重误差协方差矩阵，从而提高了计算效率。作者在`13`个常见体系上进行了数值实验，并与 ADAM 优化器进行了比较。实验结果表明，RLEKF 相对于 ADAM `收敛更快且精度稍高`。此外，作者还从理论上证明了权值的更新是收敛的，从而克服了梯度爆炸问题。总体而言，RLEKF对权值初始化不敏感，对神经网络力场的训练具有较好的效果。
+## Partial Experimental Results
 
-## 部分实验结果
-
-### 拟合精度
+### Fitting Accuracy
 ![proportion_time](./pictures/exp_2_e_loss.png)
 
-在多种系统中，RLEKF 性能与 DFT 在每个结构上的能量(meV)和力(meV/˚A)进行对比（点越接近对角线，性能越好）。Etot的RMSE;测试集上的Eatom和F，每个子图的右下角处显示了体系的结构。
+Performance of RLEKF compared to DFT in terms of energy (meV) and force (meV/Å) for each structure in various systems (the closer the points are to the diagonal, the better the performance). The RMSE of Etot; Eatom and F on the test set, with the structure of the system shown in the bottom right corner of each subplot.
 
-
-### 训练时间（ VS ADAM）
+### Training Time (VS ADAM)
 ![proportion_time](./pictures/exp_2_times.png)
 
-根据epochs、iterations (权重更新)和wall-clock时间，RLEKF在能量和力方面达到精度基线与 Adam 的速度比，其中1000表示Adam无法达到基线。
+Speed comparison of RLEKF and Adam in reaching the accuracy baseline for energy and force based on epochs, iterations (weight updates), and wall-clock time, where 1000 indicates that Adam could not reach the baseline.

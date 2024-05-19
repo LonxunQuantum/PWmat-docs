@@ -4,7 +4,9 @@ sidebar_position: 5
 
 # 5. Liquid-to-crystal-Si-growth
 
-[本案例](https://pubs.aip.org/aip/jcp/article/153/7/074501/1064762/Liquid-to-crystal-Si-growth-simulation-using) 使用PMLFF模拟了远离平衡态的硅熔体生长过程，发现基于第一性原理分解的原子能量 (`PWmat 特性`) 构建的 MLFF 可以准确再现第一性原理模拟的生长过程。实验结果表明，MLFF 可以准确模拟硅熔体生长过程，为使用 MLFF 进行远离平衡态模拟提供了证据。
+[[文献 Si-growth]](https://pubs.aip.org/aip/jcp/article/153/7/074501/1064762/Liquid-to-crystal-Si-growth-simulation-using) 
+
+案例 使用PMLFF模拟了远离平衡态的硅熔体生长过程，发现基于第一性原理分解的原子能量 (`PWmat 特性`) 构建的 MLFF 可以准确再现第一性原理模拟的生长过程。实验结果表明，MLFF 可以准确模拟硅熔体生长过程，为使用 MLFF 进行远离平衡态模拟提供了证据。
 #
 
 ### 

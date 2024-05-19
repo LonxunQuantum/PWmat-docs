@@ -3,48 +3,45 @@ sidebar_position: 2
 ---
 
 # 3. Active Learning
+[PWact](../active%20learning/README.md) (Active learning based on PWMLFF) is an open-source automated active learning platform based on PWMLFF that we developed for efficient data sampling. PWact implements commonly used committee query-based active learning strategies, as well as our Kalman Prediction Uncertainty (KPU) algorithm, which we proposed based on the Kalman filter. KPU-based active learning is still in the testing phase and not yet available to users. In this example, we compare two active learning sampling methods.
 
-[PWact](../active%20learning/README.md) (Active learning based on PWMLFF) 是我们开发的一款开源的基于 PWMLFF 的一套自动化主动学习平台，用于高效的数据采样。在PWact中实现了常用的基于多模型委员会查询（Committee Query）的主动学习策略，以及我们基于卡尔曼滤波算法提出的不确定性度量算法（Kalman Prediction Uncertainty， KPU）。基于 KPU 的主动学习还在内测阶段，暂未开放给用户访问。在本例中，我们做了两种主动学习采样的对比。
+## Two Active Learning Methods for Copper Structures
 
-## 铜结构的两种主动学习
-
-使用如下结构做主动学习采样
+Active learning sampling was conducted using the following structures:
 
 <div>
   <div style={{ display: 'inline-block', marginRight: '10px' }}>
     <img src={require("./pictures/ffc-333-108-cu.png").default} alt="cu_ffc_333" width="100" />
-    <p style={{ textAlign: 'center' }}>铜</p>
+    <p style={{ textAlign: 'center' }}>Copper</p>
   </div>
   <div style={{ display: 'inline-block', marginRight: '10px' }}>
     <img src={require("./pictures/diamond-222-64-si.png").default} alt="si_diamond_222" width="100" />
-    <p style={{ textAlign: 'center' }}>硅</p>
+    <p style={{ textAlign: 'center' }}>Silicon</p>
   </div>
   <div style={{ display: 'inline-block' }}>
     <img src={require("./pictures/ffc-333-108-ni.png").default} alt="ni_ffc_333" width="100" />
-    <p style={{ textAlign: 'center' }}>镍</p>
+    <p style={{ textAlign: 'center' }}>Nickel</p>
   </div>
 </div>
 
-
-
-### 主动学习轮次数据采集细节
+### Data Collection Details for Each Active Learning Round
 
 ![proportion_time](./pictures/exp_3_cu_tabel.png)
 
-### 主动学习每个轮次对应的 loss 下降情况
+### Loss Reduction in Each Active Learning Round
 
 ![proportion_time](./pictures/exp_3_cu_loss.png)
 
-这里使用1200K、1400K 的1000步/2fs的AIMD (PWmat) 轨迹作为验证集，分析了主动学习过程中模型随着加入新数据后的误差下降趋势。KPU 和Committee 的力误差在逐渐降低，相对的 Committee 能量误差没有下降，这可能是由于 Committee 的最大力偏差的选点方式对力更有偏好，造成了一些能量预测不够准确的点漏采。在上述验证集下，KPU 与 Committee 最终得到的模型误差，如第二行的四幅图所示，KPU 与 Committee 能量误差相似，而 KPU 的能量误差要比 Committee 更低。
+Using 1000 steps/2fs AIMD (PWmat) trajectories at 1200K and 1400K as the validation set, we analyzed the error reduction trend as new data was added during active learning. The force error for both KPU and Committee gradually decreased, while the energy error for the Committee did not decline. This could be due to the point selection method based on the maximum force deviation in the Committee approach, which favored force prediction and resulted in some inaccuracies in energy prediction being missed. In the validation set, the final model errors for KPU and Committee, as shown in the four graphs in the second row, indicated that the energy errors for KPU and Committee were similar, but KPU had a lower energy error than the Committee.
 
-
-### KPU 在硅、镍的测试
+### KPU Testing on Silicon and Nickel
 
 ![proportion_time](./pictures/exp_3_si_loss.png)
 
-我们也分别对硅和镍在 KPU 上做了主动学习测试，结果如图所示。随着主动学习轮次的进行，模型逐渐覆盖到了测试集所在相空间。
+We also conducted active learning tests on silicon and nickel using KPU, with results shown in the figure. As the active learning rounds progressed, the model gradually covered the phase space of the test set.
 
-### 铜、硅、镍的声子谱
-我们对 KPU 最终得到的模型画了对应的声子谱，图像如图所示。
+### Phonon Spectra for Copper, Silicon, and Nickel
+
+We plotted the phonon spectra for the final models obtained using KPU, as shown in the figure below.
 
 ![proportion_time](./pictures/exp_3_phonon.png)
