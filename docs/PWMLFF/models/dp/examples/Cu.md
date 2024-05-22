@@ -60,7 +60,7 @@ OUT.STRESS = F
   "valid_shuffle": true,
   "train_valid_ratio": 0.8,
   "raw_files": ["./MOVEMENT300", "./MOVEMENT1500"],
-  "format": "movement"
+  "format": "pwmat/movement"
 }
 ```
 
@@ -124,7 +124,7 @@ $ PWMLFF train dp_cu.json
 ```json
 {
   "raw_files": ["./MOVEMENT300", "./MOVEMENT1500"],
-  "format": "movement",
+  "format": "pwmat/movement",
   "valid_shuffle": true,
   "train_valid_ratio": 0.8,
   "model_type": "DP",
@@ -225,7 +225,7 @@ run             1000 #1ps
   "recover_train": false,
 
   "raw_files": ["0_300_MOVEMENT", "1_500_MOVEMENT"],
-  "format": "movement",
+  "format": "pwmat/movement",
   "valid_shuffle": true,
   "train_valid_ratio": 0.8,
 
