@@ -61,4 +61,24 @@ PWmat Machine Learning Force Field (PWMLFF) 是一套在 GNU 许可下的开源�
 
 该数据仓库包含了常见体系的 `AIMD 数据集`、一些已经过充分训练的 `PWMLFF 模型`以及训练精度情况，便于用户快速复用已有数据集和模型，以及在不同模型之间的横向比较，节省数据制备和模型训练成本。
 
-## [6. PWMLFF Examples]
+## [6. PWMLFF Examples](./examples/README.md)
+
+PWMLFF的测试结果以及使用PWMLFF的相关案例
+
+
+##
+
+##
+
+##
+
+<div>
+  <div style={{ display: 'inline-block', marginRight: '10px' }}>
+    <img src={require("./pictures/user_chat.png").default} alt="user_chat" width="200" />
+    <p style={{ textAlign: 'center' }}>PWMLFF 技术支持群</p>
+</div>
+<div style={{ display: 'inline-block', marginRight: '10px' }}>
+    <img src={require("./pictures/pmat_support.png").default} alt="user_chat" width="200" />
+    <p style={{ textAlign: 'center' }}>PWMAT 客服微信</p>
+</div>
+</div>

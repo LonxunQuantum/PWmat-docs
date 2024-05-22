@@ -59,3 +59,25 @@ An efficient molecular dynamics simulation software that seamlessly integrates P
 👉[Open source repository](https://github.com/LonxunQuantum/PWMLFF_library)
 
 This data repository contains `AIMD datasets` for common systems, pre-trained `PWMLFF models`, and information about training accuracy. It allows users to quickly reuse existing datasets and models, compare them across different models, and `save data preparation and model training costs`.
+
+## [6. PWMLFF Examples](./examples/README.md)
+
+Some test work done using PWMLFF, as well as published papers using PWMLFF.
+
+
+##
+
+##
+
+##
+
+<div>
+  <div style={{ display: 'inline-block', marginRight: '10px' }}>
+    <img src={require("./pictures/user_chat.png").default} alt="user_chat" width="200" />
+    <p style={{ textAlign: 'center' }}>PWMLFF support</p>
+</div>
+<div style={{ display: 'inline-block', marginRight: '10px' }}>
+    <img src={require("./pictures/pmat_support.png").default} alt="user_chat" width="200" />
+    <p style={{ textAlign: 'center' }}>PWMAT Customer</p>
+</div>
+</div>
