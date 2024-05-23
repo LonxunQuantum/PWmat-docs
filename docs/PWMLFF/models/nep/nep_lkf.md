@@ -285,3 +285,7 @@ module load cuda/11.8 intel/2020
 </div>
 
 NEP 模型在 LKF 优化器下收敛精度相比于 ADAM 和 SNES(GPUMD 训练) 更高
+
+
+### 测试数据
+测试数据与模型已经上传, 您可以访问我们的[百度云网盘下载 https://pan.baidu.com/s/1M0cf-7brcM0kwgmuwgMqNQ?pwd=pwmt ](https://pan.baidu.com/s/1M0cf-7brcM0kwgmuwgMqNQ?pwd=pwmt)。
