@@ -104,7 +104,14 @@ pwact run param.json resource.json
 MOVEMENT 或 OUTCAR 转换为 PWdata 数据格式
 
 ```bash
-pwact to_pwdata
+# pwact 转换MOVEMENT 为 pwdata 格式命令
+pwact to_pwdata -i mvm_init_000_50 mvm_init_001_50 mvm_init_002_50 -s pwdata -f pwmat/movement -r -m -o 0.8
+# -i 结构文件列表
+# -f 结构文件格式 支持pwmat/movement 或 vasp/outcar
+# -s 保存的目录名称
+# -r 指定将数据做乱序保存
+# -m 指定合并转换后的数据，如果您的MOVMENT 文件列表元素种类相同和原子数量相同，您可以使用该参数，将训练集作为一个文件夹保存
+# -o 指定训练集和测试集划分比例，默认为0.8
 ```
 
 搜索主动学习目录下已标记的数据集

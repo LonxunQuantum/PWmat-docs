@@ -11,7 +11,7 @@ sidebar_position: 2
 对于任何模型，以下参数需要用户输入。
 
 ### model_type
-该参数用于指定用于训练的模型类型。您可以使用`LINEAR`模型，`NN`模型，或者`DP`模型。
+该参数用于指定用于训练的模型类型。您可以使用`LINEAR`模型、`NN`模型、`DP`模型或 `NEP` 模型。
 
 ### atom_type
 该参数用于设置训练体系的元素类型。用户可以按照任意顺序指定元素的原子序数。例如，对于单元素系统如铜，可以设置为 [29]，而对于多元素系统如 CH4，则可以设置为 [1, 6]。
@@ -39,7 +39,7 @@ Error! maxNeighborNum too small
 该参数指定训练集与验证集的比例。例如，0.8 表示将 MOVEMENT 中前 80% 的 images 作为训练集，剩余的 20% 作为验证集。默认值为 `0.8`。
 
 ### recover_train
-该参数用于从中断的 DP 或 NN 训练任务中恢复训练。默认值为 `false`。
+该参数用于从中断的 DP 或 NN 训练任务中恢复训练。默认值为 `true`
 
 ### work_dir
 该参数用于设置执行训练、测试和其他任务的工作目录。它可以设置为绝对路径或相对路径。默认值是相对路径`./work_dir`。
@@ -60,9 +60,6 @@ Error! maxNeighborNum too small
 ### type_embedding
 
 `"model_type"="DP"` 时，在`model`参数中设置`"type_embedding":true`表示用 type embedding 训练 DP 模型，默认值为`false`。
-
-### nep_in_file
-当 `"model_type"="NEP"` 时， `nep_in_file` 参数用于支持原生的 GPUMD 输入，用户可以在这里指定 `nep.in` 文件路径。该参数是可选参数，用户也可以在 `model` 中设置对 NEP 参数做详细设置。如果用户指定了 `"model_type"="NEP"`，但是没有设置 `nep_in_file`或者 `model`，那么会采用默认的 NEP 参数。
 
 ### model 参数
 
@@ -175,81 +172,50 @@ DP 模型中平滑函数的最小截断半径。默认值为 $0.5 \text{\AA}$。
 拟合网络的结构：
 输入层（M2 X 25）➡ 隐藏层 1（50 个神经元）➡ 隐藏层 2（50 个神经元）➡ 隐藏层 3（50 个神经元）➡ 输出层（1 个神经元）
 
-### NEP
+### NEP model
 
 完整的 NEP 模型参数设置如下：
 
 ```json
+{
+    "model_type": "NEP",
+    "atom_type": [8,72],
+    "max_neigh_num": 100,
     "model": {
-        "version": 4,
-        "model_type": 0,
-        "prediction": 0,
-        "cutoff": [8, 4],
-        "n_max": [4, 4],
-        "basis_size": [8, 8],
-        "l_max": [4, 2, 0],
-        "neuron": 30,
-        "lambda_1": -1,
-        "lambda_2": -1,
-        "lambda_e": 1.0,
-        "lambda_f": 1.0,
-        "lambda_v": 0.1,
-        "batch": 1000,
-        "population": 50,
-        "generation": 100000
+        "descriptor": {
+            "cutoff": [6.0,6.0],
+            "n_max": [4,4],
+            "basis_size": [12,12],
+            "l_max": [4,2,1]
+        },
+        "fitting_net": {
+            "network_size": [100,1]
+        }
     }
+}
 ```
 
-#### version
-该参数用于指定 NEP 模型的版本，用户可以设置的值有 `1`, `2`, `3` 和 `4`，默认值为 `4`。
-
 #### model_type
-该参数用于指定`NEP`训练的类型，`0`用于训练`potential`, `1` 用于训练`dipole`，`2`用于训练`polarizability`，默认值为 `0`。
-
+该参数用于指定`NEP`训练的类型。
 
 #### cutoff
-该参数用于设置 `radial` 和 `angular` 的截断能，默认参数分别为 8 和 4。
+该参数用于设置 `radial` 和 `angular` 的截断能，在PWMLFF的实现中，我们只使用了 radial 的截断能，角度的截断能与 raidial 一致。默认值为 `[6.0, 6.0]`。
 
 #### n_max
-该参数用于设置 `radial` 和 `angular`的距离和角度分别对应的 feature 数量，默认值为 4 和 4。
+该参数用于设置 `radial` 和 `angular`的距离和角度分别对应的 feature 数量，默认值为 `[4, 4]`。
 
 #### basis_size
-该参数用于设置 `radial` 和 `angular`的距离和角度分别对应的基组数量，默认值为 8 和 8。
+该参数用于设置 `radial` 和 `angular`的距离和角度分别对应的基组数量，默认值为 `[12, 12]`。
 
 #### l_max
-该参数用于设置 angular 的展开阶，默认值为 `[4, 2, 0]`，分别是三体 feature、四体 feature 以及五体 feature 对应的阶，这里 `0`表示不使用五体 feature，此外要求$l_3 \geqslant l_4 \geqslant l_5$。
+该参数用于设置 angular 的展开阶，同时控制是否使用四体和五体feature，默认值为 `[4, 2, 1]`，分别是三体、四体以及五体 feature 对应的阶。这里 `2`表示使用四体 feature，`1` 表示使用五体feature。如果您只使用三体feature，请设置为`[4, 0, 0]`；只是用三体和四体feature，请设置为`[4, 2, 0]`。
 
-#### neuron
-该参数用于设置 `NEP` 模型中隐藏层神经元个数，在 NEP 模型中只有一层隐藏层，默认值为 30。
+#### network_size
+该参数用于设置 `NEP` 模型中隐藏层神经元个数，在 NEP 模型中只有一层隐藏层，默认值为 `[100]`。这里支持使用多层神经网络，如您可以设置为`[50, 50, 50, 1]`这类网络，但是建议您使用默认值即可，更多网络层数在我们的测试中对模型拟合精度的提升有限，反而会造成推理负担，降低推理速度。
 
+## optimizer 优化器
 
-#### lambda_1
-正则化项的权重，默认值为-1，表示由系统自动确定，如果用户自定义，要求该值 $\geqslant$ 0。
-
-#### lambda_2
-范数正则化项的权重，默认值为-1，表示由系统自动确定, $\geqslant$ 0。
-
-#### lambda_e
-能量 Loss 项的重量，默认值为 1.0。
-
-#### lambda_f
-力 Loss 项的重量，默认值为 1.0。
-
-#### lambda_v
-维里 Loss 项的重量，默认值为 0.1。
-
-#### batch
-训练中 batch size 大小，默认值为 1000。
-
-#### population
-自然进化策略算法中使用的种群规模，默认值为 50。
-
-#### generation
-自然进化策略算法中使用的代数，默认值为 100000。
-
-### optimizer 优化器
-
-可用于训练 DP 或 NN 模型的优化器，有`KF（Kalman Filter）优化器`和`ADAM 优化器`。
+可用于训练 NN、DP、NEP 模型的优化器，有`KF（Kalman Filter）优化器`和`ADAM 优化器`。
 
 ### KF optimizer
 

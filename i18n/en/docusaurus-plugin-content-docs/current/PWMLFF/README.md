@@ -23,11 +23,12 @@ It includes `8` feature types with translational, rotational, and permutation in
         8. DP-Gaussian(dp2)
 ```
 
-`3` training models:
+`4` training models:
 ```
         1. Linear Model
         2. Deep Neural Netowrk (NN)
-        3. DP-torch Network (DP) 及其优化版本 model compress 和 type embedding
+        3. DP-torch Network (DP) with model compress and type embedding
+        4. Neuro evolution potentail(NEP)
 ```
 `2` efficient training optimizers:
 ```
@@ -39,7 +40,7 @@ It includes `8` feature types with translational, rotational, and permutation in
 
 👉[Open source repository](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/tree/libtorch)
 
-An efficient molecular dynamics simulation software that seamlessly integrates PWMLFF's DP models (including type embedding and model compress). It supports simulation on both `CPU` and `GPU (multi-GPUs)`.
+An efficient molecular dynamics simulation software that seamlessly integrates PWMLFF's DP and NEP models (including type embedding and model compress). It supports simulation on both `CPU` and `GPU (multi-GPUs)`. For `Linear` and `NN`, a `Fortran`-based CPU version of the Lammps interface is provided.
 
 ## [3. Active Learning Platform](./active%20learning/README.md)
 

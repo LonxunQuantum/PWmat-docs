@@ -7,12 +7,12 @@ sidebar_position: 1
 ## PWMLFF
 
 :::tip
-PWMLFF 包含 Fortran、Python 和 CUDA 加速等，需要在包含 Python 环境、gcc 编译器、GPU 硬件条件下进行安装
+PWMLFF 包含 Fortran、Python 和 CUDA 加速等，需要在包含 Python 环境、gcc 编译器、GPU 硬件条件下进行安装。我们这里提供了三种方式安装 PWMLFF。
 :::
 
-### Mcloud 直接加载
+### 一、 Mcloud 直接加载
 
-mcloud 已有配置好的 conda 环境，可以直接调用，避免自己安装 anaconda, cudatoolkit, pytorch 等极度耗时的过程，具体步骤如下：
+`mcloud` 已有配置好的 conda 环境，可以直接调用，避免自己安装 anaconda, cudatoolkit, pytorch 等极度耗时的过程，具体步骤如下：
 
 ```
 module load pwmlff
@@ -20,13 +20,13 @@ source /share/app/anaconda3/etc/profile.d/conda.sh
 conda activate PWMLFF
 ```
 
-### 离线安装
+### 二、 离线安装
 
 对于非联网设备，可以直接下载已经配置好的 conda 环境及程序包：
 
 #### 1. 下载
 
-👉[百度云链接](https://pan.baidu.com/s/1K4TrZuh4WVzSwfu2ZzL5mg?pwd=pwmt)
+👉[百度云链接](https://pan.baidu.com/s/1K4TrZuh4WVzSwfu2ZzL5mg?pwd=pwmt) 选择最新的版本下载（当前最新版本为2024.05）。
 
 #### 2. 解压
 
@@ -66,7 +66,9 @@ source /PWMLFF-March2024/env/bin/activate
 source /PWMLFF-March2024/env/bin/deactivate
 ```
 
-### 在线安装
+### 三、在线安装
+
+在线安装需要您已安装相关编译器、conda 虚拟环境。
 
 #### 环境配置
 
@@ -88,7 +90,7 @@ curl https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2023.07-1-L
 conda 安装完成后，创建虚拟环境，环境中需指定安装 python3.11 解释器，其他版本可能会出现依赖冲突或语法不支持等问题，之后的编译工作均在该虚拟环境中进行
 
 ```
-conda create -n PWMLFF python=3.11
+conda create -n PWMLFF python=3.11.5
 ```
 
 3. 虚拟环境安装完成后重新激活该环境
@@ -100,17 +102,21 @@ conda activate PWMLFF
 
 4. 安装 PWMLFF 所需的第三方依赖包
 
-```python
-pip3 install numpy tqdm cmake pyyaml pandas scikit-learn-intelex matplotlib charset_normalizer pwdata
+```bash
+pip3 install numpy tqdm cmake pyyaml pandas scikit-learn-intelex matplotlib pwdata pwact pybind11 charset_normalizer=3.3.2
+
+# charset_normalizer 请安装到最新版本(版本3.3.2或以上)，否则在编译fortran code 会存在编码错误 
+#UnicodeDecodeError: 'ascii' codec can't decode byte 0xe4 in position 144: ordinal not in range(128)
 ```
 
 ```python
 pip3 install torch --force-reinstall --index-url https://download.pytorch.org/whl/cu118
 ```
 
-如需安装其他版本请查阅[Pytorch 官网](https://pytorch.org/get-started/previous-versions/)。
+如需安装其他版本的 `pytorch` 请查阅[Pytorch 官网](https://pytorch.org/get-started/previous-versions/)。
 
-5. 完成第三方依赖包安装后进行 PWMLFF 的编译安装。
+
+5. 完成第三方依赖包安装后进行 PWMLFF 的 [编译安装](#编译安装)。
 
 #### 编译安装
 
@@ -152,7 +158,7 @@ source ~/.bashrc
 ## Lammps (Recompiled version for PWMLFF)
 
 :::tip
-当前版本 Lammps 适用于 DP model 提取的力场模型
+当前版本 Lammps 适用于 DP 和 NEP model 提取的力场模型
 
 旧版 Linear, NN 和 DP model 提取的力场模型见 [Lammps for PWMLFF](http://doc.lonxun.com/1.1/PWMLFF/Installation_v0.0.1/#lammps_for_pwmlff%E5%AE%89%E8%A3%85)
 :::

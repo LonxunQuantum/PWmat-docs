@@ -11,7 +11,7 @@ This section introduces the user-definable parameters in all models. There are 2
 For any model, the following parameters `require user input`.
 
 ### model_type
-This parameter is used to specify which model to use for training. You can use `DP` for deep learning, `NN` for neural network, `LINEAR` for linear models, or the `NEP` for nep model in [GPUMD](https://github.com/brucefan1983/GPUMD).
+This parameter is used to specify which model to use for training. You can use `DP` for deep learning, `NN` for neural network, `LINEAR` for linear models, or the `NEP` for NEP model.
 
 ### atom_type
 This parameter is used to set the element types of the training system. The atomic number of the input elements is specified by the user in any desired order. For example, for a single-element system like copper, it would be set as [29], and for multi-element systems like CH4, it would be set as [1, 6].
@@ -46,7 +46,7 @@ Users only need to set the required parameters to complete the model training, t
 This parameter specifies the ratio of the training set to the validation set. For example, 0.8 means taking the first 80% of the MOVEMENT images as the training set and the remaining 20% as the validation set. The default value is 0.8.
 
 ### recover_train
-This parameter is used to resume training from an interrupted DP or NN training task. The default value is `false`.
+This parameter is used to resume training from an interrupted DP or NN training task. The default value is `true`.
 
 ### work_dir
 This parameter is used to set the working directory where training, testing, and other tasks will be executed. It can be set to an absolute or relative path. The default value is a relative path `./work_dir`。
@@ -67,10 +67,6 @@ This parameter is used to specify whether to keep the working directory `work_di
 ### type_embedding
 
 Setting `"type_embedding":true` will use the type embedding method to train the DP model. The default value is `false`. (This parameter is only used in the DP model. That is `"model_type":"DP"`)
-
-### nep_in_file
-    
-When `"model_type"="NEP"`, the `nep_in_file` parameter is used to support the original GPUMD input, and the user can specify the path of the `nep.in` file here. This parameter is optional, and users can also set detailed NEP parameters in the `model`. If the user specifies `"model_type":"NEP"`, but does not set `nep_in_file` or `model`, the default NEP parameters will be used.
 
 ### model 参数
 
@@ -190,79 +186,44 @@ Input layer (`M2` X 25) ➡ Hidden layer 1 (50 neurons) ➡ Hidden layer 2 (50 n
 The complete parameter settings for the NEP model are as follows.
 
 ```json
+{
+    "model_type": "NEP",
+    "atom_type": [8,72],
+    "max_neigh_num": 100,
     "model": {
-        "version": 4,
-        "model_type": 0,
-        "prediction": 0,
-        "cutoff": [8, 4],
-        "n_max": [4, 4],
-        "basis_size": [8, 8],
-        "l_max": [4, 2, 0],
-        "neuron": 30,
-        "lambda_1": -1,
-        "lambda_2": -1,
-        "lambda_e": 1.0,
-        "lambda_f": 1.0,
-        "lambda_v": 0.1,
-        "batch": 1000,
-        "population": 50,
-        "generation": 100000
+        "descriptor": {
+            "cutoff": [6.0,6.0],
+            "n_max": [4,4],
+            "basis_size": [12,12],
+            "l_max": [4,2,1]
+        },
+        "fitting_net": {
+            "network_size": [100,1]
+        }
     }
+}
 ```
-
-#### version
-This parameter is used to specify the version of the NEP model. Users can set the value to `1`, `2`, `3` and `4`. The default value is `4`.
-
 #### model_type
-This parameter is used to specify the type of training for `NEP`. `0` is used for training the `potential`, `1` is used for training the `dipole`, and `2` is used for training the `polarizability`. The default value is `0`.
-
-<!--
-#### prediction
-该参数用于
--->
+This parameter specifies the type of `NEP` training.
 
 #### cutoff
-This parameter is used to set the cutoff energy for `radial` and `angular` terms. The default parameters are `8` and `4`, respectively.
+This parameter sets the cutoff energies for `radial` and `angular` components. In the implementation of PWMLFF, only the radial cutoff energy is used, and the angular cutoff energy is the same as the radial cutoff energy. The default value is `[6.0, 6.0]`.
 
 #### n_max
-This parameter is used to set the size of `radial and angular basis`. The default values are 4 for both.
+This parameter sets the number of features for the distances and angles corresponding to `radial` and `angular` components, respectively. The default value is `[4, 4]`.
 
 #### basis_size
-number of `radial` and `angular` basis functions. The default values are `8` for both.
+This parameter sets the number of basis functions for the distances and angles corresponding to `radial` and `angular` components, respectively. The default value is `[12, 12]`.
 
 #### l_max
-This parameter is used to set the expansion order for angular terms. The default value is [4, 2, 0], which corresponds to the orders for three-body, four-body, and five-body features. Here, 0 indicates that five-body features are not used. It is also required $l_3 \geqslant l_4 \geqslant l_5 $.
+This parameter sets the expansion order for angular components and also controls whether four-body and five-body features are used. The default value is `[4, 2, 1]`, corresponding to the orders for three-body, four-body, and five-body features, respectively. Here, `2` indicates the use of four-body features, and `1` indicates the use of five-body features. If you only use three-body features, set this to `[4, 0, 0]`; if you only use three-body and four-body features, set this to `[4, 2, 0]`.
 
-#### neuron
-This parameter is used to set the number of neurons in the hidden layer of the NEP model. In the NEP model, there is only 1 hidden layer, and the default value is `30`.
+#### network_size
+This parameter sets the number of neurons in the hidden layer of the `NEP` model. The NEP model has only one hidden layer by default, with the default value being `[100]`. Although multi-layer neural networks are supported (e.g., you can set it to `[50, 50, 50, 1]`), we recommend using the default value. In our tests, adding more network layers did not significantly improve model fitting accuracy and instead increased inference burden, reducing inference speed.
 
-#### lambda_1
-Weight of regularization term. The default value is `-1`, which indicates that it is automatically determined by the system. If the user wants to customize it, the value need $\geqslant$ `0`.
+## optimizer
 
-#### lambda_2
-Weight of norm regularization term. The default value is `-1`, which indicates that it is automatically determined by the system. If the user wants to customize it, the value need $\geqslant$ `0`.
-
-#### lambda_e
-Weight of energy loss term, the default value is `1.0`.
-
-#### lambda_f
-Weight of force loss term, the default value is     .
-
-#### lambda_v
-Weight of virial loss term, the default value is `0.1`.
-
-#### batch
-The batch size for training, the default value is `1000`.
-
-#### population
-Population size used in the SNES algorithm, the default value is `50`.
-
-#### generation
-Number of generations used by the SNES algorithm, the default value is `100000`.
-
-### optimizer
-
-The optimizers available for training DP or NN models are the `KF(Kalman Filter) Optimizer` and `ADAM optimizer`.
+The optimizers available for training DP, NRP, NN models are the `KF(Kalman Filter) Optimizer` and `ADAM optimizer`.
 
 ### KF optimizer
 

@@ -50,7 +50,7 @@ export PYTHONPATH=/the/path/PWMLFF_nep/src/:$PYTHONPATH
 ```json 
 {
   "model_type": "NEP",
-  "atom_type": [72,8],
+  "atom_type": [8,72],
   "raw_files": [
     "./mvm_data/init_mvm_19_300",
     "./mvm_data/init_mvm_21_300",
@@ -63,7 +63,7 @@ export PYTHONPATH=/the/path/PWMLFF_nep/src/:$PYTHONPATH
 ``` json
 {
   "model_type": "NEP",
-  "atom_type": [72,8],
+  "atom_type": [8, 72],
   "datasets_path": [
     "./pwdata/init_mvm_19_300",
     "./pwdata/init_mvm_21_300",
@@ -78,7 +78,7 @@ export PYTHONPATH=/the/path/PWMLFF_nep/src/:$PYTHONPATH
 {
     "model_type": "NEP",
     "atom_type": [
-        72,8
+        8,72
     ],
     "max_neigh_num": 100,
     "seed": 2023,

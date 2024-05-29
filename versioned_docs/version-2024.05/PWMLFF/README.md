@@ -23,11 +23,12 @@ PWmat Machine Learning Force Field (PWMLFF) 是一套在 GNU 许可下的开源�
         8. DP-Gaussian(dp2)
 ```
 
-`3` 种训练模型
+`4` 种训练模型
 ```
         1. Linear Model
         2. Deep Neural Netowrk (NN)
         3. DP-torch Network (DP) 及其优化版本 model compress 和 type embedding
+        4. Neuro evolution potentail(NEP)
 ```
 `2` 种高效的训练优化器
 ```
@@ -40,7 +41,7 @@ PWmat Machine Learning Force Field (PWMLFF) 是一套在 GNU 许可下的开源�
 
 👉[开源仓库地址](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/tree/libtorch)
 
-高效的分子动力学仿真软件，无缝集成了PWMLFF的DP模型（包括type embedding 以及 model compress），模拟支持 `CPU` 以及 `GPU(多卡)` 。
+高效的分子动力学仿真软件，无缝集成了PWMLFF的 `DP` 模型（包括type embedding 以及 model compress）和 `NEP` 模型，模拟支持 `CPU(多核)` 以及 `GPU(多卡)` 。对于 `Lienar` 和 `NN` 提供了基于 `fortran` 的 CPU 版本 lammps 接口。
 
 ## [3. 主动学习平台](./active%20learning/README.md)
 
@@ -59,7 +60,7 @@ PWmat Machine Learning Force Field (PWMLFF) 是一套在 GNU 许可下的开源�
 
 👉[开源仓库地址](https://github.com/LonxunQuantum/PWMLFF_library)
 
-该数据仓库包含了常见体系的 `AIMD 数据集`、一些已经过充分训练的 `PWMLFF 模型`以及训练精度情况，便于用户快速复用已有数据集和模型，以及在不同模型之间的横向比较，节省数据制备和模型训练成本。
+该数据仓库包含了常见体系的 `AIMD 数据集`、一些已经过充分训练的 `PWMLFF 模型`，便于用户快速复用已有数据集和模型，以及在不同模型之间的横向比较，节省数据制备和模型训练成本。
 
 ## [6. PWMLFF Examples](./examples/README.md)
 
@@ -78,7 +79,7 @@ PWMLFF的测试结果以及使用PWMLFF的相关案例
     <p style={{ textAlign: 'center' }}>PWMLFF 技术支持群</p>
 </div>
 <div style={{ display: 'inline-block', marginRight: '10px' }}>
-    <img src={require("./pictures/pmat_support.png").default} alt="user_chat" width="200" />
+    <img src={require("./pictures/pmat_support.png").default} alt="user_chat" width="250" />
     <p style={{ textAlign: 'center' }}>PWMAT 客服微信</p>
 </div>
 </div>
