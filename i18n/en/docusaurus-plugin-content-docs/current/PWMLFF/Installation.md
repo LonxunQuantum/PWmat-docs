@@ -31,20 +31,25 @@ For non-networked devices, you can directly download the pre-configured conda en
 #### 2. Unzip
 
 ```bash
-gzip -d pwmlff.sh.gz
+gzip -d pwmlff.2024.5.sh.gz
 ```
 
-After unzipping, you will get the `pwmlff.sh` file. Run this file to complete the environment installation.
+After unzipping, you will get the `pwmlff.2024.5.sh` file. Run this file to complete the environment installation.
 
 :::caution
-Before running `pwmlff.sh`, you still need to load the necessary modules for compilation, namely intel, cuda, and gcc.
+Before running `pwmlff.2024.5.sh`, you still need to load the necessary modules for compilation, namely intel, cuda, and gcc.
+
+for users of Mcloud, jsut load
+module load cuda/11.8-share intel/2020
+source /opt/rh/devtoolset-8/enable
 :::
 
 ```bash
-./pwmlff.sh
+./pwmlff.2024.5.sh
+# or sh pwmlff.2024.5.sh
 ```
 
-After running, a folder named `PWMLFF-March2024` containing all environment configurations (`env`) and program packages (`PWMLFF`) will be generated in the running directory.
+After running, a folder named `PWMLFF2024.5` containing all environment configurations (`pwmlff`) and program packages (`PWMLFF`) will be generated in the running directory.
 
 After unzipping and compiling, update the environment variables:
 
@@ -57,13 +62,13 @@ source ~/.bashrc
 Activate the environment
 
 ```bash
-source /PWMLFF-March2024/env/bin/activate
+source /the/path/PWMLFF2024.5/pwmlff/bin/activate
 ```
 
 Deactivate the environment
 
 ```bash
-source /PWMLFF-March2024/env/bin/deactivate
+source /the/path/PWMLFF2024.5/pwmlff/bin/deactivate
 ```
 
 ### 3. Online Installation
@@ -90,7 +95,7 @@ curl https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2023.07-1-L
 After conda installation, create a virtual environment, specifying the installation of the python3.11 interpreter. Other versions may cause dependency conflicts or syntax support issues. All subsequent compilation work will be carried out in this virtual environment.
 
 ```
-conda create -n PWMLFF python=3.11.5
+conda create -n PWMLFF python=3.11
 ```
 
 3. Reactivate the virtual environment after installation
@@ -103,7 +108,8 @@ conda activate PWMLFF
 4. Install third-party dependencies required for PWMLFF
 
 ```bash
-pip3 install numpy tqdm cmake pyyaml pandas scikit-learn-intelex matplotlib pwdata pwact pybind11 charset_normalizer=3.3.2
+pip3 install numpy tqdm cmake pyyaml pandas scikit-learn-intelex matplotlib pwdata pwact pybind11 
+pip3 install charset_normalizer==3.3.2
 
 # Ensure charset_normalizer is installed to the latest version (version 3.3.2 or above), otherwise there will be encoding errors when compiling fortran code 
 #UnicodeDecodeError: 'ascii' codec can't decode byte 0xe4 in position 144: ordinal not in range(128)
@@ -209,18 +215,18 @@ make clean-all && make mpi -j4
   Alternatively, use the following commands to download the source code to the user directory and unzip for installation:
 
 ```bash
-$ wget https://github.com/LonxunQuantum/Lammps_for_PWMLFF/archive/refs/tags/2024.3.zip
+$ wget https://github.com/LonxunQuantum/Lammps_for_PWMLFF/archive/refs/tags/2024.5.zip
 or
-$ wget https://gitee.com/pfsuo/Lammps_for_PWMLFF/repository/archive/2024.3.zip
+$ wget https://gitee.com/pfsuo/Lammps_for_PWMLFF/repository/archive/2024.5.zip
 
-$ unzip Lammps_for_PWMLFF-2024.3.zip    # After unzipping, enter the source directory and complete the above compilation and installation steps
+$ unzip 2024.5.zip    # After unzipping, enter the source directory and complete the above compilation and installation steps
 ```
 
 2. Add the Lammps executable file to the environment variables
 
 ```bash
 vim ~/.bashrc
-export PATH=absolute/path/to/Lammps_for_PWMLFF/src:$PATH
+export PATH=absolute/path/to/Lammps_for_PWMLFF-2024.5/src:$PATH
 source ~/.bashrc
 ```
 

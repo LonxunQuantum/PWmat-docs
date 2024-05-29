@@ -227,7 +227,7 @@ PWMLFF script nep_model.ckpt
 为了使用 PWMLFF 生成的力场文件，lammps 的输入文件示例如下：
 ```bash
 pair_style   pwmlff   1 jit_nep_module.pt  out_freq ${DUMP_FREQ} out_file model_devi.out 
-pair_coeff       * * 72 8
+pair_coeff       * *  8 72
 
 ```
 ### step3 启动lammps模拟

@@ -31,20 +31,24 @@ conda activate PWMLFF
 #### 2. 解压
 
 ```bash
-gzip -d pwmlff.sh.gz
+gzip -d pwmlff.2024.5.sh.gz
 ```
 
-解压后得到 `pwmlff.sh` 文件，执行该文件即可完成环境的安装。
+解压后得到 `pwmlff.2024.5.sh` 文件，执行该文件即可完成环境的安装。
 
 :::caution
-运行 `pwmlff.sh` 前，仍然需要加载编译所需要的模块，即 intel, cuda 和 gcc.
+运行 `pwmlff.2024.5.sh` 前，仍然需要加载编译所需要的模块，即 intel, cuda 和 gcc.
+对于mcloud用户，直接加载如下环境
+module load cuda/11.8-share intel/2020
+source /opt/rh/devtoolset-8/enable
 :::
 
 ```bash
-./pwmlff.sh
+./pwmlff.2024.5.sh
+# 或 sh pwmlff.2024.5.sh
 ```
 
-运行完成后，会在运行目录下生成一个名为 `PWMLFF-March2024` 的文件夹，内含所有的环境配置（`env`）和程序包（`PWMLFF`）。
+运行完成后，会在运行目录下生成一个名为 `PWMLFF2024.5` 的文件夹，内含所有的环境配置（`pwmlff`）和程序包（`PWMLFF`）。
 
 解压及编译完成后，更新环境变量：
 
@@ -57,13 +61,15 @@ source ~/.bashrc
 激活环境
 
 ```bash
-source /PWMLFF-March2024/env/bin/activate
+source /the/path/PWMLFF2024.5/pwmlff/bin/activate
+# 这里环境地址需要完整的路径，例如/data/home/wuxingxing/pack/PWMLFF2024.5/pwmlff/bin/activate
 ```
 
 退出环境
 
 ```bash
-source /PWMLFF-March2024/env/bin/deactivate
+source /the/path/PWMLFF2024.5/pwmlff/bin/deactivate
+# 这里环境地址需要完整的路径，例如/data/home/wuxingxing/pack/PWMLFF2024.5/pwmlff/bin/deactivate
 ```
 
 ### 三、在线安装
@@ -74,7 +80,8 @@ source /PWMLFF-March2024/env/bin/deactivate
 
 1. 首先加载编译 PWMLFF 所需的编译器(**intel ≥ 2016 , gcc ≥ 7.0**)和 cuda (推荐 **11.8**)
 
-```
+```bash
+# mcloud 用户直接加载如下环境
 module load cuda/11.8-share intel/2020
 source /opt/rh/devtoolset-8/enable
 ```
@@ -90,7 +97,7 @@ curl https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2023.07-1-L
 conda 安装完成后，创建虚拟环境，环境中需指定安装 python3.11 解释器，其他版本可能会出现依赖冲突或语法不支持等问题，之后的编译工作均在该虚拟环境中进行
 
 ```
-conda create -n PWMLFF python=3.11.5
+conda create -n PWMLFF python=3.11
 ```
 
 3. 虚拟环境安装完成后重新激活该环境
@@ -103,18 +110,19 @@ conda activate PWMLFF
 4. 安装 PWMLFF 所需的第三方依赖包
 
 ```bash
-pip3 install numpy tqdm cmake pyyaml pandas scikit-learn-intelex matplotlib pwdata pwact pybind11 charset_normalizer=3.3.2
+pip3 install numpy tqdm cmake pyyaml pandas scikit-learn-intelex matplotlib pwdata pwact pybind11 
+pip3 install charset_normalizer==3.3.2
 
 # charset_normalizer 请安装到最新版本(版本3.3.2或以上)，否则在编译fortran code 会存在编码错误 
 #UnicodeDecodeError: 'ascii' codec can't decode byte 0xe4 in position 144: ordinal not in range(128)
 ```
 
 ```python
-pip3 install torch --force-reinstall --index-url https://download.pytorch.org/whl/cu118
+pip install torch==2.2.0  --index-url https://download.pytorch.org/whl/cu118
+# 如果您要使用torch2.3版本或以上，请使用9.0及以上的gcc
 ```
 
 如需安装其他版本的 `pytorch` 请查阅[Pytorch 官网](https://pytorch.org/get-started/previous-versions/)。
-
 
 5. 完成第三方依赖包安装后进行 PWMLFF 的 [编译安装](#编译安装)。
 
@@ -210,18 +218,18 @@ make clean-all && make mpi -j4
     或者使用以下命令下载源码到用户目录下并解压安装：
 
 ```bash
-$ wget https://github.com/LonxunQuantum/Lammps_for_PWMLFF/archive/refs/tags/2024.3.zip
+$ wget https://github.com/LonxunQuantum/Lammps_for_PWMLFF/archive/refs/tags/2024.5.zip
 或
-$ wget https://gitee.com/pfsuo/Lammps_for_PWMLFF/repository/archive/2024.3.zip
+$ wget https://gitee.com/pfsuo/Lammps_for_PWMLFF/repository/archive/2024.5.zip
 
-$ unzip Lammps_for_PWMLFF-2024.3.zip    #解压后进入源码目录，完成上述编译安装步骤
+$ unzip 2024.5.zip    #解压后进入源码目录，完成上述编译安装步骤
 ```
 
 2. 将 Lammps 执行文件写入环境变量中
 
 ```bash
 vim ~/.bashrc
-export PATH=absolute/path/to/Lammps_for_PWMLFF/src:$PATH
+export PATH=absolute/path/to/Lammps_for_PWMLFF-2024.5/src:$PATH
 source ~/.bashrc
 ```
 
