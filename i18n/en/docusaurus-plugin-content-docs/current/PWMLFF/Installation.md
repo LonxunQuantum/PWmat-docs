@@ -14,10 +14,12 @@ PWMLFF includes Fortran, Python, and CUDA acceleration, requiring installation i
 
 `mcloud` already has a configured conda environment, which can be directly called to avoid the time-consuming process of installing anaconda, cudatoolkit, pytorch, etc. The steps are as follows:
 
-```
-module load pwmlff
+``` bash
+# load conda environment
 source /share/app/anaconda3/etc/profile.d/conda.sh
 conda activate PWMLFF
+# load PWMLFF2024.5 
+module load lammps4pwmlff/2024.5
 ```
 
 ### 2. Offline Installation
@@ -73,92 +75,101 @@ source /the/path/PWMLFF2024.5/pwmlff/bin/deactivate
 
 ### 3. Online Installation
 
-Online installation requires that you have already installed the relevant compilers and a conda virtual environment.
+Online installation requires you to first configure the environment, then download and compile the source code.
 
-#### Environment Configuration
+#### Configure Environment
 
-1. First, load the compilers (**intel ≥ 2016, gcc ≥ 7.0**) and cuda (recommended **11.8**) required to compile PWMLFF
+To compile and run PWMLFF2024.5, you need to install the conda environment and install the packages PWMLFF2024.5 depends on within the conda environment, as follows.
 
-```
+1. First, load the necessary compilers (**intel ≥ 2016, gcc ≥ 7.0**) and CUDA (recommended **11.8**) for compiling PWMLFF.
+
+```bash
+# Mcloud users can directly load the following environment
 module load cuda/11.8-share intel/2020
 source /opt/rh/devtoolset-8/enable
 ```
 
-2. Create a new Python virtual environment in the user directory. It is recommended to manually download and use Anaconda3 for environment management (search for a Linux installation Anaconda3 tutorial using a search engine).
+2. Create a new Python virtual environment in the user's directory. It is recommended to manually download and use Anaconda3 for environment management (search for Linux Anaconda3 installation tutorials via search engines).
 
 You can use this command to download Anaconda3 directly to the server directory:
 
 ```bash
 curl https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2023.07-1-Linux-x86_64.sh -o Anaconda3-2023.07-1-Linux-x86_64.sh
+
+#If you cannot download, please visit the webpage https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/ to download, or use other methods to download.
 ```
 
-After conda installation, create a virtual environment, specifying the installation of the python3.11 interpreter. Other versions may cause dependency conflicts or syntax support issues. All subsequent compilation work will be carried out in this virtual environment.
+After installing conda, create a virtual environment specifying the Python 3.11 interpreter. Other versions may cause dependency conflicts or syntax issues. All subsequent compilation work will be done in this virtual environment.
 
-```
+```bash
 conda create -n PWMLFF python=3.11
 ```
 
-3. Reactivate the virtual environment after installation
+3. After the virtual environment is installed, reactivate the environment:
 
-```
+```bash
 conda deactivate
 conda activate PWMLFF
 ```
 
-4. Install third-party dependencies required for PWMLFF
+4. Install third-party dependencies required by PWMLFF:
 
 ```bash
 pip3 install numpy tqdm cmake pyyaml pandas scikit-learn-intelex matplotlib pwdata pwact pybind11 
 pip3 install charset_normalizer==3.3.2
 
-# Ensure charset_normalizer is installed to the latest version (version 3.3.2 or above), otherwise there will be encoding errors when compiling fortran code 
-#UnicodeDecodeError: 'ascii' codec can't decode byte 0xe4 in position 144: ordinal not in range(128)
+# Ensure charset_normalizer is the latest version (3.3.2 or above), otherwise, there will be encoding errors when compiling Fortran code
+# UnicodeDecodeError: 'ascii' codec can't decode byte 0xe4 in position 144: ordinal not in range(128)
 ```
 
 ```python
-pip3 install torch --force-reinstall --index-url https://download.pytorch.org/whl/cu118
+pip install torch==2.2.0  --index-url https://download.pytorch.org/whl/cu118
+# If you want to use torch version 2.3 or above, use gcc version 9.0 or above
 ```
 
 If you need to install other versions of `pytorch`, please refer to the [Pytorch official website](https://pytorch.org/get-started/previous-versions/).
 
-5. After installing the third-party dependencies, proceed with the [compilation and installation](#compilation-and-installation) of PWMLFF.
+5. After completing the installation of third-party dependencies, proceed with the [compilation and installation](#compilation-installation) of PWMLFF.
 
 #### Compilation and Installation
 
-- Online installation:
+6. After preparing the environment, you need to download and compile the source code. We provide two ways to compile: pulling the code online and downloading an offline package.
 
-  ```bash
+- Pull the PWMLFF repository code online via GitHub or Gitee:
+```bash
   $ git clone https://github.com/LonxunQuantum/PWMLFF.git
   or
   $ git clone https://gitee.com/pfsuo/PWMLFF.git
+```
 
+After pulling the code, enter the PWMLFF source `src` directory to compile the source code:
+```bash
   $ cd PWMLFF/src
   $ sh build.sh
-  ```
+```
 
-  - Source code download:
-    - https://github.com/LonxunQuantum/PWMLFF
-    - https://gitee.com/pfsuo/PWMLFF
-
-  Alternatively, use the following commands to download the source code to the user directory and unzip for installation:
-
-  ```bash
+- Or download the release offline package. You can directly enter the following address in the browser to download, or use the `wget` command to download:
+```bash
   $ wget https://github.com/LonxunQuantum/PWMLFF/archive/refs/heads/master.zip
   or
-  $ wget https://gitee.com/pfsuo/PWMLFF/repository/archive/master.zip
+  $ wget https://gitee.com/pfsuo/PWMLFF/repository/archive/2024.5
+```
+After downloading the release offline package, unzip and compile as follows:
 
+```bash
   $ unzip master.zip
   $ cd PWMLFF-master/src
   $ sh build.sh
-  ```
+```
 
-- After the compilation is complete, update the environment variables by executing the following command:
-
+:::tip
+- After compilation, the PWMLFF environment variables will be automatically added to the .bashrc file. If not needed, please manually delete the environment variables in .bashrc. You can execute the following command to update the environment variables:
 ```bash
 source ~/.bashrc
 ```
+:::
 
-At this point, the complete compilation and installation of PWMLFF is finished. Ensure that you are in the PWMLFF virtual environment and have loaded the intel compiler for subsequent use.
+At this point, the complete compilation and installation of PWMLFF are finished. For subsequent use, ensure you are in the PWMLFF virtual environment and have loaded the Intel compiler.
 
 ## Lammps (Recompiled version for PWMLFF)
 
@@ -168,61 +179,74 @@ The current version of Lammps is suitable for force field models extracted using
 For the old Linear, NN, and DP models, see [Lammps for PWMLFF](http://doc.lonxun.com/1.1/PWMLFF/Installation_v0.0.1/#lammps_for_pwmlff%E5%AE%89%E8%A3%85).
 :::
 
-### Direct Loading in Mcloud
+We provide two solutions for installing Lammps. For Mcloud users, the pre-installed Lammps interface can be directly loaded and used. Additionally, users are provided with the option to compile and install from source code.
+
+### 1. Direct Loading via Mcloud
+
+Mcloud has already installed the Lammps interface corresponding to PWMLFF2024.5. You can load it with the following command:
 
 ```bash
-module load lammps4pwmlff
+module load lammps4pwmlff/2024.5
 ```
 
-### Compilation and Installation
+### 2. Installation by Compiling from Source Code
 
-After constructing the force field model using PWMLFF, use the matching Lammps for molecular dynamics simulations. Here are the detailed installation steps:
+The source code installation involves the following steps:
 
-1. Load the required modules for compilation (example for Mcloud)
-
-```
-module load pwmlff
-source /share/app/anaconda3/etc/profile.d/conda.sh
-conda activate PWMLFF
-```
-
-:::info
-
-1. Model export uses the Libtorch library, ensure that the PWMLFF virtual environment is loaded when compiling the software.
-2. The compilation and execution program needs to use the `op` (custom operator) library included in the PWMLFF package, ensure it is in the environment variables.
-:::
-
-- Online installation:
-
+1. Download Lammps source code. You can download the source code from GitHub or a release package.
+- Clone the source code via GitHub or Gitee:
 ```bash
 $ git clone -b libtorch https://github.com/LonxunQuantum/Lammps_for_PWMLFF.git
 or
 $ git clone -b libtorch https://gitee.com/pfsuo/Lammps_for_PWMLFF.git
 ```
 
-```bash
-cd Lammps_for_PWMLFF/src
-make yes-PWMLFF
-export OP_LIB_PATH=$(dirname $(dirname $(which PWMLFF)))/op/build/lib
-make clean-all && make mpi -j4
-```
-
-- Source code download:
-
-  - https://github.com/LonxunQuantum/Lammps_for_PWMLFF/tree/libtorch
-  - https://gitee.com/pfsuo/Lammps_for_PWMLFF/tree/libtorch/
-
-  Alternatively, use the following commands to download the source code to the user directory and unzip for installation:
-
+- Or download the release package:
 ```bash
 $ wget https://github.com/LonxunQuantum/Lammps_for_PWMLFF/archive/refs/tags/2024.5.zip
 or
-$ wget https://gitee.com/pfsuo/Lammps_for_PWMLFF/repository/archive/2024.5.zip
+$ wget https://gitee.com/pfsuo/Lammps_for_PWMLFF/repository/archive/2024.5
 
-$ unzip 2024.5.zip    # After unzipping, enter the source directory and complete the above compilation and installation steps
+$ unzip 2024.5.zip    # Unzip the source code
 ```
 
-2. Add the Lammps executable file to the environment variables
+2. Load the compilation environment variables
+
+```bash
+# Load the pre-installed PWMLFF2024.5 environment in Mcloud
+source /share/app/anaconda3/etc/profile.d/conda.sh
+conda activate PWMLFF
+module load lammps4pwmlff/2024.5
+```
+If your PWMLFF is installed from source, load the corresponding environment.
+```bash
+# Example of loading the PWMLFF environment
+# Load the conda environment
+source /the/path/anaconda3/etc/profile.d/conda.sh
+# Activate the conda environment
+conda activate torch2_feat
+# Load the PWMLFF2024.5 environment variables
+export PATH=/the/path/codespace/PWMLFF2024.5/src/bin:$PATH
+export PYTHONPATH=/the/path/codespace/PWMLFF2024.5/src/:$PYTHONPATH
+# Load the shared library files
+export OP_LIB_PATH=$(dirname $(dirname $(which PWMLFF)))/op/build/lib
+```
+
+:::info
+
+1. Model export uses the Libtorch library, ensure the virtual environment where PWMLFF resides is loaded during software compilation.
+2. The compilation and execution of the program require the `op` (custom operator) library included in the PWMLFF package, ensure it is in the environment variables.
+   :::
+
+3. Compile the Lammps code
+
+```bash
+cd Lammps_for_PWMLFF/src
+make yes-PWMLFF
+make clean-all && make mpi -j4
+```
+
+4. Add the Lammps executable to the environment variables
 
 ```bash
 vim ~/.bashrc
@@ -230,34 +254,77 @@ export PATH=absolute/path/to/Lammps_for_PWMLFF-2024.5/src:$PATH
 source ~/.bashrc
 ```
 
-3. Add Pytorch-related libraries to the environment variables
-
+5. Add the Pytorch related libraries to the environment variables
+When running Lammps, you need to load the following environment variables:
+```bash
+export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.__path__[0])")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib
+```
+You can also execute the following command to add the shared library file path to `./bashrc`, so it won't be necessary to load these environment variables every time you use Lammps:
 ```bash
 echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.__path__[0])")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib" >> ~/.bashrc
 ```
 
-**The purpose of loading `pwmlff` and the virtual environment is to get `LD_LIBRARY_PATH`.**
+**The purpose of loading `pwmlff` and the virtual environment is to obtain the `LD_LIBRARY_PATH`.**
 
-**The `LD_LIBRARY_PATH` environment variable must be included when running Lammps, otherwise, the specific libraries cannot be called.**
+**Lammps must include the `LD_LIBRARY_PATH` environment variable during execution, otherwise specific libraries cannot be called.**
 
 ---
 
 :::caution
-When submitting training tasks, ensure that the relevant environment is loaded in the task script, as shown below:
+When submitting a training task, make sure the task script loads the relevant environment as shown below:
 
 ```
 module load intel/2020
 source /share/app/anaconda3/etc/profile.d/conda.sh
 conda activate PWMLFF
 
-# The following lines solve potential issues
+# The following are some solutions to potential problems
 export MKL_SERVICE_FORCE_INTEL=1
 export MKL_THREADING_LAYER=GNU
 export I_MPI_HYDRA_BOOTSTRAP=slurm
 export I_MPI_PMI_LIBRARY=/lib64/libpmi.so
 ```
 
-- The 5th and 6th lines resolve the issue of version mismatch between pytorch and numpy.
-- The last two lines solve the issue of multiple Lammps tasks not running in parallel.
+- Lines 5 and 6 address the issue of mismatched versions of Pytorch and Numpy.
+- The last two lines address the issue of multiple Lammps tasks being unable to run in parallel simultaneously.
 
 :::
+
+### Running MD Examples with Lammps Environment Loaded
+
+#### Load the pre-installed Lammps on Mcloud for MD
+
+```bash
+module load lammps4pwmlff/2024.5
+
+mpirun -np 1 lmp_mpi_gpu -in in.lammps
+# If you are using the CPU version
+# mpirun -np 1 lmp_mpi -in in.lammps
+```
+
+#### Load your own environment for MD
+
+```bash
+# For mpirun command
+module load intel/2020
+
+# Load and activate the conda environment
+source /data/home/wuxingxing/anaconda3/etc/profile.d/conda.sh
+conda activate torch2_feat
+
+# Load the PWMLFF environment variables
+export PATH=/data/home/wuxingxing/codespace/PWMLFF2024.5/src/bin:$PATH
+export PYTHONPATH=/data/home/wuxingxing/codespace/PWMLFF2024.5/src/:$PYTHONPATH
+
+# Import the shared library path of PWMLFF2024.5
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.__path__[0])")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib
+
+# Load the Lammps environment variables
+export PATH=/data/home/wuxingxing/codespace/Lammps_for_PWMLFF-2024.5/src:$PATH
+
+# GPU Lammps command
+mpirun -np 1 lmp_mpi_gpu -in in.lammps
+
+# CPU Lammps command
+# mpirun -np 32 lmp_mpi -in in.lammps
+```

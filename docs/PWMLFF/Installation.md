@@ -14,10 +14,12 @@ PWMLFF 包含 Fortran、Python 和 CUDA 加速等，需要在包含 Python 环�
 
 `mcloud` 已有配置好的 conda 环境，可以直接调用，避免自己安装 anaconda, cudatoolkit, pytorch 等极度耗时的过程，具体步骤如下：
 
-```
-module load pwmlff
+``` bash
+# 加载conda 环境
 source /share/app/anaconda3/etc/profile.d/conda.sh
 conda activate PWMLFF
+# 加载PWMLFF2024.5版本
+module load lammps4pwmlff/2024.5
 ```
 
 ### 二、 离线安装
@@ -74,9 +76,10 @@ source /the/path/PWMLFF2024.5/pwmlff/bin/deactivate
 
 ### 三、在线安装
 
-在线安装需要您已安装相关编译器、conda 虚拟环境。
+在线安装需要您首先配置环境，然后下载和编译源码。
 
-#### 环境配置
+#### 配置环境
+为了编译和运行PWMLFF2024.5，您需要安装conda 环境，并在conda 环境中安装 PWMLFF2024.5依赖的安装包，过程如下。
 
 1. 首先加载编译 PWMLFF 所需的编译器(**intel ≥ 2016 , gcc ≥ 7.0**)和 cuda (推荐 **11.8**)
 
@@ -92,6 +95,8 @@ source /opt/rh/devtoolset-8/enable
 
 ```bash
 curl https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2023.07-1-Linux-x86_64.sh -o Anaconda3-2023.07-1-Linux-x86_64.sh
+
+# 如果无法下载，请访问网页 https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/ 下载，或者其他方式下载。
 ```
 
 conda 安装完成后，创建虚拟环境，环境中需指定安装 python3.11 解释器，其他版本可能会出现依赖冲突或语法不支持等问题，之后的编译工作均在该虚拟环境中进行
@@ -128,38 +133,40 @@ pip install torch==2.2.0  --index-url https://download.pytorch.org/whl/cu118
 
 #### 编译安装
 
-- 在线安装:
+6. 准备环境完成之后，您需要下载和编译源码。我们提供了在线拉取代码和下载离线包两种方式编译。
 
-  ```bash
+- 通过github或gitee 在线拉取PWMLFF仓库代码
+```bash
   $ git clone https://github.com/LonxunQuantum/PWMLFF.git
   或
   $ git clone https://gitee.com/pfsuo/PWMLFF.git
+```
 
+代码拉取后，进入PWMLFF源码src目录编译源码
+``` bash
   $ cd PWMLFF/src
   $ sh build.sh
-  ```
+```
 
-  - 源码下载:
-    - https://github.com/LonxunQuantum/PWMLFF
-    - https://gitee.com/pfsuo/PWMLFF
-
-  或者使用以下命令下载源码到用户目录下并解压安装：
-
-  ```bash
+- 或下载release 离线安装包，您可以直接浏览器输入下面的地址下载，或者加前缀 wget 下载:
+``` bash
   $ wget https://github.com/LonxunQuantum/PWMLFF/archive/refs/heads/master.zip
   或
-  $ wget https://gitee.com/pfsuo/PWMLFF/repository/archive/master.zip
+  $ wget https://gitee.com/pfsuo/PWMLFF/repository/archive/2024.5
+```
+下载releas离线安装包后，通过如下方式解压和编译
 
+``` bash
   $ unzip master.zip
   $ cd PWMLFF-master/src
   $ sh build.sh
-  ```
-
-- 编译完成后环境变量需更新，直接执行以下命令：
-
+```
+:::tip
+- `编译完成后会自动将 PWMLFF 环境变量加入.bashrc 文件中，如果不需要，请您在.bashrc中手动删除环境变量`。您可以执行以下命令更新环境变量：
 ```bash
 source ~/.bashrc
 ```
+:::
 
 至此完成了 PWMLFF 的全部编译安装，后续使用时也要保证在 PWMLFF 的虚拟环境中，并加载完成 intel 编译器。
 
@@ -171,22 +178,56 @@ source ~/.bashrc
 旧版 Linear, NN 和 DP model 提取的力场模型见 [Lammps for PWMLFF](http://doc.lonxun.com/1.1/PWMLFF/Installation_v0.0.1/#lammps_for_pwmlff%E5%AE%89%E8%A3%85)
 :::
 
-### Mcloud 直接加载
+我们为Lammps 安装提供了两种方案。对于Mcloud用户，可以直接加载和使用已安装的lammps接口。也为用户提供了从源码编译安装方式。
+
+### 一、Mcloud 直接加载
+
+Mcloud 已经为用户安装PWMLFF2024.5对应的lammps接口，使用如下命令加载即可。
 
 ```bash
-module load lammps4pwmlff
+module load lammps4pwmlff/2024.5
 ```
 
-### 编译安装
+### 二、通过源码编译安装
+源码安装需要经过如下几个步骤。
 
-使用 PWMLFF 完成力场模型构建后需使用配套的 Lammps 进行分子动力学模拟，以下是详细的安装步骤：
-
-1. 加载编译所需模块 （以 Mcloud 为例）
-
+1. lammps 源码下载，你可以通过github下载源码，或者下载release 包。
+- 通过github或gitee clone 源码:
+```bash
+$ git clone -b libtorch https://github.com/LonxunQuantum/Lammps_for_PWMLFF.git
+或
+$ git clone -b libtorch https://gitee.com/pfsuo/Lammps_for_PWMLFF.git
 ```
-module load pwmlff
+
+- 或下载release 包:
+```bash
+$ wget https://github.com/LonxunQuantum/Lammps_for_PWMLFF/archive/refs/tags/2024.5.zip
+或
+$ wget https://gitee.com/pfsuo/Lammps_for_PWMLFF/repository/archive/2024.5
+
+$ unzip 2024.5.zip    #解压源码
+```
+
+2. 加载编译环境变量
+
+``` bash
+# 加载 mcloud 已安装PWMLFF2024.5环境
 source /share/app/anaconda3/etc/profile.d/conda.sh
 conda activate PWMLFF
+module load lammps4pwmlff/2024.5
+```
+如果您的PWMLFF来自源码安装，请加载对应环境。
+```bash
+# PWMLFF 环境加载例子
+# 加载conda 环境
+source /the/path/anaconda3/etc/profile.d/conda.sh
+# 激活conda 环境
+conda activate torch2_feat
+# 加载 PWMLFF2024.5 环境变量
+export PATH=/the/path/codespace/PWMLFF2024.5/src/bin:$PATH
+export PYTHONPATH=/the/path/codespace/PWMLFF2024.5/src/:$PYTHONPATH
+# 加载 共享库文件
+export OP_LIB_PATH=$(dirname $(dirname $(which PWMLFF)))/op/build/lib
 ```
 
 :::info
@@ -195,37 +236,15 @@ conda activate PWMLFF
 2. 编译和执行程序需要使用到包含在 PWMLFF 软件包中的`op`(自定义算子)库，需要确保在环境变量中
    :::
 
-- 在线安装:
-
-```bash
-$ git clone -b libtorch https://github.com/LonxunQuantum/Lammps_for_PWMLFF.git
-或
-$ git clone -b libtorch https://gitee.com/pfsuo/Lammps_for_PWMLFF.git
-```
+3. 编译lammps代码
 
 ```bash
 cd Lammps_for_PWMLFF/src
 make yes-PWMLFF
-export OP_LIB_PATH=$(dirname $(dirname $(which PWMLFF)))/op/build/lib
 make clean-all && make mpi -j4
 ```
 
-- 源码下载:
-
-  - https://github.com/LonxunQuantum/Lammps_for_PWMLFF/tree/libtorch
-  - https://gitee.com/pfsuo/Lammps_for_PWMLFF/tree/libtorch/
-
-    或者使用以下命令下载源码到用户目录下并解压安装：
-
-```bash
-$ wget https://github.com/LonxunQuantum/Lammps_for_PWMLFF/archive/refs/tags/2024.5.zip
-或
-$ wget https://gitee.com/pfsuo/Lammps_for_PWMLFF/repository/archive/2024.5.zip
-
-$ unzip 2024.5.zip    #解压后进入源码目录，完成上述编译安装步骤
-```
-
-2. 将 Lammps 执行文件写入环境变量中
+4. 将 Lammps 执行文件写入环境变量中
 
 ```bash
 vim ~/.bashrc
@@ -233,8 +252,13 @@ export PATH=absolute/path/to/Lammps_for_PWMLFF-2024.5/src:$PATH
 source ~/.bashrc
 ```
 
-3. 将 Pytorch 相关库写入环境变量中
+5. 将 Pytorch 相关库写入环境变量中
+在执行lammps 时您需要加载下环境变量
+```bash
+export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.__path__[0])")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib" >> ~/.bashrc
+```
 
+您也可以执行下述指令将共享库文件路径写入./bashrc，再次使用lammps时不再需要加载该环境变量
 ```bash
 echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.__path__[0])")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib" >> ~/.bashrc
 ```
@@ -264,3 +288,43 @@ export I_MPI_PMI_LIBRARY=/lib64/libpmi.so
 - 最后两行环境解决多 lammps 任务无法同时并行的问题
 
 :::
+
+### lammps 加载环境运行md例子
+
+#### 加载 Mcloud 已安装lammps 做MD 
+
+``` bash
+module load lammps4pwmlff/2024.5
+
+mpirun -np 1 lmp_mpi_gpu -in in.lammps
+# 如果您使用cpu version
+# mpirun -np 1 lmp_mpi -in in.lammps
+
+```
+#### 加载用户自己的环境做MD
+
+``` bash
+# 用于mpirun 命令
+module load intel/2020
+
+# 加载conda环境、激活conda虚拟环境
+source /data/home/wuxingxing/anaconda3/etc/profile.d/conda.sh
+conda activate torch2_feat
+
+# 加载PWMLFF 环境变量
+export PATH=/data/home/wuxingxing/codespace/PWMLFF2024.5/src/bin:$PATH
+export PYTHONPATH=/data/home/wuxingxing/codespace/PWMLFF2024.5/src/:$PYTHONPATH
+
+# 导入PWMLFF2024.5 的共享库路径
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.__path__[0])")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib
+
+# 加载lammps 环境变量
+export PATH=/data/home/wuxingxing/codespace/Lammps_for_PWMLFF-2024.5/src:$PATH
+
+# GPU lammps 命令
+mpirun -np 1 lmp_mpi_gpu -in in.lammps
+
+# CPU lammps 命令
+# mpirun -np 32 lmp_mpi -in in.lammps
+
+```
