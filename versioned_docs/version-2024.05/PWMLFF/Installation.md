@@ -12,14 +12,14 @@ PWMLFF 包含 Fortran、Python 和 CUDA 加速等，需要在包含 Python 环�
 
 ### 一、 Mcloud 直接加载
 
-`mcloud` 已有配置好的 conda 环境，可以直接调用，避免自己安装 anaconda, cudatoolkit, pytorch 等极度耗时的过程，具体步骤如下：
+`mcloud` 已有配置好的 conda 环境和 PWMLFF 软件包，避免自己安装 anaconda, cudatoolkit, pytorch 等极度耗时的过程，使用 `PWMLFF` 请加载以下环境变量即可：
 
 ``` bash
 # 加载conda 环境
 source /share/app/anaconda3/etc/profile.d/conda.sh
 conda activate PWMLFF
-# 加载PWMLFF2024.5版本
-module load lammps4pwmlff/2024.5
+# PWMLFF 用于PWMLFF2024.5 或 pwmlff/2024.03.06版本
+module load pwmlff/2024.5
 ```
 
 ### 二、 离线安装
@@ -81,13 +81,13 @@ source /the/path/PWMLFF2024.5/pwmlff/bin/deactivate
 #### 配置环境
 为了编译和运行PWMLFF2024.5，您需要安装conda 环境，并在conda 环境中安装 PWMLFF2024.5依赖的安装包，过程如下。
 
-1. 首先加载编译 PWMLFF 所需的编译器(**intel ≥ 2016 , gcc ≥ 7.0**)和 cuda (推荐 **11.8**)
-
+1. 首先加载编译 PWMLFF 所需的编译器
 ```bash
 # mcloud 用户直接加载如下环境
-module load cuda/11.8-share intel/2020
+module load cuda/11.8-share intel/2020 cmake/3.21.6
 source /opt/rh/devtoolset-8/enable
 ```
+我们推荐使用 `intel2020`版本，`cuda/11.8`，`cmake版本 >= 3.21`，`gcc 版本 8.n` 即可。
 
 2. 在用户目录下创建一个新 python 虚拟环境，建议手动下载并使用 Anaconda3 进行环境管理（搜索引擎搜索 Linux 安装 anaconda3 教程）。
 
@@ -101,15 +101,16 @@ curl https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2023.07-1-L
 
 conda 安装完成后，创建虚拟环境，环境中需指定安装 python3.11 解释器，其他版本可能会出现依赖冲突或语法不支持等问题，之后的编译工作均在该虚拟环境中进行
 
-```
-conda create -n PWMLFF python=3.11
+``` bash
+conda create -n pwmlff2024.5 python=3.11
+# python 版本我们建议3.11，更高级别的 python 可以在编译时存在一些错误，我们还未兼容。
 ```
 
 3. 虚拟环境安装完成后重新激活该环境
 
 ```
 conda deactivate
-conda activate PWMLFF
+conda activate pwmlff2024.5
 ```
 
 4. 安装 PWMLFF 所需的第三方依赖包
@@ -124,7 +125,7 @@ pip3 install charset_normalizer==3.3.2
 
 ```python
 pip install torch==2.2.0  --index-url https://download.pytorch.org/whl/cu118
-# 如果您要使用torch2.3版本或以上，请使用9.0及以上的gcc
+# 建议您使用torch2.2.0版本，如果您要使用torch2.3版本或以上，请使用9.0及以上的gcc
 ```
 
 如需安装其他版本的 `pytorch` 请查阅[Pytorch 官网](https://pytorch.org/get-started/previous-versions/)。
@@ -210,19 +211,14 @@ $ unzip 2024.5.zip    #解压源码
 
 2. 加载编译环境变量
 
-``` bash
-# 加载 mcloud 已安装PWMLFF2024.5环境
-source /share/app/anaconda3/etc/profile.d/conda.sh
-conda activate PWMLFF
-module load lammps4pwmlff/2024.5
-```
-如果您的PWMLFF来自源码安装，请加载对应环境。
+注意，您需要保持编译 PWMLFF 和 编译 lammps 使用的 python 虚拟环境相同。为了编译lammps，您需要加载以下环境变量。
+
 ```bash
 # PWMLFF 环境加载例子
 # 加载conda 环境
 source /the/path/anaconda3/etc/profile.d/conda.sh
-# 激活conda 环境
-conda activate torch2_feat
+# 激活conda 环境，注意这里使用的虚拟环境需要和编译PWMLFF2024.5时的环境相同
+conda activate pwmlff2024.5 
 # 加载 PWMLFF2024.5 环境变量
 export PATH=/the/path/codespace/PWMLFF2024.5/src/bin:$PATH
 export PYTHONPATH=/the/path/codespace/PWMLFF2024.5/src/:$PYTHONPATH

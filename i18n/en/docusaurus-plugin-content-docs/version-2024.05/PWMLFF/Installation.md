@@ -12,14 +12,14 @@ PWMLFF includes Fortran, Python, and CUDA acceleration, requiring installation i
 
 ### 1. Direct Loading in Mcloud
 
-`mcloud` already has a configured conda environment, which can be directly called to avoid the time-consuming process of installing anaconda, cudatoolkit, pytorch, etc. The steps are as follows:
+`mcloud` already has a configured conda environment, which can be directly called to avoid the time-consuming process of installing anaconda, cudatoolkit, pytorch, etc. To use 'PWMLFF', please load the following environment variables:
 
 ``` bash
 # load conda environment
 source /share/app/anaconda3/etc/profile.d/conda.sh
 conda activate PWMLFF
-# load PWMLFF2024.5 
-module load lammps4pwmlff/2024.5
+# #PWMLFF is used for PWMLFF2024.5 or pwmff/2024.03.06 versions
+module load pwmlff/2024.5
 ```
 
 ### 2. Offline Installation
@@ -75,19 +75,13 @@ source /the/path/PWMLFF2024.5/pwmlff/bin/deactivate
 
 ### 3. Online Installation
 
-Online installation requires you to first configure the environment, then download and compile the source code.
-
-#### Configure Environment
-
-To compile and run PWMLFF2024.5, you need to install the conda environment and install the packages PWMLFF2024.5 depends on within the conda environment, as follows.
-
-1. First, load the necessary compilers (**intel ≥ 2016, gcc ≥ 7.0**) and CUDA (recommended **11.8**) for compiling PWMLFF.
-
+1. First, load the compilers required to compile PWMLFF
 ```bash
 # Mcloud users can directly load the following environment
-module load cuda/11.8-share intel/2020
+module load cuda/11.8-share intel/2020 cmake/3.21.6
 source /opt/rh/devtoolset-8/enable
 ```
+We recommend using `intel2020` version, `cuda/11.8`, `cmake version >= 3.21`, and `gcc version 8.n`.
 
 2. Create a new Python virtual environment in the user's directory. It is recommended to manually download and use Anaconda3 for environment management (search for Linux Anaconda3 installation tutorials via search engines).
 
@@ -102,14 +96,14 @@ curl https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2023.07-1-L
 After installing conda, create a virtual environment specifying the Python 3.11 interpreter. Other versions may cause dependency conflicts or syntax issues. All subsequent compilation work will be done in this virtual environment.
 
 ```bash
-conda create -n PWMLFF python=3.11
+conda create -n pwmlff2024.5 python=3.11
 ```
 
 3. After the virtual environment is installed, reactivate the environment:
 
 ```bash
 conda deactivate
-conda activate PWMLFF
+conda activate pwmlff2024.5
 ```
 
 4. Install third-party dependencies required by PWMLFF:
@@ -210,21 +204,16 @@ $ wget https://gitee.com/pfsuo/Lammps_for_PWMLFF/repository/archive/2024.5
 $ unzip 2024.5.zip    # Unzip the source code
 ```
 
-2. Load the compilation environment variables
+2. Load the Compilation Environment Variables
 
-```bash
-# Load the pre-installed PWMLFF2024.5 environment in Mcloud
-source /share/app/anaconda3/etc/profile.d/conda.sh
-conda activate PWMLFF
-module load lammps4pwmlff/2024.5
-```
-If your PWMLFF is installed from source, load the corresponding environment.
+Note that you need to use the same Python virtual environment for compiling PWMLFF and Lammps. To compile Lammps, you need to load the following environment variables.
+
 ```bash
 # Example of loading the PWMLFF environment
 # Load the conda environment
 source /the/path/anaconda3/etc/profile.d/conda.sh
-# Activate the conda environment
-conda activate torch2_feat
+# Activate the conda environment. Note that the virtual environment used here needs to be the same as the one used when compiling PWMLFF2024.5
+conda activate pwmlff2024.5 
 # Load the PWMLFF2024.5 environment variables
 export PATH=/the/path/codespace/PWMLFF2024.5/src/bin:$PATH
 export PYTHONPATH=/the/path/codespace/PWMLFF2024.5/src/:$PYTHONPATH
