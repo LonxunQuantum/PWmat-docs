@@ -8,18 +8,20 @@ pwdata 是 PWMLFF 的数据预处理工具，可用于提取特征和标签。�
 
 ## 目前支持的数据格式
 
-| Software | file             | multi-Image | label | format           |
-| -------- | ---------------- | ----------- | ----- | ---------------- |
-| PWmat    | MOVEMENT         | True        | True  | 'pwmat/movement' |
-| PWmat    | OUT.MLMD         | False       | True  | 'pwmat/movement' |
-| PWmat    | atom.config      | False       | False | 'vasp/config     |
-| VASP     | OUTCAR           | True        | True  | 'vasp/outcar'    |
-| VASP     | poscar           | False       | False | 'vasp/poscar'    |
-| LAMMPS   | lmp.init         | False       | False | 'lammps/lmp'     |
-| LAMMPS   | dump             | True        | False | 'lammps/dump'    |
-| CP2K     | stdout, xyz, pdb | True        | True  | 'cp2k/md'        |
-| CP2K     | stdout           | False       | True  | 'cp2k/scf'       |
-| PWMLFF   | \*.npy           | True        | True  | 'pwmlff/npy'     |
+| Software          | file             | multi-Image | label | format                     |
+| ----------------- | ---------------- | ----------- | ----- | -------------------------- |
+| PWmat             | MOVEMENT         | True        | True  | 'pwmat/movement'           |
+| PWmat             | OUT.MLMD         | False       | True  | 'pwmat/movement'           |
+| PWmat             | atom.config      | False       | False | 'vasp/config               |
+| VASP              | OUTCAR           | True        | True  | 'vasp/outcar'              |
+| VASP              | poscar           | False       | False | 'vasp/poscar'              |
+| LAMMPS            | lmp.init         | False       | False | 'lammps/lmp'               |
+| LAMMPS            | dump             | True        | False | 'lammps/dump'              |
+| CP2K              | stdout, xyz, pdb | True        | True  | 'cp2k/md'                  |
+| CP2K              | stdout           | False       | True  | 'cp2k/scf'                 |
+| PWMLFF            | \*.npy           | True        | True  | 'pwmlff/npy'               |
+| DeepMD (read)     | \*.npy, \*.raw   | True        | True  | 'deepmd/npy', 'deepmd/raw' |
+| \* (extended xyz) | \*.xyz           | True        | True  | 'extxyz'                   |
 
 ## pwdata 调用方式
 
@@ -66,7 +68,7 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 >
 > **参数:**
 >
-> - **format**: 字符串. 输入文件的格式。支持的格式有：`pwmat/config`, `vasp/poscar`, `lammps/dump`, `lammps/lmp`, `pwmat/movement`, `vasp/outcar`, `cp2k/md`, `cp2k/scf`.
+> - **format**: 字符串. 输入文件的格式。支持的格式有：`pwmat/config`, `vasp/poscar`, `lammps/dump`, `lammps/lmp`, `pwmat/movement`, `vasp/outcar`, `cp2k/md`, `cp2k/scf`, `pwmlff/npy`, `deepmd/npy`, `deepmd/raw`, `extxyz`。
 >
 >   - `pwmat/config`: PWmat 结构文件，例如 `atom.config`.
 >   - `pwmat/movement`: PWmat 分子动力学轨迹文件，例如 `MOVEMENT`.
@@ -76,6 +78,10 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 >   - `vasp/outcar`: VASP 分子动力学轨迹文件，例如 `OUTCAR`.
 >   - `cp2k/md`: CP2K 标准输出文件，原子位置文件及对应的原子力文件，例如 `cp2k.out`, `*pos-1.xyz`, `*pos-1.pdb`, `*frac-1.xyz`.
 >   - `cp2k/scf`: CP2K 标准输出文件，例如 `cp2k.out`.
+>   - `pwmlff/npy`: PWMLFF 数据集文件，例如 `energies.npy`.
+>   - `deepmd/npy`: DeepMD 数据集文件，例如 `force.npy`.
+>   - `deepmd/raw`: DeepMD 数据集文件，例如 `force.raw`.
+>   - `extxyz`: 扩展的 xyz 文件，例如 `*.xyz`。
 >
 >   :::caution
 >   CP2K 的输入控制文件中需要设置`PRINT_LEVEL MEDIUM`，标准输出文件从才会存在晶格信息。
