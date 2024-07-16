@@ -214,6 +214,10 @@ $ unzip 2024.5.zip    #解压源码
 注意，您需要保持编译 PWMLFF 和 编译 lammps 使用的 python 虚拟环境相同。为了编译lammps，您需要加载以下环境变量。
 
 ```bash
+# 加载编译器
+load cuda/11.8-share intel/2020
+source /opt/rh/devtoolset-8/enable #此为gcc编译器，您可以加载自己的8.n版本
+
 # PWMLFF 环境加载例子
 # 加载conda 环境
 source /the/path/anaconda3/etc/profile.d/conda.sh
@@ -234,10 +238,24 @@ export OP_LIB_PATH=$(dirname $(dirname $(which PWMLFF)))/op/build/lib
 
 3. 编译lammps代码
 
+为了使用 NEP模型的 GPU 版本，需要您先将 NEP 的 c++ cuda 代码编译为静态库文件，如下所示。
+``` bash
+cd src/PWMLFF/NEP_GPU
+make clean
+make
+# 编译完成后您将得到一个src/PWMLFF/NEP_GPU/libnep_gpu.so的静态库文件
+```
+
+编译lammps 接口：
 ```bash
 cd Lammps_for_PWMLFF/src
 make yes-PWMLFF
 make clean-all && make mpi -j4
+
+```
+如果编译过程中找不到 `cuda_runtime.h` 头文件，请在 `src/MAKE/Makefile.mpi` 文件的 `第24行` 替换为您自己的 CUDA 路径，`/the/path/cuda/cuda-11.8`，`cuda_runtime.h` 位于该目录下的 `include` 目录下。
+```txt
+CUDA_HOME = $(CUDADIR)
 ```
 
 4. 将 Lammps 执行文件写入环境变量中
@@ -252,6 +270,7 @@ source ~/.bashrc
 在执行lammps 时您需要加载下环境变量
 ```bash
 export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.__path__[0])")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib" >> ~/.bashrc
+
 ```
 
 您也可以执行下述指令将共享库文件路径写入./bashrc，再次使用lammps时不再需要加载该环境变量
@@ -316,6 +335,9 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.
 
 # 加载lammps 环境变量
 export PATH=/data/home/wuxingxing/codespace/Lammps_for_PWMLFF-2024.5/src:$PATH
+
+# 如果您需要运行NEP gpu 版本的lammps 接口，请加载
+# export LD_LIBRARY_PATH=/the/path/Lammps_for_PWMLFF-2024.5/src/PWMLFF/NEP_GPU:$LD_LIBRARY_PATH
 
 # GPU lammps 命令
 mpirun -np 1 lmp_mpi_gpu -in in.lammps

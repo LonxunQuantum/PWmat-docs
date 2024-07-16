@@ -158,9 +158,11 @@ $ PWMLFF train dp_cu.json
 ### 2.4 提取力场
 
 :::tip
-推荐使用 Libtorch 版本的力场模型，该版本的力场模型在训练完成后手动执行`PWMLFF script dp_model.ckpt`命令可以直接生成`torch_script_module.pt`文件，该文件可直接用于 lammps 模拟。
+It is recommended to use the Libtorch version of the force field model. After training, manually execute the `PWMLFF script dp_model.ckpt` command to generate the `jit_dp_cpu.pt` or `jit_dp_gpu.pt` file. This file is used for Lammps simulation.
 
-注意，如果需要在 gpu 环境下运行 lammps，则使用该命令时也需要在 gpu 环境下运行。如果在 cpu 环境下运行，则生成的`torch_script_module.pt`文件只能在 cpu 环境下运行。
+If your device includes a GPU environment, executing `PWMLFF script` will generate the `jit_dp_gpu.pt` file; otherwise, it will generate the `jit_dp_cpu.pt` file.
+
+Note: `jit_dp_gpu.pt` can only run Lammps in a GPU environment; `jit_dp_cpu.pt` can only run Lammps in a CPU environment.
 
 :::
 
@@ -173,13 +175,13 @@ $ PWMLFF train dp_cu.json
 为了使用 PWMLFF 生成的力场文件，lammps 的输入文件示例如下：
 
 ```bash
-pair_style      pwmlff 1 ../model_record/torch_script_module.pt
+pair_style      pwmlff 1 ../model_record/jit_dp_gpu.pt
 pair_coeff      * * 29
 ```
 
 其中：
 
-- `pair_style pwmlff 1` 表示使用 PWMLFF 生成的力场文件，`1`表示读取 1 个力场文件， `../model_record/torch_script_module.pt` 为 PWMLFF 生成的力场文件，可以根据实际情况修改路径。
+- `pair_style pwmlff 1` 表示使用 PWMLFF 生成的力场文件，`1`表示读取 1 个力场文件， `../model_record/jit_dp_gpu.pt` 为 PWMLFF 生成的力场文件，可以根据实际情况修改路径。
 - `pair_coeff * * 29` 为 Cu 的原子序数。
 
 以下是 lammps 输入文件示例(nvt 系综)：
@@ -194,7 +196,7 @@ neigh_modify    every 10 delay 0 check no
 
 read_data       lmp.init
 
-pair_style      pwmlff 1 ../model_record/torch_script_module.pt
+pair_style      pwmlff 1 ../model_record/jit_dp_gpu.pt
 pair_coeff      * * 29
 velocity        all create 1500 206952 dist gaussian
 timestep        0.001
