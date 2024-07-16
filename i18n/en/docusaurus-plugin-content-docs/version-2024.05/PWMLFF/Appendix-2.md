@@ -8,20 +8,18 @@ pwdata 是 PWMLFF 的数据预处理工具，可用于提取特征和标签。�
 
 ## 目前支持的数据格式
 
-| Software          | file             | multi-Image | label | format                     |
-| ----------------- | ---------------- | ----------- | ----- | -------------------------- |
-| PWmat             | MOVEMENT         | True        | True  | 'pwmat/movement'           |
-| PWmat             | OUT.MLMD         | False       | True  | 'pwmat/movement'           |
-| PWmat             | atom.config      | False       | False | 'vasp/config               |
-| VASP              | OUTCAR           | True        | True  | 'vasp/outcar'              |
-| VASP              | poscar           | False       | False | 'vasp/poscar'              |
-| LAMMPS            | lmp.init         | False       | False | 'lammps/lmp'               |
-| LAMMPS            | dump             | True        | False | 'lammps/dump'              |
-| CP2K              | stdout, xyz, pdb | True        | True  | 'cp2k/md'                  |
-| CP2K              | stdout           | False       | True  | 'cp2k/scf'                 |
-| PWMLFF            | \*.npy           | True        | True  | 'pwmlff/npy'               |
-| DeepMD (read)     | \*.npy, \*.raw   | True        | True  | 'deepmd/npy', 'deepmd/raw' |
-| \* (extended xyz) | \*.xyz           | True        | True  | 'extxyz'                   |
+| Software | file             | multi-Image | label | format           |
+| -------- | ---------------- | ----------- | ----- | ---------------- |
+| PWmat    | MOVEMENT         | True        | True  | 'pwmat/movement' |
+| PWmat    | OUT.MLMD         | False       | True  | 'pwmat/movement' |
+| PWmat    | atom.config      | False       | False | 'vasp/config     |
+| VASP     | OUTCAR           | True        | True  | 'vasp/outcar'    |
+| VASP     | poscar           | False       | False | 'vasp/poscar'    |
+| LAMMPS   | lmp.init         | False       | False | 'lammps/lmp'     |
+| LAMMPS   | dump             | True        | False | 'lammps/dump'    |
+| CP2K     | stdout, xyz, pdb | True        | True  | 'cp2k/md'        |
+| CP2K     | stdout           | False       | True  | 'cp2k/scf'       |
+| PWMLFF   | \*.npy           | True        | True  | 'pwmlff/npy'     |
 
 ## pwdata 调用方式
 
@@ -62,58 +60,54 @@ pwdata extract.json
 pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接口来生成数据集或者进行数据转换。pwdata 的接口调用方式如下：
 
 > <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**Config**</font> <font color='#2ecc71'>_(self, format: str, data_path: str, pbc = None, atom_names = None, index = ':', **kwargs)_</font> 
-> [源码](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/main.py#L110)</p>
+> [source](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/main.py#L110)</p>
 >
-> 从输入文件中读取数据。
+> Read the data from the input file.
 >
-> **参数:**
+> **Parameters:**
 >
-> - **format**: 字符串. 输入文件的格式。支持的格式有：`pwmat/config`, `vasp/poscar`, `lammps/dump`, `lammps/lmp`, `pwmat/movement`, `vasp/outcar`, `cp2k/md`, `cp2k/scf`, `pwmlff/npy`, `deepmd/npy`, `deepmd/raw`, `extxyz`。
+> - **format**: str. The format of the input file. Supported formats are `pwmat/config`, `vasp/poscar`, `lammps/dump`, `lammps/lmp`, `pwmat/movement`, `vasp/outcar`, `cp2k/md`, `cp2k/scf`
 >
->   - `pwmat/config`: PWmat 结构文件，例如 `atom.config`.
->   - `pwmat/movement`: PWmat 分子动力学轨迹文件，例如 `MOVEMENT`.
->   - `lammps/dump`: LAMMPS dump 文件, 例如 `dump.lammptraj`.
->   - `lammps/lmp`: LAMMPS 结构文件，例如 `in.lmp`.
->   - `vasp/poscar`: VASP 结构文件，例如 `POSCAR`.
->   - `vasp/outcar`: VASP 分子动力学轨迹文件，例如 `OUTCAR`.
->   - `cp2k/md`: CP2K 标准输出文件，原子位置文件及对应的原子力文件，例如 `cp2k.out`, `*pos-1.xyz`, `*pos-1.pdb`, `*frac-1.xyz`.
->   - `cp2k/scf`: CP2K 标准输出文件，例如 `cp2k.out`.
->   - `pwmlff/npy`: PWMLFF 数据集文件，例如 `energies.npy`.
->   - `deepmd/npy`: DeepMD 数据集文件，例如 `force.npy`.
->   - `deepmd/raw`: DeepMD 数据集文件，例如 `force.raw`.
->   - `extxyz`: 扩展的 xyz 文件，例如 `*.xyz`。
+>   - `pwmat/config`: PWmat configuration file, for example, `atom.config`.
+>   - `pwmat/movement`: PWmat trajectory file, for example, `MOVEMENT`.
+>   - `lammps/dump`: LAMMPS dump file, for example, `dump.lammpstrj`.
+>   - `lammps/lmp`: LAMMPS configuration file, for example, `in.lmp`.
+>   - `vasp/poscar`: VASP configuration file, for example, `POSCAR`.
+>   - `vasp/outcar`: VASP trajectory file, for example, `OUTCAR`.
+>   - `cp2k/md`: CP2K trajectory file, for example, `cp2k.out`, `*pos-1.xyz`, `*pos-1.pdb`, `*frac-1.xyz`.
+>   - `cp2k/scf`: CP2K SCF output file, for example, `cp2k.out`.
 >
 >   :::caution
 >   CP2K 的输入控制文件中需要设置`PRINT_LEVEL MEDIUM`，标准输出文件从才会存在晶格信息。
 >   :::
 >
-> - **data_path**: 字符串, **必选**. The path of the input file.
+> - **data_path**: str, **required**. The path of the input file.
 >
-> - **pbc**: 列表, 可选. 周期性边界条件。默认为 None。例如，`[1, 1, 1]` 表示系统在 x, y, z 方向上是周期性的。
+> - **pbc**: array_like, optional. The periodic boundary conditions. Default is None. For example, `[1, 1, 1]` means the system is periodic in x, y, z directions.
 >
-> - **atom_names**: 列表, 可选. 用于 <font color='red'>lammps/dump</font> 文件的原子名称。默认为 None。例如，`['C', 'H', 'O']` 表示系统包含碳、氢和氧原子。
+> - **atom_names**: list, optional. The names of the atoms for <font color='red'>lammps/dump files</font>. Default is None. For example, `['C', 'H', 'O']` means the system contains carbon, hydrogen, and oxygen atoms.
 >
-> - **index**: 整数, 切片 或 字符串, 可选. 用于读取包含多个结构的文件时，可以通过 index 参数指定读取的结构。默认为 `:`，表示读取所有结构。
+> - **index**: int, slice or str, optional. The index of the configuration to read for <font color='red'>multi_image files</font> (Temporarily). Default is `:`, which means all configurations.
 >
->   - `index=0`: 第一个结构
->   - `index=-2`: 倒数第二个结构
->   - `index=':'` 或 `index=slice(None)`: 所有结构
->   - `index='-3:'` 或 `index=slice(-3, None)`: 倒数第三个到最后一个结构
->   - `index='::2'` 或 `index=slice(0, None, 2)`: 偶数个数的结构
->   - `index='1::2'` 或 `index=slice(1, None, 2)`: 奇数个数的结构
+>   - `index=0`: first configuration
+>   - `index=-2`: second to last
+>   - `index=':'` or `index=slice(None)`: all
+>   - `index='-3:'` or `index=slice(-3, None)`: three last
+>   - `index='::2'` or `index=slice(0, None, 2)`: even
+>   - `index='1::2'` or `index=slice(1, None, 2)`: odd
 >
-> - **kwargs**: 键值对（字典）, 可选. 其他关键字参数用于读取输入文件。
+> - **kwargs**: dict, optional. Additional keyword arguments for reading the input file.
 >
->   - **unit**: 字符串, 可选. 对于 LAMMPS 文件，输入文件的单位。默认为 'metal'。
+>   - **unit**: str, optional. for lammps, the unit of the input file. Default is 'metal'.
 >
->   - **style**: 字符串, 可选. 对于 LAMMPS 文件，用于 lammps 模拟种原子相关联的每个原子的属性。默认为 'atomic'。详情见 [LAMMPS atom_style](https://docs.lammps.org/atom_style.html)。
+>   - **style**: str, optional. for lammps, the style of the input file. Default is 'atomic'.
 >
->   - **sort_by_id**: 布尔值, 可选. 对于 LAMMPS 文件，是否按照 id 排序原子。默认为 True。
+>   - **sort_by_id**: bool, optional. for lammps, whether to sort the atoms by id. Default is True.
 >
-> **返回:**
-> 返回一个 Image 对象的列表。每个 Image 对象包含一个结构的一些信息。
+> **Returns:**
+> A list of Image objects. Each Image object contains the information of a configuration.
 >
-> **例子:**
+> **EXAMPLES:**
 >
 > ```python
 > from pwdata import Config
@@ -124,40 +118,40 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 > ```
 
 > <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**Config.to**</font> <font color='#2ecc71'>_(self, output_path, save_format = None, **kwargs)_</font>
-> [源码](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/main.py#L178)</p>
+> [source](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/main.py#L178)</p>
 >
-> 根据读入的文件格式，将数据保存为指定格式的文件。
+> Write all images (>= 1) object to a new file.
 >
-> **参数:**
+> **Parameters:**
 >
-> - **output_path**: 字符串, **必选**. 保存文件的路径。
+> - **output_path**: str, **required**. The path to save the file.
 >
-> - **save_format**: 字符串, **必选**. 保存文件的格式。默认为 None。支持的格式有 `pwmat/config`, `pwmat/movement`, `vasp/poscar`, `lammps/lmp`, `extxyz`, `pwmlff/npy`.
+> - **save_format**: str, **required**. The format of the file. Default is None. Supported formats are `pwmat/config`, `pwmat/movement`, `vasp/poscar`, `lammps/lmp`, `extxyz`, `pwmlff/npy`.
 >
 > - **Kwargs**:
->   - 1. 其他用于保存文件的关键字参数。用于以下格式的文件：`pwmat/config`, `vasp/poscar`, `lammps/lmp`, `extxyz`。
->     - **data_name**: 字符串, **必选**. 结构文件的保存名称。
->     * **sort**: bool, **可选**. 是否按照原子序数排序。默认为 None。
->     * **wrap**: bool, 可选. 是否将原子映射到模拟盒中。默认为 False。
->     * **direct**: bool, **必选**. 原子坐标是分数坐标还是笛卡尔坐标。(0 0 0) -> (1 1 1)
->   - 2. 用于保存标签文件的关键字参数。用于 `pwmlff/npy` 格式的文件。
->     - **data_name**: 字符串, **必选**. 数据集文件夹的保存名称。
->     * **train_data_path**: 字符串, 可选. 训练集的保存路径。默认为 "train"。（"./PWdata/train"）
->     * **valid_data_path**: 字符串, 可选. 验证集的保存路径。默认为 "valid"。（"./PWdata/valid"）
->     * **train_ratio**: float, **必选**. 训练集的比例。默认为 None。如果给定 None，将会报错。
->     * **random**: bool, 可选. 是否对原始数据进行随机打乱，然后将数据划分为训练集和验证集。默认为 True。
->     * **seed**: int, 可选. 随机数种子。默认为 2024。
->     * **retain_raw**: bool, 可选. 是否保留原始数据。默认为 False。
+>   - 1. Additional keyword arguments for image or <font color='red'>multi_image</font> format. (e.g. `pwmat/config`, `vasp/poscar`, `lammps/lmp`, `pwmat/movement`, `extxyz`)
+>     - **data_name**: str, Save name of the configuration file.
+>     * **sort**: bool, **required**. Whether to sort the atoms by atomic number. Default is None.
+>     * **wrap**: bool, optional. Whether to wrap the atoms into the simulation box (for pbc). Default is False.
+>     * **direct**: bool, **required**. The coordinates of the atoms are in fractional coordinates or cartesian coordinates. (0 0 0) -> (1 1 1)
+>   - 2. Additional keyword arguments for <font color='red'>`pwmlff/npy`</font> format.
+>     - **data_name**: str, Save name of the dataset folder.
+>     * **train_data_path**: str, optional. Save path of the training dataset. Default is "train". ("./PWdata/train")
+>     * **valid_data_path**: str, optional. Save path of the validation dataset. Default is "valid". ("./PWdata/valid")
+>     * **train_ratio**: float, **required**. The ratio of the training dataset. Default is None. If None is given, the error will be raised.
+>     * **random**: bool, optional. Whether to shuffle the raw data and then split the data into the training and validation datasets. Default is True.
+>     * **seed**: int, optional. The random seed. Default is 2024.
+>     * **retain_raw**: bool, optional. Whether to retain raw data. Default is False.
 >
 > :::caution
 >
-> 1. 输入为 `CP2K` 的数据时，`sort` 参数需要设置为 `False`，因为 CP2K 的数据已经是按照原子序数排序的，再次排序会导致数据顺序错误。
-> 2. `pwmlff/npy` 用于保存数据集的标签。它可以用于训练机器学习模型。
-> 3. PWmat 结构文件只能保存为分数坐标，不能保存为笛卡尔坐标，因此 `direct` 参数无效。
-> 4. LAMMPS 结构文件只能保存为笛卡尔坐标，不能保存为分数坐标，因此 `direct` 参数无效。
+> 1. Set sort to False for CP2K, because data from CP2K is already sorted!!!. It will result in a wrong order if sort again.
+> 2. `pwmlff/npy` is used to save the label of the dataset. It can be used to train the ML model.
+> 3. PWmat are in fractional coordinates only, useless for direct.
+> 4. LAMMPS are in cartesian coordinates only, useless for direct.
 >    :::
 >
-> **例子:**
+> **EXAMPLES:**
 >
 > ```python
 > from pwdata import Config
@@ -169,13 +163,12 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 > ```
 >
 > :::tip
-> 对于具有相同结构的多个配置，如果有需要的话，可以在调用 `.to()` 方法之前调用 `.append()` 方法将它们拼接在一起。
+> For the same configurations, the `.append()` method can be called to piece them together before calling the `.to()` method.
 >
-> 例如:
->
+> For example:
 > ```python
 > from pwdata import Config
->
+> 
 > raw_data = ["./OUTCAR0", "./OUTCAR1", "./OUTCAR2"]    # the same atoms...
 > format = "vasp/outcar"
 > multi_data = Config(format, raw_data[0])
@@ -184,30 +177,29 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 >    multi_data.append(image_data)
 > multi_data.to(output_path = "./PWdata", save_format='pwmlff/npy', train_data_path='train', valid_data_path='valid', train_ratio=0.8, random=True, seed=2024, retain_raw=False)
 > ```
->
 > :::
 
 > <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**build.supercells.make_supercell**</font> <font color='#2ecc71'>_(image_data, supercell_matrix: list, pbc: list = None, wrap=True, tol=1e-5)_</font>
-> [源码](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/build/supercells.py#L8)</p>
+> [source](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/build/supercells.py#L8)</p>
 >
-> 根据输入的原始结构和超晶胞矩阵构建超晶胞。
+> Construct supercell from image_data and supercell_matrix
 >
-> **参数:**
+> **Parameters:**
 >
-> - **image_data**: **必选**. Image 对象，包含原始结构的一些信息。
+> - **image_data**: **required**. Image object or The list of Image objects. Each Image object contains the information of a original configuration.
 >
-> - **supercell_matrix**: 列表, **必选**. 超晶胞矩阵 (3x3)。例如，`[[2, 0, 0], [0, 2, 0], [0, 0, 2]]` 表示超晶胞是 2x2x2 的。
+> - **supercell_matrix**: list, **required**. The supercell matrix (3x3). For example, `[[2, 0, 0], [0, 2, 0], [0, 0, 2]]` means the supercell is 2x2x2.
 >
-> - **pbc**: 列表, 可选. 周期性边界条件。默认为 None。例如，`[1, 1, 1]` 表示系统在 x, y, z 方向上是周期性的。
+> - **pbc**: list, optional. The periodic boundary conditions. Default is None. For example, `[1, 1, 1]` means the system is periodic in x, y, z directions.
 >
-> - **wrap**: 布尔值, 可选. 是否将原子映射到模拟盒中（对于周期性边界条件）。默认为 True。
+> - **wrap**: bool, optional. Whether to wrap the atoms into the simulation box (for pbc). Default is True.
 >
-> - **tol**: 浮点数, 可选. 分数坐标的容差。默认为 1e-5。防止轻微负坐标被映射到模拟盒中。
+> - **tol**: float, optional. The tolerance for the fractional coordinates. Default is 1e-5. Small number to prevent slightly negative coordinates from being wrapped.
 >
-> **返回:**
-> 一个新的 Image 对象(的列表)。每个对象包含超晶胞的一些信息。
+> **Returns:**
+> A new Image object. This object contains the information of the supercell.
 >
-> **例子:**
+> **EXAMPLES:**
 >
 > ```python
 > from pwdata import Config, make_supercell
@@ -220,24 +212,24 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 > ```
 
 > <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**pertub.perturbation.perturb_structure**</font> <font color='#2ecc71'>_(image_data, pert_num:int, cell_pert_fraction:float, atom_pert_distance:float)_</font>
-> [源码](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/pertub/perturbation.py#L22)</p>
+> [source](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/pertub/perturbation.py#L22)</p>
 >
-> Perturb the structure. 微扰结构。
+> Perturb the structure.
 >
-> **参数:**
+> **Parameters:**
 >
-> - **image_data**: **必选**. 需要被微扰的 Image 对象，包含原始结构的一些信息。
+> - **image_data**: Include Image object, The system to be perturbed.
 >
-> - **pert_num**: 整数, **必选**. 要生成的微扰结构的数量。
+> - **pert_num**: int, **required**. The number of perturbed structures.
 >
-> - **cell_pert_fraction**: 浮点数, **必选**. 决定晶胞变形的程度。例如，`0.03` 表示晶胞变形的程度是相对原始晶胞的 3%。
+> - **cell_pert_fraction**: float, **required**. A fraction determines how much (relatively) will cell deform.
 >
-> - **atom_pert_distance**: 浮点数, **必选**. 原子微扰的距离，决定原子相对原始位置的移动距离。微扰是以埃为单位的距离。例如，`0.01` 表示原子的移动距离是 0.01 埃。
+> - **atom_pert_distance**: float, **required**. The distance of the atom perturbation. A distance determines how far atoms will move. The perturbation is a distance in Angstrom.
 >
-> **返回:**
-> 一个新的 Image 对象的列表。每个 Image 对象包含一个微扰结构的一些信息。
+> **Returns:**
+> A list of new Image objects. Each Image object contains the information of a perturbed configuration.
 >
-> **例子:**
+> **EXAMPLES:**
 >
 > ```python
 > from pwdata import Config, perturb_structure
@@ -257,18 +249,18 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 > ```
 
 > <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**pertub.scale.scale_cell**</font> <font color='#2ecc71'>_(image_data, scale_factor:float)_</font>
-> [源码](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/pertub/scale.py#L5)</p>
+> [source](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/pertub/scale.py#L5)</p>
 >
-> **参数:**
+> **Parameters:**
 >
-> - **image_data**: **必选**. 需要被缩放的 Image 对象，包含原始结构的一些信息。
+> - **image_data**: Include Image object, The system to be scaled.
 >
-> - **scale_factor**: 浮点数, **必选**. 晶胞的缩放因子。
+> - **scale_factor**: float, **required**. The scale factor of the cell.
 >
-> **返回:**
-> 一个新的 Image 对象(的列表)。每个 Image 对象包含一个缩放后的结构的一些信息。
+> **Returns:**
+> A list of new Image objects. Each Image object contains the information of a scaled configuration.
 >
-> **例子:**
+> **EXAMPLES:**
 >
 > ```python
 > from pwdata import Config, scale_cell
