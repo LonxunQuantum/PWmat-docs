@@ -195,9 +195,9 @@ module load lammps4pwmlff/2024.5
 1. lammps 源码下载，你可以通过github下载源码，或者下载release 包。
 - 通过github或gitee clone 源码:
 ```bash
-$ git clone -b libtorch https://github.com/LonxunQuantum/Lammps_for_PWMLFF.git
+$ git clone -b libtorch_nep https://github.com/LonxunQuantum/Lammps_for_PWMLFF.git
 或
-$ git clone -b libtorch https://gitee.com/pfsuo/Lammps_for_PWMLFF.git
+$ git clone -b libtorch_nep https://gitee.com/pfsuo/Lammps_for_PWMLFF.git
 ```
 
 - 或下载release 包:

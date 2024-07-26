@@ -195,9 +195,9 @@ Installing from source involves the following steps.
 1. **Downloading LAMMPS Source Code**: You can download the source code from GitHub or download the release package.
 - Clone the source code via GitHub or Gitee:
 ```bash
-$ git clone -b libtorch https://github.com/LonxunQuantum/Lammps_for_PWMLFF.git
+$ git clone -b libtorch_nep https://github.com/LonxunQuantum/Lammps_for_PWMLFF.git
 or
-$ git clone -b libtorch https://gitee.com/pfsuo/Lammps_for_PWMLFF.git
+$ git clone -b libtorch_nep https://gitee.com/pfsuo/Lammps_for_PWMLFF.git
 ```
 
 - Or download the release package:
