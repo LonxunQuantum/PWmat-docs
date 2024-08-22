@@ -195,7 +195,8 @@ The complete parameter settings for the NEP model are as follows.
             "cutoff": [6.0,6.0],
             "n_max": [4,4],
             "basis_size": [12,12],
-            "l_max": [4,2,1]
+            "l_max": [4,2,1],
+            "zbl": 2.0
         },
         "fitting_net": {
             "network_size": [100,1]
@@ -221,6 +222,9 @@ This parameter sets the expansion order for angular components and also controls
 #### network_size
 This parameter sets the number of neurons in the hidden layer of the `NEP` model. The NEP model has only one hidden layer by default, with the default value being `[100]`. Although multi-layer neural networks are supported (e.g., you can set it to `[50, 50, 50, 1]`), we recommend using the default value. In our tests, adding more network layers did not significantly improve model fitting accuracy and instead increased inference burden, reducing inference speed.
 
+#### zbl
+This parameter is used to set the Ziegler-Biersack-Littmark (ZBL) potential, which handles situations where atomic distances are extremely close. By default, it is not set. The allowed range for this value is 1.0 $\le$ zbl $\le$ 2.5.
+
 ## optimizer
 
 The optimizers available for training DP, NRP, NN models are the `KF(Kalman Filter) Optimizer` and `ADAM optimizer`.
@@ -236,6 +240,7 @@ KF optimizer's complete parameter settings are as follows:
         "batch_size": 1,
         "print_freq": 10,
         "block_size": 5120,
+        "p0_weight": 0.01,
         "kalman_lambda": 0.98,
         "kalman_nue": 0.9987,
         "train_energy": true,
@@ -268,6 +273,9 @@ The parameter for specifying how often to print the training error after a certa
 
 #### block_size
 The parameter is a hyperparameter for the `LKF optimizer`, which specifies the block size of the covariance matrix P. A larger block size increases memory and GPU memory consumption, leading to slower training, while a smaller block size affects convergence speed and accuracy. The default value is `5120`. If using high-end graphics cards such as A100 or H100, it is recommended to set it to `10240`.
+
+#### p0_weight
+This parameter is a hyperparameter for the LKF and GKF optimizers, used for regularization. `By default, it is 0.01`, meaning regularization is applied. Setting a regularization term helps reduce model overfitting. The value for this parameter must be less than 1.0, with `0.01` being found as a suitable value through testing.If set to `1`, it means regularization is not applicable.
 
 #### kalman_lambda
 The parameter is a hyperparameter for the `LKF and GKF optimizer`. it is called memory factor. The greater it is, the more weight, or say attention, is paid to previous data. The default value is `0.98`.
@@ -315,6 +323,7 @@ The complete set of parameters for the `ADAM optimizer` is as follows.
         "epochs": 30,
         "batch_size": 1,
         "print_freq": 10,
+        "lambda_2": 0.1,
         "learning_rate": 0.001,
         "stop_lr": 3.51e-08,
         "stop_step": 1000000,
@@ -338,6 +347,9 @@ The complete set of parameters for the `ADAM optimizer` is as follows.
 ```
 
 `optimizer`, `epochs`, `batch_size`, `print_freq`, `train_energy`, `train_force`, `train_ei`, `train_virial`, `train_egroup`. These parameters have the same functionality in the KF optimizer.
+
+#### lambda_2
+This parameter is used to set the` L2 regularization` term for the Adam optimizer. By default, it is not set. Setting a regularization term helps reduce model overfitting.
 
 #### learning_rate
 The parameter is the initial learning rate for the Adam optimizer. The default value is `0.001`.

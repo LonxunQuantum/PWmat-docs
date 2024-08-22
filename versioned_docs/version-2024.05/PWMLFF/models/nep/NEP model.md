@@ -22,17 +22,18 @@ NEP 网络结构，不同类型的元素具有独立但结构相同的子神经�
 PWMLFF train nep.json 
 ```
 
-2.python 测试接口我们提供了infer和test两种命令，详见 [Python inference](#python-inference)。
+2.python 测试接口我们提供了`infer` 和 `test` 两种命令，使用方式与 [DP inference](../dp/python_inference.md#python-inference) 相同。
 
-`infer 命令` 调用训练好的模型做 `单结构` 能量、力、维里推理。
+对于 `infer` 命令，指定 nep 力场文件路径即可，这里支持来自 `GPUMD 的 nep.txt `文件、 PWMLFF `nep_model.ckpt` 力场文件，以及在 lammps 中使用的 `nep_to_lmps.txt` 格式文件。
 
+例如
 ``` bash
 PWMLFF infer nep_model.ckpt atom.config pwmat/config
-
-PWMLFF infer nep_model.ckpt 0.lammpstrj lammps/dump Hf O
-# Hf O 为 结构中的元素名称，Hf为结构中1号元素类型，O为元素中2号元素类型
+PWMLFF infer gpumd_nep.txt 0.lammpstrj lammps/dump Hf O
+# Hf O 为 lammps/dump格式的结构中的元素名称，Hf为结构中1号元素类型，O为元素中2号元素类型
 ```
-`test 命令` 用于带标签（能量、力、维里）的MOVEMENT（PWmat）、OUTCAR（vasp）、pwdata等`多结构`数据格式数据推理。
+
+在`test`命令的 `test.json` 中，同样支持上述力场格式。
 ``` bash
 PWMLFF test nep_test.json
 ```
@@ -42,7 +43,9 @@ PWMLFF test nep_test.json
 PWMLFF toneplmps nep_model.ckpt
 ```
 
-4.`togpumd` 命令，用于把`PWMLFF` 训练的`nep_model.ckpt` 文件转换为 `nep_to_gpumd.txt` 文件，用于 `GPUMD` 模拟。
+4.`togpumd` 命令，用于把`PWMLFF` 训练的`nep_model.ckpt` 文件转换为 `nep_to_gpumd.txt` 文件，可用于 `GPUMD` 模拟。
+
+`nep_to_lmps.txt` 相比于 GPUMD 的 `nep_to_gpumd.txt` 区别是额外存储了不同元素各自的 last bias，因此，因此多了 $N_{type} - 1$ 行值，$N_{type}$ 为元素类型，如果只有单元素，那它们完全相同。
 
 由于GPUMD 不同元素的网络共享最后一个 bias， 因此需要根据模拟体系做转换。我们这里的转换思路如下公式所示。
 
@@ -54,7 +57,6 @@ $b_{com} = \frac{\sum_{t=1}^{N} b_t * N_t}{\sum_{t=1}^{N} N_t }$
 # 您可以输入如下命令，查询输入参数详解
 PWMLFF togpumd -h
 
-
 #完整的转换参数例子如下所示，这里以HfO2体系为例，假设您要模拟一个Hf原子数目为N, O 原子数目为 M 的体系
 
 #命令执行后您将得到一个nep_to_gpumd.txt 力场文件，可以用于GPUMD中模拟
@@ -64,7 +66,7 @@ PWMLFF togpumd -m nep_model.ckpt -t Hf O -n N M
 
 ```
 
-5.`topwmlff 命令`，用于把GPUMD 训练好的 nep.txt 格式力场文件转换为PWMLFF Pytorch 格式力场文件，命令完成后，您会得到一个名为 `nep_from_gpumd.ckpt`的 pytorch 格式力场文件。
+5.`topwmlff 命令`，用于把文本格式的 nep.txt 力场文件转换为PWMLFF Pytorch 格式力场文件，命令完成后，您会得到一个名为 `nep_from_gpumd.ckpt`的 pytorch 格式力场文件。
 
 ``` bash
 PWMLFF topwmlff nep.txt nep.in
@@ -143,7 +145,7 @@ PWMLFF train train.json
 
 ### 训练完成后的输出文件
 
-训练完成后，会在当前目录下生一个 `model_record` 目录，包含如下 5 个文件：
+训练完成后，会在当前目录下生一个 `model_record` 目录，包含如下 4 个文件：
 `nep_to_lmps.txt`、`nep_model.ckpt`、`epoch_valid.dat`、`epoch_train.dat`
 
 `nep_model.ckpt`为训练结束后的PWMLFF格式力场文件，`nep_to_lmps.txt`为该力场文件的 lammps 版本
@@ -151,43 +153,7 @@ PWMLFF train train.json
 `epoch_valid.dat`、`epoch_train.dat` 为训练过程中的 loss 记录文件
 
 ## Python inference
-本部分介绍如何使用训练好的 NEP 模型对新的原子结构进行性质预测。训练好的模型可以用来预测新的原子结构的性质，如系统的能量、力和应力等。如下案例所示。
-
-我们在 `example/NEP` 目录下准备了 `atom.config` 文件，使用 `infer` 命令：
-```bash
-PWMLFF infer model_record/nep_model.ckpt atom.config pwmat/config
-```
-执行后会在屏幕输出预测的能量、力、维里
-
-我们在 `example/NEP` 目录下准备了 `test.json` 文件，使用 `test` 命令：
-```bash
-PWMLFF test test.json
-
-# 如果执行 sbatch test.job, 请替换环境变量为您自己的环境变量
-```
-
-对于 test.json 文件，如下所示
-```json
-{
-    "model_type": "NEP",
-    "atom_type": [8, 72],
-    "model_load_file":"./model_record/nep_model.ckpt",
-    "format":"pwmat/movement",
-    "raw_files":["./mvms/mvm_init_000_50"],
-    "datasets_path": ["./pwdata/init_000_50", "./pwdata/init_001_50/valid"]
-}
-```
-`model_load_file` 为 训练好的 `nep_model.ckpt` 文件所在路径;
-
-`format` 为 `raw_files` 中的结构文件格式;
-
-`raw_files` 为原始结构文件所在路径；
-
-用户也可以直接在 `datasets_path` 中使用 `pwmlff/npy` 格式的结构。
-
-例如对于例子中的`pwmlff/npy`文件结构，`./pwdata/init_000_50`，目录下的 `train` 训练集和 `valid` 测试集下的所有结构都会用于推理；`./pwdata/init_001_50/valid` 测试集下的结构会用于推理。
-
-这里支持对`raw_files` 和 `datasets_path` 的混合使用。
+使用方式与 DP 中的 [Python inference](../dp/python_inference.md) 完全相同，您只需要修改力场文件为 NEP 力场文件即可。
 
 ## NEP for Lammps
 我们提供了 NEP 的 Lammps 接口，支持 CPU（单核或多核）、GPU（单卡或多卡）下的模拟。 您可以参考 [lammps 目录](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/tree/libtorch_nep/examples/nep_lmps/)下的 `examples/nep_lmps/hfo2_lmps_96atoms` 案例。此外，我们的 Lammps 接口也支持从 GPUMD 训练的 NEP4 模型，使用方式与PWMLFF中相同。
@@ -204,7 +170,7 @@ PWMLFF toneplmps nep_model.ckpt
 转换成功之后，您将得到一个力场文件`nep_to_lmps.txt`。如果您的模型正常训练结束，在`nep_model.ckpt`同级目录下会存在一个已经转换的 `nep_to_lmps.txt` 文件，您可以直接用于lammps。
 
 ### step2 lammps 输入文件设置
-为了使用 PWMLFF 生成的力场文件，lammps 的输入文件示例如下：
+nep 的lammps 接口使用方式与 [DP lammps 接口](../dp/examples/Cu.md#3-lammps-模拟) 完全相同，您只需要替换力场为 nep 力场即可，lammps 的输入文件示例如下：
 ``` bash
 pair_style   pwmlff   1 nep_to_lmps.txt 
 pair_coeff       * * 8 72

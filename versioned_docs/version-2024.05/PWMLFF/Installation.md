@@ -7,18 +7,18 @@ sidebar_position: 1
 ## PWMLFF
 
 :::tip
-PWMLFF 包含 Fortran、Python 和 CUDA 加速等，需要在包含 Python 环境、gcc 编译器、GPU 硬件条件下进行安装。我们这里提供了三种方式安装 PWMLFF。
+PWMLFF 包含 Fortran、Python (Pytorch2.0) 、 C++ 和 C++ CUDA 代码，需要在包含 Python 环境、gcc 编译器、以及 GPU 硬件条件下进行安装。我们这里提供了三种方式安装 PWMLFF。我们推荐在线安装方式，可以即时拉取仓库代码使用新增功能。
 :::
 
 ### 一、 Mcloud 直接加载
 
-`mcloud` 已有配置好的 conda 环境和 PWMLFF 软件包，避免自己安装 anaconda, cudatoolkit, pytorch 等极度耗时的过程，使用 `PWMLFF` 请加载以下环境变量即可：
+[龙讯超算云](https://mcloud.lonxun.com/)(`Mcloud`)
+已有配置好的 conda 环境和 PWMLFF 软件包，避免自己安装 anaconda, cudatoolkit, pytorch 等极度耗时的过程，使用 `PWMLFF` 请加载以下环境变量即可：
 
 ``` bash
 # 加载conda 环境
-source /share/app/anaconda3/etc/profile.d/conda.sh
+module load anaconda
 conda activate PWMLFF
-# PWMLFF 用于PWMLFF2024.5 或 pwmlff/2024.03.06版本
 module load pwmlff/2024.5
 ```
 
@@ -28,7 +28,7 @@ module load pwmlff/2024.5
 
 #### 1. 下载
 
-👉[百度云链接](https://pan.baidu.com/s/1K4TrZuh4WVzSwfu2ZzL5mg?pwd=pwmt) 选择最新的版本下载（当前最新版本为2024.05）。
+👉[百度云链接](https://pan.baidu.com/s/1K4TrZuh4WVzSwfu2ZzL5mg?pwd=pwmt) 选择版本下载（2024.05）。
 
 #### 2. 解压
 
@@ -37,26 +37,37 @@ gzip -d pwmlff.2024.5.sh.gz
 ```
 
 解压后得到 `pwmlff.2024.5.sh` 文件，执行该文件即可完成环境的安装。
-
-:::caution
-运行 `pwmlff.2024.5.sh` 前，仍然需要加载编译所需要的模块，即 intel, cuda 和 gcc.
-对于mcloud用户，直接加载如下环境
-module load cuda/11.8-share intel/2020
-source /opt/rh/devtoolset-8/enable
-:::
-
 ```bash
 ./pwmlff.2024.5.sh
 # 或 sh pwmlff.2024.5.sh
 ```
+:::caution
+运行 `pwmlff.2024.5.sh` 前，需要加载编译所需要的模块，即 intel, cuda 和 gcc.
+对于 mcloud 用户，直接加载如下环境
+```
+module load cuda/11.8-share intel/2020
+source /opt/rh/devtoolset-8/enable
+```
 
-运行完成后，会在运行目录下生成一个名为 `PWMLFF2024.5` 的文件夹，内含所有的环境配置（`pwmlff`）和程序包（`PWMLFF`）。
+我们推荐使用 `intel2020`版本，`cuda/11.8`，`cmake版本 >= 3.21`，`gcc 版本 8.n`。
+PWMLFF中使用的`pytorch`版本为`2.0`以上，必须使用 `cuda/11.8`或更高版本。
+:::
+
+运行完成后，会在运行目录下生成一个名为 `PWMLFF2024.5` 的文件夹，文件夹下包含运行环境（`pwmlff`）、程序包（`PWMLFF`）。
 
 解压及编译完成后，更新环境变量：
 
 ```bash
 source ~/.bashrc
 ```
+
+:::tip
+安装完成之后，会默认将 PWMLFF2024.5 环境变量（如下所示）写入 .bashrc 中，如果不需要，请您手动到.bashrc中删除即可。删除后，需要您在每次运行 PWMLFF 前手动导入该环境变量。
+```bash
+export PATH=/the/path/PWMLFF2024.5/PWMLFF/src/bin:$PATH
+export PYTHONPATH=/the/path/PWMLFF2024.5/PWMLFF/src/:$PYTHONPATH
+```
+:::
 
 #### 3. 使用
 
@@ -65,6 +76,12 @@ source ~/.bashrc
 ```bash
 source /the/path/PWMLFF2024.5/pwmlff/bin/activate
 # 这里环境地址需要完整的路径，例如/data/home/wuxingxing/pack/PWMLFF2024.5/pwmlff/bin/activate
+```
+
+如果您的 ./bashrc (离线安装后会自动写入) 不包含下面的环境变量，请导入该环境变量
+```bash
+export PATH=/the/path/PWMLFF2024.5/PWMLFF/src/bin:$PATH
+export PYTHONPATH=/the/path/PWMLFF2024.5/PWMLFF/src/:$PYTHONPATH
 ```
 
 退出环境
@@ -76,7 +93,7 @@ source /the/path/PWMLFF2024.5/pwmlff/bin/deactivate
 
 ### 三、在线安装
 
-在线安装需要您首先配置环境，然后下载和编译源码。
+在线安装首先需要您配置环境，然后下载和编译源码。
 
 #### 配置环境
 为了编译和运行PWMLFF2024.5，您需要安装conda 环境，并在conda 环境中安装 PWMLFF2024.5依赖的安装包，过程如下。
@@ -87,7 +104,8 @@ source /the/path/PWMLFF2024.5/pwmlff/bin/deactivate
 module load cuda/11.8-share intel/2020 cmake/3.21.6
 source /opt/rh/devtoolset-8/enable
 ```
-我们推荐使用 `intel2020`版本，`cuda/11.8`，`cmake版本 >= 3.21`，`gcc 版本 8.n` 即可。
+我们推荐使用 `intel2020`版本，`cuda/11.8`，`cmake版本 >= 3.21`，`gcc 版本 8.n`。
+PWMLFF中使用的`pytorch`版本为`2.0`以上，必须使用 `cuda/11.8`或更高版本。
 
 2. 在用户目录下创建一个新 python 虚拟环境，建议手动下载并使用 Anaconda3 进行环境管理（搜索引擎搜索 Linux 安装 anaconda3 教程）。
 
@@ -116,7 +134,9 @@ conda activate pwmlff2024.5
 4. 安装 PWMLFF 所需的第三方依赖包
 
 ```bash
-pip3 install numpy tqdm cmake pyyaml pandas scikit-learn-intelex matplotlib pwdata pwact pybind11 
+pip3 install numpy==1.26.4
+# 建议您安装numpy 版本 < 2.0，过高的numpy版本会在编译中与一些依赖包存在冲突
+pip3 install tqdm cmake pyyaml pandas scikit-learn-intelex matplotlib pwdata pwact pybind11 
 pip3 install charset_normalizer==3.3.2
 
 # charset_normalizer 请安装到最新版本(版本3.3.2或以上)，否则在编译fortran code 会存在编码错误 
@@ -125,12 +145,12 @@ pip3 install charset_normalizer==3.3.2
 
 ```python
 pip install torch==2.2.0  --index-url https://download.pytorch.org/whl/cu118
-# 建议您使用torch2.2.0版本，如果您要使用torch2.3版本或以上，请使用9.0及以上的gcc
+# 建议您使用torch2.2.0版本，更高的版本编译代码可能出错。
 ```
 
 如需安装其他版本的 `pytorch` 请查阅[Pytorch 官网](https://pytorch.org/get-started/previous-versions/)。
 
-5. 完成第三方依赖包安装后进行 PWMLFF 的 [编译安装](#编译安装)。
+5. 完成第三方依赖包安装后进行 PWMLFF 的 编译安装。
 
 #### 编译安装
 
@@ -171,7 +191,7 @@ source ~/.bashrc
 
 至此完成了 PWMLFF 的全部编译安装，后续使用时也要保证在 PWMLFF 的虚拟环境中，并加载完成 intel 编译器。
 
-## Lammps (Recompiled version for PWMLFF)
+## Lammps for PWMLFF
 
 :::tip
 当前版本 Lammps 适用于 DP 和 NEP model 提取的力场模型
@@ -188,6 +208,15 @@ Mcloud 已经为用户安装PWMLFF2024.5对应的lammps接口，使用如下命�
 ```bash
 module load lammps4pwmlff/2024.5
 ```
+:::tip
+该 lammps 接口还安装了下列功能:
+`KSPACE`、 `MANYBODY`、 `REAXFF`、 `MOLECULE`、 `QEQ`、 `REPLICA`、 `RIGID`、 `MEAM`、 `MC`、 `PWMLFF`
+
+`lammps4pwmlff/2024.5 接口用于 DP 模型和 NEP 模型的 MD，并支持多GPU卡加速。`
+
+对于 Linear 和 NN 模型的lammps 接口，我们提供了 cpu 版本的接口，请加载
+`lammps4pwmlff/0.1.0`
+:::
 
 ### 二、通过源码编译安装
 源码安装需要经过如下几个步骤。
@@ -224,8 +253,8 @@ source /the/path/anaconda3/etc/profile.d/conda.sh
 # 激活conda 环境，注意这里使用的虚拟环境需要和编译PWMLFF2024.5时的环境相同
 conda activate pwmlff2024.5 
 # 加载 PWMLFF2024.5 环境变量
-export PATH=/the/path/codespace/PWMLFF2024.5/src/bin:$PATH
-export PYTHONPATH=/the/path/codespace/PWMLFF2024.5/src/:$PYTHONPATH
+export PATH=/the/path/PWMLFF2024.5/src/bin:$PATH
+export PYTHONPATH=/the/path/PWMLFF2024.5/src/:$PYTHONPATH
 # 加载 共享库文件
 export OP_LIB_PATH=$(dirname $(dirname $(which PWMLFF)))/op/build/lib
 ```
@@ -238,12 +267,12 @@ export OP_LIB_PATH=$(dirname $(dirname $(which PWMLFF)))/op/build/lib
 
 3. 编译lammps代码
 
-为了使用 NEP模型的 GPU 版本，需要您先将 NEP 的 c++ cuda 代码编译为静态库文件，如下所示。
+为了使用 NEP模型的 GPU 版本，需要您先将 NEP 的 c++ cuda 代码编译为共享库文件，如下所示。
 ``` bash
 cd src/PWMLFF/NEP_GPU
 make clean
 make
-# 编译完成后您将得到一个src/PWMLFF/NEP_GPU/libnep_gpu.so的静态库文件
+# 编译完成后您将得到一个/PWMLFF2024.5/src/libnep_gpu.so的共享库文件
 ```
 
 编译lammps 接口：
@@ -256,34 +285,66 @@ make clean-all && make mpi -j4
 如果编译过程中找不到 `cuda_runtime.h` 头文件，请在 `src/MAKE/Makefile.mpi` 文件的 `第24行` 替换为您自己的 CUDA 路径，`/the/path/cuda/cuda-11.8`，`cuda_runtime.h` 位于该目录下的 `include` 目录下。
 ```txt
 CUDA_HOME = $(CUDADIR)
+替换为CUDA_HOME = /the/path/cuda/cuda-11.8
 ```
 
-4. 将 Lammps 执行文件写入环境变量中
-
+:::tip
+这里列举了 lammps 中常用的软件，您可以在安装 PWMLFF 时顺带安装
 ```bash
-vim ~/.bashrc
-export PATH=absolute/path/to/Lammps_for_PWMLFF-2024.5/src:$PATH
-source ~/.bashrc
+make yes-KSPACE
+make yes-MANYBODY
+make yes-REAXFF
+make yes-MOLECULE
+make yes-QEQ
+make yes-REPLICA
+make yes-RIGID
+make yes-MEAM
+make yes-MC
 ```
+对于 Linear 和 NN 模型的lammps 接口请参考 [`lammps4pwmlff/0.1.0 安装`](http://doc.lonxun.com/en/1.0/PWMLFF/Installation_v0.0.1/#lammps_for_pwmlff%E5%AE%89%E8%A3%85)
 
-5. 将 Pytorch 相关库写入环境变量中
-在执行lammps 时您需要加载下环境变量
-```bash
-export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.__path__[0])")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib" >> ~/.bashrc
+:::
+
+### lammps 加载环境运行md例子
+
+#### 方法一、加载 Mcloud 已安装lammps 做MD 
+
+``` bash
+module load lammps4pwmlff/2024.5
+
+mpirun -np 4 lmp_mpi_gpu -in in.lammps
+# 如果您使用cpu version
+# mpirun -np 1 lmp_mpi -in in.lammps
 
 ```
+#### 方法二、加载用户自己安装的 Lammps 运行MD
 
-您也可以执行下述指令将共享库文件路径写入./bashrc，再次使用lammps时不再需要加载该环境变量
-```bash
-echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.__path__[0])")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib" >> ~/.bashrc
+``` bash
+#1. 用于mpirun 命令
+module load intel/2020
+
+#2. 加载conda环境、激活conda虚拟环境
+source /data/home/wuxingxing/anaconda3/etc/profile.d/conda.sh
+conda activate torch2_feat
+
+#3. 加载PWMLFF 环境变量
+export PATH=/the/path/to/PWMLFF2024.5/src/bin:$PATH
+export PYTHONPATH=/the/path/to/PWMLFF2024.5/src/:$PYTHONPATH
+
+#4. 导入PWMLFF2024.5 的共享库路径
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.__path__[0])")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib
+
+#5. 加载lammps 环境变量
+export PATH=/the/path/to/Lammps_for_PWMLFF-2024.5/src:$PATH
+export LD_LIBRARY_PATH=/the/path/Lammps_for_PWMLFF-2024.5/src:$LD_LIBRARY_PATH
+
+#6. 运行 GPU lammps 命令
+mpirun -np 4 lmp_mpi_gpu -in in.lammps
+
+# 或者运行 CPU lammps 命令
+# mpirun -np 32 lmp_mpi -in in.lammps
+
 ```
-
-**加载`pwmlff`和虚拟环境的目的是为了获取`LD_LIBRARY_PATH`。**
-
-**lammps 运行时必须包含`LD_LIBRARY_PATH`环境变量，否则无法调用特定库。**
-
----
-
 :::caution
 在提交训练任务时，注意任务脚本中需要确保加载相关环境，如下所示：
 
@@ -302,47 +363,27 @@ export I_MPI_PMI_LIBRARY=/lib64/libpmi.so
 - 第 5、6 行环境解决 pytorch 与 numpy 版本不匹配的问题
 - 最后两行环境解决多 lammps 任务无法同时并行的问题
 
+**加载`pwmlff`和虚拟环境的目的是为了获取`LD_LIBRARY_PATH`。**
+**lammps 运行时必须包含`LD_LIBRARY_PATH`环境变量，否则无法调用特定库。**
 :::
 
-### lammps 加载环境运行md例子
 
-#### 加载 Mcloud 已安装lammps 做MD 
+<!-- 为了避免每次运行lammps 都要写上述3、4、5步的环境变量，您可以将3、4、5步的环境变量写到您的.bashrc文件中，写入步骤如下所示：
 
-``` bash
-module load lammps4pwmlff/2024.5
+```bash
+# 打开 ./bashrc 文件
+vim ~/.bashrc
+export PATH=/the/path/to/Lammps_for_PWMLFF-2024.5/src:$PATH
+export LD_LIBRARY_PATH=/the/path/to/Lammps_for_PWMLFF-2024.5/src:$LD_LIBRARY_PATH
 
-mpirun -np 1 lmp_mpi_gpu -in in.lammps
-# 如果您使用cpu version
-# mpirun -np 1 lmp_mpi -in in.lammps
-
-```
-#### 加载用户自己的环境做MD
-
-``` bash
-# 用于mpirun 命令
-module load intel/2020
-
-# 加载conda环境、激活conda虚拟环境
-source /data/home/wuxingxing/anaconda3/etc/profile.d/conda.sh
-conda activate torch2_feat
-
-# 加载PWMLFF 环境变量
-export PATH=/data/home/wuxingxing/codespace/PWMLFF2024.5/src/bin:$PATH
-export PYTHONPATH=/data/home/wuxingxing/codespace/PWMLFF2024.5/src/:$PYTHONPATH
-
-# 导入PWMLFF2024.5 的共享库路径
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.__path__[0])")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib
 
-# 加载lammps 环境变量
-export PATH=/data/home/wuxingxing/codespace/Lammps_for_PWMLFF-2024.5/src:$PATH
-
-# 如果您需要运行NEP gpu 版本的lammps 接口，请加载
-# export LD_LIBRARY_PATH=/the/path/Lammps_for_PWMLFF-2024.5/src/PWMLFF/NEP_GPU:$LD_LIBRARY_PATH
-
-# GPU lammps 命令
-mpirun -np 1 lmp_mpi_gpu -in in.lammps
-
-# CPU lammps 命令
-# mpirun -np 32 lmp_mpi -in in.lammps
-
+export PATH=/the/path/to/Lammps_for_PWMLFF-2024.5/src:$PATH
+export LD_LIBRARY_PATH=/the/path/Lammps_for_PWMLFF-2024.5/src:$LD_LIBRARY_PATH
+# 退出vim
 ```
+
+重新激活环境变量
+```bash
+source ~/.bashrc
+``` -->

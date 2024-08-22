@@ -7,18 +7,17 @@ sidebar_position: 1
 ## PWMLFF
 
 :::tip
-PWMLFF includes Fortran, Python, and CUDA acceleration. Installation requires a Python environment, GCC compiler, and GPU hardware. Here we provide three methods for installing PWMLFF.
+PWMLFF includes Fortran, Python (Pytorch2.0), C++ and C++ CUDA acceleration. Installation requires a Python environment, GCC compiler, and GPU hardware. Here we provide 3 methods for installing PWMLFF.
 :::
 
 ### 1. Direct Loading in Mcloud
 
-`mcloud` has pre-configured conda environments and PWMLFF packages, avoiding the time-consuming process of installing anaconda, cudatoolkit, pytorch, etc. To use `PWMLFF`, simply load the following environment variables:
+[`mcloud`](https://mcloud.lonxun.com/) has pre-configured conda environments and PWMLFF packages, avoiding the time-consuming process of installing anaconda, cudatoolkit, pytorch, etc. To use `PWMLFF`, simply load the following environment variables:
 
 ```bash
 # Load conda environment
-source /share/app/anaconda3/etc/profile.d/conda.sh
+module load anaconda
 conda activate PWMLFF
-# PWMLFF for PWMLFF2024.5 or pwmlff/2024.03.06 version
 module load pwmlff/2024.5
 ```
 
@@ -37,26 +36,37 @@ gzip -d pwmlff.2024.5.sh.gz
 ```
 
 After unzipping, you will get the `pwmlff.2024.5.sh` file. Run this file to complete the environment installation.
-
-:::caution
-Before running `pwmlff.2024.5.sh`, you still need to load the required modules for compilation, i.e., intel, cuda, and gcc.
-For mcloud users, directly load the following environment:
-module load cuda/11.8-share intel/2020
-source /opt/rh/devtoolset-8/enable
-:::
-
 ```bash
 ./pwmlff.2024.5.sh
 # Or sh pwmlff.2024.5.sh
 ```
+:::caution
+Before running `pwmlff.2024.5.sh`, you need to load the required modules for compilation, i.e., intel, cuda, and gcc.
+For mcloud users, directly load the following environment:
+``` bash
+module load cuda/11.8-share intel/2020
+source /opt/rh/devtoolset-8/enable
+```
+
+We recommend using `intel2020`, `cuda/11.8`, `cmake version >= 3.21`, and `gcc version 8.n`.
+Note: The version of `pytorch` used in PWMLFF is `2.0 or above`, and `CUDA/11.8` or higher must be used.
+:::
 
 After running, a folder named `PWMLFF2024.5` will be created in the running directory, containing all the environment configurations (`pwmlff`) and program packages (`PWMLFF`).
 
 After unzipping and compiling, update the environment variables:
-
 ```bash
 source ~/.bashrc
 ```
+
+:::tip
+After installation, the PWMLFF2024.5 environment variables (as shown below) will be automatically written into your `.bashrc`. If you do not need this, you can manually delete them from `.bashrc`. After deletion, you will need to manually import these environment variables each time before running PWMLFF.
+
+```bash
+export PATH=/the/path/PWMLFF2024.5/src/bin:$PATH
+export PYTHONPATH=/the/path/PWMLFF2024.5/src/:$PYTHONPATH
+```
+:::
 
 #### 3. Usage
 
@@ -65,6 +75,13 @@ Activate the environment
 ```bash
 source /the/path/PWMLFF2024.5/pwmlff/bin/activate
 # Replace with the full path, e.g., /data/home/wuxingxing/pack/PWMLFF2024.5/pwmlff/bin/activate
+```
+
+If your `.bashrc` (automatically written after offline installation) does not include the following environment variables, please import them
+
+```bash
+export PATH=/the/path/PWMLFF2024.5/PWMLFF/src/bin:$PATH
+export PYTHONPATH=/the/path/PWMLFF2024.5/PWMLFF/src/:$PYTHONPATH
 ```
 
 Deactivate the environment
@@ -88,6 +105,7 @@ module load cuda/11.8-share intel/2020 cmake/3.21.6
 source /opt/rh/devtoolset-8/enable
 ```
 We recommend using `intel2020`, `cuda/11.8`, `cmake version >= 3.21`, and `gcc version 8.n`.
+Note: The version of `pytorch` used in PWMLFF is `2.0 or above`, and `CUDA/11.8` or higher must be used.
 
 2. Create a new Python virtual environment in your user directory. It is recommended to manually download and use Anaconda3 for environment management (search for Linux Anaconda3 installation tutorial online).
 
@@ -116,6 +134,9 @@ conda activate pwmlff2024.5
 4. Install the third-party dependencies required by PWMLFF
 
 ```bash
+pip3 install numpy==1.26.4
+#it is recommended to install a version of numpy < 2.0. Versions above this may cause conflicts with some dependencies during compilation.
+
 pip3 install numpy tqdm cmake pyyaml pandas scikit-learn-intelex matplotlib pwdata pwact pybind11 
 pip3 install charset_normalizer==3.3.2
 
@@ -125,7 +146,7 @@ pip3 install charset_normalizer==3.3.2
 
 ```python
 pip install torch==2.2.0  --index-url https://download.pytorch.org/whl/cu118
-# We recommend torch 2.2.0 version. If you want to use torch 2.3 or above, use gcc version 9.0 or above.
+# it is recommended to use version 2.2.0 of PyTorch. Higher versions may result in compilation errors.
 ```
 
 For other versions of `pytorch`, refer to the [Pytorch official website](https://pytorch.org/get-started/previous-versions/).
@@ -188,6 +209,14 @@ Mcloud has already installed the LAMMPS interface corresponding to PWMLFF2024.5.
 ```bash
 module load lammps4pwmlff/2024.5
 ```
+:::tip
+This LAMMPS interface also includes the following features:
+`KSPACE`, `MANYBODY`, `REAXFF`, `MOLECULE`, `QEQ`, `REPLICA`, `RIGID`, `MEAM`, `MC`, `PWMLFF`.
+
+The `lammps4pwmlff/2024.5` interface is designed for MD simulations with both DP and NEP models and supports multi-GPU acceleration.
+
+For Linear and NN models, we offer a CPU version of the LAMMPS interface, which can be accessed by loading `lammps4pwmlff/0.1.0`.
+:::
 
 ### 2. Installing from Source Code
 Installing from source involves the following steps.
@@ -224,8 +253,8 @@ source /the/path/anaconda3/etc/profile.d/conda.sh
 # Activate conda environment, note the virtual environment here needs to be the same as the one used to compile PWMLFF2024.5
 conda activate pwmlff2024.5 
 # Load PWMLFF2024.5 environment variables
-export PATH=/the/path/codespace/PWMLFF2024.5/src/bin:$PATH
-export PYTHONPATH=/the/path/codespace/PWMLFF2024.5/src/:$PYTHONPATH
+export PATH=/the/path/PWMLFF2024.5/src/bin:$PATH
+export PYTHONPATH=/the/path/PWMLFF2024.5/src/:$PYTHONPATH
 # Load shared library files
 export OP_LIB_PATH=$(dirname $(dirname $(which PWMLFF)))/op/build/lib
 ```
@@ -237,12 +266,12 @@ export OP_LIB_PATH=$(dirname $(dirname $(which PWMLFF)))/op/build/lib
 
 3. **Compiling LAMMPS Code**
 
-To use the GPU version of the NEP model, you need to compile the NEP C++ CUDA code into a static library file as shown below.
+To use the GPU version of the NEP model, you need to compile the NEP C++ CUDA code into a share library file as shown below.
 ```bash
 cd src/PWMLFF/NEP_GPU
 make clean
 make
-# After compiling, you will get a static library file src/PWMLFF/NEP_GPU/libnep_gpu.so
+# After compiling, you will get a share library file src/libnep_gpu.so
 ```
 
 Compile LAMMPS interface:
@@ -252,93 +281,85 @@ make yes-PWMLFF
 make clean-all && make mpi -j4
 ```
 If you cannot find the `cuda_runtime.h` header file during compilation, please replace the CUDA path in line 24 of `src/MAKE/Makefile.mpi` with your own path, `/the/path/cuda/cuda-11.8`. The `cuda_runtime.h` file is located in the `include` directory under this path.
+
 ```txt
 CUDA_HOME = $(CUDADIR)
+Replace with 
+CUDA_HOME = /the/path/cuda/cuda-11.8
 ```
+:::tip
+Here is a list of commonly used software in LAMMPS that you can install alongside PWMLFF:
+```bash
+make yes-KSPACE
+make yes-MANYBODY
+make yes-REAXFF
+make yes-MOLECULE
+make yes-QEQ
+make yes-REPLICA
+make yes-RIGID
+make yes-MEAM
+make yes-MC
+```
+For the LAMMPS interface for `Linear` and `NN` models, please refer to [`lammps4pwmlff/0.1.0 Installation`](http://doc.lonxun.com/en/1.0/PWMLFF/Installation_v0.0.1/#lammps_for_pwmlff%E5%AE%89%E8%A3%85).
+:::
 
-4. **Add LAMMPS Executable to Environment Variables**
+### LAMMPS Environment Setup and MD Example
+
+#### Method 1: Load Mcloud Pre-installed LAMMPS for MD
 
 ```bash
-vim ~/.bashrc
-export PATH=absolute/path/to/Lammps_for_PWMLFF-2024.5/src:$PATH
-source ~/.bashrc
+module load lammps4pwmlff/2024.5
+
+mpirun -np 4 lmp_mpi_gpu -in in.lammps
+# If you are using the CPU version
+# mpirun -np 1 lmp_mpi -in in.lammps
 ```
 
-5. **Add Pytorch Related Libraries to Environment Variables**
-
-You need to load the following environment variables when running LAMMPS:
+#### Method 2: Loading Your Own Installed LAMMPS
 ```bash
+# 1. For mpirun command
+module load intel/2020
+
+# 2. Load conda environment and activate conda virtual environment
+source /data/home/wuxingxing/anaconda3/etc/profile.d/conda.sh
+conda activate torch2_feat
+
+# 3. Load PWMLFF environment variables
+export PATH=/the/path/to/PWMLFF2024.5/src/bin:$PATH
+export PYTHONPATH=/the/path/to/PWMLFF2024.5/src/:$PYTHONPATH
+
+# 4. Import PWMLFF2024.5 shared library path
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.__path__[0])")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib
+
+# 5. Load LAMMPS environment variables
+export PATH=/the/path/to/Lammps_for_PWMLFF-2024.5/src:$PATH
+export LD_LIBRARY_PATH=/the/path/Lammps_for_PWMLFF-2024.5/src:$LD_LIBRARY_PATH
+
+# 6. GPU LAMMPS command
+mpirun -np 4 lmp_mpi_gpu -in in.lammps
+
+# CPU LAMMPS command
+# mpirun -np 32 lmp_mpi -in in.lammps
 ```
-
-You can also execute the following command to add the shared library file path to `~/.bashrc`, so you don’t need to load this environment variable again when using LAMMPS next time:
-```bash
-echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.__path__[0])")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib" >> ~/.bashrc
-```
-
-**Loading `pwmlff` and the virtual environment is to obtain `LD_LIBRARY_PATH`.**
-
-**`LD_LIBRARY_PATH` environment variable must be included when running LAMMPS, otherwise, specific libraries cannot be called.**
-
----
 
 :::caution
-When submitting training tasks, ensure to load the relevant environments in the task script as shown below:
+When submitting a training task, ensure that the task script loads the relevant environment as shown below:
 
-```
+```bash
 module load intel/2020
 source /share/app/anaconda3/etc/profile.d/conda.sh
 conda activate PWMLFF
 
-# The following is a solution to potential problems
+# The following lines address potential issues
 export MKL_SERVICE_FORCE_INTEL=1
 export MKL_THREADING_LAYER=GNU
 export I_MPI_HYDRA_BOOTSTRAP=slurm
 export I_MPI_PMI_LIBRARY=/lib64/libpmi.so
 ```
 
-- Lines 5 and 6 solve the issue of Pytorch and NumPy version mismatch.
-- The last two lines solve the problem of multiple LAMMPS tasks not being able to run in parallel simultaneously.
+- Lines 5 and 6 solve the issue of mismatched PyTorch and NumPy versions.
+- The last two lines resolve issues with running multiple LAMMPS tasks in parallel.
+
+**Loading `pwmlff` and the virtual environment is necessary to obtain `LD_LIBRARY_PATH`.**
+**The `LD_LIBRARY_PATH` environment variable must be included when running LAMMPS, otherwise, specific libraries cannot be called.**
 :::
-
-### Example of Running MD with LAMMPS Loaded Environment
-
-#### Running MD with Mcloud Installed LAMMPS
-
-```bash
-module load lammps4pwmlff/2024.5
-
-mpirun -np 1 lmp_mpi_gpu -in in.lammps
-# If you are using the CPU version
-# mpirun -np 1 lmp_mpi -in in.lammps
-```
-
-#### Running MD with User's Own Environment
-
-```bash
-# For mpirun command
-module load intel/2020
-
-# Load conda environment and activate conda virtual environment
-source /data/home/wuxingxing/anaconda3/etc/profile.d/conda.sh
-conda activate torch2_feat
-
-# Load PWMLFF environment variables
-export PATH=/data/home/wuxingxing/codespace/PWMLFF2024.5/src/bin:$PATH
-export PYTHONPATH=/data/home/wuxingxing/codespace/PWMLFF2024.5/src/:$PYTHONPATH
-
-# Import shared library path of PWMLFF2024.5
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.__path__[0])")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib
-
-# Load LAMMPS environment variables
-export PATH=/data/home/wuxingxing/codespace/Lammps_for_PWMLFF-2024.5/src:$PATH
-
-# If you need to run NEP GPU version of LAMMPS interface, please load
-# export LD_LIBRARY_PATH=/the/path/Lammps_for_PWMLFF-2024.5/src/PWMLFF/NEP_GPU:$LD_LIBRARY_PATH
-
-# GPU LAMMPS command
-mpirun -np 1 lmp_mpi_gpu -in in.lammps
-
-# CPU LAMMPS command
-# mpirun -np 32 lmp_mpi -in in.lammps
-```

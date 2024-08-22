@@ -1,19 +1,19 @@
-# Bulk SiC system
+# Bulk SiC System
 
-下文将以 Bulk SiC 系统为例，介绍如何使用 **PWMLFF Linear Model** 进行训练，以及如何使用训练好的模型进行预测。
+The following example will guide you through using the **PWMLFF Linear Model** to train on a Bulk SiC system and how to use the trained model for predictions.
 
-整个程序运行逻辑大致分为：
+The overall workflow can be outlined as follows:
 
 ```mermaid
 graph TD;
-    A(PWMLFF)-->|产生数据集|AIMD;
+    A(PWMLFF)-->|Generate Dataset|AIMD;
     A(PWMLFF)-->|Linear Model|MLFF;
     AIMD-->atom.config;
-    AIMD-->|原子运动轨迹|MOVEMENT;
-    MLFF-->|提取特征|generate_data;
-    MLFF-->|训练过程|train;
-    MLFF-->|验证|evaluation;
-    MLFF-->|提取力场|extract_force_field;
+    AIMD-->|Atomic Movement Trajectory|MOVEMENT;
+    MLFF-->|Feature Extraction|generate_data;
+    MLFF-->|Training Process|train;
+    MLFF-->|Validation|evaluation;
+    MLFF-->|Extract Force Field|extract_force_field;
     evaluation-->plot_evaluation;
     extract_force_field-->*forcefield.ff;
     *forcefield.ff-->LAMMPS;
@@ -21,11 +21,11 @@ graph TD;
     LAMMPS-->|pair_coeff * * 1 1 myforcefield.ff 14 6|in.lammps;
 ```
 
-## 1. 产生数据集
+## 1. Generate Dataset
 
-以 PWmat AIMD 模拟得到的 SiC 数据为例，数据文件为`MOVEMENT`，包含 100 个结构，每个结构包含 216 个原子。
+Taking SiC data obtained from PWmat AIMD simulations as an example, the data file `MOVEMENT` contains 100 structures, each with 216 atoms.
 
-**etot.input**输入文件示例：
+**Sample input file `etot.input`:**
 
 ```bash
 4  1
@@ -46,21 +46,21 @@ IN.PSP1 = Si.SG15.PBE.UPF
 IN.PSP2 = C.SG15.PBE.UPF
 ```
 
-- 可选项`ENERGY_DECOMP`：是否将总 DFT 能量分解为属于每个原子的能量（原子能量）。结果输出在`MOVEMENT`文件中。如需使用或训练原子能量，需要将其设置为`T`。
-- 可选项`OUT.STRESS`：是否输出应力信息，如需训练`Virial`，则需要将其设置为`T`。
-- 其他参数含义参考[PWmat manual](http://www.pwmat.com/pwmat-resource/Manual.pdf)。
+- Optional `ENERGY_DECOMP`: Specifies whether to decompose the total DFT energy into atomic energies. The results are output in the `MOVEMENT` file. If you need to use or train on atomic energy, set this to `T`.
+- Optional `OUT.STRESS`: Specifies whether to output stress information. If you need to train the `Virial`, set this to `T`.
+- For other parameter meanings, refer to the [PWmat manual](http://www.pwmat.com/pwmat-resource/Manual.pdf).
 
-## 2. 训练过程
+## 2. Training Process
 
-### 2.1 提取特征
+### 2.1 Feature Extraction
 
-新建目录，放置`MOVEMENT*`文件。或者`MOVEMENT*`文件也可以放置在其他目录下，只需要通过修改输入文件`*.json`中的`train_movement_path`路径进行训练。
+Create a new directory to place the `MOVEMENT*` files. Alternatively, the `MOVEMENT*` files can be placed in another directory; just update the `train_movement_path` in the `*.json` input file to reflect the correct path.
 
-### 2.2 训练输入文件
+### 2.2 Training Input File
 
-当前目录下，新建`*.json`文件(如`linear_sic.json`)，该文件包含一系列需要传入的参数。
+In the current directory, create a `*.json` file (e.g., `linear_sic.json`) containing a series of parameters to be passed.
 
-**输入文件示例 ([输入文件其他参数说明](#5-输入文件其他参数说明))：**
+**Sample Input File ([Detailed explanation of other input parameters](#5-input-file-additional-parameters))：**
 
 ```json
 {   
@@ -70,13 +70,13 @@ IN.PSP2 = C.SG15.PBE.UPF
 }
 ```
 
-- `train_movement_file`: `MOVEMENT`文件存放名。可以设置同时多个文件。
-- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](/en/next/PWMLFF/Parameter%20details)。
-- `atom_type`：原子类型，14 和 6 分别为 Si 和 C 的原子序数
+- `train_movement_file`: Specifies the name of the `MOVEMENT` files. Multiple files can be set simultaneously.
+- `model_type`: Specifies the model type for training. For training with other models and parameter configuration, refer to [Parameter Details](/next/PWMLFF/Parameter%20details).
+- `atom_type`: Specifies the atom types, where 14 and 6 are the atomic numbers for Si and C, respectively.
 
-### 2.3 运行
+### 2.3 Execution
 
-以下 slurm 示例脚本适用于 Mcloud,提交任务时确保已经加载必要的环境和模块。如`conda activate PWMLFF`。
+The following slurm script example is suitable for Mcloud. Ensure that the necessary environment and modules are loaded before submitting the task, such as `conda activate PWMLFF`.
 
 ```bash
 #!/bin/sh
@@ -90,7 +90,7 @@ IN.PSP2 = C.SG15.PBE.UPF
 PWMLFF train linear_sic.json > log
 ```
 
-交互式运行：
+Interactive execution:
 
 ```bash
 $ srun -p 3080ti --gres=gpu:1 --pty /bin/bash
@@ -99,7 +99,7 @@ $ PWMLFF train linear_sic.json
 
 ---
 
-程序运行后，会在程序执行目录下生成`forcefield`目录:
+After running the program, a `forcefield` directory will be generated in the execution directory:
 
 ```
 forcefield
@@ -117,50 +117,49 @@ forcefield
 ├── input          
 │   └── *feature.in     
 ├── (output)                     
-    └── grid*   # feature 1, 2时使用
-
+    └── grid*   # Used for feature 1, 2
 ```
 
-## 3. 验证/测试
+## 3. Validation/Testing
 
-训练完成后，可以对模型进行验证/测试，以确定模型的拟合效果。
+After training, the model can be validated/tested to determine its fit.
 
-新建目录(如`MD`)，将另一个的`MOVEMENT`文件复制到该目录中。同时在`.json`文件中设置`test_movement_file`和`test_dir_name`参数。
+Create a new directory (e.g., `MD`), and copy another `MOVEMENT` file to this directory. Set the `test_movement_file` and `test_dir_name` parameters in the `.json` file.
 
 ```json
     "test_movement_file":["./MD/MOVEMENT"],
     "test_dir_name":"test_dir",
-``````
+```
 
-**验证程序运行示例：**
+**Sample validation run:**
 
-将PWMLFF train linear_sic.json中的`train`修改为`test`：
+Change `train` to `test` in `PWMLFF train linear_sic.json`:
 
-```python
+```bash
 PWMLFF test linear_sic.json
 ```
 
-程序运行完成后，验证结果保存在`test_dir_name`设置的`test_dir/`目录下
+After running the program, the validation results will be saved in the directory specified by `test_dir_name` (`test_dir/`).
 ![](../../../pictures/Linear-evaluation_plots-SiC.png)
 
 :::caution
-`pre_fac_ei`不为0时，即进行atomic energy的训练时，如果用于验证的`MOVEMENT`中没有atomic energy，则`test`程序不会自动输出atomic-energy的验证图。
+When `pre_fac_ei` is non-zero, i.e., when training atomic energy, if the `MOVEMENT` used for validation does not contain atomic energy, the `test` program will not automatically output atomic energy validation plots.
 :::
 
-## 4. Lammps 模拟
+## 4. LAMMPS Simulation
 
-将训练完成后生成的`*.ff`力场文件用于 lammps 模拟。（需使用经过修改的[版本](https://github.com/LonxunQuantum/Lammps_for_PWMLFF)重新编译）
+The `*.ff` force field file generated after training can be used for LAMMPS simulation. (Requires a modified [version](https://github.com/LonxunQuantum/Lammps_for_PWMLFF) to be recompiled.)
 
-为了使用 PWMLFF 生成的力场文件，需要在 lammps 的输入文件中设置以下内容：
+To use the force field file generated by PWMLFF, set the following in the LAMMPS input file:
 
 ```bash
 pair_style      pwmatmlff
 pair_coeff      * * 1 1 forcefield.ff 14 6
 ```
 
-其中`1`表示使用 Linear 模型产生的力场，`1`表示读取 1 个力场文件，`forcefield.ff`为 PWMLFF 生成的力场文件名称，`14` 和 `6` 分别为 Si 和 C 的原子序数
+Here, `1` indicates the force field generated by the Linear model, `1` indicates reading 1 force field file, `forcefield.ff` is the force field file generated by PWMLFF, and `14` and `6` are the atomic numbers for Si and C, respectively.
 
-以下是lammps输入文件示例(nvt系综)：
+Below is an example LAMMPS input file (NVT ensemble):
 
 ```bash
 units           metal
@@ -183,7 +182,8 @@ dump            1 all custom 1 traj.xyz id type x y z  vx vy vz fx fy fz
 run             1000 
 ```
 
-## 5. 输入文件其他参数说明
+## 5. Input File Additional Parameters
+
 
 ```json
 {
@@ -264,17 +264,17 @@ run             1000
 
 ```
 
-- `work_dir`: 训练过程中的中间文件保存目录。训练完成后自动删除。`reserve_work_dir`为`true`时，训练完成后不删除该目录。
-- `train_movement_file`: `MOVEMENT`文件存放名。可以设置同时多个文件。
-- `forcefield_name`: 生成的力场文件名称。可不设置。
-- `forcefield_dir`: 生成的力场文件存放的目录。可不设置。
-- `test_movement_file`: 用于训练完成后验证模型的`MOVEMENT`文件。([详情见验证测试部分](#3-验证测试))
-- `test_dir_name`: 训练完成后验证模型的`MOVEMENT`文件的存放目录。
-- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](/en/next/PWMLFF/Parameter%20details)。
-- `atom_type`：原子类型，14 和 6 分别为 Si 和 C 的原子序数
-- `max_neigh_num`：最大近邻原子数。
-- `etot_weight`：训练时总能量的权重。
-- `force_weight`：训练时原子力的权重。
-- `ei_weight`：训练时原子能量的权重，设置为 0 时表示不训练原子能量。
-- `model`: 模型参数，具体参数配置参考[参数细节](/en/next/PWMLFF/Parameter%20details)。
-- `feature_type`：特征类型，3,4 对应 2-body and 3-body Gaussian feature，详见[特征类型](/en/next/PWMLFF/Appendix-1)
+- `work_dir`: Directory where intermediate files from the training process are saved. This directory is automatically deleted after training is complete unless `reserve_work_dir` is set to `true`, in which case the directory will not be deleted.
+- `train_movement_file`: Specifies the name of the `MOVEMENT` files. Multiple files can be set simultaneously.
+- `forcefield_name`: Name of the generated force field file. This is optional.
+- `forcefield_dir`: Directory where the generated force field file will be stored. This is optional.
+- `test_movement_file`: `MOVEMENT` file used for model validation after training ([details in the validation and testing section](#3-validationtesting)).
+- `test_dir_name`: Directory where the `MOVEMENT` file for model validation is stored after training.
+- `model_type`: Type of model used for training. For other models and parameter configurations, refer to [Parameter Details](/en/next/PWMLFF/Parameter%20details).
+- `atom_type`: Specifies the atom types, where 14 and 6 are the atomic numbers for Si and C, respectively.
+- `max_neigh_num`: Maximum number of neighboring atoms.
+- `etot_weight`: Weight of the total energy during training.
+- `force_weight`: Weight of the atomic forces during training.
+- `ei_weight`: Weight of the atomic energy during training; if set to 0, atomic energy is not trained.
+- `model`: Model parameters; for specific parameter configurations, refer to [Parameter Details](/en/next/PWMLFF/Parameter%20details).
+- `feature_type`: Type of feature; 3 and 4 correspond to 2-body and 3-body Gaussian features, respectively. See [Feature Types](/en/next/PWMLFF/Appendix-1) for more details.

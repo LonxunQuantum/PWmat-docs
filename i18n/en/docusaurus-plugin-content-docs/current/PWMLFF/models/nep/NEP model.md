@@ -18,62 +18,63 @@ NEP network structure, where different types of elements have independent but st
 
 ## NEP Command List
 
-1. `train command` is the same as for DP, NN, and Linear models. For detailed usage, refer to [NEP Model Training](#nep-模型训练).
-
+1. `train` training command, the same as for DP, NN, and Linear models. For detailed usage, refer to [NEP Model Training](#nep-model-training).
 ```bash
 PWMLFF train nep.json 
 ```
 
-2. For the Python testing interface, we provide `infer` and `test` commands, detailed in [Python inference](#python-inference).
+2. Python testing interface: We provide two commands, `infer` and `test`, which are used in the same way as [DP inference](../dp/python_inference.md#python-inference).
 
-`infer command` calls the trained model to perform `single structure` energy, force, and virial inference.
+For the `infer` command, you only need to specify the NEP potential file path. This supports `nep.txt` files from `GPUMD`, PWMLFF `nep_model.ckpt` potential files, as well as the `nep_to_lmps.txt` format file used in LAMMPS.
 
+For example:
 ```bash
 PWMLFF infer nep_model.ckpt atom.config pwmat/config
-
-PWMLFF infer nep_model.ckpt 0.lammpstrj lammps/dump Hf O
-# Hf and O are the element names in the structure, Hf is the type 1 element, O is the type 2 element
+PWMLFF infer gpumd_nep.txt 0.lammpstrj lammps/dump Hf O
+# Hf and O are the element names in the LAMMPS dump format, where Hf is element type 1 and O is element type 2 in the structure.
 ```
 
-`test command` is used for inference on `multi-structure` data formats with labels (energy, force, virial) such as MOVEMENT (PWmat), OUTCAR (vasp), pwdata, etc.
-
+In the `test` command's `test.json`, the above-mentioned potential formats are also supported:
 ```bash
 PWMLFF test nep_test.json
 ```
 
-3. `toneplmps command` is used to convert the `nep_model.ckpt` file trained by `PWMLFF` into a `nep_to_lmps.txt` file for `Lammps` simulations.
-
+3. `toneplmps` command is used to convert the `nep_model.ckpt` file trained by `PWMLFF` into a `nep_to_lmps.txt` file for use in LAMMPS simulations:
 ```bash
 PWMLFF toneplmps nep_model.ckpt
 ```
 
-4. `togpumd command` is used to convert the `nep_model.ckpt` file trained by `PWMLFF` into a `nep_to_gpumd.txt` file for `GPUMD` simulations.
+4. `togpumd` command is used to convert the `nep_model.ckpt` file trained by `PWMLFF` into a `nep_to_gpumd.txt` file for use in `GPUMD` simulations.
 
-Since GPUMD shares the last bias among different element networks, the conversion needs to be done according to the simulated system. Our conversion approach is shown in the following formula.
+The difference between `nep_to_lmps.txt` and `GPUMD`’s `nep_to_gpumd.txt` is that `nep_to_lmps.txt` additionally stores the last bias for each element type, so there are $N_{type} - 1$ extra rows of values, where $N_{type}$ is the number of element types. If it’s a single-element system, the files will be the same.
 
-$b_{com} = \frac{\sum_{t=1}^{N} b_t * N_t}{\sum_{t=1}^{N} N_t }$
+Since the last bias is shared across all element types in GPUMD, it needs to be adjusted based on the system being simulated. The conversion logic we use is shown in the formula below:
 
-Here, $N$ is the number of element types, $b_t$ is the bias corresponding to element type $r$ in the force field, and $N_t$ is the number of atoms of type $t$ in the simulated system.
+$$
+b_{com} = \frac{\sum_{t=1}^{N} b_t * N_t}{\sum_{t=1}^{N} N_t }
+$$
+
+Where $N$ is the number of element types, $b_t$ is the bias for element type $t$ in the potential file, and $N_t$ is the number of atoms of element type $t$ in the system to be simulated.
 
 ```bash
-# You can enter the following command to query the input parameters in detail
+# You can enter the following command to query the input parameter details:
 PWMLFF togpumd -h
 
-# A complete example of conversion parameters is shown below. Here, using the HfO2 system as an example, suppose you want to simulate a system with N Hf atoms and M O atoms.
+# A complete example of conversion parameters is shown below, using the HfO2 system as an example. Suppose you are simulating a system with N Hf atoms and M O atoms.
 
-# After executing the command, you will get a nep_to_gpumd.txt force field file that can be used for GPUMD simulations.
+# After executing the command, you will get a `nep_to_gpumd.txt` potential file, which can be used in GPUMD simulations.
 
-# Note that this method only applies to MD simulations where the number of atoms of different types does not change.
+# Note that this method only applies to MD simulations where the number of atoms of different types in the system does not change.
 PWMLFF togpumd -m nep_model.ckpt -t Hf O -n N M
 ```
 
-5. `topwmlff command` is used to convert the nep.txt format force field file trained by GPUMD into a PWMLFF Pytorch format force field file. After the command completes, you will get a Pytorch format force field file named `nep_from_gpumd.ckpt`.
+5. `topwmlff` command is used to convert a text-format `nep.txt` potential file into a PWMLFF Pytorch format potential file. After the command is completed, you will get a Pytorch format potential file named `nep_from_gpumd.ckpt`.
 
 ```bash
 PWMLFF topwmlff nep.txt nep.in
 ```
 
-<!-- 4. `script command` is used to convert the force field file trained by PWMLFF into a Lammps input format, with usage similar to DP.
+<!-- 4. `script` command is used to convert the trained PWMLFF potential file into LAMMPS input format, the usage is the same as for DP:
 ```bash
 PWMLFF script nep_model.ckpt
 ``` -->
@@ -154,43 +155,7 @@ After training is completed, a `model_record` directory will be generated in the
 
 ## Python Inference
 
-This section introduces how to use the trained NEP model to predict the properties of new atomic structures. The trained model can be used to predict the properties of new atomic structures, such as the energy, forces, and stress of the system. As shown in the following examples.
-
-We have prepared the `atom.config` file in the `example/NEP` directory, using the `infer` command:
-```bash
-PWMLFF infer model_record/nep_model.ckpt atom.config pwmat/config
-```
-After execution, the predicted energy, forces, and virial will be output on the screen.
-
-We have also prepared the `test.json` file in the `example/NEP` directory, using the `test` command:
-```bash
-PWMLFF test test.json
-
-# If you execute sbatch test.job, please replace the environment variables with your own
-```
-
-For the `test.json` file, as shown below:
-```json
-{
-    "model_type": "NEP",
-    "atom_type": [8, 72],
-    "model_load_file":"./model_record/nep_model.ckpt",
-    "format":"pwmat/movement",
-    "raw_files":["./mvms/mvm_init_000_50"],
-    "datasets_path": ["./pwdata/init_000_50", "./pwdata/init_001_50/valid"]
-}
-```
-`model_load_file` is the path where the trained `nep_model.ckpt` file is located;
-
-`format` is the format of the structure files in `raw_files`;
-
-`raw_files` is the path where the original structure files are located;
-
-Users can also directly use the `pwmlff/npy` format structure in the `datasets_path`.
-
-For example, for the example `pwmlff/npy` file structure, `./pwdata/init_000_50`, all structures in the `train` training set and `valid` test set under the directory will be used for inference; the structures under the `./pwdata/init_001_50/valid` test set will be used for inference.
-
-Mixed use of `raw_files` and `datasets_path` is supported here.
+The usage is exactly the same as in [Python inference](../dp/python_inference.md) for DP. You just need to replace the potential file with the NEP potential file.
 
 ## NEP for Lammps
 

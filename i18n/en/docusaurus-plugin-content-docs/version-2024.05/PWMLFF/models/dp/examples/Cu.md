@@ -1,33 +1,34 @@
 ---
+
 sidebar_position: 0
 ---
 
 # Bulk Cu system
 
-下文将以 Cu 系统为例，介绍如何使用 **PWMLFF Deep Potential Model** 进行训练及 lammps 模拟。
+The following section provides an example of how to use the **PWMLFF Deep Potential Model** for training and LAMMPS simulation using a Cu system.
 
-整个程序运行逻辑大致分为：
+The overall program workflow is roughly divided into:
 
 ```mermaid
 graph TD;
-    A(PWMLFF)-->|产生数据集|AIMD;
-    A(PWMLFF)-->|处理数据集|pwdata;
+    A(PWMLFF)-->|Generate dataset|AIMD;
+    A(PWMLFF)-->|Process dataset|pwdata;
     A(PWMLFF)-->|Deep Potential Model|MLFF;
     A(PWMLFF)-->LAMMPS;
-    AIMD-->|原子结构|configurations;
-    AIMD-->|原子运动轨迹|trajectories;
-    pwdata-->|提取标签|*.npy;
-    MLFF-->|*.npy, 构建特征|descriptor;
-    descriptor-->|力场训练|train;
-    MLFF-->|提取力场|*.pt/*.ff;
+    AIMD-->|Atomic structures|configurations;
+    AIMD-->|Atomic trajectories|trajectories;
+    pwdata-->|Extract labels|*.npy;
+    MLFF-->|*.npy, build features|descriptor;
+    descriptor-->|Force field training|train;
+    MLFF-->|Extract force field|*.pt/*.ff;
     *.pt/*.ff-->|pair_style pwmlff|LAMMPS;
 ```
 
-## 1. 产生数据集
+## 1. Generate Dataset
 
-以 PWmat AIMD 模拟得到的 Cu 数据为例，数据文件为`MOVEMENT300`, `MOVEMENT1500`，各包含 100 个结构，每个结构包含 72 个 Cu 原子。
+Using Cu data obtained from PWmat AIMD simulations as an example, the data files are `MOVEMENT300` and `MOVEMENT1500`, each containing 100 structures with 72 Cu atoms per structure.
 
-**etot.input**输入文件示例：
+**Example `etot.input` file:**
 
 ```bash
 8  1
@@ -43,17 +44,17 @@ ENERGY_DECOMP = T
 OUT.STRESS = F
 ```
 
-- 可选项`ENERGY_DECOMP`：是否将总 DFT 能量分解为属于每个原子的能量（原子能量）。结果输出在`MOVEMENT`文件中。如需使用或训练原子能量，需要将其设置为`T`。
-- 可选项`OUT.STRESS`：是否输出应力信息，如需训练`Virial`，则需要将其设置为`T`。
-- 其他参数含义参考[PWmat manual](http://www.pwmat.com/pwmat-resource/Manual.pdf)。
+- Optional `ENERGY_DECOMP`: Whether to decompose the total DFT energy into atomic energies. Results are output in the `MOVEMENT` file. Set to `T` if atomic energies are needed for use or training.
+- Optional `OUT.STRESS`: Whether to output stress information. Set to `T` if training `Virial` is required.
+- For other parameter meanings, refer to the [PWmat manual](http://www.pwmat.com/pwmat-resource/Manual.pdf).
 
-## 2. 训练力场
+## 2. Training the Force Field
 
-### 2.1 处理数据集
+### 2.1 Processing Dataset
 
-工作目录下新建`*.json`文件(如`extract.json`)，该文件用于调用 pwdata 对分子动力学轨迹文件进行处理，提取标签。
+Create a new `*.json` file (e.g., `extract.json`) in the working directory. This file is used to call `pwdata` for processing molecular dynamics trajectory files and extracting labels.
 
-示例如下：
+Example:
 
 ```json
 {
@@ -64,22 +65,22 @@ OUT.STRESS = F
 }
 ```
 
-其中：
+Where:
 
-- `valid_shuffle`: 是否对全部数据进行随机打乱。例如，分子动力学步长为 10，存在 10 个 images，`valid_shuffle` 为 `true` 时，将对 10 个 images 进行随机打乱，然后按照 `train_valid_ratio` 的比例划分训练集和验证集。`valid_shuffle` 为 `false` 时，将按照 `train_valid_ratio` 的比例按顺序划分训练集和验证集。默认为 `True`
-- `train_valid_ratio`: 训练集和验证集的比例
-- `raw_files`: 原始数据的路径
-- `format`: 原始数据的格式，用于训练集的生成，所以支持的格式有 `movement`, `outcar`, `cp2k/md`
+- `valid_shuffle`: Whether to randomly shuffle all data. For example, if the molecular dynamics step size is 10 and there are 10 images, with `valid_shuffle` set to `true`, the 10 images will be shuffled randomly and then split into training and validation sets according to `train_valid_ratio`. If `valid_shuffle` is `false`, the data will be split sequentially according to `train_valid_ratio`. Default is `True`.
+- `train_valid_ratio`: Ratio of training to validation sets.
+- `raw_files`: Path to the raw data.
+- `format`: Format of the raw data used for generating the training set. Supported formats include `movement`, `outcar`, `cp2k/md`.
 
-执行命令<font color='red'>`pwdata extract.json`</font>，将会在当前目录下生成`PWdata`文件夹，包含`train`和`valid`两个子文件夹，分别存放训练集和验证集的数据。
+Run the command <font color='red'>`pwdata extract.json`</font> to generate a `PWdata` folder in the current directory, containing `train` and `valid` subfolders with training and validation data.
 
-然后需要修改力场训练输入控制文件`*.json`（如`dp_cu.json`）中的`datasets_path`路径，指定标签文件所在路径。（见下文）
+Then, modify the force field training input control file `*.json` (e.g., `dp_cu.json`) to specify the `datasets_path` where the label files are located. (See below)
 
-### 2.2 输入文件
+### 2.2 Input File
 
-当前目录下，力场训练输入控制文件包含一系列需要传入的参数。
+In the current directory, the force field training input control file includes several parameters.
 
-输入文件示例 ([输入文件其他参数说明](#4-输入文件其他参数说明))：
+Example input file ([Other parameters for input files](#4-输入文件其他参数说明)):
 
 ```json
 {
@@ -89,13 +90,13 @@ OUT.STRESS = F
 }
 ```
 
-- `datasets_path`: 标签文件存放路径。可以设置同时多个路径，路径下包含训练集和验证集子目录。请根据实际情况进行修改。
-- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](/en/next/PWMLFF/Parameter%20details)。
-- `atom_type`：原子类型，Cu 的原子序数为 29。
+- `datasets_path`: Path to the label files. Multiple paths can be specified, each containing training and validation subdirectories. Adjust as needed.
+- `model_type`: Type of model used for training. For other model types and parameter configurations, refer to [Parameter Details](/en/next/PWMLFF/Parameter%20details).
+- `atom_type`: Atomic type, where the atomic number of Cu is 29.
 
-### 2.3 运行
+### 2.3 Running
 
-以下 slurm 示例脚本适用于 Mcloud,提交任务时确保已经加载必要的环境和模块。
+The following slurm example script is suitable for Mcloud. Ensure that the necessary environment and modules are loaded before submitting the job.
 
 ```bash
 #!/bin/sh
@@ -109,7 +110,7 @@ OUT.STRESS = F
 PWMLFF train dp_cu.json > log
 ```
 
-交互式运行：
+For interactive running:
 
 ```bash
 $ srun -p 3090 --pty /bin/bash
@@ -117,9 +118,9 @@ $ PWMLFF train dp_cu.json
 ```
 
 :::tip
-大多数情况下，可以使用`raw_files`参数直接调用`pwdata`进行数据处理并进行训练：
+In most cases, you can use the `raw_files` parameter to directly call `pwdata` for data processing and training:
 
-这种情况下，可以跳过单独运行`pwdata extract.json`，直接运行`PWMLFF train dp_cu.json`。例如：
+In this case, you can skip running `pwdata extract.json` separately and run `PWMLFF train dp_cu.json` directly. For example:
 
 ```json
 {
@@ -136,55 +137,55 @@ $ PWMLFF train dp_cu.json
 
 ---
 
-在训练期间，可以通过检查训练模型文件存放的目录(`model_record`)的日志来查看训练情况。
+During training, you can check the training status by looking at the logs in the directory where the model files are stored (`model_record`).
 
-该目录下存在以下三个文件:
+This directory contains the following files:
 
-- `dp_model.ckpt` 为模型文件，可用于继续训练或提取力场。对应于最后一次训练的模型。
-- `epoch_train.dat` 和 `epoch_valid.dat` 日志文件中包含每个 epoch 的训练误差和验证误差。
+- `dp_model.ckpt` is the model file, which can be used to continue training or extract the force field. It corresponds to the most recent training model.
+- `epoch_train.dat` and `epoch_valid.dat` log files contain training and validation errors for each epoch.
 
-:::info epoch_train.dat&epoch_valid.dat
+:::info epoch_train.dat & epoch_valid.dat
 
 ![](../../../pictures/epoch-train&valid_dat.png)
 
-- `loss` 对应训练总误差
-- `RMSE_Etot_per_atom` 对应训练能量误差，建议达到 ~$10^{-3} eV/atom$ 数量级
-- `RMSE_F` 对应训练力误差， 建议达到 ~$10^{-2} eV/\text{\AA}$ 数量级
+- `loss` corresponds to the total training error.
+- `RMSE_Etot_per_atom` corresponds to the energy error in training, with a suggested target of around ~$10^{-3} eV/atom$.
+- `RMSE_F` corresponds to the force error in training, with a suggested target of around ~$10^{-2} eV/\text{\AA}$.
 
-<font color='red'>如果训练集的误差比验证集的误差明显偏小,表明训练过拟合,可适当增加训练集的大小或调整 batch_size 的数量。</font>
+<font color='red'>If the training error is significantly lower than the validation error, it indicates overfitting. Consider increasing the training set size or adjusting the batch size.</font>
 
 :::
 
-### 2.4 提取力场
+### 2.4 Extracting Force Field
 
 :::tip
-It is recommended to use the Libtorch version of the force field model. After training, manually execute the `PWMLFF script dp_model.ckpt` command to generate the `jit_dp_cpu.pt` or `jit_dp_gpu.pt` file. This file is used for Lammps simulation.
+It is recommended to use the Libtorch version of the force field model. After training, manually execute the `PWMLFF script dp_model.ckpt` command to generate the `jit_dp_cpu.pt` or `jit_dp_gpu.pt` file. This file is used for LAMMPS simulation.
 
 If your device includes a GPU environment, executing `PWMLFF script` will generate the `jit_dp_gpu.pt` file; otherwise, it will generate the `jit_dp_cpu.pt` file.
 
-Note: `jit_dp_gpu.pt` can only run Lammps in a GPU environment; `jit_dp_cpu.pt` can only run Lammps in a CPU environment.
+Note: `jit_dp_gpu.pt` can only run LAMMPS in a GPU environment; `jit_dp_cpu.pt` can only run LAMMPS in a CPU environment.
 
 :::
 
-训练完成后，默认会在当前目录下生成`forcefield`文件夹，包含`*.ff`力场文件。该力场文件需使用[该版本](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/releases/tag/v0.1.0)，[编译](http://doc.lonxun.com/1.0/PWMLFF/Installation_v0.0.1#lammps_for_pwmlff%E5%AE%89%E8%A3%85)，[及使用](http://doc.lonxun.com/1.0/PWMLFF/Cu#3-lammps-%E6%A8%A1%E6%8B%9F)可查阅之前的手册教程。
+After training is complete, the default behavior is to generate a `forcefield` folder in the current directory, containing `*.ff` force field files. This force field file should be used with the [specific version](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/releases/tag/v0.1.0), [compiled](http://doc.lonxun.com/1.0/PWMLFF/Installation_v0.0.1#lammps_for_pwmlff%E5%AE%89%E8%A3%85), and [used](http://doc.lonxun.com/1.0/PWMLFF/Cu#3-lammps-%E6%A8%A1%E6%8B%9F) according to the previous manual.
 
-## 3. Lammps 模拟
+## 3. LAMMPS Simulation
 
-将训练完成后生成的`pt`力场文件用于 lammps 模拟。
+Use the `pt` force field file generated after training for LAMMPS simulation.
 
-为了使用 PWMLFF 生成的力场文件，lammps 的输入文件示例如下：
+To use the force field file generated by PWMLFF, an example LAMMPS input file is as follows:
 
 ```bash
 pair_style      pwmlff 1 ../model_record/jit_dp_gpu.pt
 pair_coeff      * * 29
 ```
 
-其中：
+Where:
 
-- `pair_style pwmlff 1` 表示使用 PWMLFF 生成的力场文件，`1`表示读取 1 个力场文件， `../model_record/jit_dp_gpu.pt` 为 PWMLFF 生成的力场文件，可以根据实际情况修改路径。
-- `pair_coeff * * 29` 为 Cu 的原子序数。
+- `pair_style pwmlff 1` indicates using the PWMLFF generated force field file, with `1` indicating reading one force field file. `../model_record/jit_dp_gpu.pt` is the PWMLFF generated force field file; adjust the path as needed.
+- `pair_coeff * * 29` specifies the atomic number for Cu.
 
-以下是 lammps 输入文件示例(nvt 系综)：
+Here is an example LAMMPS input file (NVT ensemble):
 
 ```bash
 units           metal
@@ -195,6 +196,8 @@ neighbor        2.0 bin
 neigh_modify    every 10 delay 0 check no
 
 read_data       lmp.init
+
+
 
 pair_style      pwmlff 1 ../model_record/jit_dp_gpu.pt
 pair_coeff      * * 29
@@ -209,9 +212,9 @@ run             1000 #1ps
 
 :::info
 
-1. 使用 GPU 运行 lammps 时，执行程序为`lmp_mpi_gpu`; 使用 CPU 运行 lammps 时，执行程序为`lmp_mpi`。
+1. When running LAMMPS with GPU, use the executable `lmp_mpi_gpu`; when running with CPU, use `lmp_mpi`.
 
-2. 如果有多个力场文件（如[主动学习](/en/next/PWMLFF/active%20learning/example_si_init_zh)时），(例如 4 个)可以修改为：
+2. If there are multiple force field files (e.g., during [active learning](/en/next/PWMLFF/active%20learning/example_si_init_zh)), such as 4 files, you can modify it to:
 
    ```bash
    pair_style      pwmlff 4 1.pt 2.pt 3.pt 4.pt
@@ -220,7 +223,7 @@ run             1000 #1ps
 
 :::
 
-## 4. 输入文件其他参数说明
+## 4. Other Input File Parameters Explanation
 
 ```json
 {
@@ -278,15 +281,15 @@ run             1000 #1ps
 }
 ```
 
-- `recover_train`: 是否从上次训练中断/完成处继续训练。如果为`true`，读取默认`model_load_path`和`model_name`，程序则会从上次训练中断/完成处继续训练。见[参数细节](/en/next/PWMLFF/Parameter%20details)。
-- `raw_files`: 分子动力学轨迹文件存放路径及名称。可以设置同时多个文件。请根据实际情况进行修改。
-- `train_valid_ratio`: 训练集和验证集的比例。`0.8`表示训练集占`80%`，验证集占`20%`。
-- `model_load_file`: 模型文件路径。则读取该路径下的模型文件，程序则会从该模型文件处继续训练/测试。见[参数细节](/en/next/PWMLFF/Parameter%20details)。
-- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](/en/next/PWMLFF/Parameter%20details)。
-- `atom_type`：原子类型，Cu 的原子序数为 29。
-- `max_neigh_num`：最大近邻原子数。
-- `seed`: 随机数种子。
-- `model`: 模型参数，具体参数配置参考[参数细节](/en/next/PWMLFF/Parameter%20details)。
-- `optimizer`：优化器参数，推荐使用`LKF`和`ADAM`。通常情况下，对于大体系大网络，使用`LKF`优化器可以加速训练。其他优化器及更多的参数配置参考[参数细节](/en/next/PWMLFF/Parameter%20details)。
-- `batch_size`：每批次用于训练的数据大小。如 1, 2, 5, 10。
-- `n_epoch`：训练迭代次数。根据总的动力学轨迹 images 数量修改,images 少时可适当增加,如 50。
+- `recover_train`: Whether to continue training from where it was last interrupted or completed. If set to `true`, the program will read from the default `model_load_path` and `model_name` to resume training from the last checkpoint. See [Parameter Details](/en/next/PWMLFF/Parameter%20details).
+- `raw_files`: Path and names of the molecular dynamics trajectory files. Multiple files can be specified. Modify according to the actual situation.
+- `train_valid_ratio`: Ratio of training set to validation set. `0.8` means 80% of the data is used for training and 20% for validation.
+- `model_load_file`: Path to the model file. If specified, the program will read from this path and continue training/testing from the specified model file. See [Parameter Details](/en/next/PWMLFF/Parameter%20details).
+- `model_type`: Type of model currently used for training. For training and parameter configurations of other model types, refer to [Parameter Details](/en/next/PWMLFF/Parameter%20details).
+- `atom_type`: Atomic type, where the atomic number for Cu is 29.
+- `max_neigh_num`: Maximum number of neighboring atoms.
+- `seed`: Random number seed.
+- `model`: Model parameters. For specific parameter configurations, refer to [Parameter Details](/en/next/PWMLFF/Parameter%20details).
+- `optimizer`: Optimizer parameters, recommended are `LKF` and `ADAM`. Generally, for large systems and networks, using the `LKF` optimizer can speed up training. For other optimizers and more parameter configurations, refer to [Parameter Details](/en/next/PWMLFF/Parameter%20details).
+- `batch_size`: Size of data used per batch for training. For example, 1, 2, 5, 10.
+- `n_epoch`: Number of training iterations. Adjust according to the total number of dynamics trajectory images. For fewer images, the number of epochs can be increased, e.g., to 50.

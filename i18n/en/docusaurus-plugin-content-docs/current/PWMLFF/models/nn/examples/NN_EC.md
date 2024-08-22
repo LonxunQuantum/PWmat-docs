@@ -1,20 +1,20 @@
-# Molecure Ethylene carbonate system
+# Molecule Ethylene Carbonate System
 
-下文将以 C3H4O3 孤立体系为例，介绍如何使用 **PWMLFF Neural Network Model** 进行训练，以及如何使用训练好的模型进行预测。
+The following example, based on an isolated C3H4O3 system, demonstrates how to train and use the **PWMLFF Neural Network Model** for prediction.
 
-整个程序运行逻辑大致分为：
+The overall program workflow is roughly divided into:
 
 ```mermaid
 graph TD;
-    A(PWMLFF)-->|产生数据集|AIMD;
+    A(PWMLFF)-->|Generate Dataset|AIMD;
     A(PWMLFF)-->|Neural Network Model|MLFF;
     AIMD-->atom.config;
-    AIMD-->|原子运动轨迹|MOVEMENT;
-    MLFF-->|提取特征|generate_data;
-    MLFF-->|训练过程|load_and_train;
-    MLFF-->|提取模型|extract_model_para;
-    MLFF-->|验证|evaluation;
-    MLFF-->|提取力场|extract_force_field;
+    AIMD-->|Atomic Motion Trajectory|MOVEMENT;
+    MLFF-->|Feature Extraction|generate_data;
+    MLFF-->|Training Process|load_and_train;
+    MLFF-->|Extract Model Parameters|extract_model_para;
+    MLFF-->|Validation|evaluation;
+    MLFF-->|Extract Force Field|extract_force_field;
     evaluation-->plot_evaluation;
     extract_force_field-->*forcefield.ff;
     *forcefield.ff-->LAMMPS;
@@ -22,11 +22,11 @@ graph TD;
     LAMMPS-->|pair_coeff * * 3 1 myforcefield.ff 8 6 1|in.lammps;
 ```
 
-## 1. 产生数据集
+## 1. Generating the Dataset
 
-以 PWmat AIMD 模拟得到的 C3H4O3 数据为例，数据文件为`MOVEMENT`，包含 200 个结构，每个结构包含 10 个原子。
+Using the C3H4O3 data obtained from a PWmat AIMD simulation, the data file `MOVEMENT` contains 200 structures, each consisting of 10 atoms.
 
-**etot.input**输入文件示例：
+**Sample `etot.input` File:**
 
 ```bash
 8  1   
@@ -44,21 +44,21 @@ IN.PSP2 = H.SG15.PBE.UPF
 IN.PSP3 = O.SG15.PBE.UPF
 ```
 
-- 可选项`ENERGY_DECOMP`：是否将总 DFT 能量分解为属于每个原子的能量（原子能量）。结果输出在`MOVEMENT`文件中。如需使用或训练原子能量，需要将其设置为`T`。
-- 可选项`OUT.STRESS`：是否输出应力信息，如需训练`Virial`，则需要将其设置为`T`。
-- 其他参数含义参考[PWmat manual](http://www.pwmat.com/pwmat-resource/Manual.pdf)。
+- Optional `ENERGY_DECOMP`: Whether to decompose the total DFT energy into atomic energies (atomic energy). The results are output in the `MOVEMENT` file. To use or train atomic energy, set this to `T`.
+- Optional `OUT.STRESS`: Whether to output stress information. To train `Virial`, set this to `T`.
+- Other parameter details can be found in the [PWmat manual](http://www.pwmat.com/pwmat-resource/Manual.pdf).
 
-## 2. 训练过程
+## 2. Training Process
 
-### 2.1 提取特征
+### 2.1 Feature Extraction
 
-新建目录，放置`MOVEMENT*`文件。或者`MOVEMENT*`文件也可以放置在其他目录下，只需要通过修改输入文件`*.json`中的`train_movement_path`路径进行训练。
+Create a new directory and place the `MOVEMENT*` files there. Alternatively, these files can be located in other directories, and you can adjust the `train_movement_path` in the `*.json` input file accordingly.
 
-### 2.2 训练输入文件
+### 2.2 Training Input File
 
-当前目录下，新建`*.json`文件(如`nn_ec.json`)，该文件包含一系列需要传入的参数。
+In the current directory, create a new `*.json` file (e.g., `nn_ec.json`). This file will contain a series of required parameters.
 
-**输入文件示例  ([输入文件其他参数说明](#5-输入文件其他参数说明))：**
+**Example Input File ([Details on Other Parameters](#5-Input-File-Parameter-Details)):**
 
 ```json
 {   
@@ -67,16 +67,15 @@ IN.PSP3 = O.SG15.PBE.UPF
     "model_type": "NN",
     "atom_type":[8,6,1]
 }
-
 ```
 
-- `train_movement_file`: `MOVEMENT`文件存放名。可以设置同时多个文件。请根据实际情况进行修改。
-- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](/en/next/PWMLFF/Parameter%20details)。
-- `atom_type`：原子类型，8, 6 和 1 分别为 O, C 和 H 的原子序数.
+- `train_movement_file`: Name of the `MOVEMENT` file(s). Multiple files can be specified. Adjust according to your setup.
+- `model_type`: Model type, referring to the model used for training. Other models and parameter configurations are detailed in [Parameter Details](/next/PWMLFF/Parameter%20details).
+- `atom_type`: Specifies the atomic types, where 8, 6, and 1 correspond to O, C, and H atomic numbers, respectively.
 
-### 2.3 运行
+### 2.3 Running the Program
 
-以下 slurm 示例脚本适用于 Mcloud,提交任务时确保已经加载必要的环境和模块。
+The following slurm script example is suitable for Mcloud. Ensure that the necessary environment and modules are loaded when submitting the job.
 
 ```bash
 #!/bin/sh
@@ -90,7 +89,7 @@ IN.PSP3 = O.SG15.PBE.UPF
 PWMLFF train nn_ec.json > log
 ```
 
-交互式运行：
+To run interactively:
 
 ```bash
 $ srun -p 3080ti --gres=gpu:1 --pty /bin/bash
@@ -98,16 +97,15 @@ $ PWMLFF train nn_ec.json
 ```
 
 :::tip
-产生feature与train可以单独运行：
+Generating features and training can be run separately:
 
-- `PWMLFF gen_feat nn_ec.json` - 仅用于产生特征。
-- `PWMLFF train nn_ec.json` - 用于加载特征,对特征进行处理后开始训练。直接运行`train`会自动调用`gen_feat`。如果`gen_feat`已经运行过，可以在`.json`文件中设置`train_feature_path`来指定feature所在路径，同时注释掉`train_movement_file`
-
+- `PWMLFF gen_feat nn_ec.json` - Only used to generate features.
+- `PWMLFF train nn_ec.json` - Loads and processes features before starting training. Running `train` directly will automatically call `gen_feat`. If `gen_feat` has already been run, you can set the `train_feature_path` in the `.json` file to specify the feature path, and comment out `train_movement_file`.
 :::
 
 ---
 
-程序运行后，会在程序执行目录下生成`forcefield`和`model_record`目录:
+After running the program, the `forcefield` and `model_record` directories will be generated in the execution directory:
 
 ```
 EC_system/
@@ -120,72 +118,70 @@ EC_system/
     │   │   ├── vdw_fitB.ntype            
     │   │   └── Wij.txt     
     │   ├── input          
-    │   │   ├── (egroup.in)  # 仅对MOVEMENT中存在ATOMIC ENERGY时起作用           
+    │   │   ├── (egroup.in)  # Only works when ATOMIC ENERGY exists in the MOVEMENT
     │   │   └── *feature.in     
     │   └── (output)                     
-    │       └── grid*   # feature 1, 2时使用
+    │       └── grid*   # Used when feature 1, 2 is applied
     │
     └── model_record
-    │   ├── epoch_train.dat     # 每个 epoch 的训练误差
-    │   ├── epoch_valid.dat     # 每个 epoch 的验证误差
-    │   ├── iter_train.dat      # 每个 batch 的训练误差     
-    │   ├── iter_valid.dat      # 每个 batch 的验证误差     
-    │   ├── nn_model.ckpt       # 模型文件   
-    │   └── scaler.pkl          # extracting scaler values of the model
-
+    │   ├── epoch_train.dat     # Training error for each epoch
+    │   ├── epoch_valid.dat     # Validation error for each epoch
+    │   ├── iter_train.dat      # Training error for each batch     
+    │   ├── iter_valid.dat      # Validation error for each batch     
+    │   ├── nn_model.ckpt       # Model file   
+    │   └── scaler.pkl          # Extracting scaler values of the model
 ```
 
-:::info epoch_loss.dat&epoch_loss_valid.dat
+:::info epoch_loss.dat & epoch_loss_valid.dat
 
 ![](../../../pictures/epoch-train%26valid_dat3.png)
 
+- `loss` corresponds to the total training error.
+- `RMSE_Etot` corresponds to the energy error during training.
+- `RMSE_F` corresponds to the force error during training.
 
-- `loss` 对应训练总误差
-- `RMSE_Etot` 对应训练能量误差
-- `RMSE_F` 对应训练力误差
-
-<font color='red'>如果训练集的误差比验证集的误差明显偏小,表明训练过拟合,可适当增加训练集的大小或调整 batch_size 的数量。</font>
+<font color='red'>If the training set error is significantly lower than the validation set error, it indicates overfitting. Consider increasing the training set size or adjusting the batch size.</font>
 
 :::
 
-## 3. 验证/测试
+## 3. Validation/Testing
 
-训练完成后，可以对模型进行验证/测试，以确定模型的拟合效果。
+After training is complete, you can validate or test the model to assess its fitting performance.
 
-新建目录(如`MD`)，将另一个的`MOVEMENT`文件复制到该目录中。同时在`.json`文件中设置`test_movement_file`,`test_dir_name`参数以及添加`model_load_file`参数。
+Create a new directory (e.g., `MD`) and copy another `MOVEMENT` file into this directory. Then, set the `test_movement_file` and `test_dir_name` parameters in the `.json` file, and add the `model_load_file` parameter.
 
-**相关输入示例：**
+**Relevant Input Example:**
+
 ```json
     "test_movement_file":["./MD/MOVEMENT"],
     "test_dir_name":"test_dir",
     "model_load_file":"./model_record/nn_model.ckpt",
 ```
 
-**验证程序运行示例：**
+**Example of Running Validation:**
 
-将PWMLFF train nn_ec.json中的`train`修改为`test`：
+Change `train` to `test` in `PWMLFF train nn_ec.json`:
 
-```python
+```bash
 PWMLFF test nn_ec.json
 ```
 
-程序运行完成后，验证结果保存在`test_dir_name`设置的`test_dir/`目录下
-<center><img src={require("../../../pictures/NN-evaluation_plots-EC.png").default} width='70%' /></center>
+After running the program, validation results will be stored in the directory specified by `test_dir_name`.
 
-## 4. Lammps 模拟
+## 4. LAMMPS Simulation
 
-将训练完成后生成的`*.ff`力场文件用于 lammps 模拟。（需使用经过修改的[版本](https://github.com/LonxunQuantum/Lammps_for_PWMLFF)重新编译）
+The generated `*.ff` force field file can be used for LAMMPS simulation (requires a recompiled [version](https://github.com/LonxunQuantum/Lammps_for_PWMLFF)).
 
-为了使用 PWMLFF 生成的力场文件，需要在 lammps 的输入文件中设置以下内容：
+To use the force field file generated by PWMLFF, include the following in the LAMMPS input file:
 
 ```bash
 pair_style      pwmatmlff
 pair_coeff      * * 3 1 forcefield.ff 8 6 1
 ```
 
-其中`3`表示使用 Neural Network 模型产生的力场，`1`表示读取 1 个力场文件，`forcefield.ff`为 PWMLFF 生成的力场文件名称，`8`, `6`, `1` 分别为 O, C, H 的原子序数。
+Here, `3` indicates the use of the Neural Network model, `1` specifies reading one force field file, `forcefield.ff` is the name of the PWMLFF-generated force field file, and `8`, `6`, `1` are the atomic numbers for O, C, and H, respectively.
 
-以下是lammps输入文件示例(nvt系综)：
+Example LAMMPS input file (NVT ensemble):
 
 ```bash
 units           metal
@@ -204,12 +200,11 @@ timestep        0.001
 fix             1 all nvt temp 300 300 0.1
 thermo_style    custom step pe ke etotal temp vol press
 thermo          1
-dump            1 all custom 1 traj.xyz id type x y z  vx vy vz fx fy fz
+dump            1 all custom 1 traj.xyz id type x y z vx vy vz fx fy fz
 run             1000 
 ```
 
-## 5. 输入文件其他参数说明
-
+## 5. Input File Parameter Details
 ```json
 {   
     "recover_train":false,
@@ -316,19 +311,19 @@ run             1000
 
 ```
 
-- `recover_train`: 是否从上次训练中断/完成处继续训练。如果为`true`，读取默认`model_load_path`和`model_name`，程序则会从上次训练中断/完成处继续训练。见[参数细节](/en/next/PWMLFF/Parameter%20details)。
-- `work_dir`: 训练过程中的中间文件保存目录。训练完成后自动删除。`reserve_work_dir`为`true`时，训练完成后不删除该目录。
-- `train_movement_file`: `MOVEMENT`文件存放名。可以设置同时多个文件。请根据实际情况进行修改。
-- `forcefield_name`: 生成的力场文件名称。可不设置。
-- `forcefield_dir`: 生成的力场文件存放的目录。可不设置。
-- `test_movement_file`: 用于训练完成后验证模型的`MOVEMENT`文件。([详情见验证测试部分](#3-验证测试))
-- `test_dir_name`: 训练完成后验证模型的`MOVEMENT`文件的存放目录。
-- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](/en/next/PWMLFF/Parameter%20details)。
-- `atom_type`：原子类型，8, 6 和 1 分别为 O, C 和 H 的原子序数.
-- `max_neigh_num`：最大近邻原子数。
-- `model`: 模型参数，具体参数配置参考[参数细节](/en/next/PWMLFF/Parameter%20details)。
-- `Rmax`：特征的最大截断半径。
-- `Rmin`：特征的最小截断半径。
-- `feature_type`：特征类型，7 对应 DP-Chebyshev feature，详见[特征类型](/en/next/PWMLFF/Appendix-1)。
-- `optimizer`：优化器参数，推荐使用`LKF`。通常情况下，对于大体系大网络，使用`LKF`优化器可以加速训练。其他优化器及更多的参数配置参考[参数细节](/en/next/PWMLFF/Parameter%20details)。
-- `epochs`：训练迭代次数。根据`MOVEMENT`总的 images 数量修改,images 少时可适当增加,如 30。
+- `recover_train`: Whether to continue training from the last interruption/completion. If set to `true`, the program will resume training from the last interruption/completion point using the default `model_load_path` and `model_name`. See [Parameter Details](/next/PWMLFF/Parameter%20details) for more information.
+- `work_dir`: Directory for storing intermediate files during training. This directory is automatically deleted after training completes. If `reserve_work_dir` is set to `true`, the directory will not be deleted after training.
+- `train_movement_file`: Name of the `MOVEMENT` file(s). Multiple files can be specified. Adjust according to your needs.
+- `forcefield_name`: Name of the generated force field file. This is optional.
+- `forcefield_dir`: Directory for storing the generated force field file. This is optional.
+- `test_movement_file`: `MOVEMENT` file used for validating the model after training is complete. ([Details on Validation/Testing](#3-Validation-Testing))
+- `test_dir_name`: Directory for storing the `MOVEMENT` file used for model validation after training.
+- `model_type`: Model type being used for training. For other model types and parameter configurations, refer to [Parameter Details](/next/PWMLFF/Parameter%20details).
+- `atom_type`: Atomic types, where 8, 6, and 1 correspond to the atomic numbers of O, C, and H, respectively.
+- `max_neigh_num`: Maximum number of neighboring atoms.
+- `model`: Model parameters. For specific parameter configurations, refer to [Parameter Details](/next/PWMLFF/Parameter%20details).
+- `Rmax`: Maximum cutoff radius for features.
+- `Rmin`: Minimum cutoff radius for features.
+- `feature_type`: Type of feature, where 7 corresponds to DP-Chebyshev features. See [Feature Types](/next/PWMLFF/Appendix-1) for details.
+- `optimizer`: Optimizer parameters, with `LKF` recommended. Generally, for large systems and networks, using the `LKF` optimizer can speed up training. For other optimizers and additional parameter configurations, refer to [Parameter Details](/next/PWMLFF/Parameter%20details).
+- `epochs`: Number of training iterations. Adjust based on the total number of images in the `MOVEMENT` file. For fewer images, you may increase this number, e.g., to 30.
