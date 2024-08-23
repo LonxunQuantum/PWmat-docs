@@ -119,12 +119,17 @@ const config = {
             type: "doc",
             docId: "intro",
             position: "left",
-            label: "PWmat产品手册",
+            label: "龙讯产品手册",
           },
           // { to: "/blog", label: "Blog", position: "left" },
           {
             href: "http://www.pwmat.com/",
             label: "PWmat官网",
+            position: "right",
+          },
+          {
+            href: "http://www.lonxun.com/",
+            label: "龙讯官网",
             position: "right",
           },
           {
