@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Load and install (In Mcloud)
+# Load and install
 
 ## PWMLFF
 
