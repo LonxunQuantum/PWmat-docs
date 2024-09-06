@@ -2,19 +2,14 @@
 sidebar_position: 2
 ---
 
-# Exploration parameter input
+# run_iter param.json
 
 # run_param.json
 
 训练设置（网络结构、优化器）、探索设置（lammps 设置、选点策略）以及标记设置（VASP/PWmat 自洽计算设置）。
 
-#
 
 # 参数列表
-
-### record_file
-
-设置记录主动学习轮次的记录文件名称，默认设置为 `"al.record"`。
 
 ### reserve_work
 
@@ -101,8 +96,8 @@ sidebar_position: 2
 
 #### uncertainty
 
-用于设置不确定性度量策略
-
+用于设置不确定性度量策略，当前支持多模型委员会查询方法 (`committee`) 。`KPU`方法我们在做探索，后续将面向用户开放。
+<!-- 
 默认值为 `committee`，即采用多模型查询的方式计算模型预测偏差。该值 需要配合 [`model_num`](#model_num) 、[`lower_model_deiv_f`](#lower_model_deiv_f) 和 [`upper_model_deiv_f`](#upper_model_deiv_f) 参数使用，将模型预测偏差值介于 `lower_model_deiv_f` 和 `upper_model_deiv_f` 之间结构作为候选结构，之后使用 DFT 做标注，`model_num` 用于设置模型的数量，如果使用 `committee` 方法，默认值为 `4`。
 
 如果设置为 `kpu`，则采用单模型的基于卡尔曼滤波的不确定性度量。该值 需要配合 [`kpu_lower`](#kpu_lower) 和 [`kpu_upper`](#kpu_upper) 使用，其中 `kpu_lower` 用于设置不确定性下界，`kpu_upper` 用于设置不确定性上界。
@@ -125,7 +120,19 @@ sidebar_position: 2
 
 #### kpu_upper
 
-该参数需要配合 [`"uncertainty":"kpu"`](#uncertainty) 使用，用于设置 KPU 的上界，如果 KPU 值大于该上界，则该构型本身不符合物理意义，不需要标注，默认值为 `10`。
+该参数需要配合 [`"uncertainty":"kpu"`](#uncertainty) 使用，用于设置 KPU 的上界，如果 KPU 值大于该上界，则该构型本身不符合物理意义，不需要标注，默认值为 `10`。 -->
+
+#### lower_model_deiv_f
+
+该参数用于设置偏差的下界，如果偏差值小于该下界，则认为模型对构型的预测准确，不需要标注，默认值为 `0.05`。
+
+#### upper_model_deiv_f
+
+该参数用于设置偏差的上界，如果偏差值大于该上界，则该构型本身不符合物理意义，不需要标注，默认值为 `0.15`。
+
+#### model_num
+
+该参数用于设置使用 `committee` 方法作为不确定性度量时使用的模型数量，默认值为`4`，该值的设置应该 `>=3`。
 
 #### max_select
 
@@ -237,7 +244,32 @@ sidebar_position: 2
 
 #### ensemble
 
-设置 系综，默认值 `"npt"`, 也支持 `"nvt"` 系综。
+设置 系综，默认值 `"nve"`,支持如下设置：
+
+`npt`、`npt-i`或`npt-iso` 对应 lammps 设置
+```txt
+fix  1 all npt temp ${TEMP} ${TEMP} ${TAU_T} iso ${PRESS} ${PRESS} ${TAU_P}
+```
+
+`npt-a` 或 `npt-aniso` 对应 lammps 设置
+```txt
+fix  1 all npt temp ${TEMP} ${TEMP} ${TAU_T} aniso ${PRESS} ${PRESS} ${TAU_P}
+```
+
+`npt-t`、`npt-tri` 对应 lammps 设置
+```txt
+fix  1 all npt temp ${TEMP} ${TEMP} ${TAU_T} tri ${PRESS} ${PRESS} ${TAU_P}
+```
+
+`nvt` 对应 lammps 设置
+```txt
+fix  1 all nvt temp ${TEMP} ${TEMP} ${TAU_T}
+```
+
+`nve` 对应 lammps 设置
+```txt
+fix  1 all nve
+```
 
 #### nsteps
 
@@ -328,7 +360,6 @@ sidebar_position: 2
             "sys_idx": [2],
             "temps": [400],
             "taut":0.1,
-            "taup": 0.5,
             "boundary":true
         }]
     ]
@@ -436,8 +467,6 @@ sidebar_position: 2
 
 ```json
 {
-  "record_file": "si.al",
-
   "reserve_work": false,
   "reserve_md_traj": false,
   "reserve_scf_files": false,
@@ -535,10 +564,7 @@ sidebar_position: 2
           "sys_idx": [0, 3],
           "temps": [500, 700],
           "taut": 0.1,
-          "boundary": true,
-          "_neigh_modify": 10,
-          "_mass": "list or string",
-          "merge_traj": false
+          "boundary": true
         }
       ],
       {

@@ -9,6 +9,18 @@ sidebar_position: 1
 我们推荐使用 `intel2020`版本，`cuda/11.8`，`cmake版本 >= 3.21`，`gcc 版本 8.n`。
 PWMLFF中使用的`pytorch`版本为`2.0`以上，必须使用 `cuda/11.8`或更高版本。
 
+对于 `intel/2020`编译套件，使用了它的 `ifort` 和 `icc` 编译器(`19.1.3`)、`mpi(2019)`、`mkl库(2020)`，如果单独加载，请确保版本不低于它们。
+
+您可以通过位于源码根目录的src/check_env.sh 脚本检查环境。一个正确的环境如下所示。
+``` txt
+1. CUDA version is 11.8.
+2. nvcc command exists.
+3. ifort version is no less than 19.1, current version is 19.1.
+4. MKL library is installed.
+5. GCC version is not 8.x, current version is 8.
+6. PyTorch is installed.
+7. PyTorch version is 2.0 or above, current version is 2.2.
+```
 ## 1. OSError
 
 ### 环境描述

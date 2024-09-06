@@ -100,7 +100,6 @@ pwact run param.json resource.json
 对于上述两个命令，json 文件名称可以用户修改，但是要求 [`param.json`](#paramjson) 和 [`resouce.json`](#resourcejson) 的输入顺序不能变。
 
 ### 5. 工具命令
-
 MOVEMENT 或 OUTCAR 转换为 PWdata 数据格式
 
 ```bash
@@ -119,6 +118,22 @@ pwact to_pwdata -i mvm_init_000_50 mvm_init_001_50 mvm_init_002_50 -s pwdata -f 
 ```bash
 pwact gather_pwdata
 ```
+
+
+结束正在执行的 init_bulk 任务，如 驰豫（relax）、AIMD 任务。
+```bash
+pwact kill init_bulk
+```
+
+结束正在执行的 run 任务，包括正在运行的训练、探索（MD）或者标记任务
+```bash
+pwact kill run
+```
+上面的 kill 命令功能您也可以通过手动操作替代，需要您第一步，结束正在执行的主进程，即执行 pwact init_bulk 或 pwact run 的窗口；第二步，需要您手动结束正在执行的slurm任务。
+
+考虑到手动操作可能会误结束您的其他进程，建议您使用命令结束。
+
+使用命令结束进程后，建议您查看命令输出信息，并使用 slurm 命令查看是否有未结束的进程。
 
 ## 输入文件
 

@@ -2,195 +2,232 @@
 sidebar_position: 1
 ---
 
-# Load and Install (In Mcloud)
+# Load and install
 
 ## PWMLFF
 
 :::tip
-PWMLFF includes Fortran, Python (Pytorch2.0), C++ and C++ CUDA acceleration. Installation requires a Python environment, GCC compiler, and GPU hardware. Here we provide 3 methods for installing PWMLFF.
+PWMLFF includes `Fortran`, `Python (Pytorch2.0)`, `C++`, and `C++ CUDA` code, and requires installation in an environment with `Python`, `gcc compiler`, `Intel compiler suite` (including `ifort`, `icc` compilers and `tbb`, `mkl`, and `mpi` libraries), and `nvidia GPU` hardware. We offer three methods to install PWMLFF.
 :::
 
-### 1. Direct Loading in Mcloud
+### 1. Directly Load from Mcloud
 
-[`mcloud`](https://mcloud.lonxun.com/) has pre-configured conda environments and PWMLFF packages, avoiding the time-consuming process of installing anaconda, cudatoolkit, pytorch, etc. To use `PWMLFF`, simply load the following environment variables:
+[Longxun Supercomputing Cloud](https://mcloud.lonxun.com/) (`Mcloud`) provides a pre-configured conda environment and PWMLFF package, avoiding the time-consuming process of installing anaconda, cudatoolkit, pytorch, etc. To use `PWMLFF`, simply load the following environment variables:
 
 ```bash
-# Load conda environment
-module load anaconda
-conda activate PWMLFF
-module load pwmlff/2024.5
+# Load the conda environment
+$ module load anaconda
+$ conda activate PWMLFF
+$ module load pwmlff/2024.5
 ```
 
 ### 2. Offline Installation
 
-For offline devices, you can download the pre-configured conda environment and program package directly:
+For devices without internet access, you can download the offline installation package with a pre-configured conda environment:
 
 #### 1. Download
 
-👉[Baidu Cloud Link](https://pan.baidu.com/s/1K4TrZuh4WVzSwfu2ZzL5mg?pwd=pwmt) Choose the latest version to download (current latest version is 2024.05).
+👉 [Baidu Cloud Link](https://pan.baidu.com/s/1K4TrZuh4WVzSwfu2ZzL5mg?pwd=pwmt) Select the version to download (2024.05).
 
-#### 2. Unzip
+Here is the translation with the Markdown format preserved:
+
+#### 2. Unpacking
 
 ```bash
-gzip -d pwmlff.2024.5.sh.gz
+$ gzip -d pwmlff.2024.5.sh.gz
 ```
 
-After unzipping, you will get the `pwmlff.2024.5.sh` file. Run this file to complete the environment installation.
+After unpacking, you will get the `pwmlff.2024.5.sh` file. Execute this file to complete the environment installation.
+
 ```bash
-./pwmlff.2024.5.sh
-# Or sh pwmlff.2024.5.sh
+$ ./pwmlff.2024.5.sh
+# or sh pwmlff.2024.5.sh
 ```
+
 :::caution
-Before running `pwmlff.2024.5.sh`, you need to load the required modules for compilation, i.e., intel, cuda, and gcc.
-For mcloud users, directly load the following environment:
-``` bash
-module load cuda/11.8-share intel/2020
-source /opt/rh/devtoolset-8/enable
+Before running `pwmlff.2024.5.sh`, you need to load the required modules for compilation, namely `intel`, `cuda`, and `gcc`. For mcloud users, load the following environment directly:
+
+```
+$ module load cuda/11.8-share intel/2020
+$ source /opt/rh/devtoolset-8/enable
 ```
 
-We recommend using `intel2020`, `cuda/11.8`, `cmake version >= 3.21`, and `gcc version 8.n`.
-Note: The version of `pytorch` used in PWMLFF is `2.0 or above`, and `CUDA/11.8` or higher must be used.
+We recommend using the `intel2020` version, `cuda/11.8`, and `gcc version 8.n`. The `pytorch` version used in PWMLFF is `2.0` or higher, and it must use `cuda/11.8` or a later version.
+
+For the `intel/2020` compilation suite, it uses its `ifort` and `icc` compilers (`19.1.3`), `mpi(2019)`, and `mkl library (2020)`. If loading separately, ensure the versions are not lower than these.
 :::
 
-After running, a folder named `PWMLFF2024.5` will be created in the running directory, containing all the environment configurations (`pwmlff`) and program packages (`PWMLFF`).
+After running, a folder named `PWMLFF2024.5` will be created in the working directory, containing the runtime environment (`pwmlff2024.5`) and the package (`PWMLFF`).
 
-After unzipping and compiling, update the environment variables:
+After unpacking and compiling, update the environment variables:
+
 ```bash
-source ~/.bashrc
+$ source ~/.bashrc
 ```
 
 :::tip
-After installation, the PWMLFF2024.5 environment variables (as shown below) will be automatically written into your `.bashrc`. If you do not need this, you can manually delete them from `.bashrc`. After deletion, you will need to manually import these environment variables each time before running PWMLFF.
+After installation, the PWMLFF2024.5 environment variables (as shown below) will be written to `.bashrc` by default. If you do not need this, please manually remove them from `.bashrc`. After deletion, you will need to manually import these environment variables before each run of PWMLFF.
 
 ```bash
-export PATH=/the/path/PWMLFF2024.5/src/bin:$PATH
-export PYTHONPATH=/the/path/PWMLFF2024.5/src/:$PYTHONPATH
+$ export PATH=/the/path/PWMLFF2024.5/PWMLFF/src/bin:$PATH
+$ export PYTHONPATH=/the/path/PWMLFF2024.5/PWMLFF/src/:$PYTHONPATH
 ```
 :::
 
 #### 3. Usage
 
-Activate the environment
+Activate the Python environment:
 
 ```bash
-source /the/path/PWMLFF2024.5/pwmlff/bin/activate
-# Replace with the full path, e.g., /data/home/wuxingxing/pack/PWMLFF2024.5/pwmlff/bin/activate
+$ source /the/path/PWMLFF2024.5/pwmlff2024.5/bin/activate
+# The environment address needs to be the full path, e.g., /data/home/wuxingxing/pack/PWMLFF-2024.5/pwmlff/bin/activate
 ```
 
-If your `.bashrc` (automatically written after offline installation) does not include the following environment variables, please import them
+Load `intel/2020` and `cuda/11.8`:
 
 ```bash
-export PATH=/the/path/PWMLFF2024.5/PWMLFF/src/bin:$PATH
-export PYTHONPATH=/the/path/PWMLFF2024.5/PWMLFF/src/:$PYTHONPATH
+$ module load intel/2020 cuda/11.8-share
 ```
 
-Deactivate the environment
+If your `./bashrc` (automatically written after offline installation) does not contain the environment variables below, import them:
 
 ```bash
-source /the/path/PWMLFF2024.5/pwmlff/bin/deactivate
-# Replace with the full path, e.g., /data/home/wuxingxing/pack/PWMLFF2024.5/pwmlff/bin/deactivate
+$ export PATH=/the/path/PWMLFF2024.5/PWMLFF/src/bin:$PATH
+$ export PYTHONPATH=/the/path/PWMLFF2024.5/PWMLFF/src/:$PYTHONPATH
+```
+
+Deactivate the environment:
+
+```bash
+$ source /the/path/PWMLFF2024.5/pwmlff2024.5/bin/deactivate
+# The environment address needs to be the full path, e.g., /data/home/wuxingxing/pack/PWMLFF-2024.5/pwmlff/bin/deactivate
 ```
 
 ### 3. Online Installation
 
-For online installation, you need to configure the environment first, then download and compile the source code.
+To compile and run PWMLFF-2024.5, you need to download the source code, install the conda environment, and install the PWMLFF-2024.5 dependencies in the conda environment. The process is as follows:
 
-#### Configure Environment
-To compile and run PWMLFF2024.5, you need to install the conda environment and install the necessary packages in the conda environment as follows.
+#### 1. Download Source Code
 
-1. First, load the compilers required for compiling PWMLFF
-```bash
-# For mcloud users, directly load the following environment
-module load cuda/11.8-share intel/2020 cmake/3.21.6
-source /opt/rh/devtoolset-8/enable
-```
-We recommend using `intel2020`, `cuda/11.8`, `cmake version >= 3.21`, and `gcc version 8.n`.
-Note: The version of `pytorch` used in PWMLFF is `2.0 or above`, and `CUDA/11.8` or higher must be used.
+We provide two methods: online code pull and offline package download.
 
-2. Create a new Python virtual environment in your user directory. It is recommended to manually download and use Anaconda3 for environment management (search for Linux Anaconda3 installation tutorial online).
-
-You can use this command to download Anaconda3 directly to the server directory:
+- Pull the PWMLFF repository code via github or gitee:
 
 ```bash
-curl https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2023.07-1-Linux-x86_64.sh -o Anaconda3-2023.07-1-Linux-x86_64.sh
-
-# If you cannot download it, visit the webpage https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/ to download, or use other methods.
+  $ git clone https://github.com/LonxunQuantum/PWMLFF.git PWMLFF-2024.5
+  Or
+  $ git clone https://gitee.com/pfsuo/PWMLFF.git PWMLFF-2024.5
 ```
 
-After installing conda, create a virtual environment, specifying Python3.11 as the interpreter. Other versions may have dependency conflicts or syntax issues. The subsequent compilation work will be done in this virtual environment.
+- Or download the release offline source package. You can download it directly via the browser or with the wget prefix:
 
 ```bash
-conda create -n pwmlff2024.5 python=3.11
-# We recommend Python 3.11. Higher versions may have compilation errors that we have not yet resolved.
-```
-
-3. After creating the virtual environment, reactivate it:
-
-```bash
-conda deactivate
-conda activate pwmlff2024.5
-```
-
-4. Install the third-party dependencies required by PWMLFF
-
-```bash
-pip3 install numpy==1.26.4
-#it is recommended to install a version of numpy < 2.0. Versions above this may cause conflicts with some dependencies during compilation.
-
-pip3 install numpy tqdm cmake pyyaml pandas scikit-learn-intelex matplotlib pwdata pwact pybind11 
-pip3 install charset_normalizer==3.3.2
-
-# Install the latest version of charset_normalizer (version 3.3.2 or above) to avoid encoding errors when compiling Fortran code
-# UnicodeDecodeError: 'ascii' codec can't decode byte 0xe4 in position 144: ordinal not in range(128)
-```
-
-```python
-pip install torch==2.2.0  --index-url https://download.pytorch.org/whl/cu118
-# it is recommended to use version 2.2.0 of PyTorch. Higher versions may result in compilation errors.
-```
-
-For other versions of `pytorch`, refer to the [Pytorch official website](https://pytorch.org/get-started/previous-versions/).
-
-5. After installing the third-party dependencies, proceed to the [source code compilation and installation](#compile-and-install).
-
-#### Compile and Install
-
-6. After preparing the environment, download and compile the source code. We provide two methods for compiling: online pulling code and downloading offline packages.
-
-- Pull PWMLFF repository code online via GitHub or Gitee
-```bash
-  $ git clone https://github.com/LonxunQuantum/PWMLFF.git
-  or
-  $ git clone https://gitee.com/pfsuo/PWMLFF.git
-```
-
-After pulling the code, go to the PWMLFF source `src` directory and compile the source code
-```bash
-  $ cd PWMLFF/src
-  $ sh build.sh
-```
-
-- Or download the release offline package. You can directly input the following address in your browser to download, or add a prefix to download with wget:
-```bash
-  $ wget https://github.com/LonxunQuantum/PWMLFF/archive/refs/heads/master.zip
-  or
+  $ wget https://github.com/LonxunQuantum/PWMLFF/archive/refs/tags/2024.5.zip
+  Or
   $ wget https://gitee.com/pfsuo/PWMLFF/repository/archive/2024.5
 ```
-After downloading the release offline package, unzip and compile it as follows:
+
+After downloading the release offline source package, extract it using the unzip command:
 
 ```bash
-  $ unzip master.zip
-  $ cd PWMLFF-master/src
-  $ sh build.sh
+  # After extraction, you will get a source directory named PWMLFF-2024.5
+  $ unzip 2024.5.zip
 ```
+
+#### 2. Create Conda Virtual Environment
+
+##### Step 1. Install Anaconda3 (skip if already installed)
+
+Make sure Anaconda3 is installed, then create a new python virtual environment (search for Linux Anaconda3 installation tutorial online).
+
+You can download Anaconda3 directly to the server directory with this command:
+
+```bash
+$ curl https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2023.07-1-Linux-x86_64.sh -o Anaconda3-2023.07-1-Linux-x86_64.sh
+# If download fails, enter the download address in the browser, then upload to the server
+# https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2023.07-1-Linux-x86_64.sh 
+# You can also visit the website to download other versions https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/
+```
+
+##### Step 2. Create Virtual Environment
+
+After installing conda, create a virtual environment specifying `python3.11` as the interpreter. Other versions may cause dependency conflicts or syntax issues. All subsequent compilation work will be done in this virtual environment.
+
+```bash
+$ conda create -n pwmlff2024.5 python=3.11
+# We recommend python 3.11; higher versions might cause errors during compilation, which we have not yet addressed.
+```
+
+After creating the virtual environment, activate it:
+
+```bash
+$ conda activate pwmlff2024.5
+```
+
+##### Step 3. Install Dependencies
+
+Next, install the third-party dependencies required for PWMLFF. All dependencies are listed in `requirements.txt`. Execute the pip command in the directory where this file is located to install all dependencies. This step can be time-consuming as it installs packages like pytorch, so please be patient.
+
+```bash
+# First step: Activate the conda environment
+$ conda activate pwmlff2024.5
+# Second step: Navigate to the source root directory
+# For online downloaded source, enter the PWMLFF-2024.5 directory
+$ cd PWMLFF-2024.5
+# For offline downloaded source, enter the PWMLFF-master directory after extraction
+$ pip install -r requirements.txt
+```
+
+#### 3. Compile and Install
+
+##### Step 1. Check Compilation Environment
+
+Navigate to the `src` directory, which is at the same level as `requirements.txt`.
+First, check if `cuda/11.8`, `intel/2020`, and `gcc8.n` are loaded, and ensure the `conda` virtual environment is activated.
+
+For the `intel/2020` compiler suite, it uses `ifort` and `icc` compilers (`19.1.3`), `mpi(2019)`, and `mkl library(2020)`. If loaded separately, ensure the versions are not lower than these.
+
+Since most compilation issues are caused by compiler version mismatches, we provide a script `check_env.sh` to check if the compilation environment is properly set up. Run this script to verify your environment.
+
+```bash
+$ cd src
+$ sh check_env.sh
+```
+
+The output will provide information about your compilation environment. A correct environment will look like this:
+
+```txt
+1. CUDA version is 11.8.
+2. nvcc command exists.
+3. ifort version is no less than 19.1, current version is 19.1.
+4. MKL library is installed.
+5. GCC version is not 8.x, current version is 8.
+6. PyTorch is installed.
+7. PyTorch version is 2.0 or above, current version is 2.2.
+```
+
+##### Step 2. Compile Code
+
+If your environment passes the checks, proceed to compile the code. Run the following commands to start the compilation:
+
+```bash
+$ sh clean.sh
+$ sh build.sh
+```
+
+If you encounter errors during compilation, please refer to [Common Installation Errors of PWMLFF](./Error%20Record/InstallError.md).
+
 :::tip
-- `After compiling, PWMLFF environment variables will be automatically added to the .bashrc file. If you don't need it, manually remove the environment variables from .bashrc`. You can execute the following command to update the environment variables:
+If your issue persists, please send your machine environment information, compilation error logs, and the compilation steps you followed to support@pwmat.com or wuxingxing@pwmat.com. We will contact you promptly.
+
+- `After compilation, the PWMLFF environment variables will be automatically added to the .bashrc file. If not needed, manually remove these environment variables from .bashrc.` You can execute the following command to update environment variables:
+
 ```bash
 source ~/.bashrc
 ```
 :::
 
-At this point, the compilation and installation of PWMLFF are complete. Ensure to use the PWMLFF virtual environment and load the Intel compiler when using it.
+This completes the compilation and installation of PWMLFF.
 
 ## LAMMPS (Recompiled version for PWMLFF)
 

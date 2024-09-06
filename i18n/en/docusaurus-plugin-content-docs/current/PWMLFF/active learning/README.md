@@ -116,6 +116,22 @@ Search for labeled datasets in the active learning directory
 pwact gather_pwdata
 ```
 
+End the ongoing init_fulk tasks, such as relaxation and AIMD tasks.
+```bash
+pwact kill init_bulk
+```
+
+End running tasks that are currently in progress, including training, exploration (MD), or tagging tasks
+```bash
+pwact kill run
+```
+
+The kill command function above can also be replaced by manual operation. You need to first end the executing main process, that is, the window that executes pwact init_fulk or pwact run; The second step requires you to manually end the ongoing Slurm task. 
+
+Considering that manual operation may accidentally terminate your other processes, it is recommended that you use the command to terminate.
+
+After using the command to end a process, it is recommended that you check the command output information and use the sludge command to see if there are any unfinished processes.
+
 ## Input Files
 
 AL-PWMLFF requires two input files, `param.json` and `resource.json`, for initial dataset preparation or active learning. AL-PWMLFF is not sensitive to the case input of keys in two JSON files.

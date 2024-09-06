@@ -14,7 +14,7 @@ For any model, the following parameters `require user input`.
 This parameter is used to specify which model to use for training. You can use `DP` for deep learning, `NN` for neural network, `LINEAR` for linear models, or the `NEP` for NEP model.
 
 ### atom_type
-This parameter is used to set the element types of the training system. The atomic number of the input elements is specified by the user in any desired order. For example, for a single-element system like copper, it would be set as [29], and for multi-element systems like CH4, it would be set as [1, 6].
+This parameter is used to set the element types of the training system. The atomic number of the input elements is specified by the user in any desired order. For example, for a single-element system like copper, it would be set as [29], and for multi-element systems like CH4, it would be set as [1, 6]. You could also use the name of the atom type, such as ["Cu"] or ["H", "C"].
 
 ### max_neigh_num
 size of neighbor buffer, with default value `100`. However, for some systems it is not enough to accommodate all the neighbors, and the feature generation fails. The following warning will pop up:

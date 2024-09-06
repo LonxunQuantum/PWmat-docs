@@ -2,10 +2,9 @@
 sidebar_position: 1
 ---
 
-# Initializes the input
+# init_bulk param.json
 
-# init_param.json{#init_paramjson}
-初始训练集制备，包括对构型（VASP、PWmat等格式）进行驰豫、阔胞、缩放、微扰和AIMD（DFTB、PWMAT、VASP）设置。
+初始训练集制备，包括对构型（VASP、PWmat等格式）进行`驰豫`、`阔胞`、`缩放`、`微扰`和`AIMD`（支持 DFTB、PWMAT、VASP）设置。
 
 ## 参数列表
 
@@ -87,7 +86,7 @@ sidebar_position: 1
 ```
 
 ### relax_input
-设置 Relax 的 输入控制文件。如果存在多个 relax 控制文件，则按照list 格式组织，对于只是用单个文件的情况，也可以设置为dict格式。
+设置 Relax 的 输入控制文件。如果存在多个 relax 控制文件，则按照list 格式组织。详细的设置请参考下面的例子。
 
 ### aimd_input
 设置 AIMD 的 输入控制文件。如果存在多个 aimd 控制文件，则按照list 格式组织，对于只是用单个文件的情况，也可以设置为dict格式。
@@ -106,7 +105,6 @@ sidebar_position: 1
 #### flag_symm
 该参数为PWMAT的输入参数，用于设置K点，可选参数。对于 Relax 或者 SCF 计算，默认值为 `0`, 对于 AIMD计算，默认值为 `3`。
 
-#
 
 ### 例子
 ```json
@@ -199,4 +197,43 @@ sidebar_position: 1
         "atom_pert_distance":0.01, 
         "aimd":true
     }]
+```
+
+vasp 的 relax 和 aimd 输入控制文件设置如下例子所示
+
+vasp
+``` json
+设置 dft 计算软件类型
+"dft_style":"vasp",
+赝势设置
+"pseudo" : ["POTCAR"]
+
+单文件
+"relax_input":"relax_incar"
+多文件
+"relax_input":["relax_incar1", "relax_incar2"]
+
+单文件
+"aimd_input":"aimd_incar"
+多文件
+"aimd_input":["aimd_incar1", "aimd_incar2"]
+```
+
+cp2k
+```json
+设置 dft 计算软件类型
+"dft_style":"cp2k",
+赝势设置
+"basis_set_file_name":"BASIS_MOLOPT",
+"potential_file_name":"POTENTIAL",
+
+单文件
+"relax_input":"relax_cp2k.inp"
+多文件
+"relax_input":["relax_cp2k.inp", "relax_cp2k2.inp"]
+
+单文件
+"aimd_input":"aimd_cp2k.inp"
+多文件
+"aimd_input":["aimd_cp2k.inp", "aimd_cp2k2.inp"]
 ```

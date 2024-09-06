@@ -12,10 +12,6 @@ Settings for training (network structure, optimizer), exploration (LAMMPS settin
 
 # Parameter List
 
-### record_file
-
-Set the name of the record file for active learning iterations. The default value is `"al.record"`.
-
 ### reserve_work
 
 Specify whether to keep the temporary working directory. The default value is `false`. After each active learning iteration, the temporary working directory is automatically deleted.
@@ -448,8 +444,6 @@ The following example shows a standard active learning workflow with two rounds 
 
 ```json
 {
-  "record_file": "si.al",
-
   "reserve_work": false,
   "reserve_md_traj": false,
   "reserve_scf_files": false,
