@@ -32,7 +32,7 @@ PWmat Machine Learning Force Field (PWMLFF) 是一套在 GNU 许可下的开源�
 `2` 种高效的训练优化器
 ```
         1. Adaptive Moment Estimation (ADAM)
-        2. Reorganized Layer Extended Kalman Filtering (RLEKF)
+        2. Reorganized Layer Extended Kalman Filtering (LKF)
 ```
 
 ## [2. lammps 接口](./Installation.md#lammps-recompiled-version-for-pwmlff)

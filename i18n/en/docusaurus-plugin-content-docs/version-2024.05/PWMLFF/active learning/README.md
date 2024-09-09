@@ -1,6 +1,6 @@
 ---
 sidebar_position: 3
-title: PWact for Active Learning
+title: PWact
 ---
 
 # active learning

@@ -25,15 +25,15 @@ It includes `8` feature types with translational, rotational, and permutation in
 
 `4` training models:
 ```
-        1. Linear Model
-        2. Deep Neural Netowrk (NN)
-        3. DP-torch Network (DP) with model compress and type embedding
-        4. Neuro evolution potentail(NEP)
+        1. Linear
+        2. Neural Netowrk (NN)
+        3. DP se_e2_a(Pytorch)
+        4. Neuroevolution Potential(NEP)
 ```
 `2` efficient training optimizers:
 ```
         1. Adaptive Moment Estimation (ADAM)
-        2. Reorganized Layer Extended Kalman Filtering (RLEKF)
+        2. Reorganized Layer Extended Kalman Filtering (LKF)
 ```
 
 ## [2. Lammps Interface](./Installation.md#lammps-recompiled-version-for-pwmlff)
@@ -68,17 +68,9 @@ Some test work done using PWMLFF, as well as published papers using PWMLFF.
 
 ##
 
-##
-
-##
-
 <div>
-  <div style={{ display: 'inline-block', marginRight: '10px' }}>
-    <img src={require("./pictures/user_chat.png").default} alt="user_chat" width="200" />
-    <p style={{ textAlign: 'center' }}>PWMLFF support</p>
-</div>
 <div style={{ display: 'inline-block', marginRight: '10px' }}>
-    <img src={require("./pictures/pmat_support.png").default} alt="user_chat" width="200" />
-    <p style={{ textAlign: 'center' }}>PWMAT Customer</p>
+    <img src={require("./pictures/pmat_support.png").default} alt="user_chat" width="250" />
+    <p style={{ textAlign: 'center' }}>PWMAT 客服微信(support@pwmat.com)</p>
 </div>
 </div>

@@ -87,6 +87,14 @@ IN.PSP2 = C.SG15.PBE.UPF
 #SBATCH --gres=gpu:1
 #SBATCH --gpus-per-task=1
 
+# mcloud 已安装环境加载
+source /share/app/anaconda3/etc/profile.d/conda.sh
+module load conda/3-2020.07
+conda deactivate
+conda activate PWMLFF
+module load pwmlff/2024.5
+# 
+
 PWMLFF train linear_sic.json > log
 ```
 
@@ -94,6 +102,13 @@ PWMLFF train linear_sic.json > log
 
 ```bash
 $ srun -p 3080ti --gres=gpu:1 --pty /bin/bash
+# mcloud 已安装环境加载
+$ source /share/app/anaconda3/etc/profile.d/conda.sh
+$ module load conda/3-2020.07
+$ conda deactivate
+$ conda activate PWMLFF
+$ module load pwmlff/2024.5
+# 
 $ PWMLFF train linear_sic.json
 ```
 

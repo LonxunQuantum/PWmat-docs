@@ -32,7 +32,7 @@ It includes `8` feature types with translational, rotational, and permutation in
 `2` efficient training optimizers:
 ```
         1. Adaptive Moment Estimation (ADAM)
-        2. Reorganized Layer Extended Kalman Filtering (RLEKF)
+        2. Reorganized Layer Extended Kalman Filtering (LKF)
 ```
 
 ## [2. Lammps Interface](./Installation.md#lammps-recompiled-version-for-pwmlff)

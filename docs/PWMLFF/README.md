@@ -15,8 +15,8 @@ PWmat Machine Learning Force Field (PWMLFF) 是一套在 GNU 许可下的开源�
 ```
         1. 2-body(2b)
         2. 3-body(3b)
-        3. 2-body Gaussian(2bgauss)
-        4. 3-body Cosine(3bcos)
+        3. 2-body Gaussian(2b gauss)
+        4. 3-body Cosine(3b cos)
         5. Moment Tensor Potential(MTP)
         6. Spectral Neighbor Analysis Potential(SNAP)
         7. DP-Chebyshev(dp1)
@@ -26,14 +26,14 @@ PWmat Machine Learning Force Field (PWMLFF) 是一套在 GNU 许可下的开源�
 `4` 种训练模型
 ```
         1. Linear Model
-        2. Deep Neural Netowrk (NN)
-        3. DP-torch Network (DP) 及其优化版本 model compress 和 type embedding
-        4. Neuro evolution potentail(NEP)
+        2. Neural Network(NN)
+        3. DP se_e2_a(Pytorch)
+        4. Neuroevolution Potential(NEP)
 ```
 `2` 种高效的训练优化器
 ```
         1. Adaptive Moment Estimation (ADAM)
-        2. Reorganized Layer Extended Kalman Filtering (RLEKF)
+        2. Reorganized Layer Extended Kalman Filtering (LKF)
 ```
 
 ## [2. lammps 接口](./Installation.md#lammps-recompiled-version-for-pwmlff)
@@ -41,14 +41,14 @@ PWmat Machine Learning Force Field (PWMLFF) 是一套在 GNU 许可下的开源�
 
 👉[开源仓库地址](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/tree/libtorch)
 
-高效的分子动力学仿真软件，无缝集成了PWMLFF的 `DP` 模型（包括type embedding 以及 model compress）和 `NEP` 模型，模拟支持 `CPU(多核)` 以及 `GPU(多卡)` 。对于 `Lienar` 和 `NN` 提供了基于 `fortran` 的 CPU 版本 lammps 接口。
+高效的分子动力学仿真软件，无缝集成了PWMLFF的 `DP` 模型（包括type embedding 以及 model compress）和 `NEP` 模型，模拟支持 `CPU(多核)` 以及 `GPU(多卡)` 。对于 `Linear` 和 `NN` 提供了基于 `fortran` 的 CPU 版本 Lammps 接口。
 
 ## [3. 主动学习平台](./active%20learning/README.md)
 
 
 👉[开源仓库地址](https://github.com/LonxunQuantum/PWact)
 
-`PWact` 是开源的基于 PWMLFF 的一套自动化主动学习平台。它集成了 `PWMLFF`、`Lammps接口`以及常用的`PWMAT`、`VASP`、`CP2K`、`DFTB(PWMAT 集成)`第一性原理软件，能够自动进行计算任务分发、监控、故障恢复、结果收集。通过使用PWact，用户能够低成本、快速地制备覆盖了广泛相空间的训练数据集。
+`PWact` 是开源的基于 PWMLFF 的一套自动化主动学习数据生成平台。它集成了 `PWMLFF`、`Lammps接口`以及常用的`PWMAT`、`VASP`、`CP2K`、`DFTB(PWMAT 集成)`第一性原理软件，能够自动进行计算任务分发、监控、故障恢复、结果收集。通过使用PWact，用户能够低成本、快速地制备覆盖广泛相空间的训练数据集。
 
 ## [4. 结构转换工具pwdata](./Appendix-2.md)
 
@@ -69,17 +69,9 @@ PWMLFF的测试结果以及使用PWMLFF的相关案例
 
 ##
 
-##
-
-##
-
 <div>
-  <div style={{ display: 'inline-block', marginRight: '10px' }}>
-    <img src={require("./pictures/user_chat.png").default} alt="user_chat" width="200" />
-    <p style={{ textAlign: 'center' }}>PWMLFF 技术支持群</p>
-</div>
 <div style={{ display: 'inline-block', marginRight: '10px' }}>
     <img src={require("./pictures/pmat_support.png").default} alt="user_chat" width="250" />
-    <p style={{ textAlign: 'center' }}>PWMAT 客服微信</p>
+    <p style={{ textAlign: 'center' }}>PWMAT 客服微信(support@pwmat.com)</p>
 </div>
 </div>

@@ -16,7 +16,9 @@ PWMLFF includes `Fortran`, `Python (Pytorch2.0)`, `C++`, and `C++ CUDA` code, an
 
 ```bash
 # Load the conda environment
-$ module load anaconda
+$ source /share/app/anaconda3/etc/profile.d/conda.sh
+$ module load conda/3-2020.07
+$ conda deactivate
 $ conda activate PWMLFF
 $ module load pwmlff/2024.5
 ```
@@ -28,8 +30,6 @@ For devices without internet access, you can download the offline installation p
 #### 1. Download
 
 👉 [Baidu Cloud Link](https://pan.baidu.com/s/1K4TrZuh4WVzSwfu2ZzL5mg?pwd=pwmt) Select the version to download (2024.05).
-
-Here is the translation with the Markdown format preserved:
 
 #### 2. Unpacking
 

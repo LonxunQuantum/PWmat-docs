@@ -10,8 +10,8 @@ slug: /Models
 ```
         1. 2-body(2b)
         2. 3-body(3b)
-        3. 2-body Gaussian(2bgauss)
-        4. 3-body Cosine(3bcos)
+        3. 2-body Gaussian(2b gauss)
+        4. 3-body Cosine(3b cos)
         5. Moment Tensor Potential(MTP)
         6. Spectral Neighbor Analysis Potential(SNAP)
         7. DP-Chebyshev(dp1)
@@ -20,15 +20,15 @@ slug: /Models
 
 `4` 种训练模型
 ```
-        1. Linear Model
-        2. Deep Neural Netowrk (NN)
-        3. DP-torch Network (DP) 及其优化版本 model compress 和 type embedding
-        4. Neuro evolution potentail(NEP)
+        1. Linear
+        2. Neural Network(NN)
+        3. DP se_e2_a(Pytorch)
+        4. Neuroevolution Potential(NEP)
 ```
 `2` 种高效的训练优化器
 ```
         1. Adaptive Moment Estimation (ADAM)
-        2. Reorganized Layer Extended Kalman Filtering (RLEKF)
+        2. Reorganized Layer Extended Kalman Filtering (LKF)
 ```
 <!-- 
 :::tip

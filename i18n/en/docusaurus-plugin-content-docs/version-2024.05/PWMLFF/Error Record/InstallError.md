@@ -10,6 +10,19 @@ Most installation failures are due to version mismatches in the compilation envi
 
 We recommend using `intel2020` version, `cuda/11.8`, `cmake version >= 3.21`, and `gcc version 8.n`. The `pytorch` version used in PWMLFF is `2.0` or higher, and it must be used with `cuda/11.8` or a newer version.
 
+You can check the environment using the `src/check_env.sh` script located in the root directory of the source code. A correct environment will look as follows:
+
+```txt
+1. CUDA version is 11.8.
+2. nvcc command exists.
+3. ifort version is no less than 19.1, current version is 19.1.
+4. MKL library is installed.
+5. GCC version is not 8.x, current version is 8.
+6. PyTorch is installed.
+7. PyTorch version is 2.0 or above, current version is 2.2.
+```
+
+<!-- 
 ## 1. OSError
 
 ### Environment Description
@@ -40,4 +53,4 @@ This error is caused by an ‌ABI (Application Binary Interface) mismatch for `s
 
 For CentOS systems, after installing `pytorch` via pip, the `_GLIBCXX_USE_CXX11_ABI` macro of `libtorch` is set to 1, matching the value used when compiling C++ CUDA operators. However, on Rocky8.5 or Ubuntu systems, the `libtorch` macro is 0, which no longer matches, leading to this error. You need to manually specify it as 0 in the `CMakeLists.txt` file.
 
----
+--- -->

@@ -21,7 +21,7 @@ PWMLFF中使用的`pytorch`版本为`2.0`以上，必须使用 `cuda/11.8`或更
 6. PyTorch is installed.
 7. PyTorch version is 2.0 or above, current version is 2.2.
 ```
-## 1. OSError
+<!-- ## 1. OSError
 
 ### 环境描述
 操作系统`rocky8.5`，`cmake 2.30.0`，`gcc8.5`或者`gcc9.2`，`cuda/11.8`，`intel/2020`，`pytroch 2.2.0.dev20231127+cu118`， `PWMLFF2024.5`
@@ -44,5 +44,5 @@ add_compile_options(-D_GLIBCXX_USE_CXX11_ABI=0)
 该错误是‌std::string ABI不匹配造成的。
 ‌std::string ABI‌主要涉及到C++标准库中的std::string类在不同编译器ABI（Application Binary Interface，应用程序二进制接口）下的兼容性问题。ABI定义了程序在二进制层面的规范，包括函数调用的约定、数据类型的布局、异常处理机制等，是编译器、操作系统和硬件共同决定的接口。由于C++的ABI比C语言更复杂，因为它依赖于编译器，因此在使用不同编译器或编译器不同版本编译的程序之间，可能会出现ABI不兼容的情况。
 对于Centos 系统，pip安装了pytroch之后，libtorch的_GLIBCXX_USE_CXX11_ABI宏被设置为1，在编译c++ cuda的算子时使用的是1，相匹配。但是在 rocky8.5 或者 Ubuntu 系统，libtorch的宏是0，不再匹配，因此编译后发生该错误。需要手动在CMakelist.txt中指定为0。
-
+ -->
 

@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # type embedding
 
-由于 DP 模型的 Embedding Net 数目是元素类型数目$N$的$N^2$倍。一方面，当体系中元素类型较多时制约了模型的训练速度，以及推理速度。另一方面，这也制约了 DP 模型在通用大模型方面的潜力。考虑到$N^2$个 Embedding net 其实隐含了对元素类型的编码，因此我们通过调整$S_{ij}$，将元素类型的物理属性信息与$S_{ij}$做拼接，则只需要一个 Embeding net 即可达到与$N^2$相似效果。
+由于 DP 模型的 Embedding Net 数目是元素类型数目$N$的$N^2$倍。一方面，当体系中元素类型较多时制约了模型的训练速度，以及推理速度。另一方面，这也制约了 DP 模型在通用大模型方面的潜力。考虑到$N^2$个 Embedding net 其实隐含了对元素类型的编码，因此我们通过调整$S_{ij}$，将元素类型的物理属性信息与$S_{ij}$做拼接，则只需要一个 Embedding net 即可达到与$N^2$相似效果。
 
 对于$S_{ij}$，$i$为中心原子，这里将$j$对应的元素类型的[物理属性](/next/PWMLFF/Parameter%20details#type_physical_property)与$S_{ij}$做拼接，组成一个长度为 1+物理属性数量的 Vector 送入 Embedding Net。在我们[五元合金(钌、铑、铱、钯、镍)数据集](https://github.com/LonxunQuantum/PWMLFF_library/tree/main/alloy/Ru_Rh_Ir_Pd_Ni)以及[LiGePS 四元数据集(1200K)](https://github.com/LonxunQuantum/PWMLFF_library/tree/main/LiGePS)的测试中，基于这种 Type embedding 方法的 DP 模型，能够在达到或者超过标准的 DP 模型预测精度的同时，对训练时间减少 27%，详细结果见[性能测试](#type_performance)。
 

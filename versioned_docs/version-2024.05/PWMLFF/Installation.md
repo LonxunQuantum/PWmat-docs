@@ -17,8 +17,9 @@ PWMLFF 包含 `Fortran`、`Python (Pytorch2.0)` 、 `C++` 和 `C++ CUDA` 代码�
 
 ``` bash
 # 加载conda 环境
-$ module load anaconda
 $ source /share/app/anaconda3/etc/profile.d/conda.sh
+$ module load conda/3-2020.07
+$ conda deactivate
 $ conda activate PWMLFF
 $ module load pwmlff/2024.5
 ```
@@ -354,8 +355,8 @@ mpirun -np 4 lmp_mpi_gpu -in in.lammps
 module load intel/2020
 
 #2. 加载conda环境、激活conda虚拟环境
-source /data/home/wuxingxing/anaconda3/etc/profile.d/conda.sh
-conda activate torch2_feat
+source /the/path/to/anaconda3/etc/profile.d/conda.sh
+conda activate PWMLFF
 
 #3. 加载PWMLFF 环境变量
 export PATH=/the/path/to/PWMLFF-2024.5/src/bin:$PATH
@@ -379,19 +380,21 @@ mpirun -np 4 lmp_mpi_gpu -in in.lammps
 在提交训练任务时，注意任务脚本中需要确保加载相关环境，如下所示：
 
 ```
-module load intel/2020
 source /share/app/anaconda3/etc/profile.d/conda.sh
+module load conda/3-2020.07
+conda deactivate
 conda activate PWMLFF
+module load pwmlff/2024.5
 
-# 以下是一些针对可能存在的问题的一种解决方式
+```
+<!-- # 以下是一些针对可能存在的问题的一种解决方式
 export MKL_SERVICE_FORCE_INTEL=1
 export MKL_THREADING_LAYER=GNU
 export I_MPI_HYDRA_BOOTSTRAP=slurm
-export I_MPI_PMI_LIBRARY=/lib64/libpmi.so
-```
-
+export I_MPI_PMI_LIBRARY=/lib64/libmpi.so -->
+<!-- 
 - 第 5、6 行环境解决 pytorch 与 numpy 版本不匹配的问题
-- 最后两行环境解决多 lammps 任务无法同时并行的问题
+- 最后两行环境解决多 lammps 任务无法同时并行的问题 -->
 
 **加载`pwmlff`和虚拟环境的目的是为了获取`LD_LIBRARY_PATH`。**
 **lammps 运行时必须包含`LD_LIBRARY_PATH`环境变量，否则无法调用特定库。**

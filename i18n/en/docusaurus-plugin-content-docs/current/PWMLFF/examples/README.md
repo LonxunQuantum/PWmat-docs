@@ -1,6 +1,6 @@
 ---
 sidebar_position: 4
-title: PWMLFF Examples
+title: Examples
 ---
 
 In this chapter, we compile some test work done using PWMLFF, as well as published papers using PWMLFF, to provide references for users.
@@ -13,7 +13,7 @@ More test details can also be found in the [Longxin WeChat article](https://mp.w
 
 ### [2. LKF And ADAM](./LKF%20vs%20Adam.md)
 
-PWMLFF implements the [[Reconfigured Layer Extended Kalman Filter (RLEKF) optimizer]](https://arxiv.org/abs/2212.06989), aimed at accelerating the training of neural network force fields. RLEKF is an improved version of the global extended Kalman filter (GEKF), reducing computational costs by segmenting large layers and aggregating small layers. This strategy uses sparse diagonal block matrices to approximate the dense weight error covariance matrix, thereby enhancing computational efficiency. The authors conducted numerical experiments on `13` common systems and compared the results with the ADAM optimizer.
+PWMLFF implements the [[Reconfigured Layer Extended Kalman Filter (LKF) optimizer]](https://arxiv.org/abs/2212.06989), aimed at accelerating the training of neural network force fields. LKF is an improved version of the global extended Kalman filter (GKF), reducing computational costs by segmenting large layers and aggregating small layers. This strategy uses sparse diagonal block matrices to approximate the dense weight error covariance matrix, thereby enhancing computational efficiency. The authors conducted numerical experiments on `13` common systems and compared the results with the ADAM optimizer.
 
 ### [3. Active Learning](./Active%20Learning.md)
 [PWact](../active%20learning/README.md) (Active learning based on PWMLFF) is an open-source automated active learning platform we developed based on PWMLFF for efficient data sampling. PWact implements commonly used active learning strategies based on committee query, as well as our uncertainty measurement algorithm based on the Kalman filter algorithm (Kalman Prediction Uncertainty, KPU). Active learning based on KPU is still in the testing phase and not yet open for user access. In this example, we compare two active learning sampling methods.

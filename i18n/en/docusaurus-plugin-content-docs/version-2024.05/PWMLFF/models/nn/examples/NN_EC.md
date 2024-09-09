@@ -86,6 +86,13 @@ The following slurm script example is suitable for Mcloud. Ensure that the neces
 #SBATCH --gres=gpu:1
 #SBATCH --gpus-per-task=1
 
+#Mcloud installed environment loaded
+source /share/app/anaconda3/etc/profile.d/conda.sh
+module load conda/3-2020.07
+conda deactivate
+conda activate PWMLFF
+module load pwmlff/2024.5
+
 PWMLFF train nn_ec.json > log
 ```
 
@@ -93,6 +100,13 @@ To run interactively:
 
 ```bash
 $ srun -p 3080ti --gres=gpu:1 --pty /bin/bash
+
+$ source /share/app/anaconda3/etc/profile.d/conda.sh
+$ module load conda/3-2020.07
+$ conda deactivate
+$ conda activate PWMLFF
+$ module load pwmlff/2024.5
+
 $ PWMLFF train nn_ec.json
 ```
 
