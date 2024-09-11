@@ -35,7 +35,7 @@ $ module load pwmlff/2024.5
 #### 2. 解压
 
 ```bash
-$ gzip -d pwmlff.2024.5.sh.gz
+$ tar -xzvf pwmlff.2024.5.sh.tar.gz
 ```
 
 解压后得到 `pwmlff.2024.5.sh` 文件，执行该文件即可完成环境的安装。

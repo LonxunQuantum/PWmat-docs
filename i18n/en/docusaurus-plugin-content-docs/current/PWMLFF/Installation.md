@@ -34,7 +34,7 @@ For devices without internet access, you can download the offline installation p
 #### 2. Unpacking
 
 ```bash
-$ gzip -d pwmlff.2024.5.sh.gz
+$ tar -xzvf pwmlff.2024.5.sh.tar.gz
 ```
 
 After unpacking, you will get the `pwmlff.2024.5.sh` file. Execute this file to complete the environment installation.

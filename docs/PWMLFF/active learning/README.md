@@ -46,6 +46,7 @@ PWact 平台包含主任务和任务分发器两部分，如 [结构图](#Arch_d
 PWact 支持pip 命令安装与源码安装两种安装方式。
 
 ### 1.pip 命令安装
+安装包已上传至pypi 官网，支持直接使用pip install 安装。
 ```bash
     pip install pwact
 ```
@@ -54,11 +55,16 @@ PWact 支持pip 命令安装与源码安装两种安装方式。
 源码下载
 ```bash
 git clone https://github.com/LonxunQuantum/PWact.git
+或者
+git clone https://gitee.com/pfsuo/pwact.git
+gitee更新可能没有github及时，建议优先从github下载
 ```
 
-源码下载后，您可以通过加载如下环境变量的方式使用 `pwact` 命令，这里`~/codespace/al_pwmlff` 为您的源码文件路径
+源码下载后，进入源码的根目录（与setup.py同一级）执行命令
 ```bash
-export PATH=~/codespace/al_pwmlff/pwact/bin:$PATH
+pip install .
+#或者加开发者选项, 安装时不复制文件，而是直接从源码文件读取，任何对源码的修改都会立即生效，适用于需要自己修改源码的用户
+# pip install -e .
 ```
 
 PWact 开发语言采用 Python ，支持 Python 3.9 以及以上的版本。建议用户直接使用 PWMLFF 的 [Python 运行环境](http://doc.lonxun.com/PWMLFF/Installation) 即可。

@@ -49,19 +49,19 @@ It includes four sub-modules: relaxation (supporting PWMAT or VASP), supercell g
 PWact supports two installation methods: pip command installation and source code installation.
 
 ### 1. Pip Command Installation
-```bash
-pip install pwact
-```
-
-### 2. GitHub Source Code Installation
-Source code download
+Source Code Download
 ```bash
 git clone https://github.com/LonxunQuantum/PWact.git
+or
+git clone https://gitee.com/pfsuo/pwact.git
+The Gitee repository may not be updated as promptly as GitHub, so it is recommended to download from GitHub.
 ```
 
-After downloading the source code, you can use the `pwact` command by loading the following environment variable. Here, `~/codespace/al_pwmlff` is the path to your source code files.
+After downloading the source code, navigate to the root directory (at the same level as `setup.py`) and run the following command:
 ```bash
-export PATH=~/codespace/al_pwmlff/pwact/bin:$PATH
+pip install .
+# Or use the developer option, which installs without copying files. It reads directly from the source files, meaning any changes to the source code will take effect immediately. This is useful for users who need to modify the source code themselves.
+# pip install -e .
 ```
 
 PWact is developed in Python and supports Python 3.9 and above. It is recommended to use the [Python runtime environment](http://doc.lonxun.com/PWMLFF/Installation) of PWMLFF directly.
