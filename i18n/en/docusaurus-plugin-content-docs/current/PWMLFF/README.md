@@ -6,7 +6,7 @@ title: PWMLFF
 
 PWmat Machine Learning Force Field (PWMLFF) is an open-source software package under the GNU license. We provide a comprehensive set of software, tools, and data repositories for rapidly generating machine learning force fields that rival ab initio molecular dynamics (AIMD). This includes a model training platform, Lammps molecular dynamics interface, active learning platform, data format conversion tools, and data and model repositories. You can access their source code and user manuals through the following links.
 
-## [1. PWMLFF Machine Learning Platform](./Installation.md#pwmlff)
+## [1. PWMLFF Machine Learning Platform](./Installation.md)
 
 👉[Open source repository](https://github.com/LonxunQuantum/PWMLFF)
 
@@ -36,7 +36,7 @@ It includes `8` feature types with translational, rotational, and permutation in
         2. Reorganized Layer Extended Kalman Filtering (LKF)
 ```
 
-## [2. Lammps Interface](./Installation.md#lammps-recompiled-version-for-pwmlff)
+## [2. Lammps Interface](./Installation.md#lammps-for-pwmlff-compilation-and-installation)
 
 👉[Open source repository](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/tree/libtorch)
 

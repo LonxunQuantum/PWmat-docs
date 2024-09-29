@@ -4,11 +4,11 @@ sidebar_position: 2
 
 # Parameter details
 
-This section introduces the user-definable parameters in all models. There are 2 types of parameters: `Required` and `Advanced`. In the following parameters, "relative path" refers to a path relative to the current working directory, while "absolute path" refers to the complete path of a file or directory starting from the root directory.
+This section introduces all the parameters that can be defined by the user in the models, which can be divided into necessary parameters and advanced parameters. Necessary parameters need to be specified by the user, while advanced parameters have default values that can be manually modified in the JSON file as needed. In the parameters below, "relative path" refers to the path relative to the current working directory, while "absolute path" refers to the complete path of a file or directory starting from the root directory.
 
 ## Required
 
-For any model, the following parameters `require user input`.
+For any model, the following parameters need to be provided by the user.
 
 ### model_type
 This parameter is used to specify which model to use for training. You can use `DP` for deep learning, `NN` for neural network, `LINEAR` for linear models, or the `NEP` for NEP model.
@@ -25,43 +25,45 @@ Error! maxNeighborNum too small
 
 In this case increase the value.
 
-:::note
-For the `NEP` model, there is no need to set this parameter.
-:::
+### raw_files
+This parameter specifies the path to the molecular dynamics trajectory files for the training task. You can use either a relative or absolute path.
+   - For DP and NEP models, supported file formats include PWmat, VASP, and CP2K (with the corresponding `format` parameters being `pwmat/movement`, `vasp/outcar`, `cp2k/md`).
+   - For LINEAR and NN models, only the `pwmat/movement` format is supported.
+
+### format
+This parameter works in conjunction with `raw_files` to specify the format of the raw trajectory files, with a default value of `pwmat/movement`. PWmat, VASP, and CP2K correspond to `format` parameters of `pwmat/movement`, `vasp/outcar`, and `cp2k/md`, respectively.
+
+### datasets_path
+This parameter is for DP and NEP models, specifying the path to the data in `pwmlff/npy` format. If `raw_files` is specified for DP and NEP models, the trajectories from `raw_files` will be automatically converted to `pwmlff/npy` format during training or testing. The conversion tool is [`PWDATA`](./Appendix-2.md).
 
 ### train_movement_file
-This parameter is used to specify the path where the MOVEMENT files for the `train` task are located. You can use relative paths or absolute paths.
+In versions prior to `PWMLFF-2025.5`, this parameter was used to provide the movement file path for training in LINEAR and NN models. The current version (2024.5) has modified this to `raw_files`, which is also compatible with this parameter, meaning you can use either `train_movement_file` or `raw_files`.
 
 ### test_movement_file
-This parameter is used to specify the path where the MOVEMENT files for the `test` task are located. You can use relative paths or absolute paths. It should be specified along with the `model_load_file` parameter.
+In versions prior to `PWMLFF-2025.5`, this parameter was used to provide the movement file path for testing in LINEAR and NN models. The current version (2024.5) has modified this to `raw_files`, which is also compatible with this parameter, meaning you can use either `test_movement_file` or `raw_files`.
 
 ### model_load_file
-This parameter is used to specify the path where the model used for testing tasks is located. It should be specified along with the `test_movement_file` parameter.
+This parameter specifies the path to the model used for the testing task.
 
- ### *dvanced`
+ ### Advanced Parameters
 
-Users only need to set the required parameters to complete the model training, testing, and related molecular dynamics processes. The corresponding advanced parameters, such as model hyperparameters and optimizer hyperparameters, will be set to default values. These advanced parameters can also be set in the JSON file.
+Users only need to set the necessary parameters to complete the training, testing, and related molecular dynamics processes. The corresponding advanced parameters, such as model hyperparameters and optimizer hyperparameters, will be set to their default values. These advanced parameters can also be configured in the JSON file.
 
 ### train_valid_ratio
-This parameter specifies the ratio of the training set to the validation set. For example, 0.8 means taking the first 80% of the MOVEMENT images as the training set and the remaining 20% as the validation set. The default value is 0.8.
+This parameter specifies the ratio of the training set to the validation set. For example, 0.8 indicates that the first 80% of the images in MOVEMENT will be used as the training set, with the remaining 20% as the validation set. The default value is `0.8`.
 
 ### recover_train
 This parameter is used to resume training from an interrupted DP or NN training task. The default value is `true`.
 
 ### work_dir
-This parameter is used to set the working directory where training, testing, and other tasks will be executed. It can be set to an absolute or relative path. The default value is a relative path `./work_dir`。
+This parameter sets the working directory for executing training, testing, and other tasks. It can be set to an absolute path or a relative path. The default value is the relative path `./work_dir`.
 
 ### reserve_work_dir
-This parameter is used to specify whether to keep the working directory `work_dir` after the task execution is completed. The default value is `false`, which means the directory will be deleted after the job execution is finished.
+This parameter specifies whether to keep the working directory `work_dir` after the task execution is completed. The default value is `False`, meaning the directory will be deleted after execution.
 
 :::info
 
-1. Note，`work_dir`，`reserve_work_dir`, `train_movement_file` and `test_movement_file` Parameters are only used in the Linear and NN models in curren version.
-2. For DP model:
-   - The `raw_files` are used to specify the path of the molecular dynamics trajectory files for the training task. Supported file formats include PWmat, VASP, and CP2K (corresponding to the `format` parameter as `pwmat/movement`, `vasp/outcar`, `cp2k/md`).
-   - The `format` parameter is used to specify the format of the original trajectory file. The default value is `None`. When using the `raw_files` parameter, the `format` parameter must be specified.
-   - The `datasets_path` parameter is used to specify the path where the datasets for the test task are located. These datasets are preprocessed by [`PWDATA`](./Appendix-2.md), including feature extraction and label generation. It can replace the `raw_files` and `format` parameters.
-
+1. Note that the parameters `work_dir`, `reserve_work_dir`, `train_movement_file`, and `test_movement_file` are only applicable to LINEAR and NN models. Also, LINEAR and NN models only support movement file formats. The `train_movement_file` and `test_movement_file` parameters have been replaced by `raw_files` in the `PWMLFF-2024.5 version`, while still being compatible with these parameters.
 :::
 
 ### type_embedding
