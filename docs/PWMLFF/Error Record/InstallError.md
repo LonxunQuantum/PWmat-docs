@@ -11,7 +11,7 @@ PWMLFF中使用的`pytorch`版本为`2.0`以上，必须使用 `cuda/11.8`或更
 
 对于 `intel/2020`编译套件，使用了它的 `ifort` 和 `icc` 编译器(`19.1.3`)、`mpi(2019)`、`mkl库(2020)`，如果单独加载，请确保版本不低于它们。
 
-您可以通过位于源码根目录的src/check_env.sh 脚本检查环境。一个正确的环境如下所示。
+您可以通过位于源码根目录的src/check/check_env.sh 脚本检查环境。一个正确的环境如下所示。
 ``` txt
 1. CUDA version is 11.8.
 2. nvcc command exists.
@@ -21,6 +21,56 @@ PWMLFF中使用的`pytorch`版本为`2.0`以上，必须使用 `cuda/11.8`或更
 6. PyTorch is installed.
 7. PyTorch version is 2.0 or above, current version is 2.2.
 ```
+
+
+### NeighConst.so 编译错误
+#### 错误描述
+在编译 fortran 代码过程中出现如下错误
+
+```
+ifort -O3 least_squares.f90 counts_atom.f90 scan_title.f90 transform_to_upper.f90 \
+        find_neighbore00.f90 find_neighbore.f90 find_feature_deepMD2.f90  \
+        gen_deepMD2_feature.f90 \
+	-o gen_deepMD2_feature.x -mkl
+python3 -m numpy.f2py -c -m NeighConst --fcompiler=intelem --compiler=intelem -L/share/app/intel2020ucompilers_and_libraries_2020.4.304/linux/mkl/lib/intel64/ -lmkl_rt NeighConst.f90
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/data/home/wuxingxing/anaconda3/envs/pwmlff-2024.5/lib/python3.11/site-packages/numpy/f2py/__in__.py", line 5, in <module>
+    main()
+  File "/data/home/wuxingxing/anaconda3/envs/pwmlff-2024.5/lib/python3.11/site-packages/numpy/f2py/f22e.py", line 766, in main
+    run_compile()
+  File "/data/home/wuxingxing/anaconda3/envs/pwmlff-2024.5/lib/python3.11/site-packages/numpy/f2py/f22e.py", line 594, in run_compile
+    build_backend = f2py_build_generator(backend_key)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/home/wuxingxing/anaconda3/envs/pwmlff-2024.5/lib/python3.11/site-packages/numpy/f2py/_bkends/__init__.py", line 6, in f2py_build_generator
+    from ._distutils import DistutilsBackend
+  File "/data/home/wuxingxing/anaconda3/envs/pwmlff-2024.5/lib/python3.11/site-packages/numpy/f2py/_bkends/_distutils.py", line 3, in <module>
+    from numpy.distutils.core import setup, Extension
+  File "/data/home/wuxingxing/anaconda3/envs/pwmlff-2024.5/lib/python3.11/site-packages/numpy/distuti/core.py", line 24, in <module>
+    from numpy.distutils.command import config, config_compiler, \
+  File "/data/home/wuxingxing/anaconda3/envs/pwmlff-2024.5/lib/python3.11/site-packages/numpy/distuti/command/config.py", line 19, in <module>
+    from numpy.distutils.mingw32ccompiler import generate_manifest
+  File "/data/home/wuxingxing/anaconda3/envs/pwmlff-2024.5/lib/python3.11/site-packages/numpy/distuti/mingw32ccompiler.py", line 27, in <module>
+    from distutils.msvccompiler import get_build_version as get_build_msvc_version
+ModuleNotFoundError: No module named 'distutils.msvccompiler'
+make: *** [NeighConst.so] Error 1
+make: Leaving directory `/data/home/wuxingxing/codespace/PWMLFF_gpu/src/pre_data/gen_feature'
+make: Entering directory `/data/home/wuxingxing/codespace/PWMLFF_gpu/src/pre_data/fit'
+```
+
+#### 错误原因
+该错误出自 setuptools 版本不匹配，一般是版本过高造成的，您需要降低 setuptools，执行如下命令：
+``` bash
+# 卸载 setuptools
+$ pip uninstall setuptools
+# 清除本地缓存
+$ pip cache purge
+# 重新安装 setuptools
+$ pip install setuptools==68.0.0
+# 在我们的测试中不高于 68.0.0 即可
+```
+
 <!-- ## 1. OSError
 
 ### 环境描述

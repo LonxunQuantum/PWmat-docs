@@ -37,9 +37,9 @@ PWact 平台包含主任务和任务分发器两部分，如 [结构图](#Arch_d
 
 2. PWact 的 DFT 计算支持 [PWmat](https://www.pwmat.com/gpu-download) 、[VASP](https://www.vasp.at/)、 [CP2K](https://www.cp2k.org/)和DFTB，需要您的计算机群已安装PWMAT、VASP或CP2K。对于DFTB, 我们已经在 PWMAT 中集成了 DFTB，您可以在[`PWMAT手册的DFTB_DETAIL章节`](http://www.pwmat.com/pwmat-resource/Manual_cn.pdf)查看详细使用说明([`集成了DFTB的PWmat版本下载地址`](https://www.pwmat.com/modulefiles/pwmat-resource/mstation-download/cuda-11.6-mstation-beta.zip))。
 
-3. PWact 模型训练基于 [PWMLFF](https://github.com/LonxunQuantum/PWMLFF) , PWMLFF 安装方式参考 [PWMLFF 文档](http://doc.lonxun.com/PWMLFF/Installation)。
+3. PWact 模型训练基于 [PWMLFF](https://github.com/LonxunQuantum/PWMLFF) , PWMLFF 安装方式参考 [PWMLFF 文档](../Installation.md#pwmlff-编译安装)。
 
-4. PWact Lammps 分子动力学模拟 基于 [Lammps_for_pwmlff](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/tree/libtorch_nep)，安装方式参考 [Lammps_for_pwmlff 文档](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/tree/libtorch_nep/README) 或者 [在线手册](../Installation.md)
+4. PWact Lammps 分子动力学模拟 基于 [Lammps_for_pwmlff](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/tree/libtorch_nep)，安装方式参考 [Lammps_for_pwmlff 文档](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/tree/libtorch_nep/README) 或者 [在线手册](../Installation.md#lammps-for-pwmlff编译安装)
 
 # 安装流程
 
@@ -65,6 +65,8 @@ gitee更新可能没有github及时，建议优先从github下载
 pip install .
 #或者加开发者选项, 安装时不复制文件，而是直接从源码文件读取，任何对源码的修改都会立即生效，适用于需要自己修改源码的用户
 # pip install -e .
+# 从源码安装执行完毕后，需要把pwact加入环境变量
+# export PYTHONPATH=/the/path/pwact:$PYTHONPATH
 ```
 
 PWact 开发语言采用 Python ，支持 Python 3.9 以及以上的版本。建议用户直接使用 PWMLFF 的 [Python 运行环境](http://doc.lonxun.com/PWMLFF/Installation) 即可。
@@ -128,11 +130,13 @@ pwact gather_pwdata
 
 结束正在执行的 init_bulk 任务，如 驰豫（relax）、AIMD 任务。
 ```bash
+# 进入到执行 pwact init_bulk 命令时的所在目录
 pwact kill init_bulk
 ```
 
 结束正在执行的 run 任务，包括正在运行的训练、探索（MD）或者标记任务
 ```bash
+# 进入到执行 pwact run 命令时的所在目录
 pwact kill run
 ```
 上面的 kill 命令功能您也可以通过手动操作替代，需要您第一步，结束正在执行的主进程，即执行 pwact init_bulk 或 pwact run 的窗口；第二步，需要您手动结束正在执行的slurm任务。

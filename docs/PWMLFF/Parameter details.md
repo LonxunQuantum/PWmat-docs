@@ -23,10 +23,23 @@ sidebar_position: 2
 Error! maxNeighborNum too small
 ```
 
-在该情况下，请调大该值。对于 `NEP` 模型，不需要设置该参数。
+在该情况下，请调大该值。
 
 ### raw_files
-该参数用于指定`训练`任务的 MOVEMENT 文件所在的路径。您可以使用相对路径或绝对路径。
+该参数用于指定训练任务的分子动力学轨迹文件所在的路径。您可以使用相对路径或绝对路径。
+   - 对于 DP 和 NEP 模型，支持的文件格式有 PWmat, VASP, CP2K (对应 `format` 参数为 `pwmat/movement`, `vasp/outcar`, `cp2k/md`)
+   - 对于 LINEAR 和 NN 模型，仅支持`pwmat/movement`格式
+### format
+该与 `raw_files` 配合使用，参数用于指定原始轨迹文件的格式，默认值为 `pwmat/movement`。 PWmat, VASP, CP2K 对应 `format` 参数分别为 `pwmat/movement`, `vasp/outcar`, `cp2k/md`。
+
+### datasets_path
+该参数用于 DP 和 NEP 模型，用于指定 `pwmlff/npy` 格式的数据所在路径。对于 DP 和 NEP 模型，如果指定了`raw_files`，在训练或者测试中会把`raw_files`中的轨迹自动转换为`pwmlff/npy`格式。转换工具为 [`PWDATA`](./Appendix-2.md)。
+
+### train_movement_file
+该参数在`PWMLFF-2025.5之前的版本`中，用于 LINEAR 和 NN 模型做训练，提供 movement 文件路径。当前版本（2024.5）已经修改为`raw_files`，并且兼容该参数，即您可以使用`train_movement_file` 或者 `raw_files` 皆可。
+
+### test_movement_file
+该参数在`PWMLFF-2025.5之前的版本`中，用于 LINEAR 和 NN 模型做测试，提供 movement 文件路径。当前版本（2024.5）已经修改为`raw_files`，并且兼容该参数，即您可以使用`test_movement_file` 或者 `raw_files` 皆可。
 
 ### model_load_file
 该参数用于指定用于`测试`任务的模型所在的路径。
@@ -49,12 +62,7 @@ Error! maxNeighborNum too small
 
 :::info
 
-1. 注意，`work_dir`，`reserve_work_dir`, `train_movement_file` 和 `test_movement_file` 参数目前版本中仅用于 LINEAR 和 NN 模型。
-2. 对于 DP 模型：
-   - `raw_files` 参数用于指定训练任务的分子动力学轨迹文件所在的路径。支持的文件格式有 PWmat, VASP, CP2K (对应 `format` 参数为 `pwmat/movement`, `vasp/outcar`, `cp2k/md`)
-   - `format` 参数用于指定原始轨迹文件的格式。默认值为 `None`。 使用 `raw_files`参数时，必须指定`format`参数。
-   - `datasets_path` 参数用于指定测试任务的数据集所在的路径。这些数据集经过 [`PWDATA`](./Appendix-2.md) 预处理，包括特征提取和标签生成。可代替`raw_files`参数及`format`参数。
-
+1. 注意，`work_dir`，`reserve_work_dir`, `train_movement_file` 和 `test_movement_file` 参数仅用于 LINEAR 和 NN 模型。并且 LINEAR 和 NN 模型仅支持 movement 文件格式。`train_movement_file` 和 `test_movement_file` 参数在 `PWMLFF-2024.5 版本`中，已经被 `raw_files`替换，同时也兼容该参数。
 :::
 
 ### type_embedding
@@ -112,7 +120,7 @@ NN 模型的完整参数设置如下：
 特征的最小截断半径。默认值为 $0.5 \text{\AA}$。
 
 #### feature_type
-该参数用于特征类型。支持的选项有[1, 2]、[3, 4]、[5]、[6]、[7]和[8]。默认值为[3, 4]，即 2-b 和 3-b 高斯特征。有关不同特征类型的更详细信息，请参考[附录1](/next/PWMLFF/Appendix-1)。
+该参数用于特征类型。支持的选项有[1, 2]、[3, 4]、[5]、[6]、[7]和[8]。默认值为[3, 4]，即 2-b 和 3-b 高斯特征。有关不同特征类型的更详细信息，请参考[附录1](./Appendix-1.md)。
 
 #### network_size
 该参数用于拟合网络（fitting_net）的结构。默认值为[15, 15, 1]，其结构如下所示：

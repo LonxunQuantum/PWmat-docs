@@ -19,7 +19,7 @@ NEP 网络结构，不同类型的元素具有独立但结构相同的子神经�
 ## NEP 命令列表
 1.`train 训练命令`，与 DP、NN、Linear 模型相同，详细使用参考 [NEP 模型训练](#nep-模型训练)
 ``` bash
-PWMLFF train nep.json 
+PWMLFF train train.json 
 ```
 
 2.python 测试接口我们提供了`infer` 和 `test` 两种命令，使用方式与 [DP inference](../dp/python_inference.md#python-inference) 相同。
@@ -33,9 +33,10 @@ PWMLFF infer gpumd_nep.txt 0.lammpstrj lammps/dump Hf O
 # Hf O 为 lammps/dump格式的结构中的元素名称，Hf为结构中1号元素类型，O为元素中2号元素类型
 ```
 
-在`test`命令的 `test.json` 中，同样支持上述力场格式。
+在`test`命令的 `test.json` 中，同样支持上述力场格式。如果您测试的结构中原子数不超过万级，建议您使用 CPU 即可。对于 `test` 接口，我们使用了 cpu 多核并行加速。
+
 ``` bash
-PWMLFF test nep_test.json
+PWMLFF test test.json
 ```
 
 3.`toneplmps` 命令， 用于把 `PWMLFF` 训练的 `nep_model.ckpt` 文件转换为 `nep_to_lmps.txt`文件，用于 `lammps` 模拟。
@@ -79,7 +80,7 @@ PWMLFF script nep_model.ckpt
 
 ## NEP 模型训练
 
-我们这里以一个HfO2的数据集为例，例子位于 [[PWMLFF_nep/example/NEP]](https://github.com/LonxunQuantum/PWMLFF/tree/dev_nn_nep/example/NEP).
+我们这里以一个HfO2的数据集为例，例子位于 [[源码/example/HfO2]](https://github.com/LonxunQuantum/PWMLFF/blob/master/example/HfO2).
 
 ### 输入文件设置
 
@@ -135,12 +136,12 @@ pip install pwact
 
 ## 训练
 
-训练 NEP 模型，用户只需要在当前 `nep.json` 所在目录执行如下命令即可。以 [ [PWMLFF_nep/example/NEP] ](https://github.com/LonxunQuantum/PWMLFF/tree/dev_nn_nep/example/NEP)为例
+训练 NEP 模型，用户只需要在当前 `train.json` 所在目录执行如下命令即可。以 [ [源码/example/HfO2] ](https://github.com/LonxunQuantum/PWMLFF/tree/master/example/HfO2)为例。
 
 ``` bash
-cd /example/NEP
+cd /example/HfO2
 PWMLFF train train.json
-# 如果您执行 sbatch train.job ，这里job文件中的环境变量需要修改为您自己的环境变量
+# 如果您执行 sbatch train.job ，这里job文件中的环境变量需要修改为您自己的环境变量，我们提供了在mcloud上的加载以及离线安装的加载slurm脚本例子。
 ```
 
 ### 训练完成后的输出文件
@@ -268,7 +269,7 @@ NEP和DP模型在LKF优化器下训练误差收敛情况
 ## 关于lammps 接口的测试结果
 下图展示了 NEP 模型的 lammps CPU 和 GPU 接口在 `3090*4` 机器上做 NPT 系综 MD 模拟的速度。对于CPU 接口，速度正比与原子规模和CPU核数；对于GPU 接口, 速度正比与原子规模和GPU数量。
 
-根据测试结果，我们建议如果您需要模拟的体系规模在 $10^3$ 量级以下，建议您使用 CPU 接口即可。另外使用 GPU 接口时，建议您使用的 CPU 核数于 GPU 卡数相同。
+根据测试结果，我们建议如果您需要模拟的体系规模在 $10^3$ 量级以下，建议您使用 CPU 接口即可。另外使用 GPU 接口时，建议您使用的 CPU 核数与 GPU 卡数相同。
 
 <div style={{ display: 'inline-block', marginRight: '10px' }}>
   <img src={require("./pictures/lmps_speed.png").default} alt="nep_net" width="500" />

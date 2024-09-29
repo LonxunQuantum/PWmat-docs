@@ -1,6 +1,6 @@
 # Molecure Ethylene carbonate system
 
-下文将以 C3H4O3 孤立体系为例，介绍如何使用 **PWMLFF Neural Network Model** 进行训练，以及如何使用训练好的模型进行预测。
+下文将以 C3H4O3 孤立体系为例，介绍如何使用 **PWMLFF Neural Network Model** 进行训练，以及如何使用训练好的模型进行预测。该例位于[源码/example/EC](https://github.com/LonxunQuantum/PWMLFF/tree/master/example/EC)
 
 整个程序运行逻辑大致分为：
 
@@ -52,17 +52,17 @@ IN.PSP3 = O.SG15.PBE.UPF
 
 ### 2.1 提取特征
 
-新建目录，放置`MOVEMENT*`文件。或者`MOVEMENT*`文件也可以放置在其他目录下，只需要通过修改输入文件`*.json`中的`train_movement_path`路径进行训练。
+新建目录，放置`MOVEMENT*`文件。或者`MOVEMENT*`文件也可以放置在其他目录下，只需要通过修改输入文件`*.json`中的 `raw_files`参数(或者`train_movement_file`，为NN `2024.5前的版本`参数) 路径进行训练。
 
 ### 2.2 训练输入文件
 
-当前目录下，新建`*.json`文件(如`nn_ec.json`)，该文件包含一系列需要传入的参数。
+当前目录下，新建`*.json`文件(如`train.json`)，该文件包含一系列需要传入的参数。
 
 **输入文件示例  ([输入文件其他参数说明](#5-输入文件其他参数说明))：**
 
 ```json
 {   
-    "train_movement_file":["./EC_MOVEMENT"],
+    "raw_files":["./EC_MOVEMENT"],
 
     "model_type": "NN",
     "atom_type":[8,6,1]
@@ -70,7 +70,7 @@ IN.PSP3 = O.SG15.PBE.UPF
 
 ```
 
-- `train_movement_file`: `MOVEMENT`文件存放名。可以设置同时多个文件。请根据实际情况进行修改。
+- `raw_files`: `MOVEMENT`文件存放名。可以设置同时多个文件。请根据实际情况进行修改。`2024.5前的版本`该参数为`train_movement_file`，新版本兼容该参数。
 - `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](/next/PWMLFF/Parameter%20details)。
 - `atom_type`：原子类型，8, 6 和 1 分别为 O, C 和 H 的原子序数.
 
@@ -94,7 +94,7 @@ conda deactivate
 conda activate PWMLFF
 module load pwmlff/2024.5
 
-PWMLFF train nn_ec.json > log
+PWMLFF train train.json > log
 ```
 
 交互式运行：
@@ -108,14 +108,14 @@ $ conda deactivate
 $ conda activate PWMLFF
 $ module load pwmlff/2024.5
 
-$ PWMLFF train nn_ec.json
+$ PWMLFF train train.json
 ```
 
 :::tip
 产生feature与train可以单独运行：
 
-- `PWMLFF gen_feat nn_ec.json` - 仅用于产生特征。
-- `PWMLFF train nn_ec.json` - 用于加载特征,对特征进行处理后开始训练。直接运行`train`会自动调用`gen_feat`。如果`gen_feat`已经运行过，可以在`.json`文件中设置`train_feature_path`来指定feature所在路径，同时注释掉`train_movement_file`
+- `PWMLFF gen_feat train.json` - 仅用于产生特征。
+- `PWMLFF train train.json` - 用于加载特征,对特征进行处理后开始训练。直接运行`train`会自动调用`gen_feat`。如果`gen_feat`已经运行过，可以在`.json`文件中设置`train_feature_path`来指定feature所在路径，同时注释掉`raw_files`（`2024.5前的版本`该参数为`train_movement_file`）。
 
 :::
 
@@ -166,21 +166,21 @@ EC_system/
 
 训练完成后，可以对模型进行验证/测试，以确定模型的拟合效果。
 
-新建目录(如`MD`)，将另一个的`MOVEMENT`文件复制到该目录中。同时在`.json`文件中设置`test_movement_file`,`test_dir_name`参数以及添加`model_load_file`参数。
+新建目录(如`MD`)，将另一个的`MOVEMENT`文件复制到该目录中。同时在`.json`文件中设置`raw_files`(`2024.5前的版本`该参数为`test_movement_file`，新版本兼容该参数),`test_dir_name`参数以及添加`model_load_file`参数。
 
 **相关输入示例：**
 ```json
-    "test_movement_file":["./MD/MOVEMENT"],
+    "raw_files":["./MD/MOVEMENT"],
     "test_dir_name":"test_dir",
     "model_load_file":"./model_record/nn_model.ckpt",
 ```
 
 **验证程序运行示例：**
 
-将PWMLFF train nn_ec.json中的`train`修改为`test`：
+将PWMLFF train train.json中的`train`修改为`test`：
 
 ```python
-PWMLFF test nn_ec.json
+PWMLFF test train.json
 ```
 
 程序运行完成后，验证结果保存在`test_dir_name`设置的`test_dir/`目录下
@@ -230,12 +230,12 @@ run             1000
     "work_dir":"./work_train_dir",
     "reserve_work_dir": false,
    
-    "train_movement_file":["./PWdata/MOVEMENT"],
+    "raw_files":["./PWdata/MOVEMENT"],
 
     "forcefield_name": "forcefield.ff",
     "forcefield_dir": "forcefield",
 
-    "test_movement_file":["./MD/MOVEMENT"],
+    "raw_files":["./MD/MOVEMENT"],
     "test_dir_name":"test_dir",
 
     "train_valid_ratio":0.8,
@@ -332,10 +332,10 @@ run             1000
 
 - `recover_train`: 是否从上次训练中断/完成处继续训练。如果为`true`，读取默认`model_load_path`和`model_name`，程序则会从上次训练中断/完成处继续训练。见[参数细节](/next/PWMLFF/Parameter%20details)。
 - `work_dir`: 训练过程中的中间文件保存目录。训练完成后自动删除。`reserve_work_dir`为`true`时，训练完成后不删除该目录。
-- `train_movement_file`: `MOVEMENT`文件存放名。可以设置同时多个文件。请根据实际情况进行修改。
+- `raw_files`: 用于训练或者训练后验证模型的`MOVEMENT`文件。([详情见验证测试部分](#3-验证测试))，`2024.5前的版本`该参数训练为`train_movement_file`, 测试为`test_movement_file`，新版本兼容该参数。可以设置同时多个文件。请根据实际情况进行修改。
 - `forcefield_name`: 生成的力场文件名称。可不设置。
 - `forcefield_dir`: 生成的力场文件存放的目录。可不设置。
-- `test_movement_file`: 用于训练完成后验证模型的`MOVEMENT`文件。([详情见验证测试部分](#3-验证测试))
+- `raw_files`: 用于训练完成后验证模型的`MOVEMENT`文件。([详情见验证测试部分](#3-验证测试))，`2024.5前的版本`该参数为`test_movement_file`，新版本兼容该参数。
 - `test_dir_name`: 训练完成后验证模型的`MOVEMENT`文件的存放目录。
 - `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](/next/PWMLFF/Parameter%20details)。
 - `atom_type`：原子类型，8, 6 和 1 分别为 O, C 和 H 的原子序数.

@@ -5,9 +5,9 @@ title: PWMLFF
 
 # Machine Learning Force Field
 
-PWmat Machine Learning Force Field (PWMLFF) 是一套在 GNU 许可下的开源软件包。我们提供了一套完备的软件、工具以及数据仓库，用于快速生成生成媲美从头算分子动力学（AIMD）的机器学习力场。包括模型训练平台、Lammps分子动力学接口、主动学习平台、数据格式转换工具、数据和模型仓库。您可以通过下列链接访问它们的源码以及使用手册。
+PWmat Machine Learning Force Field (PWMLFF) 是一套在 GNU 许可下的开源软件包。我们提供了一套完备的软件、工具以及数据仓库，用于快速生成生成媲美从头算分子动力学（AIMD）的机器学习力场。包括模型训练平台 `PWMLFF`、`Lammps` 分子动力学接口、主动学习数据生成平台 `pwact`、数据格式转换工具 `pwdata`、数据和模型仓库。您可以通过下列链接访问它们的源码以及使用手册。
 
-## [1. PWMLFF机器学习平台](./Installation.md#pwmlff)
+## [1. PWMLFF机器学习平台](./Installation.md)
 
 👉[开源仓库地址](https://github.com/LonxunQuantum/PWMLFF)
 
@@ -36,7 +36,7 @@ PWmat Machine Learning Force Field (PWMLFF) 是一套在 GNU 许可下的开源�
         2. Reorganized Layer Extended Kalman Filtering (LKF)
 ```
 
-## [2. lammps 接口](./Installation.md#lammps-recompiled-version-for-pwmlff)
+## [2. lammps 接口](./Installation.md#lammps-for-pwmlff编译安装)
 
 
 👉[开源仓库地址](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/tree/libtorch)
