@@ -24,6 +24,7 @@ $ conda activate PWMLFF
 $ module load pwmlff/2024.5
 ```
 
+
 ### 二、 离线安装
 
 对于非联网设备，可以直接下载已经配置好 conda 环境的离线安装包：
