@@ -340,9 +340,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.
 #5. 加载lammps 环境变量
 export PATH=/the/path/to/Lammps_for_PWMLFF-2024.5/src:$PATH
 export LD_LIBRARY_PATH=/the/path/Lammps_for_PWMLFF-2024.5/src:$LD_LIBRARY_PATH
-#6. 运行 GPU lammps 命令
-mpirun -np 4 lmp_mpi -in in.lammps
-# 或者运行 CPU lammps 命令
+#6. 运行 CPU lammps 命令
 # mpirun -np 32 lmp_mpi -in in.lammps
 ```
 :::caution

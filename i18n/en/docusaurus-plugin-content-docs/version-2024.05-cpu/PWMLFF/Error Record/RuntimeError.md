@@ -75,9 +75,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.
 export PATH=/the/path/to/Lammps_for_PWMLFF-2024.5/src:$PATH
 export LD_LIBRARY_PATH=/the/path/Lammps_for_PWMLFF-2024.5/src:$LD_LIBRARY_PATH
 
-# 6. Run the GPU LAMMPS command
-mpirun -np 4 lmp_mpi_gpu -in in.lammps
-# Or run the CPU LAMMPS command
+# 6. run the CPU LAMMPS command
 # mpirun -np 32 lmp_mpi -in in.lammps
 ```
 
