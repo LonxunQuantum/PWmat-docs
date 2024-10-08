@@ -157,9 +157,9 @@ I.S. Novikov, etal, The MLIP package: moment tensor potential with MPI and activ
 
 ## Spectral Neighbor Analysis Potential (feature 6)
 
-In SNAP, it does not use Gaussian progression. So it does not calculate the distance and kernel between two charge density maps. It first defines a charge density, then use sphoerical harmonic (or 4D sphere, with rotation matrix) to expand the charge density. It then uses the bispectrum, so it becomes rotational invariant. In a way it is like the MTP, but it uses a special way to contract out the orientational index to make it roatational invariant. It is often used with linear regression.
+In SNAP, it does not use Gaussian progression. So it does not calculate the distance and kernel between two atomic local environment maps. It first defines a atomic local environment, then use sphoerical harmonic (or 4D sphere, with rotation matrix) to expand the atomic local environment. It then uses the bispectrum, so it becomes rotational invariant. In a way it is like the MTP, but it uses a special way to contract out the orientational index to make it roatational invariant. It is often used with linear regression.
 
-Consider the density of neighboring atoms around the central atom $i$ at position $\mathbf{r}$ as a sum of $\delta$ functions in a three-dimensional space:
+Consider the local environment of neighboring atoms around the central atom $i$ at position $\mathbf{r}$ as a sum of $\delta$ functions in a three-dimensional space:
 
 $$
     \rho(\mathbf{r}) = \delta({\mathbf{r}}) + \sum_{\mathbf{r}_{ki}\lt R_C}f_C(\mathbf{r}_{ki})\omega_k\delta(\mathbf{r}-\mathbf{r}_{ki})
@@ -171,13 +171,13 @@ $$
 f_C(\mathbf{r}) = 0.5\left[\cos\left(\frac{\pi r}{R_C}\right)+1\right]
 $$
 
-The angular part of this density function can be expanded in the familiar basis of spherial harmonic functions defined for $l = 0, 1, 2, ...$ and $m = -l, -l+1, ..., l-1, l$. The radial distribution is usually represented by a set of radial basis functions. However, here, the radial information $\mathbf{r}$ is mapped into another angle information in a 4D hyper spherical function $U^j_{mm^{'}}(\theta_0,\theta,\phi)$, where all the points (neighboring atoms) fall into a 3D spherical surface (in a 4D space) and  the orientational (angual) information is given by the there angles:
+The angular part of this local environment can be expanded in the familiar basis of spherial harmonic functions defined for $l = 0, 1, 2, ...$ and $m = -l, -l+1, ..., l-1, l$. The radial distribution is usually represented by a set of radial basis functions. However, here, the radial information $\mathbf{r}$ is mapped into another angle information in a 4D hyper spherical function $U^j_{mm^{'}}(\theta_0,\theta,\phi)$, where all the points (neighboring atoms) fall into a 3D spherical surface (in a 4D space) and  the orientational (angual) information is given by the there angles:
 
 $$
 \mathbf{r} \equiv \begin{pmatrix} x \\ y \\ z \end{pmatrix} \rightarrow \begin{matrix} \phi = \arctan(y/x) \\ \theta = \arccos(z/\mathbf{r}) \\ \theta_0 = \frac{3}{4} \pi \mathbf{r} / \mathbf{r}_{c} \end{matrix}
 $$
 
-As a result, the above density function can be expanded by these 4D hyper spherical harmonics $U^j_{mm^{'}}(\theta_0,\theta,\phi)$ with an expansion coefficient $u^j_{mm^{'}}$:
+As a result, the above local environment function can be expanded by these 4D hyper spherical harmonics $U^j_{mm^{'}}(\theta_0,\theta,\phi)$ with an expansion coefficient $u^j_{mm^{'}}$:
 
 $$
     \rho(\mathbf{r}) = \sum_{j=0,\frac{1}{2},1,...}^\infin \sum_{m=-j, -j+1}^j \sum_{m^{'}=-j,-j+1,...}^j u^j_{mm^{'}} U^j_{mm^{'}}(\theta_0,\theta,\phi)

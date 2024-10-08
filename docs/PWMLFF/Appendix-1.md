@@ -158,9 +158,9 @@ I.S. Novikov, etal, The MLIP package: moment tensor potential with MPI and activ
 
 ## Spectral Neighbor Analysis Potential (feature 6)
 
-在 SNAP 中，不使用高斯基函数。因此不计算两个电荷密度图之间的距离和核函数。它首先定义一个电荷密度，然后使用球谐函数（或 4D 球，带有旋转矩阵）来展开电荷密度。然后使用双谱，使其具有旋转不变性。从某种意义上说，它类似于 MTP，但它使用一种特殊的方法来缩并方向指数，使其具有旋转不变性。它通常与线性回归一起使用。
+在 SNAP 中，不使用高斯基函数。因此不计算两个原子局域环境图之间的距离和核函数。它首先定义一个原子局域环境，然后使用球谐函数（或 4D 球，带有旋转矩阵）来展开原子局域环境。然后使用双谱，使其具有旋转不变性。从某种意义上说，它类似于 MTP，但它使用一种特殊的方法来缩并方向指数，使其具有旋转不变性。它通常与线性回归一起使用。
 
-首先，它定义位于 $\mathbf{r}$ 处的中心原子 $i$ 的邻近原子周围的电荷密度为三维空间中的 $\delta$ 函数之和：
+首先，它定义位于 $\mathbf{r}$ 处的中心原子 $i$ 的邻近原子周围的原子局域环境为三维空间中的 $\delta$ 函数之和：
 
 $$
     \rho(\mathbf{r}) = \delta({\mathbf{r}}) + \sum_{\mathbf{r}_{ki}\lt R_C}f_C(\mathbf{r}_{ki})\omega_k\delta(\mathbf{r}-\mathbf{r}_{ki})
@@ -172,19 +172,19 @@ $$
 f_C(\mathbf{r}) = 0.5\left[\cos\left(\frac{\pi r}{R_C}\right)+1\right]
 $$
 
-这个电荷密度函数的角部分可以用球谐函数展开，球谐函数定义在 $l = 0, 1, 2, ...$ 和 $m = -l, -l+1, ..., l-1, l$ 的基础上。径向分布通常由一组径向基函数表示。然而，在这里，径向信息 $\mathbf{r}$ 被映射到 4D 超球面函数 $U^j_{mm^{'}}(\theta_0,\theta,\phi)$ 中，其中所有点（邻近原子）落入 3D 球面（在 4D 空间中），定向（角度）信息由三个角度给出：
+这个原子局域环境函数的角部分可以用球谐函数展开，球谐函数定义在 $l = 0, 1, 2, ...$ 和 $m = -l, -l+1, ..., l-1, l$ 的基础上。径向分布通常由一组径向基函数表示。然而，在这里，径向信息 $\mathbf{r}$ 被映射到 4D 超球面函数 $U^j_{mm^{'}}(\theta_0,\theta,\phi)$ 中，其中所有点（邻近原子）落入 3D 球面（在 4D 空间中），定向（角度）信息由三个角度给出：
 
 $$
 \mathbf{r} \equiv \begin{pmatrix} x \\ y \\ z \end{pmatrix} \rightarrow \begin{matrix} \phi = \arctan(y/x) \\ \theta = \arccos(z/\mathbf{r}) \\ \theta_0 = \frac{3}{4} \pi \mathbf{r} / \mathbf{r}_{c} \end{matrix}
 $$
 
-因此，上述电荷密度函数可以用这些 4D 超球面函数 $U^j_{mm^{'}}(\theta_0,\theta,\phi)$ 展开，展开系数为 $u^j_{mm^{'}}$：
+因此，上述原子局域环境函数可以用这些 4D 超球面函数 $U^j_{mm^{'}}(\theta_0,\theta,\phi)$ 展开，展开系数为 $u^j_{mm^{'}}$：
 
 $$
     \rho(\mathbf{r}) = \sum_{j=0,\frac{1}{2},1,...}^\infin \sum_{m=-j, -j+1}^j \sum_{m^{'}=-j,-j+1,...}^j u^j_{mm^{'}} U^j_{mm^{'}}(\theta_0,\theta,\phi)
 $$
 
-使用上述电荷密度函数，可以计算 $u^j_{mm^{'}}$：
+使用上述原子局域环境函数，可以计算 $u^j_{mm^{'}}$：
 
 $$
     u^j_{mm^{'}} = U^j_{mm^{'}}(0,0,0) + \sum_{\mathbf{r}_{ki}\lt R_C}f_C(\mathbf{r}_{ki})\omega_kU^j_{mm^{'}}(\theta_0(k),\theta(k),\phi(k))
