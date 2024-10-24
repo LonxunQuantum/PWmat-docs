@@ -14,7 +14,7 @@ pwdata is a data preprocessing tool for PWMLFF, used for feature and label extra
 | ----------------- | ----------------- | ----------- | ----- | -------------------------- |
 | PWmat             | MOVEMENT          | True        | True  | 'pwmat/movement'           |
 | PWmat             | OUT.MLMD          | False       | True  | 'pwmat/movement'           |
-| PWmat             | atom.config       | False       | False | 'vasp/config'              |
+| PWmat             | atom.config       | False       | False | 'pwmat/config'             |
 | VASP              | OUTCAR            | True        | True  | 'vasp/outcar'              |
 | VASP              | poscar            | False       | False | 'vasp/poscar'              |
 | LAMMPS            | lmp.init          | False       | False | 'lammps/lmp'               |

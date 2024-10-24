@@ -12,7 +12,7 @@ pwdata 是 PWMLFF 的数据预处理工具，可用于提取特征和标签。�
 | ----------------- | ---------------- | ----------- | ----- | -------------------------- |
 | PWmat             | MOVEMENT         | True        | True  | 'pwmat/movement'           |
 | PWmat             | OUT.MLMD         | False       | True  | 'pwmat/movement'           |
-| PWmat             | atom.config      | False       | False | 'vasp/config               |
+| PWmat             | atom.config      | False       | False | 'pwmat/config'             |
 | VASP              | OUTCAR           | True        | True  | 'vasp/outcar'              |
 | VASP              | poscar           | False       | False | 'vasp/poscar'              |
 | LAMMPS            | lmp.init         | False       | False | 'lammps/lmp'               |

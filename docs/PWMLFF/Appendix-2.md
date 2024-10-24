@@ -12,7 +12,7 @@ pwdata 是 PWMLFF 的数据预处理工具，可用于提取特征和标签。�
 | ----------------- | ---------------- | ----------- | ----- | -------------------------- |
 | PWmat             | MOVEMENT         | True        | True  | 'pwmat/movement'           |
 | PWmat             | OUT.MLMD         | False       | True  | 'pwmat/movement'           |
-| PWmat             | atom.config      | False       | False | 'vasp/config               |
+| PWmat             | atom.config      | False       | False | 'pwmat/config'             |
 | VASP              | OUTCAR           | True        | True  | 'vasp/outcar'              |
 | VASP              | poscar           | False       | False | 'vasp/poscar'              |
 | LAMMPS            | lmp.init         | False       | False | 'lammps/lmp'               |
@@ -283,3 +283,11 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 >           direct = True,
 >           sort = True)
 > ```
+
+
+### pwdata 使用命令做格式互转
+
+#### 多结构文件的互转
+pwmat/movement, vasp/outcar, cp2k/md, deepmd/npy, deepmd/raw, pwmlff/npy or extxyz files
+
+#### 单结构文件格式的互转
