@@ -162,8 +162,8 @@ pwdata convert_configs [-h] -i INPUT [INPUT ...] -f INPUT_FORMAT [-t ATOM_TYPES 
 #### `-q`
 可选参数，str类型，该参数值在输入类型为`meta`时生效，用于查询数据库操作，详细的使用参考 [meta查询演示](#convert_configs-meta-查询例子)
 
-#### `n`
-可选参数，int类型，该参数在输入类型为`meta`时生效，用于设置并行查询数据库时使用的CPU核数，默认使用所有可用核
+#### `-n`
+可选参数，int类型，该参数在输入类型为`meta`时生效，用于设置并行查询数据库时使用的CPU核数，默认使用单核
 
 #### `-t`
 如果输入格式是 `lammps/lmp`或 `lammps/dump` 格式，该参数用于指定结构的原子类型，可以是元素名称或者原子编号，顺序需要与输入结构中保持一致
