@@ -50,12 +50,22 @@ PWMLFF includes `Fortran`, `Python (Pytorch 2.0)`, `C++`, and `C++ CUDA` acceler
 Since configuring a conda environment can be time-consuming and some user devices may not have internet access, we have pre-configured the conda environment in the offline installation package. You can simply download the package, install it, and use it right away. 
 
 ### 1. Download the Offline Installation Package
-Please visit Baidu Cloud to download the package. If the link is invalid, contact us via email at `wuxingxing@pwmat.com` or `support@pwmat.com`:
 
-👉 [Download GPU Version Offline Installation Package pwmlff-2024.5.sh.tar.gz](https://pan.baidu.com/s/1sPB9gBEFJd3q9A__O_wpBQ?pwd=pwmt)
+#### Method 1: Download from Baidu Netdisk
+Please access the Baidu Netdisk link to download. If the link becomes invalid, please contact `wuxingxing@pwmat.com` or `support@pwmat.com`:
 
-### 2. Extract the Installation Package
+👉 [Download Offline Installation Package pwmlff-2024.5.sh.tar.gz](https://pan.baidu.com/s/1sPB9gBEFJd3q9A__O_wpBQ?pwd=pwmt)
+
+#### Method 2: Request via Email
+You can also request the offline installation package by emailing `wuxingxing@pwmat.com` or `support@pwmat.com`. Downloading through the email link is significantly faster than Baidu Netdisk (up to several times faster).
+
+### 2. Unpack the Installation Package
+Due to the large size of the offline installation package, it has been split into four parts. Follow the instructions below to install:
+
 ```bash
+# Merge the four files into one compressed file
+cat pwmlff-2024.5.sh.tar.gz.part_aa pwmlff-2024.5.sh.tar.gz.part_ab pwmlff-2024.5.sh.tar.gz.part_ac pwmlff-2024.5.sh.tar.gz.part_ad > pwmlff-2024.5.sh.tar.gz
+# Unpack the file
 tar -xzvf pwmlff.2024.5.sh.tar.gz
 ```
 After extraction, you will get the following files:

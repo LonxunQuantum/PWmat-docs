@@ -12,14 +12,17 @@ CPU 版本 PWMLFF 离线安装包集成了 PWMLFF 和 Lammps 接口，包含 `Fo
 ## 一、离线安装
 
 ### 1. 下载离线安装包
+方法一 请访问百度网盘下载，链接如果失效请邮件联系 `wuxingxing@pwmat.com` 或`support@pwmat.com`：
+👉 [离线安装包下载 pwmlff-2024.5.sh.tar.gz](https://pan.baidu.com/s/1sPB9gBEFJd3q9A__O_wpBQ?pwd=pwmt)
 
-请访问百度网盘下载，链接如果失效请邮件联系 `wuxingxing@pwmat.com` 或`support@pwmat.com`：
-
-👉[CPU 版本离线安装包下载 pwmlff_cpu-2024.5.sh.tar.gz](https://pan.baidu.com/s/1-MQBicDKaeudUhjmJRJrZA?pwd=pwmt)
+方法二 邮件获取，建议您发送邮件到 `wuxingxing@pwmat.com` 或 `support@pwmat.com` 获取离线安装包。相比于百度网盘，通过邮件链接下载的速度更快（几十倍以上）。
 
 ### 2. 解压安装包
-
+离线安装包内容较大，我们拆分成了4个文件，安装方式如下所示：
 ```bash
+# 合并4个文件到1个压缩文件
+cat pwmlff_cpu-2024.5.sh.tar.gz.part_aa pwmlff_cpu-2024.5.sh.tar.gz.part_ab pwmlff_cpu-2024.5.sh.tar.gz.part_ac pwmlff_cpu-2024.5.sh.tar.gz.part_ad > pwmlff_cpu-2024.5.sh.tar.gz
+# 解压文件
 tar -xzvf pwmlff_cpu-2024.5.sh.tar.gz
 ```
 

@@ -12,13 +12,21 @@ Since configuring the conda environment is time-consuming and some user devices 
 
 ### 1. Download the Offline Installation Package
 
-Please download from Baidu Netdisk. If the link is invalid, please contact `wuxingxing@pwmat.com` or `support@pwmat.com` by email:
+#### Method 1: Download from Baidu Netdisk
+Please access the Baidu Netdisk link to download. If the link becomes invalid, please contact `wuxingxing@pwmat.com` or `support@pwmat.com`:
 
-👉 [Download the CPU version offline installation package pwmlff_cpu-2024.5.sh.tar.gz](https://pan.baidu.com/s/1-MQBicDKaeudUhjmJRJrZA?pwd=pwmt)
+👉 [Download Offline Installation Package pwmlff-2024.5.sh.tar.gz](https://pan.baidu.com/s/1sPB9gBEFJd3q9A__O_wpBQ?pwd=pwmt)
 
-### 2. Extract the Installation Package
+#### Method 2: Request via Email
+You can also request the offline installation package by emailing `wuxingxing@pwmat.com` or `support@pwmat.com`. Downloading through the email link is significantly faster than Baidu Netdisk (up to several times faster).
+
+### 2. Unpack the Installation Package
+Due to the large size of the offline installation package, it has been split into four parts. Follow the instructions below to install:
 
 ```bash
+# Merge the four files into one compressed file
+cat pwmlff_cpu-2024.5.sh.tar.gz.part_aa pwmlff_cpu-2024.5.sh.tar.gz.part_ab pwmlff_cpu-2024.5.sh.tar.gz.part_ac pwmlff_cpu-2024.5.sh.tar.gz.part_ad > pwmlff_cpu-2024.5.sh.tar.gz
+# Unpack the file
 tar -xzvf pwmlff_cpu-2024.5.sh.tar.gz
 ```
 

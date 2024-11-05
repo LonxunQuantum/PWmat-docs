@@ -356,52 +356,50 @@ pwdata super -m 2 0 0 0 3 0 0 0 4 -i examples/pwmat_data/lisi_atom.config -s exa
 # 执行完成后将在 examples/test_workdir 目录下生成一个名为 super_atom.config 的文件，采用了2X3X4阔胞
 ```
 
-### 5. Lattice and Atom Position Perturbation: `perturb`
-
-This command is used to apply perturbations to the lattice structure or atomic positions.
-
-Parameters are as follows:
+### 5. 晶格和原子位置微扰 perturb
+该命令用于对结构的晶格或者原子位置坐微扰。
+参数如下所示
 
 ```bash
-pwdata perturb [-h] [-d ATOM_PERT_DISTANCE] [-e CELL_PERT_FRACTION] -n PERT_NUM -i INPUT -f INPUT_FORMAT [-s SAVENAME] [-o OUTPUT_FORMAT] [-c] [-t ATOM_TYPES [ATOM_TYPES ...]]
+pwdata perturb [-h] [-d ATOM_PERT_DISTANCE] [-e CELL_PERT_FRACTION] -n PERT_NUM -i INPUT -f  INPUT_FORMAT [-s SAVENAME] [-o OUTPUT_FORMAT] [-c] [-t ATOM_TYPES [ATOM_TYPES ...]]
 ```
 
 #### `-h`
-Displays help information, listing all available parameters for the `perturb` command and their explanations.
+输出帮助信息，将列出 super 命令的所有可用参数及其解释
 
 #### `-d`
-Optional parameter specifying the distance for atomic perturbations, which determines the displacement distance of atoms relative to their original positions. Each atomic coordinate is randomly offset within the range [-atom_pert_distance, atom_pert_distance] from a uniform distribution. Perturbation is in Angstroms; for example, `0.01` displaces atoms by up to `0.01` Å. The default value is `0`, meaning no atomic perturbation is applied.
+可选参数，原子微扰的距离，决定原子相对原始位置的移动距离。对每个原子的三个坐标值，分别加上从 [-atom_pert_distance，atom_pert_distance] 范围内的均匀分布中随机采样的值。微扰是以埃为单位的距离。例如，0.01 表示原子的移动距离是 0.01 埃，默认值为0，即不对原子位置微扰
 
 #### `-e`
-Optional parameter defining the extent of lattice distortion. Each of the nine lattice values is randomly offset within the range [-cell_pert_fraction, cell_pert_fraction]. For example, `0.03` means the lattice is perturbed by up to 3% of the original lattice. The default is `0`, indicating no lattice perturbation.
+可选参数，晶胞变形的程度。对 9 个晶格值分别加上从[-cell_pert_fraction，cell_pert_fraction] 范围内的均匀分布中随机采样的值。例如，0.03 表示晶胞变形的程度是相对原始晶胞的 3%，默认值为0，即不对晶格做微扰
 
 #### `-n`
-Required parameter specifying the number of perturbed structures to generate.
+必选参数，需要微扰的结构数量
 
 #### `-i`
-Required parameter for the input file path, which can be absolute or relative.
+必选参数，输入文件的文件路径，支持绝对路径或者相对路径，必选参数
 
 #### `-f`
-Optional parameter; if not explicitly specified, the input file format is inferred automatically. Supported formats are `['pwmat/config','vasp/poscar', 'lammps/lmp', 'cp2k/scf']`.
+可选参数，如不显式指定，将根据输入文件自动推测。输入文件的格式，支持的格式有 ['pwmat/config','vasp/poscar', 'lammps/lmp', 'cp2k/scf']，必选参数
 
 #### `-o`
-Optional parameter specifying the output file format. Supported formats are `['pwmat/config','vasp/poscar', 'lammps/lmp']`. If unspecified, the format of the input structure will be used. If the input file format is `cp2k/scf`, it defaults to `pwmat/config` format.
+可选参数，输出文件的格式，支持的格式有['pwmat/config','vasp/poscar', 'lammps/lmp']，如果未指定该参数，将会使用输入结构的格式，此时如果输入的文件格式是`cp2k/scf`，那么将使用`pwmat/config`格式
 
 #### `-s`
-Optional parameter defining the output filename, used with `-o`. If unspecified, `atom.config` is used for `pwmat/config`, `POSCAR` for `vasp/poscar`, and `lammps.lmp` for `lammps/lmp`. For example, `'-o pwmat/config -s perturb_atom.config'` saves the perturbed structure as `perturb_atom.config`.
+可选参数，输出文件的名称，与 `-o` 配合使用。如果未指定，对于 `pwmat/config` 格式将使用 `atom.config` 作为文件名，对于 `vasp/poscar` 格式使用 `POSCAR` ,对于 `lammps/lmp` 格式使用 `lammps.lmp` 作为文件名。例如 `'-o pwmat/config -s super_atom.config'` 缩放后的新文件名称为 `'super_atom.config'`
 
 #### `-c`
-Optional parameter that specifies whether to use fractional coordinates. If `-c` is specified, the structure is saved in Cartesian coordinates; otherwise, fractional coordinates are used. Note: PWmat only supports fractional coordinates, so this parameter has no effect in that case.
+可选参数，是否使用分数坐标，如果指定了 `-c` 参数，在保存结构时将使用`笛卡尔坐标`，否则使用`分数坐标`。注意，PWmat只支持分数坐标，此时该参数将失效
 
 #### `-t`
-Specifies atomic types for the input structure, used when the input format is `lammps/lmp` or `lammps/dump`. Atomic types can be element names or atomic numbers, and the order should match the structure in the input. This parameter is ignored for other input file formats.
+输入结构的原子类型，该参数用于当输入结构是 `lammps/lmp`或 `lammps/dump` 格式时指定结构的原子类型，可以是元素名称或者原子编号，顺序需要与输入结构中保持一致。对于其他格式的输入文件，该参数失效
 
-Examples are provided in the [examples directory](https://github.com/LonxunQuantum/pwdata/tree/master/examples) in the source code root. Download them to test these commands:
+我们在源码的根目录下提供了 [examples](https://github.com/LonxunQuantum/pwdata/tree/master/examples)，您可以下载后使用这些测试例子：
 
 ```bash
-# Example of the perturb command
+# perturb 命令例子
 pwdata perturb -e 0.01 -d 0.04 -n 20 -i examples/pwmat_data/lisi_atom.config -f pwmat/config -s examples/test_workdir/perturb_atom -o pwmat/config
-# After execution, 20 perturbed structures will be created in the examples/test_workdir/perturb_atom directory.
+# 微扰后将在 examples/test_workdir/pertub_atom 目录下生成20个微扰后的结构
 ```
 
 ## 二、直接结合 PWMLFF 使用

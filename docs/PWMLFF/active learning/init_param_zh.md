@@ -74,7 +74,7 @@ sidebar_position: 1
 
 ### in_skf
 设置 `DFTB`(PWMAT封装) 的赝势文件上一级目录所在路径，为string 格式，绝对路径或相对路径（相对于当前路径）。
-
+<!-- 
 ### basis_set_file
 参考 [potential_file](#potential_file)。
 
@@ -83,8 +83,22 @@ sidebar_position: 1
 ```josn
     "basis_set_file":"~/datas/systems/cp2k/data/BASIS_MOLOPT",
     "potential_file":"~/datas/systems/cp2k/data/POTENTIAL"
-```
+``` -->
 
+### gaussian_param
+CP2K 或 PWMAT 高斯基组参数设置，
+`basis_set_file` 和 `potential_file` 指定基组和势函数文件路径。
+`atom_list`, `basis_set_list`, `potential_list` 配合使用，分别指定元素对应的基组和势函数设置。
+```json
+"gaussian_param": {
+    "basis_set_file":"./init_bulk/BASIS_MOLOPT_1",
+    "potential_file":"./init_bulk/POTENTIAL_1",
+    "atom_list":["Si"],
+    "basis_set_list":["SZV-MOLOPT-SR-GTH"],
+    "potential_list":["GTH-PBE-q4"]
+}
+```
+    
 ### relax_input
 设置 Relax 的 输入控制文件。如果存在多个 relax 控制文件，则按照list 格式组织。详细的设置请参考下面的例子。
 
