@@ -88,11 +88,14 @@ The following slurm script example is suitable for Mcloud. Ensure that the neces
 #SBATCH --gpus-per-task=1
 
 #Mcloud installed environment loaded
-source /share/app/anaconda3/etc/profile.d/conda.sh
-module load conda/3-2020.07
-conda deactivate
-conda activate PWMLFF
-module load pwmlff/2024.5
+# Recommended here
+source /share/app/PWMLFF/PWMLFF2024.5/env.sh
+# Alternatively, the following method can be used for step-by-step loading
+# source /share/app/anaconda3/etc/profile.d/conda.sh
+# module load conda/3-2020.07
+# conda deactivate
+# conda activate PWMLFF
+# module load pwmlff/2024.5
 #
 PWMLFF train linear_sic.json > log
 ```
@@ -102,11 +105,7 @@ Interactive execution:
 ```bash
 $ srun -p 3080ti --gres=gpu:1 --pty /bin/bash
 #Mcloud installed environment loaded
-$ source /share/app/anaconda3/etc/profile.d/conda.sh
-$ module load conda/3-2020.07
-$ conda deactivate
-$ conda activate PWMLFF
-$ module load pwmlff/2024.5
+$ source /share/app/PWMLFF/PWMLFF2024.5/env.sh
 #
 $ PWMLFF train linear_sic.json
 ```

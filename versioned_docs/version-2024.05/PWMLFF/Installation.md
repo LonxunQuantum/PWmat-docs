@@ -22,11 +22,15 @@ sidebar_position: 1
 
 ``` bash
 # 加载conda 环境
-source /share/app/anaconda3/etc/profile.d/conda.sh
-module load conda/3-2020.07
-conda deactivate
-conda activate PWMLFF
-module load pwmlff/2024.5
+# 这里推荐
+source /share/app/PWMLFF/PWMLFF2024.5/env.sh
+
+# 或者采用以下方式分步加载
+# source /share/app/anaconda3/etc/profile.d/conda.sh
+# module load conda/3-2020.07
+# conda deactivate
+# conda activate PWMLFF
+# module load pwmlff/2024.5
 ```
 ### 加载 lammps 接口
 

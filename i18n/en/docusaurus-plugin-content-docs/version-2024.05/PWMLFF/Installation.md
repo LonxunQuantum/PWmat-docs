@@ -16,11 +16,14 @@ has pre-configured conda environments and the PWMLFF software package, saving yo
 
 ```bash
 # Load conda environment
-source /share/app/anaconda3/etc/profile.d/conda.sh
-module load conda/3-2020.07
-conda deactivate
-conda activate PWMLFF
-module load pwmlff/2024.5
+# Recommended here
+source /share/app/PWMLFF/PWMLFF2024.5/env.sh
+# Alternatively, the following method can be used for step-by-step loading
+# source /share/app/anaconda3/etc/profile.d/conda.sh
+# module load conda/3-2020.07
+# conda deactivate
+# conda activate PWMLFF
+# module load pwmlff/2024.5
 ```
 
 ### Load the Lammps interface
@@ -436,12 +439,8 @@ mpirun -np 4 lmp_mpi_gpu -in in.lammps
 :::caution
 When submitting training jobs, ensure that the relevant environment is loaded in your job script, as shown below:
 
-```
-source /share/app/anaconda3/etc/profile.d/conda.sh
-module load conda/3-2020.07
-conda deactivate
-conda activate PWMLFF
-module load pwmlff/2024.5
+``` bash
+source /share/app/PWMLFF/PWMLFF2024.5/env.sh
 ```
 
 **Loading the `pwmlff` and virtual environment is necessary to acquire the `LD_LIBRARY_PATH`.**  
