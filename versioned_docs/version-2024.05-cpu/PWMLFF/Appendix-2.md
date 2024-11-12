@@ -50,7 +50,6 @@ pip index versions pwdata
 pip install pwdata==n.m.o
 ```
 
-
 # pwdata 命令行调用方式
 pwdata支持命令行操作以及源码接入两种方式。
 
@@ -566,6 +565,32 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 > ```
 >
 > :::
+> **例子2:**
+
+> 将'pwmat/movement'、'vasp/outcar'、'cp2k/md'、 或者 'lammps/dump' 轨迹文件转换为单结构文件'pwmat/config'、 'vasp/poscar'、 'lammps/lmp'
+```python
+from pwdata import Config
+from pwdata.utils.constant import FORMAT
+
+def trajs2config():
+    atom_types = ["Hf", "O"] # for lammps
+    input_file = "/data/home/wuxingxing/codespace/pwdata/examples/lmps_data/HfO2/30.lammpstrj"
+    input_format="lammps/dump"
+    save_format = "pwmat/config"
+    image = Config(data_path=input_file, format=input_format, atom_names=atom_types)
+    tmp_image_data = image.images
+    save_dir = "./tmp_test"
+    for id, config in enumerate(tmp_image_data):
+        savename = "{}_{}".format(id, FORMAT.get_filename_by_format(save_format))
+        image.iamges = [config]
+        image.to(output_path = save_dir,
+            data_name = savename,
+            save_format = save_format,
+            sort = True)
+
+if __name__=="__main__":
+    trajs2config()
+```
 
 > <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**build.supercells.make_supercell**</font> <font color='#2ecc71'>_(image_data, supercell_matrix: list, pbc: list = None, wrap=True, tol=1e-5)_</font>
 > [源码](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/build/supercells.py#L8)</p>
@@ -664,3 +689,70 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 >           sort = True)
 > ```
 
+## 四、一些代码案例
+
+#### 将MPtraj文件转换为lmdb格式
+
+MPtraj 开源数据集为json格式，转换为lmdb格式后，配合 [cvt_configs 命令 -t 和 -q 选项](#2-训练数据提取-convert_configs) 可以快速查找到指定结构，转换为extxyz或者pwmlff/npy格式做训练。
+
+```python
+import json
+from pwdata.fairchem.datasets.ase_datasets import LMDBDatabase
+from ase import Atoms
+from ase.db.row import AtomsRow
+from pwdata.utils.constant import get_atomic_number_from_name
+from tqdm import tqdm
+import numpy as np
+
+def MPjson2lmdb():
+    mp_file = "/data/home/wuxingxing/codespace/pwdata/examples/mp_data/mptest.json"
+    save_file = "/data/home/wuxingxing/codespace/pwdata/examples/mp_data/sub.aselmdb"
+    Mpjson = json.load(open(mp_file))
+    db = LMDBDatabase(filename=save_file, readonly=False)
+    for key_1, val_1 in tqdm(Mpjson.items(), total=len(Mpjson.keys())):
+        for key_2, val_2 in val_1.items():
+            _atomrow, data = cvt_dict_2_atomrow(val_2)
+            db._write(_atomrow, key_value_pairs={}, data=data)
+    db.close()
+    
+def cvt_dict_2_atomrow(config:dict):
+    cell = read_from_dict('matrix', config['structure']['lattice'], require=True)
+    atom_type_list = get_atomic_number_from_name([_['label'] for _ in config['structure']['sites']])
+    position = [_['xyz'] for _ in config['structure']['sites']]
+    magmom = read_from_dict('magmom', config, require=True)
+    atom = Atoms(positions=position,
+                numbers=atom_type_list,
+                magmoms=magmom,
+                cell=cell)
+
+    atom_rows = AtomsRow(atom)
+    atom_rows.pbc = np.ones(3, bool)
+    # read stress -> xx, yy, zz, yz, xz, xy
+    stress = read_from_dict('stress', config, require=True)
+    atom_rows.stress = [stress[0][0],stress[1][1],stress[2][2],stress[1][2],stress[0][2],stress[0][1]]
+    force = read_from_dict('force', config, require=True)
+    energy = read_from_dict('corrected_total_energy', config, require=True)
+    atom_rows.__setattr__('force',  force)
+    atom_rows.__setattr__('energy', energy)
+    data = {}
+    data['uncorrected_total_energy'] = read_from_dict('uncorrected_total_energy', config, default=None)
+    data['corrected_total_energy'] = read_from_dict('uncorrected_total_energy', config, default=None)
+    data['energy_per_atom'] = read_from_dict('energy_per_atom', config, default=None)
+    data['ef_per_atom'] = read_from_dict('ef_per_atom', config, default=None)
+    data['e_per_atom_relaxed'] = read_from_dict('e_per_atom_relaxed', config, default=None)
+    data['ef_per_atom_relaxed'] = read_from_dict('ef_per_atom_relaxed', config, default=None)
+    data['bandgap'] = read_from_dict('bandgap', config, default=None)
+    data['mp_id'] = read_from_dict('mp_id', config, default=None)
+    return atom_rows, data
+
+def read_from_dict(key:str, config:dict, default=None, require=False):
+    if key in config:
+        return config[key]
+    else:
+        if require:
+            raise ValueError("key {} not found in config".format(key))
+        else:
+            return default
+if __name__=="__main__":
+    MPjson2lmdb()
+```
