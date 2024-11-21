@@ -22,16 +22,13 @@ sidebar_position: 0
     "cpu_per_node": 1,
     "queue_name": "new3080ti,3080ti,3090",
     "custom_flags": [
-      "#SBATCH -x gn43,gn66"
     ],
     "source_list": [
-      "/share/app/anaconda3/etc/profile.d/conda.sh"
+      "/share/app/PWMLFF/PWMLFF2024.5/env.sh"
     ],
     "module_list": [
-      "pwmlff/2024.5"
     ],
     "env_list":[
-      "conda activate PWMLFF"
     ]
   },
   "explore": {
@@ -294,13 +291,11 @@ export PYTHONPATH=~/codespace/PWMLFF2024.5/src/:$PYTHONPATH
     "custom_flags": [
     ],
     "source_list": [
-    "/share/app/anaconda3/etc/profile.d/conda.sh"
+    "/share/app/PWMLFF/PWMLFF2024.5/env.sh"
     ],
     "env_list": [
-    "conda activate PWMLFF"
     ],
     "module_list": [
-      "pwmlff/2024.5"
     ]
   }
 ```

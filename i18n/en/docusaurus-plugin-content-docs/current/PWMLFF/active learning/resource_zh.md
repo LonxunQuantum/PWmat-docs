@@ -194,13 +194,11 @@ For the `train` module, it is necessary to load the Python runtime environment o
   "queue_name": "new3080ti,3080ti,3090",
   "custom_flags": [],
   "source_list": [
-    "/share/app/anaconda3/etc/profile.d/conda.sh"
+    "/share/app/PWMLFF/PWMLFF2024.5/env.sh"
   ],
   "env_list": [
-    "conda activate PWMLFF"
   ],
   "module_list": [
-    "pwmlff"
   ]
 }
 ```
