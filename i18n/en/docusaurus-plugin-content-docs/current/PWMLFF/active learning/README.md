@@ -102,35 +102,71 @@ pwact run param.json resource.json
 
 For the above two commands, the names of the json files can be changed by the user, but the order of input for [`param.json`](#paramjson) and [`resouce.json`](#resourcejson) must remain the same.
 
-### 5. Utility Commands
-
-Convert MOVEMENT or OUTCAR to PWdata format
+### 5. Tool Commands
+<!-- MOVEMENT or OUTCAR conversion to PWdata data format
 
 ```bash
-pwact to_pwdata
+# Command to convert MOVEMENT to pwdata format using pwact
+pwact to_pwdata -i mvm_init_000_50 mvm_init_001_50 mvm_init_002_50 -s pwdata -f pwmat/movement -r -m -o 0.8
+# -i List of structure files
+# -f Format of the structure files, supports pwmat/movement or vasp/outcar
+# -s Name of the directory to save data
+# -r Specify random shuffling of the saved data
+# -m Specify merging of the converted data. If your MOVEMENT files contain the same element types and number of atoms, you can use this option to save the training set as a single folder
+# -o Specify the training and test set split ratio, default is 0.8
+``` -->
+
+#### gather_pwdata
+
+Searches all structures explored under the active learning directory and converts the results into a pwmlff/npy format training set.
+
+```bash
+pwact gather_pwdata -i .
 ```
+Here, `-i` specifies the path to the active learning directory.
 
-Search for labeled datasets in the active learning directory
+#### kill
+
+Terminates an ongoing `init_bulk` task, such as relaxation (relax) or AIMD tasks.
 
 ```bash
-pwact gather_pwdata
-```
-
-End the ongoing init_fulk tasks, such as relaxation and AIMD tasks.
-```bash
+# Navigate to the directory where the pwact init_bulk command was executed
 pwact kill init_bulk
 ```
 
-End running tasks that are currently in progress, including training, exploration (MD), or tagging tasks
+Terminates an ongoing `run` task, including running training, exploration (MD), or labeling tasks.
+
 ```bash
+# Navigate to the directory where the pwact run command was executed
 pwact kill run
 ```
 
-The kill command function above can also be replaced by manual operation. You need to first end the executing main process, that is, the window that executes pwact init_fulk or pwact run; The second step requires you to manually end the ongoing Slurm task. 
+The above `kill` commands can also be replaced by manual operations. First, terminate the main process executing `pwact init_bulk` or `pwact run`. Second, manually end the ongoing SLURM tasks.
 
-Considering that manual operation may accidentally terminate your other processes, it is recommended that you use the command to terminate.
+To avoid accidentally terminating other processes, it is recommended to use the commands for termination.
 
-After using the command to end a process, it is recommended that you check the command output information and use the sludge command to see if there are any unfinished processes.
+After using the command to terminate processes, it is recommended to review the command output and use SLURM commands to check for any remaining processes.
+
+#### filter
+
+Test the point selection under specified lower and upper limits.
+
+```bash
+pwact filter -i iter.0000/explore/md -l 0.01 -u 0.02 -s 
+```
+
+This command will analyze the selection results from all trajectories explored in the `iter.0000/explore/md` directory using a lower limit of 0.01 and an upper limit of 0.02 (as shown in the example below). The `-s` option is optional and specifies whether to save detailed selection information.
+
+```txt
+Image select result (lower 0.01 upper 0.02):
+ Total structures 972    accurate 20 rate 2.06%    selected 44 rate 4.53%    error 908 rate 93.42%
+
+Select by model deviation force:
+Accurate configurations: 20, details in file accurate.csv
+Candidate configurations: 44
+        Select details in file candidate.csv
+Error configurations: 908, details in file fail.csv
+```
 
 ## Input Files
 

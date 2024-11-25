@@ -108,7 +108,7 @@ pwact run param.json resource.json
 对于上述两个命令，json 文件名称可以用户修改，但是要求 [`param.json`](#paramjson) 和 [`resouce.json`](#resourcejson) 的输入顺序不能变。
 
 ### 5. 工具命令
-MOVEMENT 或 OUTCAR 转换为 PWdata 数据格式
+<!-- MOVEMENT 或 OUTCAR 转换为 PWdata 数据格式
 
 ```bash
 # pwact 转换MOVEMENT 为 pwdata 格式命令
@@ -119,22 +119,27 @@ pwact to_pwdata -i mvm_init_000_50 mvm_init_001_50 mvm_init_002_50 -s pwdata -f 
 # -r 指定将数据做乱序保存
 # -m 指定合并转换后的数据，如果您的MOVMENT 文件列表元素种类相同和原子数量相同，您可以使用该参数，将训练集作为一个文件夹保存
 # -o 指定训练集和测试集划分比例，默认为0.8
-```
+``` -->
 
-搜索主动学习目录下已标记的数据集
+#### gather_pwdata 命令
+
+搜索主动学习目录下所有探索到的结构，并将结果转换为pwmlff/npy 格式训练集，
 
 ```bash
-pwact gather_pwdata
+pwact gather_pwdata -i .
 ```
+这里 `-i` 指定主动学习的目录所在路径
 
+#### kill 命令
 
-结束正在执行的 init_bulk 任务，如 驰豫（relax）、AIMD 任务。
+结束正在执行的 `init_bulk` 任务，如 驰豫（relax）、AIMD 任务
+
 ```bash
 # 进入到执行 pwact init_bulk 命令时的所在目录
 pwact kill init_bulk
 ```
 
-结束正在执行的 run 任务，包括正在运行的训练、探索（MD）或者标记任务
+结束正在执行的 `run` 任务，包括正在运行的训练、探索（MD）或者标记任务
 ```bash
 # 进入到执行 pwact run 命令时的所在目录
 pwact kill run
@@ -144,6 +149,26 @@ pwact kill run
 考虑到手动操作可能会误结束您的其他进程，建议您使用命令结束。
 
 使用命令结束进程后，建议您查看命令输出信息，并使用 slurm 命令查看是否有未结束的进程。
+
+#### filter 命令
+
+测试指定上、下限设置下的选点情况
+```bash
+pwact filter -i iter.0000/explore/md -l 0.01 -u 0.02 -s 
+```
+该命令将检测位于iter.0000/explore/md目录下（该轮次探索到的所有轨迹）使用下限0.01 和上限 0.02 的选点结果(如下面的例子所示)， -s 为可选项，用于指定是否将详细的选点信息做保存。
+
+```txt
+Image select result (lower 0.01 upper 0.02):
+ Total structures 972    accurate 20 rate 2.06%    selected 44 rate 4.53%    error 908 rate 93.42%
+
+Select by model deviation force:
+Accurate configurations: 20, details in file accurate.csv
+Candidate configurations: 44
+        Select details in file candidate.csv
+Error configurations: 908, details in file fail.csv
+```
+
 
 ## 输入文件
 
