@@ -28,8 +28,8 @@ const config = {
   projectName: "PWmat-docs", // Usually your repo name.
   trailingSlash: true,
 
-  // onBrokenLinks: "throw",
-  // onBrokenMarkdownLinks: "warn",
+  onBrokenLinks: "warn",
+  onBrokenMarkdownLinks: "warn",
 
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
