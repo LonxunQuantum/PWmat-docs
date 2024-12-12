@@ -20,6 +20,6 @@ sidebar_position: 11
 
 ### 高级参数
 - [k点插值](/next/Q-Flow/模拟/计算参数/qflow_parameters_interpolation/)
-- [能量点数](/next/Q-Flow/模拟/计算参数/qflow_parameters_laman/)
-- [拉曼光谱展宽](/next/Q-Flow/模拟/计算参数/qflow_parameters_laman/)
+- [能量点数](/next/Q-Flow/模拟/计算参数/qflow_parameters_raman/)
+- [拉曼光谱展宽](/next/Q-Flow/模拟/计算参数/qflow_parameters_raman/)
 - [迭代步数设置](/next/Q-Flow/模拟/计算参数/qflow_parameters_iteration/)
