@@ -128,7 +128,14 @@ sidebar_position: 2
 
 #### upper_model_deiv_f
 
+
 该参数用于设置偏差的上界，如果偏差值大于该上界，则该构型本身不符合物理意义，不需要标注，默认值为 `0.15`。
+
+这里使用的最大偏差值，计算公式如下所示：
+
+$\varepsilon_{t}  = max_i(\sqrt{\frac{\sum_{1}^{w} \left \| F_{w,i}(R_t) -\hat{F_{i}} \right \| ^2 }{W}} )$,  $\hat{F_{i}} = \frac{ {\textstyle \sum_{1}^{W}F_{w,i}} }{W} $
+
+这里 $W$ 为模型数量，$i$为原子下标。
 
 #### model_num
 

@@ -149,6 +149,37 @@ iter.0001  Total structures 404    accurate 334 rate 82.67%    selected 70 rate 
 md 子目录包括两个子目录，目录名称为 `md.***.sys.***/md.***.sys.***.t.***`，例如 `md.000.sys.000/md.000.sys.000.t.000`，
 对于`md.000.sys.000`目录，这里`md.000`的 000 指`param.json`中的[`md_jobs`](/next/PWMLFF/active%20learning/run_param_zh#md_jobs) 对第 0 个 md 设置；sys.000 为[`sys_index`](/next/PWMLFF/active%20learning/run_param_zh#sys_idx) 的下标 0 对应的结构。包括`md.000.sys.000.t.000`、m`d.000.sys.000.t.001`两个子目录，分别表示在温度 [`temps`](/next/PWMLFF/active%20learning/run_param_zh#temps) 对应下标为`0`和`1`温度下的分子动力学模拟。
 
+在每个`md.*.sys.*`目录下都有一个`model_devi_distribution.png` 文件，是对该目录下所有轨迹的偏差值分布统计绘图。
+
+在最后一级子目录下，是对应MD设置以及轨迹文件：
+```txt
+0_torch_script_module.pt, 1_torch_script_module.pt, 2_torch_script_module.pt, 3_torch_script_module.pt, atom_type.txt, in.lammps, lmp.config, log.lammps, md.log, model_devi.out, tag.md.success
+
+model_devi.out 格式：
+#    step       avg_devi_f       min_devi_f       max_devi_f       avg_devi_e       min_devi_e       max_devi_e
+        0      0.008682422      0.000574555      0.014187865      0.030333196      0.011702489      0.043806718
+       10      0.016611307      0.000627126      0.027185410      0.031661788      0.005340899      0.048241921
+       20      0.028689107      0.000811486      0.040269587      0.036761117      0.000214928      0.059791462
+       30      0.046457606      0.001416745      0.063635973      0.049553956      0.000165127      0.081012839
+       40      0.065051169      0.000681319      0.089395358      0.065790218      0.000036582      0.103522832
+```
+
+model_devi.out的第一列为当前步编号，第二列为最大里偏差的均值，计算公式如下所示：
+
+$\varepsilon_{t}  = max_i(\sqrt{\frac{\sum_{1}^{w} \left \| F_{w,i}(R_t) -\hat{F_{i}} \right \| ^2 }{W}} )$,  $\hat{F_{i}} = \frac{ {\textstyle \sum_{1}^{W}F_{w,i}} }{W} $
+
+第二列为最大力偏差值，计算公式如下所示:
+
+$\varepsilon_{t}  = max_i(\sqrt{ \left \| F_{w,i}(R_t) -\hat{F_{i}} \right \| ^2 })$
+
+第三列为最小里偏差值，计算公式如下所示：
+
+$\varepsilon_{t}  = min_i(\sqrt{ \left \| F_{w,i}(R_t) -\hat{F_{i}} \right \| ^2 })$
+
+这里 $W$ 为模型数量，$i$为原子下标。
+
+后三列分别是原子能量的最大偏差均值、最大值和最小值。在PWact主动学习中使用的是第二列的最大力偏差均值。
+
 #### select 子目录
 
 以下`.csv`文件内容包含 3 列，分别是`力偏差（devi_force）`、 `结构在轨迹中对应的编号（config_index）`、`轨迹的文件路径（file_path）`。
@@ -158,6 +189,9 @@ md 子目录包括两个子目录，目录名称为 `md.***.sys.***/md.***.sys.*
 `fail.csv`是力偏差大于设置的[`力偏差上限`](/next/PWMLFF/active%20learning/run_param_zh#upper_model_deiv_f)的结构。
 
 如果候选的结构（力偏差介于设置的力偏差上下限之间的结构）超过设置的最大选点数量 [`max_select`](/next/PWMLFF/active%20learning/run_param_zh#max_select)，则将候选的结构随机选取 `max_select`个，存入`candidate.csv`文件，其余的存入`candidate_delete.csv`文件。
+
+`model_devi_distribution-md.*.sys.*.png` 为超链接文件，是探索结构的偏差值分布绘图。
+
 
 `select_summary.txt`是筛选点的数据量信息汇总，内容如下例所示。
 

@@ -113,7 +113,14 @@ This parameter needs to be used with [`"uncertainty":"committee"`](#uncertainty)
 
 #### upper_model_deiv_f
 
-This parameter needs to be used with [`"uncertainty":"committee"`](#uncertainty) and sets the upper bound of deviation. If the deviation value is greater than this upper bound, the configuration itself is considered inconsistent with physical meaning and does not require tagging. The default value is `0.15`.
+This parameter is used to set the upper limit of the deviation. If the deviation value exceeds this upper limit, the configuration itself is not physically meaningful and does not need to be labeled. The default value is `0.15`.
+
+The maximum deviation value used here is calculated using the following formula:
+
+$$\varepsilon_{t}  = \max_i\left(\sqrt{\frac{\sum_{1}^{w} \left \| F_{w,i}(R_t) -\hat{F_{i}} \right \| ^2 }{W}} \right), \quad \hat{F_{i}} = \frac{ \sum_{1}^{W}F_{w,i}}{W} $$
+
+Here, $W$ represents the number of models, and $i$ is the subscript for atoms.
+
 
 #### model_num
 

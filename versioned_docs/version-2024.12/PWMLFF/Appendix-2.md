@@ -65,6 +65,7 @@ pwdata convert_configs or cvt_configs -h
 pwdata scale_cell or scale -h
 pwdata super_cell or super -h
 pwdata perturb -h
+pwdata count -h
 ```
 
 下面对命令做详细说明
@@ -78,7 +79,7 @@ pwdata convert_config [-h] -i INPUT -f INPUT_FORMAT [-s SAVENAME] [-o OUTPUT_FOR
 ```
 
 #### `-h`
-输出帮助信息，将列出 scale 命令的所有可用参数及其解释
+输出帮助信息，将列出命令的所有可用参数及其解释
 
 #### `-i`
 必选参数，输入文件的文件路径，支持绝对路径或者相对路径
@@ -116,7 +117,7 @@ pwdata convert_configs [-h] -i INPUT [INPUT ...] -f INPUT_FORMAT [-t ATOM_TYPES 
 
 #### `-h` 
 
-输出帮助信息，将列出 scale 命令的所有可用参数及其解释
+输出帮助信息，将列出命令的所有可用参数及其解释
 
 #### `-i`
 必选参数，输入文件的文件路径，支持绝对路径或者相对路径。该参数为列表形式，支持输入多个文件路径或者目录。pwdata对` pwmlff/npy`、`extxyz`、`deepmd/npy`、`deepmd/raw`、`meta OMAT24 开源数据集`实现了目录自动查询，您只需要指定数据源根目录即可。
@@ -265,7 +266,7 @@ pwdata scale_cell [-h] -r SCALE_FACTOR [SCALE_FACTOR ...] -i INPUT -f INPUT_FORM
 ```
 
 #### `-h`
-输出帮助信息，将列出 scale 命令的所有可用参数及其解释
+输出帮助信息，将列出命令的所有可用参数及其解释
 
 
 #### `-r`
@@ -314,7 +315,7 @@ pwdata super_cell [-h] -m SUPERCELL_MATRIX [SUPERCELL_MATRIX ...] -i INPUT -f IN
 ```
 
 #### `-h`
-输出帮助信息，将列出 super 命令的所有可用参数及其解释
+输出帮助信息，将列出命令的所有可用参数及其解释
 
 #### `-m`
 必选参数，超晶胞矩阵 (3x3)，3个或者9个值，例如 `'-m 2 0 0 0 2 0 0 0 2'` 或者 `'-m 2 2 2'` 表示超晶胞是 `2x2x2` 的，必选参数
@@ -365,7 +366,7 @@ pwdata perturb [-h] [-d ATOM_PERT_DISTANCE] [-e CELL_PERT_FRACTION] -n PERT_NUM 
 ```
 
 #### `-h`
-输出帮助信息，将列出 super 命令的所有可用参数及其解释
+输出帮助信息，将列出命令的所有可用参数及其解释
 
 #### `-d`
 可选参数，原子微扰的距离，决定原子相对原始位置的移动距离。对每个原子的三个坐标值，分别加上从 [-atom_pert_distance，atom_pert_distance] 范围内的均匀分布中随机采样的值。微扰是以埃为单位的距离。例如，0.01 表示原子的移动距离是 0.01 埃，默认值为0，即不对原子位置微扰
@@ -401,6 +402,48 @@ pwdata perturb [-h] [-d ATOM_PERT_DISTANCE] [-e CELL_PERT_FRACTION] -n PERT_NUM 
 pwdata perturb -e 0.01 -d 0.04 -n 20 -i examples/pwmat_data/lisi_atom.config -f pwmat/config -s examples/test_workdir/perturb_atom -o pwmat/config
 # 微扰后将在 examples/test_workdir/pertub_atom 目录下生成20个微扰后的结构
 ```
+
+### 6. 统计结构数量 count
+统计各种轨迹文件 `MOVEMENT(PWmat)`、`OUTCAR(VASP)`、`lammps dump file(Lammps)`、`cp2k md file(CP2K)` 或常用训练数据` pwmlff/npy`、`extxyz`、`deepmd/npy`、`deepmd/raw`、[`meta OMAT24 开源数据集`](https://huggingface.co/datasets/fairchem/OMAT24)为 `pwmlff/npy` 或者 `extxyz` 中的结构数量。
+
+参数如下所示
+```bash
+pwdata convert_configs [-h] [-h] -i INPUT [INPUT ...] [-f INPUT_FORMAT] [-q QUERY] [-n CPU_NUMS] [-t ATOM_TYPES [ATOM_TYPES ...]]
+
+```
+
+#### `-h` 
+
+输出帮助信息，将列出命令的所有可用参数及其解释
+
+#### `-i`
+必选参数，输入文件的文件路径，支持绝对路径或者相对路径。该参数为列表形式，支持输入多个文件路径或者目录。pwdata对` pwmlff/npy`、`extxyz`、`deepmd/npy`、`deepmd/raw`、`meta OMAT24 开源数据集`实现了目录自动查询，您只需要指定数据源根目录即可。
+
+例如对于[examples/pwmlff_data/LiSiC](https://github.com/LonxunQuantum/pwdata/tree/master/examples/pwmlff_data/LiSiC)，该目录下存在'C2, C448, C448Li75, C64Si32, Li1Si24, Li3Si8, Li8, Li88Si20, Si1, Si217'这些子目录, 输入`'-i examples/pwmlff_data'` 即可。
+
+此外，如果您的文件或者目录较多（如meta数据库这类非常多的子文件），您也可以将这些路径写入一个json文件中，如下所示，命令中指定`-i jsonfile `即可。
+```json
+{
+    "datapath" : [
+        "/share/public/PWMLFF_test_data/eqv2-models/datasets/decompress/Omat24/train/rattled-1000-subsampled",
+        "/share/public/PWMLFF_test_data/eqv2-models/datasets/decompress/Omat24/train/rattled-300",
+        "/share/public/PWMLFF_test_data/eqv2-models/datasets/decompress/Omat24/train/rattled-300-subsampled"
+    ]
+}
+```
+#### `-f` 
+可选参数，输入文件的格式，pwdata实现了对输入数据的格式自动推理，不需要显式指定输入格式。支持的格式有 ['pwmat/movement', 'vasp/outcar', 'lammps/dump', 'cp2k/md', 'pwmlff/npy', 'deepmd/npy', 'deepmd/raw', 'extxyz', 'meta']
+
+#### `-q`
+可选参数，str类型，该参数值在输入类型为`meta`时生效，用于查询数据库操作，详细的使用参考 [meta查询演示](#convert_configs-meta-查询例子)
+
+#### `-n`
+可选参数，int类型，该参数在输入类型为`meta`时生效，用于设置并行查询数据库时使用的CPU核数，默认使用单核
+
+#### `-t`
+如果输入格式是 `lammps/lmp`或 `lammps/dump` 格式，该参数用于指定结构的原子类型，可以是元素名称或者原子编号，顺序需要与输入结构中保持一致
+
+如果输入格式是`meta`，该该参数用于查找所有`只存在这些元素类型`的结构。
 
 ## 二、直接结合 PWMLFF 使用
 
