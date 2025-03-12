@@ -1,6 +1,6 @@
 ---
-sidebar_position: 4
-title: Examples
+sidebar_position: 7
+title: 案例
 ---
 
 在本章节，我们整理了使用PWMLFF做的一些测试工作，以及使用PWMLFF的已发表论文，为用户提供参考。

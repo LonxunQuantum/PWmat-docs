@@ -1,13 +1,13 @@
 # Bulk SiC system
 
-下文将以 Bulk SiC 系统为例，介绍如何使用 **PWMLFF Linear Model** 进行训练，以及如何使用训练好的模型进行预测。
+下文将以 Bulk SiC 系统为例，介绍如何使用 **MatPL Linear Model** 进行训练，以及如何使用训练好的模型进行预测。
 
 整个程序运行逻辑大致分为：
 
 ```mermaid
 graph TD;
-    A(PWMLFF)-->|产生数据集|AIMD;
-    A(PWMLFF)-->|Linear Model|MLFF;
+    A(MatPL)-->|产生数据集|AIMD;
+    A(MatPL)-->|Linear Model|MLFF;
     AIMD-->atom.config;
     AIMD-->|原子运动轨迹|MOVEMENT;
     MLFF-->|提取特征|generate_data;

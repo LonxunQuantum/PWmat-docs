@@ -1,10 +1,10 @@
 ---
-sidebar_position: 5
+sidebar_position: 8
 ---
 
 # Appendix I: features Wiki
 
-本节简要介绍 PWMLFF 中使用的特征。同时还列出了相关文献，供读者参考。
+本节简要介绍 MatPL 中使用的特征。同时还列出了相关文献，供读者参考。
 
 ## 什么是特征？
 
