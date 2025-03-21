@@ -23,9 +23,11 @@ pwact init_bulk init_param.json resource.json
 
 ## INIT_BULK 目录结构
 
-INIT_BULK 的[目录结构](#目录1)如下所示，`atom.config`、`POSCAR`、`resource.json`、`init_param.json`、`relax_etot.input`、`relax_etot1.input`、`aimd_etot1.input`、`aimd_etot2.input`为输入文件，`collection` 为执行后的结果汇总目录，`pwdata`文件内容是预训练数据所在目录。
+INIT_BULK 的[目录结构](#目录1)如下所示，`atom.config`、`POSCAR`、`resource.json`、`init_param.json`、`relax_etot.input`、`relax_etot1.input`、`aimd_etot1.input`、`aimd_etot2.input`为输入文件，`collection` 为执行后的结果汇总目录。
 
 ### collection 目录
+
+`datapath.txt`文件内容是预训练数据所在目录记录。
 
 init_config_0 目录为 atom.config 进过驰豫、阔胞、缩放、微扰、aimd 后的结果汇总。
 
@@ -33,9 +35,18 @@ init_config_0 目录为 atom.config 进过驰豫、阔胞、缩放、微扰、ai
 
 `0.9_scale_pertub`目录包括对`0.9_scale.config`结构做晶格和原子位置微扰后得到的 30 个结构；
 
-`pwdata`目录是对微扰后的结构做按照`aimd_etot1.input`做 AIMD 之后，将得到轨迹提取成 pwdata 格式后的结果目录，包括`train`和`valid`两个子目录，为训练集和测试集。
-
-对于`train`目录（或 valid 目录），`atom_type.npy`是结构的原子类型，`position.npy`是结构中原子的位置信息，`energies.npy`、`forces.npy`、`ei.npy`、`virials.npy` 为结构的总能量、原子三个方向的力、原子能量和维里信息。`ei.npy`、`virials.npy` 是可选文件，如果轨迹中不包括原子能和维里，则不提取。
+`train.xyz` 目录是对微扰后的结构做按照`aimd_etot1.input`做 AIMD 之后，将得到轨迹提取成 extxyz 格式后的结果目录。如果是提取为 `pwmlff/npy` 格式，则为 `PWdata`目录。内容如下所示。`atom_type.npy`是结构的原子类型，`position.npy`是结构中原子的位置信息，`energies.npy`、`forces.npy`、`ei.npy`、`virials.npy` 为结构的总能量、原子三个方向的力、原子能量和维里信息。`ei.npy`、`virials.npy` 是可选文件，如果轨迹中不包括原子能和维里，则不提取。
+```txt
+./init_config_0/PWdata/Si128
+├── atom_type.npy
+├── energies.npy
+├── ei.npy
+├── forces.npy
+├── image_type.npy
+├── lattice.npy
+├── position.npy
+└── virials.npy
+```
 
 ## 目录1
 
@@ -51,7 +62,7 @@ example/init_bulk
 ├──aimd_etot1.input
 ├──aimd_etot2.input
 └──collection
-    ├──pwdata
+    ├──datapath.txt
     ├──init_config_0
     │   ├──super_cell.config
     │   ├──0.9_scale.config
@@ -70,33 +81,9 @@ example/init_bulk
     │   │       ├──2_pertub.config
     │   │       ...
     │   │       └──30_pertub.config
-    │   ├──PWdata
-    │   │       ├──train
-    │   │       │   ├──atom_type.npy
-    │   │       │   ├──energies.npy
-    │   │       │   ├──image_type.npy
-    │   │       │   ├──position.npy
-    │   │       │   ├──ei.npy
-    │   │       │   ├──forces.npy
-    │   │       │   ├──lattice.npy
-    │   │       │   ├──virials.npy
-    │   │       ├──valid
-    │   │       │   ├──atom_type.npy
-    │   │       │   ├──energies.npy
-    │   │       │   ├──image_type.npy
-    │   │       │   ├──position.npy
-    │   │       │   ├──ei.npy
-    │   │       │   ├──forces.npy
-    │   │       │   ├──lattice.npy
-    │   │       │   ├──virials.npy
-    │   └──valid
+    │   └──train.xyz
     ├──init_config_1
     ...
-
-
-0.95_scale_pertub  0.9_scale_pertub  relaxed.config  train
-
-    ├──init_config_2
 ```
 
 # 主动学习
@@ -188,21 +175,27 @@ $\varepsilon_{t}  = min_i(\sqrt{ \left \| F_{w,i}(R_t) -\hat{F_{i}} \right \| ^2
 
 `fail.csv`是力偏差大于设置的[`力偏差上限`](/next/PWMLFF/active%20learning/run_param_zh#upper_model_deiv_f)的结构。
 
+
 如果候选的结构（力偏差介于设置的力偏差上下限之间的结构）超过设置的最大选点数量 [`max_select`](/next/PWMLFF/active%20learning/run_param_zh#max_select)，则将候选的结构随机选取 `max_select`个，存入`candidate.csv`文件，其余的存入`candidate_delete.csv`文件。
 
 `model_devi_distribution-md.*.sys.*.png` 为超链接文件，是探索结构的偏差值分布绘图。
 
+`error_traj.log`是 MD 过程为执行 MD 过程中断的轨迹，中断的原因一般是力场不准确造成原子丢失、原子靠的太近等。
+
 `select_summary.txt`是筛选点的数据量信息汇总，内容如下例所示。
 
 ```
-Total structures 1212    accurate 16 rate 1.32%    selected 403 rate 33.25%    error 793 rate 65.43%
+Total structures 862    accurate 0 rate 0.00%    selected 616 rate 71.46%    error 246 rate 28.54%
 
 Select by model deviation force:
-Accurate configurations: 16, details in file accurate.csv
-Candidate configurations: 403, randomly select 10, delete 393
+Accurate configurations: 0, details in file accurate.csv
+Candidate configurations: 616, randomly select 27, delete 589
         Select details in file candidate.csv
         Delete details in file candidate_delete.csv.
-Error configurations: 793, details in file fail.csv
+Error configurations: 246, details in file fail.csv
+
+A total of 10 MD trajectories were run. with 8 trajectories correctly executed and 2 trajectories normally completed. 
+For detailed information, refer to File error_traj.log.
 
 ```
 
@@ -216,9 +209,7 @@ scf 下的一级和二级子目录 `md.*.sys.*/md.*.sys.*.t.*` 与[md 子目录]
 
 #### result
 
-`result`的一级子目录对应 [scf 目录](#scf)的所有二级子目录。
-
-以 `result/md.000.sys.000.t.000`为例，它是对应`scf/md.000.sys.000/md.000.sys.000.t.000`所有自洽计算结果提取为 pwdata 格式后的数据目录，包括`train`和`valid`两个子目录，与 [init_bulk 例子](/next/PWMLFF/active%20learning/example_si_init_zh#目录1)中`pwdata`目录内容相同。
+`result` 为标记结束后的带标签数据集汇总，如果设置 `data_format` 为 `extxyz` 格式，将提取为 train.xyz 文件。如果为 `pwmlff/npy` 格式，则为 PWdata 目录，目录下是具体数据。
 
 ## 目录2
 
@@ -268,6 +259,7 @@ example
 │    │        ├──candidate.csv
 │    │        ├──candidate_delete.csv
 │    │        ├──fail.csv
+│    │        ├──error_traj.log
 │    │        ├──select_summary.txt
 │    │        ├──model_devi_distribution-md.000.sys.000.png
 │    │        └──...
@@ -288,10 +280,8 @@ example
 │    │   │    ├──...
 │    │   │    ├──md.001.sys.000
 │    │   └──result
-│    │        ├──md.000.sys.000.t.000
-│    │        ├──md.000.sys.000.t.001
-│    │        ├──...
-│    │        └──md.001.sys.000.t.001.p.000
+│    │        └──train.xyz
+
 ├──iter.0001
 │    └──...
 ├──...

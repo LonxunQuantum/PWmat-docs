@@ -1,9 +1,9 @@
 ---
 sidebar_position: 4
-title: MatPL 教程
+title: MatPL 案例实操
 slug: /Models
 ---
-
+# MATPL
 👉[开源仓库地址](https://github.com/LonxunQuantum/PWMLFF)
 
 包括 `8` 种具有平移、旋转和置换不变性的特征类型

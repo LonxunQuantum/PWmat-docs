@@ -1,6 +1,6 @@
 ---
 sidebar_position: 6
-title: pwdata
+title: pwdata 结构转换工具
 ---
 # pwdata
 
@@ -512,16 +512,16 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 > config = Config(format, data_file)
 > ```
 
-> <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**Config.to**</font> <font color='#2ecc71'>_(self, output_path, save_format = None, **kwargs)_</font>
+> <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**Config.to**</font> <font color='#2ecc71'>_(self, data_path, format = None, **kwargs)_</font>
 > [源码](https://github.com/LonxunQuantum/pwdata/blob/master/pwdata/main.py#L178)</p>
 >
 > 根据读入的文件格式，将数据保存为指定格式的文件。
 >
 > **参数:**
 >
-> - **output_path**: 字符串, **必选**. 保存文件的路径。
+> - **data_path**: 字符串, **必选**. 保存文件的路径。
 >
-> - **save_format**: 字符串, **必选**. 保存文件的格式。默认为 None。支持的格式有 `pwmat/config`, `pwmat/movement`, `vasp/poscar`, `lammps/lmp`, `extxyz`, `pwmlff/npy`.
+> - **format**: 字符串, **必选**. 保存文件的格式。默认为 None。支持的格式有 `pwmat/config`, `pwmat/movement`, `vasp/poscar`, `lammps/lmp`, `extxyz`, `pwmlff/npy`.
 >
 > - **Kwargs**:
 >   - 1. 其他用于保存文件的关键字参数。用于以下格式的文件：`pwmat/config`, `vasp/poscar`, `lammps/lmp`, `extxyz`。
@@ -531,13 +531,9 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 >     * **direct**: bool, **必选**. 原子坐标是分数坐标还是笛卡尔坐标。(0 0 0) -> (1 1 1)
 >   - 2. 用于保存标签文件的关键字参数。用于 `pwmlff/npy` 格式的文件。
 >     - **data_name**: 字符串, **必选**. 数据集文件夹的保存名称。
->     * **train_data_path**: 字符串, 可选. 训练集的保存路径。默认为 "train"。（"./PWdata/train"）
->     * **valid_data_path**: 字符串, 可选. 验证集的保存路径。默认为 "valid"。（"./PWdata/valid"）
->     * **train_ratio**: float, **必选**. 训练集的比例。默认为 None。如果给定 None，将会报错。
 >     * **random**: bool, 可选. 是否对原始数据进行随机打乱，然后将数据划分为训练集和验证集。默认为 True。
 >     * **seed**: int, 可选. 随机数种子。默认为 2024。
->     * **retain_raw**: bool, 可选. 是否保留原始数据。默认为 False。
->
+
 > :::caution
 >
 > 1. 输入为 `CP2K` 的数据时，`sort` 参数需要设置为 `False`，因为 CP2K 的数据已经是按照原子序数排序的，再次排序会导致数据顺序错误。
@@ -554,7 +550,7 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 > data_file = "./POSCAR"
 > format = "vasp/poscar"
 > config = Config(format, data_file)
-> config.to(output_path = "./", data_name = "lmp.init", save_format = "lammps/lmp", direct = False, sort = True)
+> config.to(data_path = "./", format = "lammps/lmp", data_name = "lmp.init", direct = False, sort = True)
 > ```
 >
 > :::tip
@@ -571,7 +567,7 @@ pwdata 也可以作为一个独立的工具使用，通过调用 pwdata 的接�
 > for data in raw_data[1:]:
 >    image_data = Config(format, data)
 >    multi_data.append(image_data)
-> multi_data.to(output_path = "./PWdata", save_format='pwmlff/npy', train_data_path='train', valid_data_path='valid', train_ratio=0.8, random=True, seed=2024, retain_raw=False)
+> multi_data.to(data_path = "./PWdata", format='pwmlff/npy')
 > ```
 >
 > :::
@@ -593,9 +589,9 @@ def trajs2config():
     for id, config in enumerate(tmp_image_data):
         savename = "{}_{}".format(id, FORMAT.get_filename_by_format(save_format))
         image.iamges = [config]
-        image.to(output_path = save_dir,
+        image.to(data_path = save_dir,
             data_name = savename,
-            save_format = save_format,
+            format = save_format,
             sort = True)
 
 if __name__=="__main__":
@@ -631,7 +627,7 @@ if __name__=="__main__":
 > config = Config('pwmat/config', data_file)
 > supercell_matrix = [[2, 0, 0], [0, 2, 0], [0, 0, 2]]
 > supercell = make_supercell(config, supercell_matrix, pbc=[1, 1, 1])
-> supercell.to(output_path = "./", data_name = "atom_2x2x2.config", save_format = "pwmat/config", sort = True)
+> supercell.to(data_path = "./", data_name = "atom_2x2x2.config", format = "pwmat/config", sort = True)
 > ```
 
 > <p style={{backgroundColor: '#E5E1EC'}}> <font color='black'>**pertub.perturbation.perturb_structure**</font> <font color='#2ecc71'>_(image_data, pert_num:int, cell_pert_fraction:float, atom_pert_distance:float)_</font>
@@ -664,9 +660,9 @@ if __name__=="__main__":
 > atom_pert_distance = 0.01
 > save_format = "pwmat/config"
 > perturbed_structs = perturb_structure(config, pert_num, cell_pert_fraction, atom_pert_distance)
-> perturbed_structs.to(output_path = "~/pwdata/test/pertubed/",
+> perturbed_structs.to(data_path = "~/pwdata/test/pertubed/",
 >           data_name = "pertubed",
->           save_format = save_format,
+>           format = save_format,
 >           direct = True,
 >           sort = True)
 > ```
@@ -692,9 +688,9 @@ if __name__=="__main__":
 > config = Config('pwmat/config', data_file)
 > scale_factor = 0.95
 > scaled_structs = scale_cell(config, scale_factor)
-> scaled_structs.to(output_path = "~/test/scaled/",
+> scaled_structs.to(data_path = "~/test/scaled/",
 >           data_name = "scaled",
->           save_format = "pwmat/config",
+>           format = "pwmat/config",
 >           direct = True,
 >           sort = True)
 > ```

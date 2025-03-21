@@ -23,11 +23,22 @@ module load matpl/2025.3
 
 ```bash
 # 加载 lammps
-module load lammps4pwmlff/2025.3
-# 对于 Linear 和 NN 模型的lammps 接口，我们提供了 cpu 版本的接口，请加载
-module load lammps4pwmlff/0.1.0
-# lammps 接口已经预装了下列功能 KSPACE、MANYBODY、REAXFF、MOLECULE、QEQ、REPLICA、RIGID、MEAM、MC、MatPL
+module load lammps4matpl/2025.3
+# 对于 Linear 和 NN 模型的lammps 接口，我们提供了 cpu 版本的接口，使用fortran 实现，请加载
+module load lammpsmatpl/fortran
 ```
+lammps 接口已经预装了下列功能 
+
+ - KSPACE
+ - MANYBODY
+ - REAXFF
+ - MOLECULE
+ - QEQ
+ - REPLICA
+ - RIGID
+ - MEAM
+ - MC
+ - MatPL
 
 <!-- :::tip
 `离线安装包`中集成了 MatPL 和 lammps 接口，包括` GPU 版本`和 `CPU 版本`两种；

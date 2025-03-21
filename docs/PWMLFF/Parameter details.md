@@ -4,11 +4,11 @@ sidebar_position: 3
 
 # MatPL 可用参数
 
-本节介绍了所有模型中可由用户定义的参数，可以分为必要参数和高级参数两类。必要参数需要用户指定，高级参数采用了默认值，用户可以在 json 文件中根据需求手动修改。在下面的参数中，"相对路径（relative path）" 表示相对于当前工作目录的路径，而 "绝对路径（absolute path）" 表示从根目录开始的文件或目录的完整路径。
+本节介绍了所有模型中可由用户定义的参数，可以分为基础参数和高级参数两类。基础参数需要用户指定，高级参数采用了默认值，用户可以在 json 文件中根据需求手动修改。在下面的参数中，"相对路径（relative path）" 表示相对于当前工作目录的路径，而 "绝对路径（absolute path）" 表示从根目录开始的文件或目录的完整路径。
 
-## 必要参数
+## 基础参数
 
-对于任何模型，以下参数需要用户输入。
+对于 MatPL 中的力场，只需要设置以下基础参数即可开始训练。
 
 ### model_type
 该参数用于指定用于训练的模型类型。您可以使用`LINEAR`模型、`NN`模型、`DP`模型或 `NEP` 模型。
@@ -72,7 +72,7 @@ Error! maxNeighborNum too small
             "zbl": 2.0
         },
         "fitting_net": {
-            "network_size": [100,1]
+            "network_size": 40
         }
     }
 ```
@@ -94,7 +94,7 @@ NEP 两体描述符的数量为 n_max[0]+1；三体描述符的数量为 (n_max[
 :::
 
 #### network_size
-该参数用于设置 `NEP` 模型中隐藏层神经元个数，在 NEP 模型中只有一层隐藏层，默认值为 `[100]`。
+该参数用于设置 `NEP` 模型中隐藏层神经元个数，在 NEP 模型中只有一层隐藏层，默认值为 `40`。
 <!-- 这里支持使用多层神经网络，如您可以设置为`[50, 50, 50, 1]`这类网络，但是建议您使用默认值即可，更多网络层数在我们的测试中对模型拟合精度的提升有限，反而会造成推理负担，降低推理速度。 -->
 
 #### zbl
@@ -218,83 +218,6 @@ Linear 模型的完整参数设置如下：
 
 ### KF optimizer
 
-KF 优化器的完整参数设置如下：
-
-```json
-    "optimizer": {
-        "optimizer": "LKF",
-        "epochs": 30,
-        "batch_size": 1,
-        "print_freq": 10,
-        "block_size": 5120,
-        "p0_weight": 0.01,
-        "kalman_lambda": 0.98,
-        "kalman_nue": 0.9987,
-        "train_energy": true,
-        "train_force": true,
-        "train_virial": false,
-        "pre_fac_force": 2.0,
-        "pre_fac_etot": 1.0,
-        "pre_fac_virial": 1.0
-    }
-```
-
-#### optimizer
-该参数用于指定优化器名称，对 LKF 优化器，指定名称为 `'LKF'`。关于优化器的详细信息参考 [LKF](https://dl.acm.org/doi/abs/10.1609/aaai.v37i7.25957)，其中提供了有关优化器实现和特性的更深入的细节说明。
-
-#### epochs
-该参数用于指定训练的轮数（epochs）。在机器学习中，一个 epoch 指的是整个训练数据集通过神经网络的完整传递，包括前向传播和反向传播。在每个 epoch 中，训练数据集分为多个 `小批量（mini-batches）` 样本，之后把每个批次输入到神经网络，进行前向传播、损失计算和参数更新的反向传播过程。训练的轮数决定了整个训练数据集在训练过程中被处理的次数。默认值为 `30`。
-
-通常需要通过调试和评估训练过程来选择适当的训练轮数。如果训练轮数过小，模型可能无法充分学习数据集的模式和特征，导致欠拟合。另一方面，如果训练轮数过大，模型可能会过拟合训练数据，在新数据上的泛化性能下降。
-
-#### batch_size
-批大小（batch size）参数确定了在每个 epoch 的训练过程中，每个小批量（mini-batch）中包含的训练样本数量。默认值为 `1`。
-
-#### print_freq
-该参数用于指定每经过多少个`小批量`迭代之后打印一次训练误差。默认值为 `10`。
-
-#### block_size
-该参数是`LKF 优化器`的超参数，用于指定协方差矩阵 P 的块大小。较大的块大小会增加内存和 GPU 内存的消耗，导致训练速度较慢，而较小的块大小会影响收敛速度和准确性。默认值为 `5120`，如果是在 A100、H100 等高端显卡上，建议设置为 `10240`。
-
-#### p0_weight
-该参数是 `LKF`的超参数，用于正则化参数，默认值为`0.01`，即采用正则化。设置正则化项有助于减少模型的过拟合。该参数要求值小于 `1` ，经过测试 `0.01` 是较为合适的值。如果设置为 `1` 则表示不适用正则化。
-
-#### kalman_lambda
-该参数是`LKF`的超参数，称为记忆因子（memory factor）。它决定了对先前数据的权重或关注程度。值越大，越重视先前的数据。默认值为 `0.98`。
-
-#### kalman_nue
-该参数是`LKF`的超参数，kalman_nue 是遗忘率（forgetting rate），描述了 kalman_lambda 变化的速率。默认值为 `0.9987`。
-
-#### train_energy
-该参数用于指定是否训练 total energy，默认值为 `true`。
-
-#### train_force
-该参数用于指定是否训练 force，默认值为 `true`。
-
-#### train_virial
-该参数用于指定是否训练 virial，默认值为 `false`。
-
-<!-- #### train_ei
-该参数用于指定是否训练 atomic energy，默认值为 `false`。 -->
-
-<!-- #### train_egroup
-该参数用于指定是否训练 energy group，默认值为 `false`。 -->
-
-#### pre_fac_etot
-该参数用于指定 total energy 对损失函数的权重或贡献。默认值为 `1.0`。
-
-#### pre_fac_force
-该参数用于指定 force 对损失函数的权重或贡献。默认值为 `2.0`。
-
-#### pre_fac_virial
-该参数用于指定 virial 对损失函数的权重或贡献。默认值为 `1.0`。
-
-<!-- #### pre_fac_ei
-该参数用于指定 atomic energy 对损失函数的权重或贡献。默认值为 `1.0`。
-
-#### pre_fac_egroup
-该参数用于指定 energy group 对损失函数的权重或贡献。默认值为 `0.1`。 -->
-
 ### ADAM optimizer
 
 ADAM 优化器的完整参数设置如下:
@@ -324,7 +247,28 @@ ADAM 优化器的完整参数设置如下:
     }
 ```
 
-`optimizer`, `epochs`, `batch_size`, `print_freq`, `train_energy`, `train_force`,  `train_virial` 参数与 KF 优化器中的参数功能相同。
+#### optimizer
+该参数用于指定优化器名称，默认为`ADAM`。对 LKF 优化器，指定名称为 `'LKF'`。关于优化器的详细信息参考 [LKF](https://dl.acm.org/doi/abs/10.1609/aaai.v37i7.25957)，其中提供了有关优化器实现和特性的更深入的细节说明。
+
+#### epochs
+该参数用于指定训练的轮数（epochs）。在机器学习中，一个 epoch 指的是整个训练数据集通过神经网络的完整传递，包括前向传播和反向传播。在每个 epoch 中，训练数据集分为多个 `小批量（mini-batches）` 样本，之后把每个批次输入到神经网络，进行前向传播、损失计算和参数更新的反向传播过程。训练的轮数决定了整个训练数据集在训练过程中被处理的次数。默认值为 `30`。
+
+通常需要通过调试和评估训练过程来选择适当的训练轮数。如果训练轮数过小，模型可能无法充分学习数据集的模式和特征，导致欠拟合。另一方面，如果训练轮数过大，模型可能会过拟合训练数据，在新数据上的泛化性能下降。
+
+#### batch_size
+批大小（batch size）参数确定了在每个 epoch 的训练过程中，每个小批量（mini-batch）中包含的训练样本数量。默认值为 `1`。
+
+#### print_freq
+该参数用于指定每经过多少个`小批量`迭代之后打印一次训练误差。默认值为 `10`。
+
+#### train_energy
+该参数用于指定是否训练 total energy，默认值为 `true`。
+
+#### train_force
+该参数用于指定是否训练 force，默认值为 `true`。
+
+#### train_virial
+该参数用于指定是否训练 virial，默认值为 `false`。
 
 #### lambda_2
 该参数用于设置 Adam 优化器的 `L2` 正则化项，默认不设置。设置正则化项有助于减少模型的过拟合。
@@ -391,3 +335,61 @@ $$
 
 #### end_pre_fac_ei
 训练结束时 atomic energy 损失的 prefactor，应大于或等于 0。默认值为 `2.0`。 -->
+
+
+KF 优化器的完整参数设置如下：
+
+```json
+    "optimizer": {
+        "optimizer": "LKF",
+        "epochs": 30,
+        "batch_size": 1,
+        "print_freq": 10,
+        "block_size": 5120,
+        "p0_weight": 0.01,
+        "kalman_lambda": 0.98,
+        "kalman_nue": 0.9987,
+        "train_energy": true,
+        "train_force": true,
+        "train_virial": false,
+        "pre_fac_force": 2.0,
+        "pre_fac_etot": 1.0,
+        "pre_fac_virial": 1.0
+    }
+```
+
+`optimizer`, `epochs`, `batch_size`, `print_freq`, `train_energy`, `train_force`,  `train_virial` 参数与 ADAM 优化器中的参数功能相同。
+
+#### block_size
+该参数是`LKF 优化器`的超参数，用于指定协方差矩阵 P 的块大小。较大的块大小会增加内存和 GPU 内存的消耗，导致训练速度较慢，而较小的块大小会影响收敛速度和准确性。默认值为 `5120`，如果是在 A100、H100 等高端显卡上，建议设置为 `10240`。
+
+#### p0_weight
+该参数是 `LKF`的超参数，用于正则化参数，默认值为`0.01`，即采用正则化。设置正则化项有助于减少模型的过拟合。该参数要求值小于 `1` ，经过测试 `0.01` 是较为合适的值。如果设置为 `1` 则表示不适用正则化。
+
+#### kalman_lambda
+该参数是`LKF`的超参数，称为记忆因子（memory factor）。它决定了对先前数据的权重或关注程度。值越大，越重视先前的数据。默认值为 `0.98`。
+
+#### kalman_nue
+该参数是`LKF`的超参数，kalman_nue 是遗忘率（forgetting rate），描述了 kalman_lambda 变化的速率。默认值为 `0.9987`。
+
+<!-- #### train_ei
+该参数用于指定是否训练 atomic energy，默认值为 `false`。 -->
+
+<!-- #### train_egroup
+该参数用于指定是否训练 energy group，默认值为 `false`。 -->
+
+#### pre_fac_etot
+该参数用于指定 total energy 对损失函数的权重或贡献。默认值为 `1.0`。
+
+#### pre_fac_force
+该参数用于指定 force 对损失函数的权重或贡献。默认值为 `2.0`。
+
+#### pre_fac_virial
+该参数用于指定 virial 对损失函数的权重或贡献。默认值为 `1.0`。
+
+<!-- #### pre_fac_ei
+该参数用于指定 atomic energy 对损失函数的权重或贡献。默认值为 `1.0`。
+
+#### pre_fac_egroup
+该参数用于指定 energy group 对损失函数的权重或贡献。默认值为 `0.1`。 -->
+

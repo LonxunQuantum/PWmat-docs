@@ -1,6 +1,6 @@
 # lonxun-docs
 
-龙讯旷腾旗下 PWmat、Q-Flow、Q-Studio、PWMLFF、PWkit 产品手册
+龙讯旷腾旗下 PWmat、Q-Flow、Q-Studio、MATPL(原 PWMLFF)、PWkit 产品手册
 
 ### git 代码托管平台
 

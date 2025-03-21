@@ -6,36 +6,47 @@ sidebar_position: 2
 
 # run_param.json
 
-训练设置（网络结构、优化器）、探索设置（lammps 设置、选点策略）以及标记设置（VASP/PWmat 自洽计算设置）。
+训练设置（网络结构、优化器）、探索设置（lammps 设置、选点策略）以及标记设置（VASP/PWmat 自洽计算设置）。参数列表如下所示
 
-
-# 参数列表
-
-### reserve_work
+## reserve_work
 
 是否保留临时工作目录，默认值为 `false`，每轮次主动学习执行结束之后，自动删除临时工作目录。
 
-### reserve_md_traj
+## reserve_md_traj
 
 是否保留 md 运行轨迹，默认值为 `false`，每轮次主动学习执行结束之后，自动删除 md 运行轨迹文件。
 
-### reserve_scf_files
+## reserve_scf_files
 
 是否保留自洽计算的所有结果文件，默认值为 `false`，设置为 `false` 之后，每轮次主动学习结束之后，对于 PWMAT 自洽计算，只保留 `REPORT`, `etot.input`,`OUT.MLMD`, `atom.config` 四个文件，对于 VASP 只保留 `OUTCAR`, `POSCAR`, `INCAR` 三个文件。
 
-### init_data
+
+## data_format
+用于设置主动学习中初始训练集、采集到的数据集格式，默认为扩展的xyz格式 `extxyz`。
+
+## init_data
 
 初始训练集所在目录，为 list 格式。可以是绝对路径或者相对路径（当前目录）。
 
-#
+## valid_data
+
+验证集所在目录，为 list 格式，可以是绝对路径或者相对路径（当前目录）。如不设置，则在主动学习训练模型过程中不输出验证集结果。
+
+## init_model_list
+用于设置初始探索模型，如果已有MatPL训练的 DP 或者 NEP 力场，并且希望从这些力场开始探索工作，则将力场文件路径写入 init_model_list 即可。
+
+注意，这里要求力场数量要与 [strategy/model_num](#model_num) 中一致，模型类型要与 `train/model_type` 中的模型类型一致。并且模型的训练参数将会自动从力场文件中提取，在 `train_input_file` 或者 `train` 字典中设置的模型网络和描述符参数将失效。
+
+## use_pre_model
+在当前步的探索中，使用上一步训练得到的力场，默认值为 true。
 
 ### train
 
-模型训练参数，用于指定模型网络结构、优化器。详细的参数设置参考 [`PWMLFF文档`](http://doc.lonxun.com/PWMLFF/) 。您可以如例子中所示设置训练的全部参数，也可以使用单独的 json 文件，只需要在参数 `train_input_file` 中指定训练的 json 文件所在路径即可。
+模型训练参数，用于指定模型网络结构、优化器。详细的参数设置参考 [`MatPL 训练参数`](../Parameter%20details.md) 。您可以像如下例子中所示，设置训练的全部参数，也可以使用单独的 json 文件，只需要在参数 `train_input_file` 中指定训练的 json 文件所在路径即可。
 
 #### train_input_file
 
-可选参数，如果您有单独的 PWMLFF 输入文件，您可以使用该参数指定文件所在路径。否则您需要设置如下例中所示参数。参数的详细解释您在可以在 [PWMLFF 参数列表](../Parameter%20details.md)中查看。
+可选参数，如果您有单独的 MatPL 输入文件，您可以使用该参数指定文件所在路径。否则您需要设置如下例中所示参数。参数的详细解释您在可以在 [MatPL 参数列表](../Parameter%20details.md)中查看。
 
 ```json
     "train": {
@@ -43,11 +54,7 @@ sidebar_position: 2
         "atom_type": [
             14
         ],
-        "max_neigh_num": 100,
         "seed": 2023,
-        "data_shuffle":true,
-        "train_valid_ratio": 0.8,
-        "recover_train": true,
         "model": {
             "descriptor": {
                 "Rmax": 6.0,
@@ -81,7 +88,7 @@ sidebar_position: 2
     }
 ```
 
-由于 PWMLFF 中设置的默认参数已经能够支持大部分的训练需求，因此，您可以简写为如下形式，将采用标准的 `DP` 模型 使用 `LKF 优化器`训练。
+由于 MatPL 中设置的默认参数已经能够支持大部分的训练需求，因此，您可以简写为如下形式，将采用标准的 `DP` 模型 使用 `LKF 优化器`训练。
 ```json
   "train": {
         "model_type": "DP",
@@ -90,13 +97,17 @@ sidebar_position: 2
   }   
 ```
 
+PWact 同时支持 MatPL 的 DP 和 NEP 力场。
+
 ### strategy
 
 用于设置主动学习的不确定性度量方法，以及是否采用模型压缩做加速。
 
 #### uncertainty
 
-用于设置不确定性度量策略，当前支持多模型委员会查询方法 (`committee`) 。`KPU`方法我们在做探索，后续将面向用户开放。
+用于设置不确定性度量策略，当前支持多模型委员会查询方法 (`committee`) 。
+
+<!-- `KPU`方法我们在做探索，后续将面向用户开放。 -->
 <!-- 
 默认值为 `committee`，即采用多模型查询的方式计算模型预测偏差。该值 需要配合 [`model_num`](#model_num) 、[`lower_model_deiv_f`](#lower_model_deiv_f) 和 [`upper_model_deiv_f`](#upper_model_deiv_f) 参数使用，将模型预测偏差值介于 `lower_model_deiv_f` 和 `upper_model_deiv_f` 之间结构作为候选结构，之后使用 DFT 做标注，`model_num` 用于设置模型的数量，如果使用 `committee` 方法，默认值为 `4`。
 
@@ -121,6 +132,9 @@ sidebar_position: 2
 #### kpu_upper
 
 该参数需要配合 [`"uncertainty":"kpu"`](#uncertainty) 使用，用于设置 KPU 的上界，如果 KPU 值大于该上界，则该构型本身不符合物理意义，不需要标注，默认值为 `10`。 -->
+#### lmps_tolerance
+
+当lammps 部分轨迹由于各种原因（如力场不准确导致丢失了原子、原子距离太近等）造成 MD 过程为正常执行结束时，是否终止主动学习过程。默认值为 true，即不终止。
 
 #### lower_model_deiv_f
 
@@ -469,7 +483,7 @@ fix  1 all nve
 
 ### 例子
 
-如下例子，为一个标准的主动学习流程，两个轮次的主动学习，采用多模型委员会查询策略。更多使用案例，请参考源码根目录的 [`example`](https://github.com/LonxunQuantum/PWMLFF_AL/tree/main/example)。
+如下例子，为一个标准的主动学习流程，两个轮次的主动学习，采用多模型委员会查询策略。更多使用案例，请参考源码根目录的 [`example`](https://github.com/LonxunQuantum/PWact/tree/main/examples)。
 
 ```json
 {

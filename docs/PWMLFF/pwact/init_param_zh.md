@@ -4,28 +4,22 @@ sidebar_position: 1
 
 # init_bulk param.json
 
-初始训练集制备，包括对构型（VASP、PWmat等格式）进行`驰豫`、`阔胞`、`缩放`、`微扰`和`AIMD`（支持 DFTB、PWMAT、VASP）设置。
+初始训练集制备，包括对构型（VASP、PWmat等格式）进行`驰豫`、`阔胞`、`缩放`、`微扰`和`AIMD`（支持 DFTB、PWMAT、VASP）设置。参数列表如下。
 
-## 参数列表
+## data_format
+用于设置init_bulk 执行结束后的得到的数据格式，默认为扩展的xyz格式 `extxyz`。
 
-### reserve_work
+## reserve_work
 是否保留临时工作目录，默认值为 `false` , 不保存。
 
-### data_shuffle
-对于制备得到的数据，是否随机划分为训练集和验证集, 默认值为 `true` 。
-
-### train_valid_ratio
-用于设置训练集和验证集的划分比例，默认值为 `0.8` , 即把训练集和验证集按照80%和20%做划分。
-
-### interval
+## interval
 用于设置提取数据时，从轨迹中选取结构的间隔，即在轨迹中，每隔多少个结构选取一个构型，默认值为`1`。
 
-### sys_config_prefix
+## sys_config_prefix
 用于设置初始构型的路径前缀，`可选参数`，与 [`sys_configs/config`](#config) 配合设置。可以是绝对路径或者相对路径，相对路径为当前目录。
 
 例子：`"sys_config_prefix":"/data/structure"`, `"config":"atom.config"`, 则 `atom.config` 的实际路径是 `/data/structure/atom.config`
 
-#
 ## sys_configs
 设置构型的文件路径、驰豫（relax）、阔胞（super cell）、缩放晶格（scale）、微扰原子位置（pertub）、AIMD。完整的参数如下例所示。
 
@@ -63,17 +57,44 @@ sidebar_position: 1
 ### aimd_input_idx
 设置 AIMD 使用的控制文件，与 [aimd_input](#aimd_input) 配合使用，指定控制文件的位置，如 [例子](#例子) 中所示，使用 `aimd_input` 中设置的 `aimd_etot.input` 文件作为 PWMAT 控制文件。默认值为0，即 使用 `aimd_input` 中的第一个文件作为控制文件。
 
+## sys_config 设置例子
+```json
+    "sys_config_prefix": "../../si_example/init_bulk",
+    "sys_configs": [{"config":"./structures/49.config", 
+                    "relax":true, 
+                    "_relax_input_idx":0, 
+                    "super_cell":[1, 1, 2], 
+                    "scale":[0.9,0.95], 
+                    "perturb":3, 
+                    "cell_pert_fraction":0.03, 
+                    "atom_pert_distance":0.01, 
+                    "aimd":true, 
+                    "_aimd_input_idx":0
+                    },
+                    {"config":"./structures/44_POSCAR", 
+                    "format":"vasp/poscar", 
+                    "relax":false, 
+                    "super_cell":[[1,0,0],[0, 2, 0],[0,0,1]], 
+                    "perturb":2, 
+                    "aimd":true, 
+                    "aimd_input_idx": 1
+                    }
+        ]
+```
+这里设置了`49.config` 和 `44_POSCAR` 两个结构，分别是 pwmat/config （默认格式）和 vasp/poscar格式。
+- 对 49.config 操作如下：step1. 对 49.config 做 relax，使用的 relax 控制文件为 `relax_input` 中的第一个文件；step2.对relax得到的结构，分别对晶格做0.9, 0.95缩放，[缩放方式参考](../pwdata/README.md#3-晶格缩放-scale_cell)；step3. 对缩放后得到两个文件做晶格和原子位置微扰，各自微扰出3个结构，[微扰方式参考](../pwdata/README.md#5-晶格和原子位置微扰-perturb)；step4. 对微扰后得到的6个结构做 AIMD，使用的 md 控制文件为 `aimd_input` 中设置的第1个文件。init_bulk执行结束后将得到6条 AIMD 轨迹。
+- 对 44_POSCAR 操作如下：step1. 对 49.config 做阔胞，按照 [1,0,0],[0, 2, 0],[0,0,1] 阔胞，[阔胞方式参考](../pwdata/README.md#4-阔胞-super_cell)；step2. 对阔胞后的结构做微扰；step3. 对微扰后得到的2个结构做 AIMD，使用的 md 控制文件为 `aimd_input` 中设置的第2个文件。init_bulk 执行结束后将得到2条AIMD轨迹。
 
-#
+因此init_bulk执行结束后将得到6条轨迹，之后会自动将轨迹提取为`data_format`中指定的文件格式。
 
-### dft_style
+## dft_style
 设置 [`Relax`](#relax) 和 [`AIMD`](#aimd) 使用哪种DFT计算软件，默认值为 `pwmat`, 也支持 VASP格式，如果是 VASP 格式，则设置为 `vasp`。
 
-### pseudo 
+## pseudo 
 设置 `PWMAT` 或 `VASP` 赝势文件所在路径，为list格式，赝势文件路径可以为绝对路径或相对路径（相对于当前路径）。
 
-### in_skf
-设置 `DFTB`(PWMAT封装) 的赝势文件上一级目录所在路径，为string 格式，绝对路径或相对路径（相对于当前路径）。
+<!-- ## in_skf
+设置 `DFTB`(PWMAT封装) 的赝势文件上一级目录所在路径，为string 格式，绝对路径或相对路径（相对于当前路径）。 -->
 <!-- 
 ### basis_set_file
 参考 [potential_file](#potential_file)。
@@ -85,30 +106,31 @@ sidebar_position: 1
     "potential_file":"~/datas/systems/cp2k/data/POTENTIAL"
 ``` -->
 
-### gaussian_param
+## gaussian_param
 CP2K 或 PWMAT 高斯基组参数设置，
 `basis_set_file` 和 `potential_file` 指定基组和势函数文件路径。
-`atom_list`, `basis_set_list`, `potential_list` 配合使用，分别指定元素对应的基组和势函数设置。
+`atom_list`, `basis_set_list`, `potential_list` 配合使用，分别指定元素对应的基组和势函数设置。kspacing 用于设置 K点，用法与 [PWMAT KSPACKING 设置](#kspacing) 相同。
 ```json
 "gaussian_param": {
     "basis_set_file":"./init_bulk/BASIS_MOLOPT_1",
     "potential_file":"./init_bulk/POTENTIAL_1",
     "atom_list":["Si"],
+    "kspacing" :0.4,
     "basis_set_list":["SZV-MOLOPT-SR-GTH"],
     "potential_list":["GTH-PBE-q4"]
 }
 ```
-    
-### relax_input
+
+## relax_input
 设置 Relax 的 输入控制文件。如果存在多个 relax 控制文件，则按照list 格式组织。详细的设置请参考下面的例子。
 
-### aimd_input
+## aimd_input
 设置 AIMD 的 输入控制文件。如果存在多个 aimd 控制文件，则按照list 格式组织，对于只是用单个文件的情况，也可以设置为dict格式。
 
-#### input
+### input
 设置输入控制文件的路径，可以为绝对路径或相对路径（相对于当前路径）。
 
-#### kspacing
+### kspacing
 该参数为PWMAT的输入参数，用于设置K点，可选参数。如果在etot.input文件中未设置 `MP_N123` 参数，则使用该参数设置 K点。如果文件中已经设置了 `MP_N123`，则对该参数的设置会造成错误，请确保 `MP_N123` 与 `kspacing` 只能同时存在一个。
 该参数为PWMAT的输入参数，用于设置K点，可选参数。如果在etot.input文件中未设置 `MP_N123` 参数，则使用该参数设置 K点。
 
@@ -116,11 +138,11 @@ CP2K 或 PWMAT 高斯基组参数设置，
 
 注意，不能同时设置 `MP_N123` 与 `kspacing`。
 
-#### flag_symm
+### flag_symm
 该参数为PWMAT的输入参数，用于设置K点，可选参数。对于 Relax 或者 SCF 计算，默认值为 `0`, 对于 AIMD计算，默认值为 `3`。
 
 
-### 例子
+## 完整例子
 ```json
     {
         "reserve_work": true,
@@ -176,7 +198,7 @@ CP2K 或 PWMAT 高斯基组参数设置，
 5. 对扰动后得到的40个结构做AIMD模拟；
 6. 将AIMD轨迹自动提取为 `PWdata` 数据格式作为预训练数据。
 
-### 对 [relax_input](#relax_input) 和 [aimd_input](#aimd_input)参数的补充说明
+### [relax_input](#relax_input) 和 [aimd_input](#aimd_input)
 
 [kspacing](#kspacing)和[flag_symm](#flag_symm)是PWMAT的K点设置，如果没有在 etot.input文件中设置 MP_N123 参数，那么程序会使用这两个参数设置K点。因此，如果您已经etot.input设置了 MP_N123 ，那么，您可以将[relax_input](#relax_input) 和 [aimd_input] 简写为如下形式
 
@@ -213,7 +235,7 @@ CP2K 或 PWMAT 高斯基组参数设置，
     }]
 ```
 
-vasp 的 relax 和 aimd 输入控制文件设置如下例子所示
+### vasp 的 relax 和 aimd 输入控制文件设置
 
 vasp
 ``` json
@@ -233,14 +255,15 @@ vasp
 "aimd_input":["aimd_incar1", "aimd_incar2"]
 ```
 
-cp2k
+### cp2k的 relax 和 aimd 输入控制文件设置
 ```json
 设置 dft 计算软件类型
 "dft_style":"cp2k",
 赝势设置
 "basis_set_file_name":"BASIS_MOLOPT",
 "potential_file_name":"POTENTIAL",
-
+设置K点
+ "kspacing":0.5
 单文件
 "relax_input":"relax_cp2k.inp"
 多文件

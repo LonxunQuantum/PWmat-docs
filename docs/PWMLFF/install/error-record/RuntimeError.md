@@ -3,23 +3,22 @@ sidebar_position: 1
 ---
 
 # 运行错误记录
-本章节整理了 `PWMLFF` 、`Lammps`接口 运行时常见错误。
+本章节整理了 `MatPL` 、`Lammps`接口 运行时常见错误。
 
-## PWMLFF 常见运行时错误
+## MatPL 常见运行时错误
 
 ### 环境变量检查
-由于未正确加载或者未加载相关环境变量，导致的运行时错误，一般表现为找不到 `PWMLFF` 命令 或者 一些 `***.so`的动态库缺失。此时请检查下列环境变量是否都已经加载。
+由于未正确加载或者未加载相关环境变量，导致的运行时错误，一般表现为找不到 `MatPL` 命令 或者 一些 `***.so`的动态库缺失。此时请检查下列环境变量是否都已经加载。
 ``` bash
 # python 环境，是否激活了python 环境
 source /the/path/etc/profile.d/conda.sh
-conda activate PWMLFF
+conda activate matpl-2025.3
 
 # intel 和 cuda 工具集是否加载
-module load intel cuda/11.8
+module load intel/2020 cuda/11.8
 
-# PWMLFF 的环境变量是否加载
-export PYTHONPATH=/the/path/PWMLFF_feat/src:$PYTHONPATH
-export PATH=/the/path/PWMLFF_feat/src/bin:$PATH
+# MatPL 的环境变量是否加载
+source /the/path/MatPL-2025.3/env.sh
 ```
 
 ### 动态库加载错误-mkl库
@@ -27,13 +26,13 @@ export PATH=/the/path/PWMLFF_feat/src/bin:$PATH
 
 ``` bash
     exec(code, run_globals)
-  File "/the/path/PWMLFF_nep/pwmlff_main.py", line 6, in <module>
+  File "/the/path/MatPL-2025.3/main.py", line 6, in <module>
     from src.user.dp_work import dp_train, dp_test
-  File "/the/path/PWMLFF_nep/src/user/dp_work.py", line 6, in <module>
+  File "/the/path/MatPL-2025.3/src/user/dp_work.py", line 6, in <module>
     from src.PWMLFF.dp_network import dp_network
-  File "/the/path/PWMLFF_nep/src/PWMLFF/dp_network.py", line 42, in <module>
+  File "/the/path/MatPL-2025.3/src/PWMLFF/dp_network.py", line 42, in <module>
     import src.pre_data.dp_mlff as dp_mlff
-  File "/the/path/PWMLFF_nep/src/pre_data/dp_mlff.py", line 11, in <module>
+  File "/the/path/MatPL-2025.3/src/pre_data/dp_mlff.py", line 11, in <module>
     from src.lib.NeighConst import neighconst
 ImportError: libmkl_rt.so: cannot open shared object file: No such file or directory 
 ```
@@ -49,45 +48,18 @@ module load intel/2020
 
 ### 环境变量检查
 
-由于未正确加载或者未加载相关环境变量，导致的运行时错误，一般表现为找不到 `lmp_mpi` 或者 `lmp_mpi_gpu` 命令， 或者 一些 `***.so`的动态库缺失。此时请检查下列环境变量是否都已经加载。
+由于未正确加载或者未加载相关环境变量，导致的运行时错误，一般表现为找不到 `lmp_mpi` 命令，或者 一些 `***.so`的动态库缺失。此时请检查下列环境变量是否都已经加载。
 
 ``` bash
 #1. 用于mpirun 命令
 module load intel/2020
 
-#2. 加载conda环境、激活conda虚拟环境
-source /the/path/etc/profile.d/conda.sh
-conda activate PWMLFF
+#2. 加载lammps 环境变量
+source /the/path/of/lammps/env.sh
 
-#3. 加载PWMLFF 环境变量
-export PATH=/the/path/to/PWMLFF2024.5/src/bin:$PATH
-export PYTHONPATH=/the/path/to/PWMLFF2024.5/src/:$PYTHONPATH
-
-#4. 导入PWMLFF2024.5 的共享库路径
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(python3 -c "import torch; print(torch.__path__[0])")/lib:$(dirname $(dirname $(which python3)))/lib:$(dirname $(dirname $(which PWMLFF)))/op/build/lib
-
-#5. 加载lammps 环境变量
-export PATH=/the/path/to/Lammps_for_PWMLFF-2024.5/src:$PATH
-export LD_LIBRARY_PATH=/the/path/Lammps_for_PWMLFF-2024.5/src:$LD_LIBRARY_PATH
-
-#6. 运行 GPU lammps 命令
-mpirun -np 4 lmp_mpi_gpu -in in.lammps
-# 或者运行 CPU lammps 命令
-# mpirun -np 32 lmp_mpi -in in.lammps
+#3. 运行 lammps 命令
+mpirun -np 4 lmp_mpi -in in.lammps
 ```
-
-### Lammps dp 模型
-#### 错误描述
-启动lammps做dp 模型的 md出现如下错误：
-```txt
-lmp_mpi_gpu: symbol lookup error: lmp_mpi_gpu: undefined symbol: _ZN2at4_ops9to_device4callERKNS_6TensorEN3c106DeviceENS5_10ScalarTypeEbbNS5_8optionalINS5_12MemoryFormatEEE
-lmp_mpi_gpu: symbol lookup error: lmp_mpi_gpu: undefined symbol: _ZN2at4_ops9to_device4callERKNS_6TensorEN3c106DeviceENS5_10ScalarTypeEbbNS5_8optionalINS5_12MemoryFormatEEE
-lmp_mpi_gpu: symbol lookup error: lmp_mpi_gpu: undefined symbol: _ZN2at4_ops9to_device4callERKNS_6TensorEN3c106DeviceENS5_10ScalarTypeEbbNS5_8optionalINS5_12MemoryFormatEEE
-lmp_mpi_gpu: symbol lookup error: lmp_mpi_gpu: undefined symbol: _ZN2at4_ops9to_device4callERKNS_6TensorEN3c106DeviceENS5_10ScalarTypeEbbNS5_8optionalINS5_12MemoryFormatEEE
-```
-
-#### 解决方法
-该错误一般是由于编译 Lammps 时使用的 PWMLFF 动态库与运行lammps时使用的PWMLFF动态库不一致造成的。如果您有多个版本的PWMLFF，请确定运行lammps时使用的PWMLFF环境变量与编译该lammp用到的是同一个。
 
 ### Lammps NEP 模型
 

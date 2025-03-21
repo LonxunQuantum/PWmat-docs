@@ -7,7 +7,7 @@ sidebar_position: 2
 大部分的安装失败问题，都来源于编译安装环境版本不匹配，或找不到相关环境变量。请先检查下列编译器是否已正确安装，并且版本适配。
 
 我们推荐使用 `intel2020`版本，`cuda/11.8`，`cmake版本 >= 3.21`，`gcc 版本 8.n`。
-PWMLFF中使用的`pytorch`版本为`2.0`以上，必须使用 `cuda/11.8`或更高版本。
+MatPL 中使用的`pytorch`版本为`2.0`以上，必须使用 `cuda/11.8`或更高版本。
 
 对于 `intel/2020`编译套件，使用了它的 `ifort` 和 `icc` 编译器(`19.1.3`)、`mpi(2019)`、`mkl库(2020)`，如果单独加载，请确保版本不低于它们。
 
@@ -22,6 +22,14 @@ PWMLFF中使用的`pytorch`版本为`2.0`以上，必须使用 `cuda/11.8`或更
 7. PyTorch version is 2.0 or above, current version is 2.2.
 ```
 
+### 找不到 `cuda_runtime.h` 头文件
+
+如果编译过程中找不到 `cuda_runtime.h` 头文件，请在 `src/MAKE/Makefile.mpi` 文件的 `第24行` 替换为您自己的 CUDA 路径，`/the/path/cuda/cuda-11.8`，`cuda_runtime.h` 位于该目录下的 `include` 目录下。
+
+```txt
+CUDA_HOME = $(CUDADIR)
+替换为CUDA_HOME = /the/path/cuda/cuda-11.8
+```
 
 ### NeighConst.so 编译错误
 #### 错误描述

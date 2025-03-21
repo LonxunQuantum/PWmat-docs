@@ -13,7 +13,7 @@ Under the background of carbon peaking, carbon neutrality, the rapid development
 
 # lonxun-docs
 
-龙讯旷腾旗下 PWmat、Q-Flow、Q-Studio、PWMLFF、PWkit 产品手册
+龙讯旷腾旗下 PWmat、Q-Flow、Q-Studio、MatPL(原 PWMLFF)、PWkit 产品手册
 
 ### git 代码托管平台
 
