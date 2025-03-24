@@ -70,7 +70,7 @@ In the current directory, create a new `*.json` file (e.g., `nn_ec.json`). This 
 ```
 
 - `train_movement_file`: Name of the `MOVEMENT` file(s). Multiple files can be specified. Adjust according to your setup.
-- `model_type`: Model type, referring to the model used for training. Other models and parameter configurations are detailed in [Parameter Details](/next/PWMLFF/Parameter%20details).
+- `model_type`: Model type, referring to the model used for training. Other models and parameter configurations are detailed in [Parameter Details](../../../Parameter%20details.md).
 - `atom_type`: Specifies the atomic types, where 8, 6, and 1 correspond to O, C, and H atomic numbers, respectively.
 
 ### 2.3 Running the Program
@@ -324,19 +324,19 @@ run             1000
 
 ```
 
-- `recover_train`: Whether to continue training from the last interruption/completion. If set to `true`, the program will resume training from the last interruption/completion point using the default `model_load_path` and `model_name`. See [Parameter Details](/next/PWMLFF/Parameter%20details) for more information.
+- `recover_train`: Whether to continue training from the last interruption/completion. If set to `true`, the program will resume training from the last interruption/completion point using the default `model_load_path` and `model_name`. See [Parameter Details](../../../Parameter%20details.md) for more information.
 - `work_dir`: Directory for storing intermediate files during training. This directory is automatically deleted after training completes. If `reserve_work_dir` is set to `true`, the directory will not be deleted after training.
 - `train_movement_file`: Name of the `MOVEMENT` file(s). Multiple files can be specified. Adjust according to your needs.
 - `forcefield_name`: Name of the generated force field file. This is optional.
 - `forcefield_dir`: Directory for storing the generated force field file. This is optional.
 - `test_movement_file`: `MOVEMENT` file used for validating the model after training is complete. ([Details on Validation/Testing](#3-Validation-Testing))
 - `test_dir_name`: Directory for storing the `MOVEMENT` file used for model validation after training.
-- `model_type`: Model type being used for training. For other model types and parameter configurations, refer to [Parameter Details](/next/PWMLFF/Parameter%20details).
+- `model_type`: Model type being used for training. For other model types and parameter configurations, refer to [Parameter Details](../../../Parameter%20details.md).
 - `atom_type`: Atomic types, where 8, 6, and 1 correspond to the atomic numbers of O, C, and H, respectively.
 - `max_neigh_num`: Maximum number of neighboring atoms.
-- `model`: Model parameters. For specific parameter configurations, refer to [Parameter Details](/next/PWMLFF/Parameter%20details).
+- `model`: Model parameters. For specific parameter configurations, refer to [Parameter Details](../../../Parameter%20details.md).
 - `Rmax`: Maximum cutoff radius for features.
 - `Rmin`: Minimum cutoff radius for features.
-- `feature_type`: Type of feature, where 7 corresponds to DP-Chebyshev features. See [Feature Types](/next/PWMLFF/Appendix-1) for details.
-- `optimizer`: Optimizer parameters, with `LKF` recommended. Generally, for large systems and networks, using the `LKF` optimizer can speed up training. For other optimizers and additional parameter configurations, refer to [Parameter Details](/next/PWMLFF/Parameter%20details).
+- `feature_type`: Type of feature, where 7 corresponds to DP-Chebyshev features. See [Feature Types](../../../Appendix-1.md) for details.
+- `optimizer`: Optimizer parameters, with `LKF` recommended. Generally, for large systems and networks, using the `LKF` optimizer can speed up training. For other optimizers and additional parameter configurations, refer to [Parameter Details](../../../Parameter%20details.md).
 - `epochs`: Number of training iterations. Adjust based on the total number of images in the `MOVEMENT` file. For fewer images, you may increase this number, e.g., to 30.

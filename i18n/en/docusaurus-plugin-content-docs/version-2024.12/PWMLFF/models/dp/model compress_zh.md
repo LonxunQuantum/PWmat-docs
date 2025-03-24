@@ -25,7 +25,7 @@ PWMLFF compress dp_model.ckpt -d 0.01 -o 3 -s cmp_dp_model
 - -o determines the order of model compression. Use 3 for third-order model compression and 5 for fifth-order model compression. The default value is 3.
 - -s sets the name of the compressed model. The default name is "cmp_dp_model".
 
-After compressing the model, you can use it in molecular dynamics simulations in LAMMPS using the same approach as the standard [DP model](/en/next/PWMLFF/models/dp/examples/Cu).
+After compressing the model, you can use it in molecular dynamics simulations in LAMMPS using the same approach as the standard [DP model](./examples/Cu.md).
 
 ## performance test{#cmp_time}
 

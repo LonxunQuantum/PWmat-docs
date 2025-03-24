@@ -71,7 +71,7 @@ In the current directory, create a `*.json` file (e.g., `linear_sic.json`) conta
 ```
 
 - `train_movement_file`: Specifies the name of the `MOVEMENT` files. Multiple files can be set simultaneously.
-- `model_type`: Specifies the model type for training. For training with other models and parameter configuration, refer to [Parameter Details](/next/PWMLFF/Parameter%20details).
+- `model_type`: Specifies the model type for training. For training with other models and parameter configuration, refer to [Parameter Details](../../../Parameter%20details.md).
 - `atom_type`: Specifies the atom types, where 14 and 6 are the atomic numbers for Si and C, respectively.
 
 ### 2.3 Execution
@@ -283,11 +283,11 @@ run             1000
 - `forcefield_dir`: Directory where the generated force field file will be stored. This is optional.
 - `test_movement_file`: `MOVEMENT` file used for model validation after training ([details in the validation and testing section](#3-validationtesting)).
 - `test_dir_name`: Directory where the `MOVEMENT` file for model validation is stored after training.
-- `model_type`: Type of model used for training. For other models and parameter configurations, refer to [Parameter Details](/en/next/PWMLFF/Parameter%20details).
+- `model_type`: Type of model used for training. For other models and parameter configurations, refer to [Parameter Details](../../../Parameter%20details.md).
 - `atom_type`: Specifies the atom types, where 14 and 6 are the atomic numbers for Si and C, respectively.
 - `max_neigh_num`: Maximum number of neighboring atoms.
 - `etot_weight`: Weight of the total energy during training.
 - `force_weight`: Weight of the atomic forces during training.
 - `ei_weight`: Weight of the atomic energy during training; if set to 0, atomic energy is not trained.
-- `model`: Model parameters; for specific parameter configurations, refer to [Parameter Details](/en/next/PWMLFF/Parameter%20details).
-- `feature_type`: Type of feature; 3 and 4 correspond to 2-body and 3-body Gaussian features, respectively. See [Feature Types](/en/next/PWMLFF/Appendix-1) for more details.
+- `model`: Model parameters; for specific parameter configurations, refer to [Parameter Details](../../../Parameter%20details.md).
+- `feature_type`: Type of feature; 3 and 4 correspond to 2-body and 3-body Gaussian features, respectively. See [Feature Types](../../../Appendix-1.md) for more details.

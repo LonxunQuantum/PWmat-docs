@@ -90,7 +90,7 @@ OUT.STRESS = F
 ```
 
 - `datasets_path`: 标签文件存放路径。可以设置同时多个路径，路径下包含训练集和验证集子目录。请根据实际情况进行修改。
-- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](/next/PWMLFF/Parameter%20details)
+- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](../../../Parameter%20details.md)
 - `atom_type`：原子类型，Cu 的原子序数为 29。
 
 ### 2.3 运行
@@ -223,7 +223,7 @@ run             1000 #1ps
 
 1. 使用 GPU 运行 lammps 时，执行程序为`lmp_mpi_gpu`; 使用 CPU 运行 lammps 时，执行程序为`lmp_mpi`。
 
-2. 如果有多个力场文件（如[主动学习](/next/PWMLFF/active%20learning/example_si_init_zh)时），(例如 4 个)可以修改为：
+2. 如果有多个力场文件（如 主动学习），(例如 4 个)可以修改为：
 
    ```bash
    pair_style      pwmlff 4 1.pt 2.pt 3.pt 4.pt
@@ -290,15 +290,15 @@ run             1000 #1ps
 }
 ```
 
-- `recover_train`: 是否从上次训练中断/完成处继续训练。如果为`true`，读取默认`model_load_path`和`model_name`，程序则会从上次训练中断/完成处继续训练。见[参数细节](/next/PWMLFF/Parameter%20details)。
+- `recover_train`: 是否从上次训练中断/完成处继续训练。如果为`true`，读取默认`model_load_path`和`model_name`，程序则会从上次训练中断/完成处继续训练。见[参数细节](../../../Parameter%20details.md)。
 - `raw_files`: 分子动力学轨迹文件存放路径及名称。可以设置同时多个文件。请根据实际情况进行修改。
 - `train_valid_ratio`: 训练集和验证集的比例。`0.8`表示训练集占`80%`，验证集占`20%`。
-- `model_load_file`: 模型文件路径。则读取该路径下的模型文件，程序则会从该模型文件处继续训练/测试。见[参数细节](/next/PWMLFF/Parameter%20details)。
-- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](/next/PWMLFF/Parameter%20details)。
+- `model_load_file`: 模型文件路径。则读取该路径下的模型文件，程序则会从该模型文件处继续训练/测试。见[参数细节](../../../Parameter%20details.md)。
+- `model_type`：模型类型，现在训练所使用的模型。其他模型类型的训练及参数配置参考[参数细节](../../../Parameter%20details.md)。
 - `atom_type`：原子类型，Cu 的原子序数为 29。
 - `max_neigh_num`：最大近邻原子数。
 - `seed`: 随机数种子。
-- `model`: 模型参数，具体参数配置参考[参数细节](/next/PWMLFF/Parameter%20details)。
-- `optimizer`：优化器参数，推荐使用`LKF`和`ADAM`。通常情况下，对于大体系大网络，使用`LKF`优化器可以加速训练。其他优化器及更多的参数配置参考[参数细节](/next/PWMLFF/Parameter%20details)。
+- `model`: 模型参数，具体参数配置参考[参数细节](../../../Parameter%20details.md)。
+- `optimizer`：优化器参数，推荐使用`LKF`和`ADAM`。通常情况下，对于大体系大网络，使用`LKF`优化器可以加速训练。其他优化器及更多的参数配置参考[参数细节](../../../Parameter%20details.md)。
 - `batch_size`：每批次用于训练的数据大小。如 1, 2, 5, 10。
 - `epochs`：训练迭代次数。根据总的动力学轨迹 images 数量修改,images 少时可适当增加,如 50。

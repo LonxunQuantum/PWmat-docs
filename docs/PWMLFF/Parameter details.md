@@ -32,7 +32,7 @@ sidebar_position: 3
    - 对于 LINEAR 和 NN 模型，仅支持`pwmat/movement`格式
 
 ### format
-该参数用于指定数据（`train_data`、`valid_data`、`test_data`）的格式，支持的数据格式有扩展的xyz格式 `extxyz` 、`pwmlff/npy`、`deepmd/npy`、`deepmd/raw`格式。此外也支持直接使用 PWmat, VASP, CP2K 轨迹文件， 对应 `format` 参数分别为 `pwmat/movement`, `vasp/outcar`, `cp2k/md`。默认格式为 `pwmat/movement`。细节请参考数据格式转换工具[`pwdata`](./Appendix-2.md)。
+该参数用于指定数据（`train_data`、`valid_data`、`test_data`）的格式，支持的数据格式有扩展的xyz格式 `extxyz` 、`pwmlff/npy`、`deepmd/npy`、`deepmd/raw`格式。此外也支持直接使用 PWmat, VASP, CP2K 轨迹文件， 对应 `format` 参数分别为 `pwmat/movement`, `vasp/outcar`, `cp2k/md`。默认格式为 `pwmat/movement`。细节请参考数据格式转换工具[`pwdata`](./pwdata/README.md)。
 :::info
 注意，输入数据的格式需要一致。
 :::
@@ -182,7 +182,7 @@ NN 模型的完整参数设置如下：
 特征的最小截断半径。默认值为 $0.5 \text{\AA}$。
 
 #### feature_type
-该参数用于特征类型。支持的选项有[1, 2]、[3, 4]、[5]、[6]、[7]和[8]。默认值为[3, 4]，即 2-b 和 3-b 高斯特征。有关不同特征类型的更详细信息，请参考[附录1](./Appendix-1.md)。
+该参数用于特征类型。支持的选项有[1, 2]、[3, 4]、[5]、[6]、[7]和[8]。默认值为[3, 4]，即 2-b 和 3-b 高斯特征。有关不同特征类型的更详细信息，请参考[附录1](./models/nn/README.md)。
 
 #### network_size
 该参数用于拟合网络（fitting_net）的结构。默认值为[15, 15, 1]，其结构如下所示：
@@ -210,7 +210,7 @@ Linear 模型的完整参数设置如下：
 特征的最小截断半径。默认值为 $0.5 \text{\AA}$。
 
 #### feature_type
-该参数用于特征类型，与`NN 模型`中的设置相同。支持的选项有[1, 2]、[3, 4]、[5]、[6]、[7]和[8]。默认值为[3, 4]，即 2-b 和 3-b 高斯特征。有关不同特征类型的更详细信息，请参考[附录1](./Appendix-1.md)。
+该参数用于特征类型，与`NN 模型`中的设置相同。支持的选项有[1, 2]、[3, 4]、[5]、[6]、[7]和[8]。默认值为[3, 4]，即 2-b 和 3-b 高斯特征。有关不同特征类型的更详细信息，请参考[附录1](./models/nn/README.md)。
 
 ## optimizer 优化器
 

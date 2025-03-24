@@ -1,76 +1,54 @@
 ---
 sidebar_position: 4
-title: PWMLFF
+title: MatPL
 ---
-# Machine Learning Force Field
 
-PWmat Machine Learning Force Field (PWMLFF) is an open-source software package under the GNU license. We provide a comprehensive set of software, tools, and data repositories for rapidly generating machine learning force fields that rival ab initio molecular dynamics (AIMD). This includes a model training platform, Lammps molecular dynamics interface, active learning platform, data format conversion tools, and data and model repositories. You can access their source code and user manuals through the following links.
+# MatPL
 
-## [1. PWMLFF Machine Learning Platform](./Installation.md)
+`Material Potential Library (MatPL，原名 PWMLFF，当前版本MatPL-2025.3 )，是一套在 GNU GPL3.0 许可下的开源软件包。` 
 
-👉[Open source repository](https://github.com/LonxunQuantum/PWMLFF)
+MatPL 提供了一套完备的软件、工具以及数据仓库，用于快速生成生成媲美从头算分子动力学（AIMD）的机器学习力场。包括模型训练平台 `MatPL`、`Lammps` 分子动力学接口、主动学习数据生成平台 `pwact`、数据格式转换工具 `pwdata`、数据和模型仓库。您可以通过下列链接访问它们的源码以及使用手册
 
+## [1. MatPL机器学习平台](./models/README.md)
 
-It includes `8` feature types with translational, rotational, and permutation invariance:
-```
-        1. 2-body(2b)
-        2. 3-body(3b)
-        3. 2-body Gaussian(2bgauss)
-        4. 3-body Cosine(3bcos)
-        5. Moment Tensor Potential(MTP)
-        6. Spectral Neighbor Analysis Potential(SNAP)
-        7. DP-Chebyshev(dp1)
-        8. DP-Gaussian(dp2)
-```
+👉[开源仓库地址](https://github.com/LonxunQuantum/MatPL)
 
-`4` training models:
-```
-        1. Linear
-        2. Neural Netowrk (NN)
-        3. DP se_e2_a(Pytorch)
-        4. Neuroevolution Potential(NEP)
-```
-`2` efficient training optimizers:
-```
-        1. Adaptive Moment Estimation (ADAM)
-        2. Reorganized Layer Extended Kalman Filtering (LKF)
-```
+MatPL 用于快速训练机器学习力场，这些力场的精度可以与从头算分子动力学（AIMD）相媲美
 
-## [2. Lammps Interface](./Installation.md#lammps-for-pwmlff-compilation-and-installation)
-
-👉[Open source repository](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/tree/libtorch)
-
-An efficient molecular dynamics simulation software that seamlessly integrates PWMLFF's DP and NEP models (including type embedding and model compress). It supports simulation on both `CPU` and `GPU (multi-GPUs)`. For `Linear` and `NN`, a `Fortran`-based CPU version of the Lammps interface is provided.
-
-## [3. Active Learning Platform](./active%20learning/README.md)
+## [2. lammps 接口](./install/README.md)
 
 
-👉[Open source repository](https://github.com/LonxunQuantum/PWact)
+👉[开源仓库地址](https://github.com/LonxunQuantum/lammps-MatPL)
 
-`PWact` is an open-source automated active learning platform based on PWMLFF. It integrates PWMLFF, Lammps interface, and commonly used first-principles software such as `PWMAT`, `VASP`, `CP2K`, and `DFTB (integrated with PWMAT)`. It automates tasks such as job distribution, monitoring, fault recovery, and result collection. By using PWact, users can prepare training datasets that cover a wide phase space at a low cost and quickly.
+<!-- 高效的分子动力学仿真软件，无缝集成了 MatPL 的 `DP` 模型（包括type embedding 以及 model compress）和 `NEP` 模型，模拟支持 `CPU(多核)` 以及 `GPU(多卡)` 。对于 `Linear` 和 `NN` 提供了基于 `fortran` 的 CPU 版本 Lammps 接口。 -->
+高效的分子动力学仿真软件，无缝集成了 MatPL 的 力场模型，并支持GPU加速
 
-## [4. Structure Transformation Tool pwdata](./Appendix-2.md)
+## [3. 主动学习工具 pwact](./pwact/README.md)
 
-👉[Open source repository](https://github.com/LonxunQuantum/pwdata)
 
-`pwdata` is the data preprocessing tool for PWMLFF, used for feature and label extraction. It also provides structure format conversion between `PWmat`, `VASP`, `CP2K`, and `Lammps`, as well as operations such as supercell, lattice scaling, and atomic position perturbation.
+👉[开源仓库地址](https://github.com/LonxunQuantum/PWact)
 
-## [5. AIMD Dataset and Model Repository](https://github.com/LonxunQuantum/PWMLFF_library)
+`PWact` 是开源的基于 MatPL 的一套自动化主动学习数据生成工具。它集成了 `MatPL`、`Lammps接口`以及常用的`PWMAT`、`VASP`、`CP2K`第一性原理软件，能够自动进行计算任务分发、监控、故障恢复、结果收集。通过使用PWact，用户能够低成本、快速地制备覆盖广泛相空间的训练数据集
 
-👉[Open source repository](https://github.com/LonxunQuantum/PWMLFF_library)
+## [4. 结构转换工具 pwdata](./pwdata/README.md)
 
-This data repository contains `AIMD datasets` for common systems, pre-trained `PWMLFF models`, and information about training accuracy. It allows users to quickly reuse existing datasets and models, compare them across different models, and `save data preparation and model training costs`.
+👉[开源仓库地址](https://github.com/LonxunQuantum/pwdata)
 
-## [6. PWMLFF Examples](./examples/README.md)
+`pwdata` 是 MatPL 的数据预处理工具，可用于提取特征和标签。同时提供`PWmat`、`VASP`、`CP2K`、`Lammps` 间的结构格式转换以及相应的扩胞、晶格缩放、原子位置微扰操作
 
-Some test work done using PWMLFF, as well as published papers using PWMLFF.
+<!-- ## [5. AIMD数据集以及模型仓库](https://github.com/LonxunQuantum/PWMLFF_library)
 
+👉[开源仓库地址](https://github.com/LonxunQuantum/PWMLFF_library)
+
+该数据仓库包含了常见体系的 `AIMD 数据集`、一些经过 `MatPL` 充分训练的力场模型，便于用户快速复用已有数据集和模型，以及在不同模型之间的横向比较和切换，节省数据制备和模型训练成本。 -->
+
+## [5. MatPL Examples](./examples/README.md)
+
+MatPL 的测试结果以及使用 MatPL 的相关案例
 
 ##
-
 <div>
 <div style={{ display: 'inline-block', marginRight: '10px' }}>
-    <img src={require("./pictures/pmat_support.png").default} alt="user_chat" width="250" />
-    <p style={{ textAlign: 'center' }}>PWMAT 客服微信(support@pwmat.com)</p>
+    <p style={{ textAlign: 'center' }}>PWMAT 客服(support@pwmat.com)</p>
 </div>
 </div>

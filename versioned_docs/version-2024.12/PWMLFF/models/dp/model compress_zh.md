@@ -22,7 +22,7 @@ PWMLFF compress dp_model.ckpt -d 0.01 -o 3 -s cmp_dp_model
 * -o 为模型压缩阶数，3为三阶模型压缩，5为五阶模型压缩，默认值为3
 * -s 为压缩后的模型名称，默认名称为“cmp_dp_model”
 
-模型压缩之后，在 lammps 中做分子动力学模拟使用方式与标准的[DP 模型](/next/PWMLFF/models/dp/examples/Cu)相同。
+模型压缩之后，在 lammps 中做分子动力学模拟使用方式与标准的[DP 模型](./examples/Cu.md)相同。
 
 ## 性能测试{#cmp_time}
 

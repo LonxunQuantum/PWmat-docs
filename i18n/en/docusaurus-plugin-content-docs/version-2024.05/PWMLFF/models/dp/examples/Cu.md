@@ -91,7 +91,7 @@ Example input file ([Other parameters for input files](#4-输入文件其他参�
 ```
 
 - `datasets_path`: Path to the label files. Multiple paths can be specified, each containing training and validation subdirectories. Adjust as needed.
-- `model_type`: Type of model used for training. For other model types and parameter configurations, refer to [Parameter Details](/en/next/PWMLFF/Parameter%20details).
+- `model_type`: Type of model used for training. For other model types and parameter configurations, refer to [Parameter Details](../../../Parameter%20details.md).
 - `atom_type`: Atomic type, where the atomic number of Cu is 29.
 
 ### 2.3 Running
@@ -226,7 +226,7 @@ run             1000 #1ps
 
 1. When running LAMMPS with GPU, use the executable `lmp_mpi_gpu`; when running with CPU, use `lmp_mpi`.
 
-2. If there are multiple force field files (e.g., during [active learning](/en/next/PWMLFF/active%20learning/example_si_init_zh)), such as 4 files, you can modify it to:
+2. If there are multiple force field files (e.g., during active learning, such as 4 files, you can modify it to:
 
    ```bash
    pair_style      pwmlff 4 1.pt 2.pt 3.pt 4.pt
@@ -293,15 +293,15 @@ run             1000 #1ps
 }
 ```
 
-- `recover_train`: Whether to continue training from where it was last interrupted or completed. If set to `true`, the program will read from the default `model_load_path` and `model_name` to resume training from the last checkpoint. See [Parameter Details](/en/next/PWMLFF/Parameter%20details).
+- `recover_train`: Whether to continue training from where it was last interrupted or completed. If set to `true`, the program will read from the default `model_load_path` and `model_name` to resume training from the last checkpoint. See [Parameter Details](../../../Parameter%20details.md).
 - `raw_files`: Path and names of the molecular dynamics trajectory files. Multiple files can be specified. Modify according to the actual situation.
 - `train_valid_ratio`: Ratio of training set to validation set. `0.8` means 80% of the data is used for training and 20% for validation.
-- `model_load_file`: Path to the model file. If specified, the program will read from this path and continue training/testing from the specified model file. See [Parameter Details](/en/next/PWMLFF/Parameter%20details).
-- `model_type`: Type of model currently used for training. For training and parameter configurations of other model types, refer to [Parameter Details](/en/next/PWMLFF/Parameter%20details).
+- `model_load_file`: Path to the model file. If specified, the program will read from this path and continue training/testing from the specified model file. See [Parameter Details](../../../Parameter%20details.md).
+- `model_type`: Type of model currently used for training. For training and parameter configurations of other model types, refer to [Parameter Details](../../../Parameter%20details.md).
 - `atom_type`: Atomic type, where the atomic number for Cu is 29.
 - `max_neigh_num`: Maximum number of neighboring atoms.
 - `seed`: Random number seed.
-- `model`: Model parameters. For specific parameter configurations, refer to [Parameter Details](/en/next/PWMLFF/Parameter%20details).
-- `optimizer`: Optimizer parameters, recommended are `LKF` and `ADAM`. Generally, for large systems and networks, using the `LKF` optimizer can speed up training. For other optimizers and more parameter configurations, refer to [Parameter Details](/en/next/PWMLFF/Parameter%20details).
+- `model`: Model parameters. For specific parameter configurations, refer to [Parameter Details](../../../Parameter%20details.md).
+- `optimizer`: Optimizer parameters, recommended are `LKF` and `ADAM`. Generally, for large systems and networks, using the `LKF` optimizer can speed up training. For other optimizers and more parameter configurations, refer to [Parameter Details](../../../Parameter%20details.md).
 - `batch_size`: Size of data used per batch for training. For example, 1, 2, 5, 10.
 - `n_epoch`: Number of training iterations. Adjust according to the total number of dynamics trajectory images. For fewer images, the number of epochs can be increased, e.g., to 50.

@@ -147,17 +147,17 @@ Subsequently, the simulated structures (trajectories) are filtered based on the 
 
 #### md subdirectory{#md_subdirectory}
 
-The md subdirectory includes two subdirectories, the directory name is `md.***.sys.***/md.***.sys.***.t.***`, for example `md.000.sys.000/md.000.sys.000.t.000`, for `md.000.sys.000` directory, here `md.000` 000 refers to the first md setting in `param.json`[`md_jobs`](/en/next/PWMLFF/active%20learning/run_param_zh#md_jobs); sys.000 is the structure corresponding to the index 0 of [`sys_index`](/en/next/PWMLFF/active%20learning/run_param_zh#sys_idx). It includes `md.000.sys.000.t.000` and `md.000.sys.000.t.001` two subdirectories, representing the molecular dynamics simulation at the temperature corresponding to the index `0` and `1` of [`temps`](/en/next/PWMLFF/active%20learning/run_param_zh#temps).
+The md subdirectory includes two subdirectories, the directory name is `md.***.sys.***/md.***.sys.***.t.***`, for example `md.000.sys.000/md.000.sys.000.t.000`, for `md.000.sys.000` directory, here `md.000` 000 refers to the first md setting in `param.json`[`md_jobs`](./run_param_zh.md#md_jobs); sys.000 is the structure corresponding to the index 0 of [`sys_index`](./run_param_zh.md#sys_idx). It includes `md.000.sys.000.t.000` and `md.000.sys.000.t.001` two subdirectories, representing the molecular dynamics simulation at the temperature corresponding to the index `0` and `1` of [`temps`](./run_param_zh.md#temps).
 
 #### select subdirectory
 
 The `.csv` files contain three columns: `force deviation (devi_force)`, `structure index in the trajectory (config_index)`, and `trajectory file path (file_path)`.
 
-`accurate.csv` summarizes the structures with force deviations less than the set [`lower_model_deiv_f`](/en/next/PWMLFF/active%20learning/run_param_zh#lower_model_deiv_f).
+`accurate.csv` summarizes the structures with force deviations less than the set [`lower_model_deiv_f`](./run_param_zh.md#lower_model_deiv_f).
 
-`fail.csv` contains the structures with force deviations greater than the set [`upper_model_deiv_f`](/en/next/PWMLFF/active%20learning/run_param_zh#upper_model_deiv_f).
+`fail.csv` contains the structures with force deviations greater than the set [`upper_model_deiv_f`](./run_param_zh.md#upper_model_deiv_f).
 
-If the number of candidate structures (structures with force deviations between the set upper and lower bounds) exceeds the set maximum number of selected points [`max_select`](/en/next/PWMLFF/active%20learning/run_param_zh#max_select), then `max_select` structures are randomly selected from the candidate structures and saved in the `candidate.csv` file, and the rest are saved in the `candidate_delete.csv` file.
+If the number of candidate structures (structures with force deviations between the set upper and lower bounds) exceeds the set maximum number of selected points [`max_select`](./run_param_zh.md#max_select), then `max_select` structures are randomly selected from the candidate structures and saved in the `candidate.csv` file, and the rest are saved in the `candidate_delete.csv` file.
 
 `select_summary.txt` summarizes the data on the number of selected points, as shown in the following example.
 

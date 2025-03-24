@@ -147,7 +147,7 @@ iter.0001  Total structures 404    accurate 334 rate 82.67%    selected 70 rate 
 #### md 子目录
 
 md 子目录包括两个子目录，目录名称为 `md.***.sys.***/md.***.sys.***.t.***`，例如 `md.000.sys.000/md.000.sys.000.t.000`，
-对于`md.000.sys.000`目录，这里`md.000`的 000 指`param.json`中的[`md_jobs`](/next/PWMLFF/active%20learning/run_param_zh#md_jobs) 对第 0 个 md 设置；sys.000 为[`sys_index`](/next/PWMLFF/active%20learning/run_param_zh#sys_idx) 的下标 0 对应的结构。包括`md.000.sys.000.t.000`、m`d.000.sys.000.t.001`两个子目录，分别表示在温度 [`temps`](/next/PWMLFF/active%20learning/run_param_zh#temps) 对应下标为`0`和`1`温度下的分子动力学模拟。
+对于`md.000.sys.000`目录，这里`md.000`的 000 指`param.json`中的[`md_jobs`](./run_param_zh.md#md_jobs) 对第 0 个 md 设置；sys.000 为[`sys_index`](./run_param_zh.md#sys_idx) 的下标 0 对应的结构。包括`md.000.sys.000.t.000`、m`d.000.sys.000.t.001`两个子目录，分别表示在温度 [`temps`](./run_param_zh.md#temps) 对应下标为`0`和`1`温度下的分子动力学模拟。
 
 在每个`md.*.sys.*`目录下都有一个`model_devi_distribution.png` 文件，是对该目录下所有轨迹的偏差值分布统计绘图。
 
@@ -184,11 +184,11 @@ $\varepsilon_{t}  = min_i(\sqrt{ \left \| F_{w,i}(R_t) -\hat{F_{i}} \right \| ^2
 
 以下`.csv`文件内容包含 3 列，分别是`力偏差（devi_force）`、 `结构在轨迹中对应的编号（config_index）`、`轨迹的文件路径（file_path）`。
 
-`accurate.csv`是力偏差小于设置的[`力偏差下限`](/next/PWMLFF/active%20learning/run_param_zh#lower_model_deiv_f)的结构汇总。
+`accurate.csv`是力偏差小于设置的[`力偏差下限`](./run_param_zh.md#lower_model_deiv_f)的结构汇总。
 
-`fail.csv`是力偏差大于设置的[`力偏差上限`](/next/PWMLFF/active%20learning/run_param_zh#upper_model_deiv_f)的结构。
+`fail.csv`是力偏差大于设置的[`力偏差上限`](./run_param_zh.md#upper_model_deiv_f)的结构。
 
-如果候选的结构（力偏差介于设置的力偏差上下限之间的结构）超过设置的最大选点数量 [`max_select`](/next/PWMLFF/active%20learning/run_param_zh#max_select)，则将候选的结构随机选取 `max_select`个，存入`candidate.csv`文件，其余的存入`candidate_delete.csv`文件。
+如果候选的结构（力偏差介于设置的力偏差上下限之间的结构）超过设置的最大选点数量 [`max_select`](./run_param_zh.md#max_select)，则将候选的结构随机选取 `max_select`个，存入`candidate.csv`文件，其余的存入`candidate_delete.csv`文件。
 
 `model_devi_distribution-md.*.sys.*.png` 为超链接文件，是探索结构的偏差值分布绘图。
 
@@ -218,7 +218,7 @@ scf 下的一级和二级子目录 `md.*.sys.*/md.*.sys.*.t.*` 与[md 子目录]
 
 `result`的一级子目录对应 [scf 目录](#scf)的所有二级子目录。
 
-以 `result/md.000.sys.000.t.000`为例，它是对应`scf/md.000.sys.000/md.000.sys.000.t.000`所有自洽计算结果提取为 pwdata 格式后的数据目录，包括`train`和`valid`两个子目录，与 [init_bulk 例子](/next/PWMLFF/active%20learning/example_si_init_zh#目录1)中`pwdata`目录内容相同。
+以 `result/md.000.sys.000.t.000`为例，它是对应`scf/md.000.sys.000/md.000.sys.000.t.000`所有自洽计算结果提取为 pwdata 格式后的数据目录，包括`train`和`valid`两个子目录，与 [init_bulk 例子](#目录1)中`pwdata`目录内容相同。
 
 ## 目录2
 

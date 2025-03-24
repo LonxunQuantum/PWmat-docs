@@ -6,7 +6,7 @@ sidebar_position: 2
 
 Since the Embedding Net of the DP model is $N^2$ times the number of element types $N$, it poses limitations on both the training and inference speed when there are a large number of element types in the system. Additionally, this also restricts the potential of the DP model in terms of scalability to larger models. Considering that the $N^2$ Embedding nets implicitly encode information about the element types, we can achieve similar effects by adjusting $S_{ij}$ and concatenating the physical property information of the element types with $S_{ij}$. This way, we only need a single Embedding Net instead of $N^2$.
 
-For $S_{ij}$, where $i$ represents the central atom, we concatenate the [physical properties](/en/next/PWMLFF/Parameter%20details#type_physical_property) of the element type corresponding to $j$ with $S_{ij}$ to form a vector of length 1 plus the number of physical properties. This vector is then fed into the Embedding Net. In our testing on the [quinary alloy(Ru, Rh, Ir, Pd, Ni) dataset](https://github.com/LonxunQuantum/PWMLFF_library/tree/main/alloy/Ru_Rh_Ir_Pd_Ni) and the [LiGePS quaternary dataset](https://github.com/LonxunQuantum/PWMLFF_library/tree/main/LiGePS), the DP model based on this type embedding method achieved or exceeded the standard DP model's prediction accuracy while reducing training time by 27%. For detailed results, please refer to the [performance test](#type_performance).
+For $S_{ij}$, where $i$ represents the central atom, we concatenate the [physical properties](../../Parameter%20details.md#type_physical_property) of the element type corresponding to $j$ with $S_{ij}$ to form a vector of length 1 plus the number of physical properties. This vector is then fed into the Embedding Net. In our testing on the [quinary alloy(Ru, Rh, Ir, Pd, Ni) dataset](https://github.com/LonxunQuantum/PWMLFF_library/tree/main/alloy/Ru_Rh_Ir_Pd_Ni) and the [LiGePS quaternary dataset](https://github.com/LonxunQuantum/PWMLFF_library/tree/main/LiGePS), the DP model based on this type embedding method achieved or exceeded the standard DP model's prediction accuracy while reducing training time by 27%. For detailed results, please refer to the [performance test](#type_performance).
 
 ## usage method
 
@@ -18,7 +18,7 @@ To initiate model training with the default physical properties, the user can in
 }
 ```
 
-You can also specify the desired [physical properties](/en/next/PWMLFF/Parameter%20details#type_physical_property) in the **model parameter** of the JSON file.
+You can also specify the desired [physical properties](../../Parameter%20details.md#type_physical_property) in the **model parameter** of the JSON file.
 
 The force field calling method in Lammps is the same as the standard DP model calling method mentioned earlier.
 
