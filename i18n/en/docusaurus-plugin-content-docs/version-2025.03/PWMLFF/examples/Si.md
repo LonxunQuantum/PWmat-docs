@@ -2,7 +2,7 @@
 sidebar_position: 5
 ---
 
-# 5. Liquid-to-crystal-Si-growth
+# Liquid-to-crystal-Si-growth
 
 [[文献 Si-growth]](https://pubs.aip.org/aip/jcp/article/153/7/074501/1064762/Liquid-to-crystal-Si-growth-simulation-using) 
 

@@ -2,7 +2,7 @@
 sidebar_position: 6
 ---
 
-# 6. MLFF for Fe-H system
+# MLFF for Fe-H system
 
 [[文献 Machine learning force field for Fe-H system and investigation on role of hydrogen on the crack propagation in α-Fe ]](https://www.osti.gov/pages/biblio/1882447-machine-learning-force-field-fe-system-investigation-role-hydrogen-crack-propagation-fe)
 

@@ -1,4 +1,4 @@
-# 非晶硅机器学习力场计算非晶硅热导率
+# Non crystalline silicon MLFF
 
 Yufeng Huang et al. Phys. Rev. B 99, 064103 (2019)
 

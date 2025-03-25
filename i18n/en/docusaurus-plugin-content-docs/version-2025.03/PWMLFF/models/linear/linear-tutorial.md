@@ -96,4 +96,5 @@ Linear 模型的 lammps 接口请参考 [lammps-fortran](https://github.com/Lonx
 pair_style      matpl
 pair_coeff      * * 1 1 forcefield.ff 14 6
 ```
+
 其中第一个`1`表示使用 Linear 模型产生的力场，第二个`1`表示读取 1 个力场文件，`forcefield.ff`为 MatPL 生成的力场文件名称，`14` 和 `6` 分别为 Si 和 C 的原子序数

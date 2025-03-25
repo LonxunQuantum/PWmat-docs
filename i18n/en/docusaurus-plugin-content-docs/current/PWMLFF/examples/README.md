@@ -3,7 +3,8 @@ sidebar_position: 7
 title: 案例
 ---
 
-在本章节，我们整理了使用 MatPL 做的一些测试工作，以及使用 MatPL 的已发表论文，为用户提供参考。
+在本章节，我们整理了使用MatPL做的一些测试工作，以及使用MatPL的已发表论文，为用户提供参考。
+
 ### [一、Comparison of Features ](./features.md)
 
 本例中比较了 `MatPL 中的特征类型` 在描述物理系统能力方面的差异。这些特征类型包括`余弦特征`、`高斯特征`、`矩张量势(MTP)特征`、`光谱邻域分析势特征`、具有`切比雪夫多项式特征`和`高斯多项式特征`的简化光滑深势以及原子簇展开特征。文章使用`线性回归模型` 在`无定形硫体系`和`碳体系`下，评估了针对密度泛函理论结果的`原子群能量`、`总能量`和`力`的训练均方根误差(RMSE)。特征的详细介绍请参考[Feature Wiki](../models/nn/README.md)。
@@ -16,7 +17,7 @@ PWMFF中实现了 [[重组层扩展卡尔曼滤波（LKF）优化器]](https://a
 <!-- 实验结果表明，LKF 相对于 ADAM `收敛更快且精度稍高`。此外，作者还从理论上证明了权值的更新是收敛的，从而克服了梯度爆炸问题。总体而言，LKF对权值初始化不敏感，对神经网络力场的训练具有较好的效果。 -->
 
 <!-- ### [三、Active Learning](./Active%20Learning.md)
-[PWact](../pwact/README.md) (Active learning based on MatPL) 是我们开发的一款开源的基于 MatPL 的一套自动化主动学习平台, 用于高效的数据采样。在PWact中实现了常用的基于多模型委员会查询（Committee Query）的主动学习策略，以及我们基于卡尔曼滤波算法提出的不确定性度量算法（Kalman Prediction Uncertainty， KPU）。基于 KPU 的主动学习还在内测阶段，暂未开放给用户访问。在本例中，我们做了两种主动学习采样的对比。 -->
+[PWact](../pwact/README.md) (Active learning based on MatPL) 是我们开发的一款开源的基于 MatPL 的一套自动化主动学习平台，用于高效的数据采样。在PWact中实现了常用的基于多模型委员会查询（Committee Query）的主动学习策略，以及我们基于卡尔曼滤波算法提出的不确定性度量算法（Kalman Prediction Uncertainty， KPU）。基于 KPU 的主动学习还在内测阶段，暂未开放给用户访问。在本例中，我们做了两种主动学习采样的对比。 -->
 
 
 <!-- ### [四、通用模型（大模型）](./GNN.md)
@@ -72,3 +73,5 @@ PWMFF中实现了 [[重组层扩展卡尔曼滤波（LKF）优化器]](https://a
 ### [五、Mg-Cu合金力场（案例）](./Mg_Cu.md)
 
 ### [六、非晶硅机器学习力场计算非晶硅热导率（案例）](./Si_temp.md)
+
+

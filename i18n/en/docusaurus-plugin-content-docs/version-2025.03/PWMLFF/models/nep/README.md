@@ -45,9 +45,9 @@ NEP 网络结构，不同类型的元素具有独立但结构相同的子神经�
 </div> -->
 
 <!-- 
-### PWMLFF中NEP模型与深度势能模型的精度对比
+### MatPL 中NEP模型与深度势能模型的精度对比
 
-深度势能（deep potential, DP）模型是目前广泛使用的一种神经网络模型，PWMLFF中实现了Pytorch版本的DP模型，该DP模型也可以使用LKF优化器。我们在多个体系下，使用LKF优化器对NEP模型和DP（PWMLFF）模型训练做了对比，结果如下图4中所示。在Al、HfO2、LiGePS（包含1万个结构）、[Ru、Rh、Ir、Pd、Ni]五元合金体系（包含9486个结构）下，PWMLFF中的NEP模型比DP模型收敛都更快，精度也更高。特别的，对于五元合金，我们采用type embedding DP以减少元素种类对训练速度的影响（在之前的测试中，我们发现，对五种以上的元素的情况，在PWMLFF的DP训练中引入type embedding可以获得比普通DP更高的精度）。
+深度势能（deep potential, DP）模型是目前广泛使用的一种神经网络模型，MatPL 中实现了Pytorch版本的DP模型，该DP模型也可以使用LKF优化器。我们在多个体系下，使用LKF优化器对NEP模型和DP（MatPL ）模型训练做了对比，结果如下图4中所示。在Al、HfO2、LiGePS（包含1万个结构）、[Ru、Rh、Ir、Pd、Ni]五元合金体系（包含9486个结构）下，MatPL 中的NEP模型比DP模型收敛都更快，精度也更高。特别的，对于五元合金，我们采用type embedding DP以减少元素种类对训练速度的影响（在之前的测试中，我们发现，对五种以上的元素的情况，在MatPL 的DP训练中引入type embedding可以获得比普通DP更高的精度）。
 
 <div>
   <div style={{ display: 'inline-block', marginRight: '10px' }}>

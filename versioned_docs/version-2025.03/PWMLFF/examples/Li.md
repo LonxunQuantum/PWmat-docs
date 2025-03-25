@@ -2,7 +2,7 @@
 sidebar_position: 7
 ---
 
-# 7. Morphology Evolution of Lithium Dendrites
+# Morphology Evolution of Lithium Dendrites
 
 案例细节可以参考 [[龙讯公众号文章]](https://mp.weixin.qq.com/s/kapzIrPvL2AcGTUzdHgglg) 以及 [[文献 Revealing Morphology Evolution of Lithium Dendrites by Large-Scale Simulation Based on Machine Learning Force Field ]](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb)
 

@@ -19,7 +19,7 @@ sidebar_position: 2
 ### 1. 下载源码
 我们提供了在线拉取代码和下载离线包两种方式编译。
 
-- 通过 github 或 gitee 在线拉取PWMLFF仓库代码
+- 通过 github 或 gitee 在线拉取 MatPL 仓库代码
 ```bash
   git clone https://github.com/LonxunQuantum/MatPL.git MatPL-2025.3
   或

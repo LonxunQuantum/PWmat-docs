@@ -109,8 +109,7 @@ sh MatPL_cpu-2025.3.sh
 MatPL-2025.3 (或MatPL_cpu-2025.3)
     ├── lammps-2025.3/
     ├── lammps-fortran/
-    ├── lammps-stable/
-    ├── matpl-2025.3/  (或matpl_cpu-2025.3)
+    ├── matpl-2025.3/  (或 matpl_cpu-2025.3)
     ├── MatPL-2025.3/  (或 MatPL_cpu-2025.3)
     ├── matpl-env.sh
     └── matpl-fortran-env.sh
@@ -119,14 +118,14 @@ MatPL-2025.3 (或MatPL_cpu-2025.3)
 
 - MatPL-2025.3 为机器学习力场训练平台
 - matpl-2025.3 为python环境
-- lammps-2025.3 为 lammps力场接口，支持 DP 和 NEP 力场
-- lammps-fortran 为 lammps力场接口支持 NN 和 Linear 力场
+- lammps-2025.3 为支持 DP 和 NEP 力场的lammps力场接口
+- lammps-fortran 为支持 NN 和 Linear 力场的lammps力场接口 
 - matpl-env.sh 为 MatPL-2025.3 和 lammps-2025.3 的所有环境变量
 - matpl-fortran-env.sh 为 MatPL-2025.3 和 lammps-fortran 的所有环境变量
 
 ## 5. 加载使用
 
-MatPL 在使用时需要先加载编译时使用的 intel/2020 和 CUDA （对于GPU版本）。之后，之后执行如下命令 即可完成 python 环境、 MatPL-2025.3 和 lammps 的加载。
+MatPL 在使用时需要先加载编译时使用的 intel/2020 和 CUDA （对于GPU版本）。之后执行如下命令 即可完成 python 环境、 MatPL-2025.3 和 lammps 的加载。
 ```bash
 source /the/path/of/MatPL-2025.3/matpl-env.sh
 # cpu 版本 source /the/path/of/MatPL_cpu-2025.3/matpl-env.sh
@@ -143,3 +142,4 @@ source /the/path/MatPL-2025.3/MatPL-2025.3/env.sh
 # step3. 加载 lammps
 source /the/path/MatPL-2025.3/lammps-2025.3/env.sh
 ```
+

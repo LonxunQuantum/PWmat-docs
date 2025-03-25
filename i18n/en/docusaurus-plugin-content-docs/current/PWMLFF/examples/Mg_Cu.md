@@ -2,7 +2,7 @@
 sidebar_position: 8
 ---
 
-# Mg-Cu合金力场训练与强度模拟
+# Mg-Cu Alloy Force Field
 Xingze Gen, Lin-Wang Wang, and Xiangying Meng. Comput. Mat. Sci. 246 (2025) 113486
 
 ## 拟合精度
