@@ -1,4 +1,4 @@
-# Non crystalline silicon MLFF
+# amorphous silicon
 
 Yufeng Huang et al. Phys. Rev. B 99, 064103 (2019)
 
@@ -10,5 +10,5 @@ Yufeng Huang et al. Phys. Rev. B 99, 064103 (2019)
 
 ### Green-Kubo 公式
 ![proportion_time](./pictures/si_temp2.png)
-### 热流
+### 热导率
 ![proportion_time](./pictures/si_temp1.png)

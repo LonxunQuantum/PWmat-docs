@@ -2,7 +2,7 @@
 sidebar_position: 5
 ---
 
-# Liquid-to-crystal-Si-growth
+# 5. Liquid-to-crystal-Si-growth
 
 [[文献 Si-growth]](https://pubs.aip.org/aip/jcp/article/153/7/074501/1064762/Liquid-to-crystal-Si-growth-simulation-using) 
 
@@ -24,7 +24,7 @@ NN 和 DFT 的总能量对比，其中(a)没有偏差，(b)有偏差。x轴对�
 
 ![proportion_time](./pictures/exp_5_3.png)
 
-用DFT和SANPP模型（[feature 6](../models/nn/README.md#spectral-neighbor-analysis-potential-feature-6)）计算Z长度随时间的增长。
+用DFT和 NN 模型（[feature 1、2](../models/nn/README.md#spectral-neighbor-analysis-potential-feature-6)）计算Z长度随时间的增长。
 
 
 ###
