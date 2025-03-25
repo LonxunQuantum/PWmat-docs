@@ -163,7 +163,7 @@ sidebar_position: 0
 ```
 -np 后面为使用的 CPU 数量，需要与[`cpu_per_node`](#cpu_per_node) 设置保持一致，如果 [`gpu_per_node`](#gpu_per_node)设置，那么 np中设置的 cpu 任务将平均分配到 gpu_per_node 所设置的 GPU 上。
 
-对于 [MatPL 文档](http://doc.lonxun.com/PWMLFF/) 模型训练设置：
+对于 [MatPL 文档](http://doc.lonxun.com/MatPL) 模型训练设置：
 ```
     "command":"MatPL"
 ```
