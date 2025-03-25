@@ -142,3 +142,4 @@ source /the/path/MatPL-2025.3/MatPL-2025.3/env.sh
 # step3. 加载 lammps
 source /the/path/MatPL-2025.3/lammps-2025.3/env.sh
 ```
+
