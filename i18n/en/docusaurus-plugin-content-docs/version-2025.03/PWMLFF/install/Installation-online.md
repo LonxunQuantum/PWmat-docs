@@ -32,7 +32,7 @@ sidebar_position: 2
   或
   wget https://gitee.com/pfsuo/MatPL/repository/archive/2025.3
 ```
-下载releas离线源码包后，通过 unzip 命令解压。
+下载 release 离线源码包后，通过 unzip 命令解压。
 ``` bash
   # 解压后您将得到一个名称为 MatPL-2025.3 的源码目录
   unzip 2025.3.zip
@@ -107,7 +107,7 @@ nvcc command exists.
 
 第1行输出了 ifort 编译器要求的版本不低于19.1，检测到当前的版本是19.1，满足要求；
 
-第2行查找 MKF 库是否存在，检测到已安装，满足要求；
+第2行查找 MKL 库是否存在，检测到已安装，满足要求；
 
 第3行输出了 GCC 要求的版本 8.n， 检测到当前的GCC版本是8，满足要求;
 
@@ -131,7 +131,7 @@ GCC version is exactly 8, current version is 8.
 ```
 第1行输出了 ifort 编译器要求的版本不低于19.1，检测到当前的版本是19.1，满足要求；
 
-第2行查找 MKF 库是否存在，检测到已安装，满足要求；
+第2行查找 MKL 库是否存在，检测到已安装，满足要求；
 
 第3行输出了 GCC 要求的版本 8.n， 检测到当前的GCC版本是8，满足要求。
 

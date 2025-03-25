@@ -216,8 +216,6 @@ Linear 模型的完整参数设置如下：
 
 可用于训练 NN、DP、NEP 模型的优化器，有`KF（Kalman Filter）优化器`和`ADAM 优化器`。
 
-### KF optimizer
-
 ### ADAM optimizer
 
 ADAM 优化器的完整参数设置如下:
@@ -336,6 +334,7 @@ $$
 #### end_pre_fac_ei
 训练结束时 atomic energy 损失的 prefactor，应大于或等于 0。默认值为 `2.0`。 -->
 
+### KF optimizer
 
 KF 优化器的完整参数设置如下：
 

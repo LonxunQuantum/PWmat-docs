@@ -21,7 +21,7 @@ HfO2/
 ```
 - pwdata 目录为训练数据目录
 - nep_train.json 是训练 NEP 力场输入参数文件
-- nep_train.json 是测试 NEP 力场输入参数文件
+- nep_test.json 是测试 NEP 力场输入参数文件
 - train.job 是slurm 提交训练任务例子
 - nep_lmps 目录下 为 NEP 力场的 lammps md例子
   - 力场文件 nep_to_lmps.txt
@@ -150,7 +150,7 @@ MatPL totxt nep_model.ckpt
 pair_style   matpl   nep_to_lmps.txt 
 pair_coeff   * *     8 72
 ```
-- pair_style 设置力场文件路径，这里 `matpl` 未固定格式，代表使用MatPL中力场，`nep_to_lmps.txt`为力场文件路径
+- pair_style 设置力场文件路径，这里 `matpl` 为固定格式，代表使用MatPL中力场，`nep_to_lmps.txt`为力场文件路径
 
   这里也支持多模型的偏差值输出，该功能一般用于主动学习采用中。您可以指定多个模型，在模拟中将使用第1个模型做MD，其他模型参与偏差值计算，例如例子中所示，此时pair_style设置为如下:
   ```txt
@@ -159,7 +159,7 @@ pair_coeff   * *     8 72
   ```
 - pair_coeff 指定待模拟结构中的原子类型对应的原子序号。例如，如果您的结构中 `1` 为 `O` 元素，`2` 为 `Hf` 元素，设置 `pair_coeff * * 8 72`即可。
 
-这里也可以将 `nep_to_lmps.txt` 文件替换为您的 GPUMD 训练得到的 NEP4 力场文件。
+这里也可以将 `nep_to_lmps.txt` 文件替换为您的 GPUMD 的 NEP4、NEP5 力场文件。
 
 ### step3 启动lammps模拟
 ``` bash

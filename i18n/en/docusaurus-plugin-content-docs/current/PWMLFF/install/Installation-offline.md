@@ -23,7 +23,7 @@ sidebar_position: 1
 ### GPU 版本
 ```bash
 # 合并4个文件到1个压缩文件
-cat MatPL-2025.3.sh.tar.gz.part_aa MatPL-2025.3.sh.tar.gz.part_ab MatPL-2025.3.sh.tar.gz.part_ac MatPL-2025.3.sh.tar.gz.part_ad > MatPL-2025.3.sh.tar.gz
+cat matpl-2025.3.sh.tar.gz.part_aa  matpl-2025.3.sh.tar.gz.part_ab  matpl-2025.3.sh.tar.gz.part_ac  matpl-2025.3.sh.tar.gz.part_ad  matpl-2025.3.sh.tar.gz.part_ae > MatPL-2025.3.sh.tar.gz
 # 解压文件
 tar -xzvf MatPL.2025.3.sh.tar.gz
 ```
@@ -33,7 +33,7 @@ tar -xzvf MatPL.2025.3.sh.tar.gz
 ### CPU 版本
 ```bash
 # 合并文件到1个压缩文件
-cat matpl_cpu-2025.3.sh.tar.gz.part_aa matpl_cpu-2025.3.sh.tar.gz.part_ab matpl_cpu-2025.3.sh.tar.gz.part_ac matpl_cpu-2025.3.sh.tar.gz.part_ad matpl_cpu-2025.3.sh.tar.gz.part_ae  >> matpl_cpu-2025.3.sh.tar.gz
+cat matpl_cpu-2025.3.sh.tar.gz.part_aa matpl_cpu-2025.3.sh.tar.gz.part_ab matpl_cpu-2025.3.sh.tar.gz.part_ac matpl_cpu-2025.3.sh.tar.gz.part_ad matpl_cpu-2025.3.sh.tar.gz.part_ae  >> MatPL_cpu-2025.3.sh.tar.gz
 
 # 解压文件
 tar -xzvf MatPL_cpu-2025.3.sh.tar.gz
@@ -45,7 +45,7 @@ tar -xzvf MatPL_cpu-2025.3.sh.tar.gz
 ## 3. 检查编译器版本
 ### GPU 版本
 我们推荐使用 `intel2020`版本，`cuda/11.8`，`gcc 版本 8.n`。
-这是因为，PWMLFF中使用的`pytorch`版本为`2.0`以上，必须使用 `cuda/11.8`或更高版本。对于 `intel/2020`编译套件，使用了它的 `ifort` 和 `icc` 编译器(`19.1.3`)、`mpi(2019)`、`mkl库(2020)`，如果单独加载，请确保版本不低于它们。
+这是因为，MatPL 中使用的`pytorch`版本为`2.0`以上，必须使用 `cuda/11.8`或更高版本。对于 `intel/2020`编译套件，使用了它的 `ifort` 和 `icc` 编译器(`19.1.3`)、`mpi(2019)`、`mkl库(2020)`，如果单独加载，请确保版本不低于它们。
 
 大部分的安装失败问题都源于编译器的版本不匹配，我们提供了检查编译器版本的脚本`check_offenv.sh` 供用户检查环境，执行如下命令
 
@@ -65,7 +65,7 @@ nvcc command exists.
 
 第1行输出了 ifort 编译器要求的版本不低于19.1，检测到当前的版本是19.1，满足要求；
 
-第2行查找 MKF 库是否存在，检测到已安装，满足要求；
+第2行查找 MKL 库是否存在，检测到已安装，满足要求；
 
 第3行输出了 GCC 要求的版本 8.n， 检测到当前的GCC版本是8，满足要求;
 
@@ -86,7 +86,7 @@ GCC version is exactly 8, current version is 8.
 ```
 第1行输出了 ifort 编译器要求的版本不低于19.1，检测到当前的版本是19.1，满足要求；
 
-第2行查找 MKF 库是否存在，检测到已安装，满足要求；
+第2行查找 MKL 库是否存在，检测到已安装，满足要求；
 
 第3行输出了 GCC 要求的版本 8.n， 检测到当前的GCC版本是8，满足要求。
 

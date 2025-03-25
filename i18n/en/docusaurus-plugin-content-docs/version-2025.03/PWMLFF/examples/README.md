@@ -3,11 +3,10 @@ sidebar_position: 7
 title: 案例
 ---
 
-在本章节，我们整理了使用PWMLFF做的一些测试工作，以及使用PWMLFF的已发表论文，为用户提供参考。
-
+在本章节，我们整理了使用 MatPL 做的一些测试工作，以及使用 MatPL 的已发表论文，为用户提供参考。
 ### [一、Comparison of Features ](./features.md)
 
-本例中比较了 `PWMLFF 中的特征类型` 在描述物理系统能力方面的差异。这些特征类型包括`余弦特征`、`高斯特征`、`矩张量势(MTP)特征`、`光谱邻域分析势特征`、具有`切比雪夫多项式特征`和`高斯多项式特征`的简化光滑深势以及原子簇展开特征。文章使用`线性回归模型` 在`无定形硫体系`和`碳体系`下，评估了针对密度泛函理论结果的`原子群能量`、`总能量`和`力`的训练均方根误差(RMSE)。特征的详细介绍请参考[Feature Wiki](../models/nn/README.md)。
+本例中比较了 `MatPL 中的特征类型` 在描述物理系统能力方面的差异。这些特征类型包括`余弦特征`、`高斯特征`、`矩张量势(MTP)特征`、`光谱邻域分析势特征`、具有`切比雪夫多项式特征`和`高斯多项式特征`的简化光滑深势以及原子簇展开特征。文章使用`线性回归模型` 在`无定形硫体系`和`碳体系`下，评估了针对密度泛函理论结果的`原子群能量`、`总能量`和`力`的训练均方根误差(RMSE)。特征的详细介绍请参考[Feature Wiki](../models/nn/README.md)。
 
 更多的测试细节也可以参考 [龙讯公众号文章](https://mp.weixin.qq.com/s/JjkivADrvUdOE_C9qCuA9g) 以及 [[文献 Accuracy evaluation of different machine learning force field features ]](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb)
 

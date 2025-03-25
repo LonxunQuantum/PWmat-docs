@@ -9,7 +9,7 @@ MatPL 提供了 [离线安装](./Installation-offline.md) 和 [在线安装](./I
 
 ``` bash
 # 加载 MatPL
-source /share/app/PWMLFF/MatPL2025.3/env.sh
+source /share/app/MATPL/MatPL2025.3/env.sh
 
 # 或者采用以下方式分步加载
 # step1. 加载 python 运行环境

@@ -119,7 +119,7 @@ iter.0001  Total structures 404    accurate 334 rate 82.67%    selected 70 rate 
 
 对于`train`目录，这里采用`4`模型的委员会查询策略，训练`4`个模型，这`4`个模型只有网络参数的`初始化值不同`，其他完全相同。`0-train.job`、`1-train.job`、`2-train.job`、`3-train.job` 为执行训练任务的`4`个 slurm 任务脚本。训练任务执行完毕后，将生成`4`个标识任务执行成功的 tag 文件（`0-tag.train.success`、`1-tag.train.success`、`2-tag.train.success`、`3-tag.train.success`），以及`4`个模型，目录为`train.000`、`train.001`、`train.002`、`train.003`。
 
-以`train.000`目录为例，`train.json`为`PWMLFF`模型训练的输入文件。`std_input.json`为`PWMLFF`输出的训练参数设置汇总。`model_record`为模型的保存目录，`dp_model.ckpt`为模型文件，`epoch_train.dat`为在`每个epoch`下的平均训练误差，为每个 epoch 训练结束后在验证集上的平均误差，保存在`epoch_valid.dat`。
+以`train.000`目录为例，`train.json`为`MatPL`模型训练的输入文件。`std_input.json`为`MatPL`输出的训练参数设置汇总。`model_record`为模型的保存目录，`dp_model.ckpt`为模型文件，`epoch_train.dat`为在`每个epoch`下的平均训练误差，为每个 epoch 训练结束后在验证集上的平均误差，保存在`epoch_valid.dat`。
 
 `torch_script_module.pt`为训练结束后，使用 jitscript 工具编译 dp_model.ckpt 后的模型文件，做为力场，用于接下来在 lammps 中的模拟。
 

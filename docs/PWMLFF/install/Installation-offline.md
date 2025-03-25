@@ -23,7 +23,7 @@ sidebar_position: 1
 ### GPU 版本
 ```bash
 # 合并4个文件到1个压缩文件
-cat MatPL-2025.3.sh.tar.gz.part_aa MatPL-2025.3.sh.tar.gz.part_ab MatPL-2025.3.sh.tar.gz.part_ac MatPL-2025.3.sh.tar.gz.part_ad > MatPL-2025.3.sh.tar.gz
+cat matpl-2025.3.sh.tar.gz.part_aa  matpl-2025.3.sh.tar.gz.part_ab  matpl-2025.3.sh.tar.gz.part_ac  matpl-2025.3.sh.tar.gz.part_ad  matpl-2025.3.sh.tar.gz.part_ae > MatPL-2025.3.sh.tar.gz
 # 解压文件
 tar -xzvf MatPL.2025.3.sh.tar.gz
 ```
@@ -33,7 +33,7 @@ tar -xzvf MatPL.2025.3.sh.tar.gz
 ### CPU 版本
 ```bash
 # 合并文件到1个压缩文件
-cat matpl_cpu-2025.3.sh.tar.gz.part_aa matpl_cpu-2025.3.sh.tar.gz.part_ab matpl_cpu-2025.3.sh.tar.gz.part_ac matpl_cpu-2025.3.sh.tar.gz.part_ad matpl_cpu-2025.3.sh.tar.gz.part_ae  >> matpl_cpu-2025.3.sh.tar.gz
+cat matpl_cpu-2025.3.sh.tar.gz.part_aa matpl_cpu-2025.3.sh.tar.gz.part_ab matpl_cpu-2025.3.sh.tar.gz.part_ac matpl_cpu-2025.3.sh.tar.gz.part_ad matpl_cpu-2025.3.sh.tar.gz.part_ae  >> MatPL_cpu-2025.3.sh.tar.gz
 
 # 解压文件
 tar -xzvf MatPL_cpu-2025.3.sh.tar.gz
@@ -45,7 +45,7 @@ tar -xzvf MatPL_cpu-2025.3.sh.tar.gz
 ## 3. 检查编译器版本
 ### GPU 版本
 我们推荐使用 `intel2020`版本，`cuda/11.8`，`gcc 版本 8.n`。
-这是因为，PWMLFF中使用的`pytorch`版本为`2.0`以上，必须使用 `cuda/11.8`或更高版本。对于 `intel/2020`编译套件，使用了它的 `ifort` 和 `icc` 编译器(`19.1.3`)、`mpi(2019)`、`mkl库(2020)`，如果单独加载，请确保版本不低于它们。
+这是因为，MatPL 中使用的`pytorch`版本为`2.0`以上，必须使用 `cuda/11.8`或更高版本。对于 `intel/2020`编译套件，使用了它的 `ifort` 和 `icc` 编译器(`19.1.3`)、`mpi(2019)`、`mkl库(2020)`，如果单独加载，请确保版本不低于它们。
 
 大部分的安装失败问题都源于编译器的版本不匹配，我们提供了检查编译器版本的脚本`check_offenv.sh` 供用户检查环境，执行如下命令
 
@@ -65,7 +65,7 @@ nvcc command exists.
 
 第1行输出了 ifort 编译器要求的版本不低于19.1，检测到当前的版本是19.1，满足要求；
 
-第2行查找 MKF 库是否存在，检测到已安装，满足要求；
+第2行查找 MKL 库是否存在，检测到已安装，满足要求；
 
 第3行输出了 GCC 要求的版本 8.n， 检测到当前的GCC版本是8，满足要求;
 
@@ -86,7 +86,7 @@ GCC version is exactly 8, current version is 8.
 ```
 第1行输出了 ifort 编译器要求的版本不低于19.1，检测到当前的版本是19.1，满足要求；
 
-第2行查找 MKF 库是否存在，检测到已安装，满足要求；
+第2行查找 MKL 库是否存在，检测到已安装，满足要求；
 
 第3行输出了 GCC 要求的版本 8.n， 检测到当前的GCC版本是8，满足要求。
 
@@ -109,8 +109,7 @@ sh MatPL_cpu-2025.3.sh
 MatPL-2025.3 (或MatPL_cpu-2025.3)
     ├── lammps-2025.3/
     ├── lammps-fortran/
-    ├── lammps-stable/
-    ├── matpl-2025.3/  (或matpl_cpu-2025.3)
+    ├── matpl-2025.3/  (或 matpl_cpu-2025.3)
     ├── MatPL-2025.3/  (或 MatPL_cpu-2025.3)
     ├── matpl-env.sh
     └── matpl-fortran-env.sh
@@ -119,14 +118,14 @@ MatPL-2025.3 (或MatPL_cpu-2025.3)
 
 - MatPL-2025.3 为机器学习力场训练平台
 - matpl-2025.3 为python环境
-- lammps-2025.3 为 lammps力场接口，支持 DP 和 NEP 力场
-- lammps-fortran 为 lammps力场接口支持 NN 和 Linear 力场
+- lammps-2025.3 为支持 DP 和 NEP 力场的lammps力场接口
+- lammps-fortran 为支持 NN 和 Linear 力场的lammps力场接口 
 - matpl-env.sh 为 MatPL-2025.3 和 lammps-2025.3 的所有环境变量
 - matpl-fortran-env.sh 为 MatPL-2025.3 和 lammps-fortran 的所有环境变量
 
 ## 5. 加载使用
 
-MatPL 在使用时需要先加载编译时使用的 intel/2020 和 CUDA （对于GPU版本）。之后，之后执行如下命令 即可完成 python 环境、 MatPL-2025.3 和 lammps 的加载。
+MatPL 在使用时需要先加载编译时使用的 intel/2020 和 CUDA （对于GPU版本）。之后执行如下命令 即可完成 python 环境、 MatPL-2025.3 和 lammps 的加载。
 ```bash
 source /the/path/of/MatPL-2025.3/matpl-env.sh
 # cpu 版本 source /the/path/of/MatPL_cpu-2025.3/matpl-env.sh

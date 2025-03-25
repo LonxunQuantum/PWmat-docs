@@ -3,7 +3,7 @@ sidebar_position: 1
 ---
 # NN 操作演示
 
-这里，我们以 MatPL [[源码根目录/example/Cu/nn_demo]](https://github.com/LonxunQuantum/MatPL/blob/master/example/Cu/nn_demo/) 为例，演示 DP 模型的训练、测试、lammps模拟以及其他功能。案例目录结构如下所示。
+这里，我们以 MatPL [[源码根目录/example/Cu/nn_demo]](https://github.com/LonxunQuantum/MatPL/blob/master/example/Cu/nn_demo/) 为例，演示 NN 模型的训练、测试、lammps 模拟以及其他功能。案例目录结构如下所示。
 
 ``` txt
 Cu/nn_demo
@@ -17,7 +17,7 @@ Cu/nn_demo
         └── runcpu.job
 ```
 - nn_train.json 是训练 NN 力场输入参数文件
-- nn_train.json 是测试 NN 力场输入参数文件
+- nn_test.json 是测试 NN 力场输入参数文件
 - train.job 是slurm 提交训练任务例子
 - nn_lmps 目录下 为 NN 力场的 lammps md例子
   - 力场文件 forcefield.ff
@@ -85,4 +85,4 @@ pair_style      matpl
 pair_coeff      * * 3 1 forcefield.ff 29
 ```
 
-其中`3`表示使用 NN 模型产生的力场，`1`表示读取 1 个力场文件，`forcefield.ff`为 PWMLFF 生成的力场文件名称，`29` 为 铜 原子序数
+其中`3`表示使用 NN 模型产生的力场，`1`表示读取 1 个力场文件，`forcefield.ff`为 MatPL 生成的力场文件名称，`29` 为 铜 原子序数

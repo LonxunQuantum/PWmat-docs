@@ -18,7 +18,7 @@ SiC
       └── MOVEMENT
 ```
 - linear_train.json 是训练 linear 力场输入参数文件
-- linear_train.json 是测试 linear 力场输入参数文件
+- linear_test.json 是测试 linear 力场输入参数文件
 - train.job 是slurm 提交训练任务例子
 - linear_lmps 目录下 为 linear 力场的 lammps md例子
   - 力场文件 forcefield.ff
@@ -37,7 +37,7 @@ MatPL train linear_train.json
 ```
 
 #### 输入文件解释
-nn_train.json 中的内容如下所示，关于 NN 的参数解释，请参考 [NN 参数手册](../../Parameter%20details.md#nn-model)：
+linear_train.json 中的内容如下所示，关于 Linear 的参数解释，请参考 [参数手册](../../Parameter%20details.md#nn-model)：
 ```json
 {   
     "train_data":["./1_300_MOVEMENT", "./2_300_MOVEMENT"],
@@ -97,4 +97,4 @@ pair_style      matpl
 pair_coeff      * * 1 1 forcefield.ff 14 6
 ```
 
-其中`1`表示使用 Linear 模型产生的力场，`1`表示读取 1 个力场文件，`forcefield.ff`为 PWMLFF 生成的力场文件名称，`14` 和 `6` 分别为 Si 和 C 的原子序数
+其中第一个`1`表示使用 Linear 模型产生的力场，第二个`1`表示读取 1 个力场文件，`forcefield.ff`为 MatPL 生成的力场文件名称，`14` 和 `6` 分别为 Si 和 C 的原子序数

@@ -179,7 +179,7 @@ pair_coeff       * * 8 72
 
 为了更灵活的使用，我们允许您的力场中的原子类型顺序与lammps的输入结构类型顺序不同。为此，您需要在 `pair_coeff` 这里指定模拟结构中的原子类型对应的原子序号。例如，如果您的结构中 `1` 为 `O` 元素，`2` 为 `Hf` 元素，您设置 `pair_coeff * * 8 72`即可。
 
-您也可以将 `nep_to_lmps.txt` 文件替换为您的 GPUMD 训练得到的 NEP4 力场文件。
+您也可以将 `nep_to_lmps.txt` 文件替换为您的 GPUMD 的 NEP4、NEP5 力场文件。
 
 ### step3 启动lammps模拟
 
