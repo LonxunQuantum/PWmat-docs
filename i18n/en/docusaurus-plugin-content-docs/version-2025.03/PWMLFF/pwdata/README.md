@@ -112,7 +112,8 @@ pwdata cvt_config -i examples/pwmat_data/LiGePS_atom.config -s examples/test_wor
 
 参数如下所示
 ```bash
-pwdata convert_configs [-h] -i INPUT [INPUT ...] -f INPUT_FORMAT [-t ATOM_TYPES [ATOM_TYPES ...]] [-s SAVEPATH] [-o OUTPUT_FORMAT] [-c] [-p TRAIN_VALID_RATIO] [-r] [-g GAP] [-q QUERY] [-n CPU_NUMS] [-m]
+pwdata [-h] -i INPUT [INPUT ...] [-f INPUT_FORMAT] [-s SAVEPATH] [-o OUTPUT_FORMAT] [-r]
+              [-m MERGE] [-g GAP] [-q QUERY] [-n CPU_NUMS] [-t ATOM_TYPES [ATOM_TYPES ...]]
 ```
 
 #### `-h` 
@@ -146,12 +147,6 @@ pwdata convert_configs [-h] -i INPUT [INPUT ...] -f INPUT_FORMAT [-t ATOM_TYPES 
 
 <!-- #### `-c`
 是否使用分数坐标，如果指定了 `-c` 参数，在保存结构时将使用`笛卡尔坐标`，否则使用`分数坐标`。注意，对于`pwmlff/npy`格式数据固定使用分数坐标；对于`extxyz`格式固定使用笛卡尔坐标 -->
-
-#### `-p`
-可选参数，提取后的数据划分为训练集和测试集的比例，取值范围[0.0,1.0] 默认为1.0，即不划分测试集
-
-####  `-r`
-可选参数，bool类型，划分测试集时，是否采用随机划分，与`-p`参数配合使用。例如'-p 0.8 -r '随机划分80%为训练集，20%为测试集，'-p 0.8' 取前80%作为训练集，后20%作为测试集
 
 #### `-m`
 可选参数，int类型，该参数仅用于输出文件格式为extxyz，设置 `'-m 1'` 所有结构会保存到一个xyz文件中，默认保存到一个xyz文件中。设置 `'-m 0'` 将按照元素类型保存到不同的xyz文件中，
