@@ -405,8 +405,8 @@ fix  1 all nve
 ### pseudo 
 设置 `PWMAT` 或 `VASP` 赝势文件所在路径，为list格式，赝势文件路径可以为绝对路径或相对路径（相对于当前路径）。
 
-### in_skf
-设置 `DFTB`(PWMAT封装) 的赝势文件上一级目录所在路径，为string 格式，绝对路径或相对路径（相对于当前路径）。
+<!-- ### in_skf
+设置 `DFTB`(PWMAT封装) 的赝势文件上一级目录所在路径，为string 格式，绝对路径或相对路径（相对于当前路径）。 -->
 
 ### basis_set_file
 参考 [potential_file](#potential_file)。
@@ -440,14 +440,14 @@ fix  1 all nve
     }
 ```
 
-如果您使用了集成在PWMAT中的DFTB，则设置为：
+<!-- 如果您使用了集成在PWMAT中的DFTB，则设置为：
 ```json
 "DFT": {
       "dft_style": "pwmat",
       "input": "scf_etot.input",
       "in_skf": "./lisi_dftb_pseudo"
     }
-```
+``` -->
 
 对于 VASP，设置如下：
 ```json

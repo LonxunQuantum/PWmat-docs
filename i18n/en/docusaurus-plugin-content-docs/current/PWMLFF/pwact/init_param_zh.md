@@ -57,6 +57,15 @@ sidebar_position: 1
 ### aimd_input_idx
 设置 AIMD 使用的控制文件，与 [aimd_input](#aimd_input) 配合使用，指定控制文件的位置，如 [例子](#例子) 中所示，使用 `aimd_input` 中设置的 `aimd_etot.input` 文件作为 PWMAT 控制文件。默认值为0，即 使用 `aimd_input` 中的第一个文件作为控制文件。
 
+### bigmodel
+是否使用大模型运行 MD，默认值为 False
+
+### bigmodel_input_idx
+设置 bigmodel 使用的脚本，与 [bigmodel_input](#bigmodel_input) 配合使用，指定脚本文件的位置。
+
+### direct
+设置 是否使用 direct 方法筛选结构，默认值 False， 与 [direct_input](#direct_input) 配合使用，direct 为 True 时，必须在 direct_input 中指定 direct的 脚本文件所在位置。
+
 ## sys_config 设置例子
 ```json
     "sys_config_prefix": "../../si_example/init_bulk",
@@ -141,6 +150,15 @@ CP2K 或 PWMAT 高斯基组参数设置，
 ### flag_symm
 该参数为PWMAT的输入参数，用于设置K点，可选参数。对于 Relax 或者 SCF 计算，默认值为 `0`, 对于 AIMD计算，默认值为 `3`。
 
+## bigmodel_input
+设置 大模型的脚本文件。如果存在多个脚本文件，则按照 list 格式组织。
+
+对大模型的接口设置，请参考[例子 si_direct_bigmodel](./example_si_direct_bigmodel.md#接入-大模型-md)。
+
+## direct_input
+设置 direct 采样的脚本文件，为单文件路径。
+
+对 direct 的接口设置，请参考[例子 si_direct_bigmodel](./example_si_direct_bigmodel.md#接入-direct-采样)。
 
 ## 完整例子
 ```json

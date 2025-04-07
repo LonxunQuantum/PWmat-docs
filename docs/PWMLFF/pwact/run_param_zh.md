@@ -40,11 +40,11 @@ sidebar_position: 2
 ## use_pre_model
 在当前步的探索中，使用上一步训练得到的力场，默认值为 true。
 
-### train
+## train
 
 模型训练参数，用于指定模型网络结构、优化器。详细的参数设置参考 [`MatPL 训练参数`](../Parameter%20details.md) 。您可以像如下例子中所示，设置训练的全部参数，也可以使用单独的 json 文件，只需要在参数 `train_input_file` 中指定训练的 json 文件所在路径即可。
 
-#### train_input_file
+### train_input_file
 
 可选参数，如果您有单独的 MatPL 输入文件，您可以使用该参数指定文件所在路径。否则您需要设置如下例中所示参数。参数的详细解释您在可以在 [MatPL 参数列表](../Parameter%20details.md)中查看。
 
@@ -99,11 +99,11 @@ sidebar_position: 2
 
 PWact 同时支持 MatPL 的 DP 和 NEP 力场。
 
-### strategy
+## strategy
 
 用于设置主动学习的不确定性度量方法，以及是否采用模型压缩做加速。
 
-#### uncertainty
+### uncertainty
 
 用于设置不确定性度量策略，当前支持多模型委员会查询方法 (`committee`) 。
 
@@ -132,15 +132,15 @@ PWact 同时支持 MatPL 的 DP 和 NEP 力场。
 #### kpu_upper
 
 该参数需要配合 [`"uncertainty":"kpu"`](#uncertainty) 使用，用于设置 KPU 的上界，如果 KPU 值大于该上界，则该构型本身不符合物理意义，不需要标注，默认值为 `10`。 -->
-#### lmps_tolerance
+### lmps_tolerance
 
 当lammps 部分轨迹由于各种原因（如力场不准确导致丢失了原子、原子距离太近等）造成 MD 过程为正常执行结束时，是否终止主动学习过程。默认值为 true，即不终止。
 
-#### lower_model_deiv_f
+### lower_model_deiv_f
 
 该参数用于设置偏差的下界，如果偏差值小于该下界，则认为模型对构型的预测准确，不需要标注，默认值为 `0.05`。
 
-#### upper_model_deiv_f
+### upper_model_deiv_f
 
 该参数用于设置偏差的上界，如果偏差值大于该上界，则该构型本身不符合物理意义，不需要标注，默认值为 `0.15`。
 
@@ -150,49 +150,42 @@ $\varepsilon_{t}  = max_i(\sqrt{\frac{\sum_{1}^{w} \left \| F_{w,i}(R_t) -\hat{F
 
 这里 $W$ 为模型数量，$i$为原子下标。
 
-#### model_num
+### model_num
 
 该参数用于设置使用 `committee` 方法作为不确定性度量时使用的模型数量，默认值为`4`，该值的设置应该 `>=3`。
 
-#### max_select
+### max_select
 
 该参数用于设置一轮次主动学习中，对于未设置 [`select_sys`](#select_sys) 参数的`每个初始探索结构`对应最大选取构型用于标注的数量。当待标注结构数目超过该值时，将随机从待标注结构中选择 `max_select` 个结构做标注。默认不设置，即不做限制。
 
 例如对于如下 md 探索设置，由于未设置 [`select_sys`](#select_sys)，如果设置了 `max_select`，则对于 [`sys_idx`](#sys_idx) 中指定的这两个结构，分别最多采集 `max_select`个结构，因此这里对于该 md 探索设置，最多采集 $2 \times max\_select $ 个结构用于标记。
 
-```json
-{  
-  "ensemble": "nvt",
-  "nsteps": 1000,
-  "md_dt": 0.002,
-  "trj_freq": 10,
-  "sys_idx": [0, 1],
-  "temps": [500, 800],
-  "taut":0.1,
-  "press": [ 1.0],
-  "taup": 0.5,
-  "boundary":true
-}
-```
+### direct
+该参数用于设置是否开启direct采样，用于对多模型偏差选出的结构进一步过滤，去除相似的结构。默认值为 False。
+
+### direct_script
+该参数用于设置 direct 方法使用的处理脚本，direct 为 True时，必须指定处理脚本。
+
+对 direct 方法的接口设置，请参考[例子 si_direct_bigmodel](./example_si_direct_bigmodel.md#接入-direct-采样)。
 
 <!--
 #### md_type
 该参数用于设置 lammps 调用力场（机器学习模型）做分子动力学模拟时使用的立场代码。我们这里提供了 fortran 和 libtorch c++ 两种方式，默认值为 `"md_type":1`，即 libtorch 方式，该方式支持 CPU 和 GPU 两种计算资源下的模拟，比 `"md_type":2` （fortran，只支持 CPU计算）方式模拟速度更快。 -->
 
-#### compress
+### compress
 
 该参数用于设置是否对模型做压缩，经过压缩后的模型精度会略有下降，但是模拟速度会有翻倍提升。默认值为 `false`, 即不使用模型压缩。
 
-#### compress_order
+### compress_order
 
 该参数用于设置模型压缩的方式，默认值为 `"compress_order":3` , 即使用三阶多项式压缩。也可以设置为 `"compress_order":5` ， 即使用五阶多项式压缩，相比于三阶多项式精度会更高，但是速度比三阶稍慢。
 
-#### Compress_dx
+### Compress_dx
 
 该参数用于设置模型压缩是的网格大小，默认值为 `"Compress_dx":0.01`。
 
 
-#### 例子
+### 例子
 
 对于committee方式的选点策略
 ```json
@@ -207,7 +200,7 @@ $\varepsilon_{t}  = max_i(\sqrt{\frac{\sum_{1}^{w} \left \| F_{w,i}(R_t) -\hat{F
 
 ```
 
-对于KPU 方式选点策略
+<!-- 对于KPU 方式选点策略
 ```json
     "strategy": {
         "uncertainty":"KPU",
@@ -215,7 +208,7 @@ $\varepsilon_{t}  = max_i(\sqrt{\frac{\sum_{1}^{w} \left \| F_{w,i}(R_t) -\hat{F
         "kpu_lower":0.5,
         "kpu_upper":1.5
     }
-```
+``` -->
 如果您需要开启模型压缩，则
 ```json
     "strategy": {
@@ -399,7 +392,12 @@ fix  1 all nve
 
 ### dft_style
 
-设置标注（自洽计算）使用哪种 DFT 计算软件，默认值为 `pwmat`, 也支持 VASP 格式，如果是 VASP 格式，则设置为 `vasp`。
+设置标注（自洽计算）使用哪种 DFT 计算软件，默认值为 `pwmat`, 也支持 VASP 格式，如果是 VASP 格式，则设置为 `vasp`。如果设置为 `bigmodel`，则必须在 [`bigmodel_script`](#bigmodel_script) 中设置处理脚本。
+
+### bigmodel_script
+用于设置 大模型做标记（推理能量和受力）时的处理脚本。
+
+对大模型标记的接口设置，请参考[例子 si_direct_bigmodel](./example_si_direct_bigmodel.md#接入-大模型-标记)。
 
 ### input
 
@@ -418,8 +416,8 @@ fix  1 all nve
 ### pseudo 
 设置 `PWMAT` 或 `VASP` 赝势文件所在路径，为list格式，赝势文件路径可以为绝对路径或相对路径（相对于当前路径）。
 
-### in_skf
-设置 `DFTB`(PWMAT封装) 的赝势文件上一级目录所在路径，为string 格式，绝对路径或相对路径（相对于当前路径）。
+<!-- ### in_skf
+设置 `DFTB`(PWMAT封装) 的赝势文件上一级目录所在路径，为string 格式，绝对路径或相对路径（相对于当前路径）。 -->
 
 ### basis_set_file
 参考 [potential_file](#potential_file)。
@@ -452,7 +450,7 @@ fix  1 all nve
       "pseudo":["~/NCPP-SG15-PBE/Si.SG15.PBE.UPF"]
     }
 ```
-
+<!-- 
 如果您使用了集成在PWMAT中的DFTB，则设置为：
 ```json
 "DFT": {
@@ -460,7 +458,7 @@ fix  1 all nve
       "input": "scf_etot.input",
       "in_skf": "./lisi_dftb_pseudo"
     }
-```
+``` -->
 
 对于 VASP，设置如下：
 ```json
@@ -541,15 +539,7 @@ fix  1 all nve
     "lower_model_deiv_f": 0.05,
     "upper_model_deiv_f": 0.15,
     "model_num": 4,
-
-    "kpu_lower": 5,
-    "kpu_upper": 10,
-
-    "max_select": 10,
-    "md_type": 2,
-    "compress": false,
-    "compress_order": 3,
-    "Compress_dx": 0.01
+    "max_select": 10
   },
 
   "explore": {

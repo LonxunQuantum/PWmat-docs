@@ -48,7 +48,7 @@ PWmat Machine Learning Force Field (PWMLFF) 是一套在 GNU 许可下的开源�
 
 👉[开源仓库地址](https://github.com/LonxunQuantum/PWact)
 
-`PWact` 是开源的基于 PWMLFF 的一套自动化主动学习数据生成平台。它集成了 `PWMLFF`、`Lammps接口`以及常用的`PWMAT`、`VASP`、`CP2K`、`DFTB(PWMAT 集成)`第一性原理软件，能够自动进行计算任务分发、监控、故障恢复、结果收集。通过使用PWact，用户能够低成本、快速地制备覆盖广泛相空间的训练数据集。
+`PWact` 是开源的基于 PWMLFF 的一套自动化主动学习数据生成平台。它集成了 `PWMLFF`、`Lammps接口`以及常用的`PWMAT`、`VASP`、`CP2K`第一性原理软件，能够自动进行计算任务分发、监控、故障恢复、结果收集。通过使用PWact，用户能够低成本、快速地制备覆盖广泛相空间的训练数据集。
 
 ## [4. 结构转换工具pwdata](./Appendix-2.md)
 

@@ -60,8 +60,6 @@ For DFT calculations:
 ```json
 PWmat settings:
 "command": "mpirun -np 4 PWmat"
-DFTB (PWmat) settings:
-"command": "PWmat"
 VASP settings:
 "command": "vasp_std"
 cp2k settings:

@@ -5,7 +5,7 @@ sidebar_position: 1
 # Initializes the input
 
 # init_param.json
-Initial Training Set Preparation, including relaxation, supercell, scaling, perturbation, and AIMD (DFTB, PWMAT, VASP) settings for configurations in VASP and PWmat formats.
+Initial Training Set Preparation, including relaxation, supercell, scaling, perturbation, and AIMD (PWMAT, VASP、CP2K) settings for configurations in VASP and PWmat formats.
 
 ## Parameter List
 
@@ -71,8 +71,8 @@ Sets which DFT calculation software to use for [`Relax`](#relax) and [`AIMD`](#a
 ### pseudo 
 Sets the path to the pseudopotential files of `PWmat` or `VASP`, in list format. The path to the pseudopotential file can be an absolute path or a relative path (relative to the current path).
 
-### in_skf
-The `in_skf` parameter is used to set the path to the parent directory of the pseudopotential files for `DFTB` (Integrated by `PWMAT`). It should be specified as a string in either absolute or relative format (relative to the current directory).
+<!-- ### in_skf
+The `in_skf` parameter is used to set the path to the parent directory of the pseudopotential files for `DFTB` (Integrated by `PWMAT`). It should be specified as a string in either absolute or relative format (relative to the current directory). -->
 
 ### basis_set_file
 Refer to [potential_file](#potential_file).

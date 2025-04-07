@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # init_bulk param.json
 
-初始训练集制备，包括对构型（VASP、PWmat等格式）进行`驰豫`、`阔胞`、`缩放`、`微扰`和`AIMD`（支持 DFTB、PWMAT、VASP）设置。
+初始训练集制备，包括对构型（VASP、PWmat等格式）进行`驰豫`、`阔胞`、`缩放`、`微扰`和`AIMD`（支持 PWMAT、VASP、CP2K）设置。
 
 ## 参数列表
 
@@ -72,8 +72,8 @@ sidebar_position: 1
 ### pseudo 
 设置 `PWMAT` 或 `VASP` 赝势文件所在路径，为list格式，赝势文件路径可以为绝对路径或相对路径（相对于当前路径）。
 
-### in_skf
-设置 `DFTB`(PWMAT封装) 的赝势文件上一级目录所在路径，为string 格式，绝对路径或相对路径（相对于当前路径）。
+<!-- ### in_skf
+设置 `DFTB`(PWMAT封装) 的赝势文件上一级目录所在路径，为string 格式，绝对路径或相对路径（相对于当前路径）。 -->
 
 ### basis_set_file
 参考 [potential_file](#potential_file)。

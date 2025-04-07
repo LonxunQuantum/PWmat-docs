@@ -378,9 +378,9 @@ This parameter is specific to PWMAT and is used to set the K points. It is an op
 
 ### pseudo 
 Sets the path to the pseudopotential files of `PWmat` or `VASP`, in list format. The path to the pseudopotential file can be an absolute path or a relative path (relative to the current path).
-
+<!-- 
 ### in_skf
-The `in_skf` parameter is used to set the path to the parent directory of the pseudopotential files for `DFTB` (Integrated by `PWMAT`). It should be specified as a string in either absolute or relative format (relative to the current directory).
+The `in_skf` parameter is used to set the path to the parent directory of the pseudopotential files for `DFTB` (Integrated by `PWMAT`). It should be specified as a string in either absolute or relative format (relative to the current directory). -->
 
 ### basis_set_file
 Refer to [potential_file](#potential_file).
@@ -414,14 +414,14 @@ Alternatively, you can omit the settings, and the default parameters will be use
 }
 ```
 
-If you are using the `DFTB integrated in PWMAT`, the settings are as follows:
+<!-- If you are using the `DFTB integrated in PWMAT`, the settings are as follows:
 ```json
 "DFT": {
     "dft_style": "pwmat",
     "input": "scf_etot.input",
     "in_skf": "./lisi_dftb_pseudo"
 }
-```
+``` -->
 
 For `VASP`, the settings are as follows:
 ```json

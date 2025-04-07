@@ -158,8 +158,6 @@ sidebar_position: 0
     
     PWmat 设置：
     "command":"mpirun -np 4 PWmat"
-    DFTB(Pwmat)设置：
-    "command":"PWmat"
     VASP设置：
     "command":"vasp_std"
     cp2k设置：

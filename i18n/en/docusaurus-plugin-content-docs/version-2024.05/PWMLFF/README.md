@@ -47,7 +47,7 @@ An efficient molecular dynamics simulation software that seamlessly integrates P
 
 👉[Open source repository](https://github.com/LonxunQuantum/PWact)
 
-`PWact` is an open-source automated active learning platform based on PWMLFF. It integrates PWMLFF, Lammps interface, and commonly used first-principles software such as `PWMAT`, `VASP`, `CP2K`, and `DFTB (integrated with PWMAT)`. It automates tasks such as job distribution, monitoring, fault recovery, and result collection. By using PWact, users can prepare training datasets that cover a wide phase space at a low cost and quickly.
+`PWact` is an open-source automated active learning platform based on PWMLFF. It integrates PWMLFF, Lammps interface, and commonly used first-principles software such as `PWMAT`, `VASP`, `CP2K`. It automates tasks such as job distribution, monitoring, fault recovery, and result collection. By using PWact, users can prepare training datasets that cover a wide phase space at a low cost and quickly.
 
 ## [4. Structure Transformation Tool pwdata](./Appendix-2.md)
 

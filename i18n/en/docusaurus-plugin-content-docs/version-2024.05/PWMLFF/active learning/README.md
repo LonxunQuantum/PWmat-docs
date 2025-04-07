@@ -16,13 +16,13 @@ The main task includes two modules, preparing pre-training data (init_bulk) and 
 
 ### pre-training data preparation module
 
-Includes four sub-modules: relaxation (supporting PWMAT, VASP, CP2K, and DFTB), supercell generation, lattice scaling, lattice perturbation, and running MD (supporting PWMAT, VASP, CP2K, and DFTB). It also supports combinations of these modules.
+Includes four sub-modules: relaxation (supporting PWMAT, VASP, CP2K), supercell generation, lattice scaling, lattice perturbation, and running MD (supporting PWMAT, VASP, CP2K). It also supports combinations of these modules.
 
 ### active learning module
 
 ![active_sampling](../models/dp/picture_wu/active_learning/active_arch.png)
 
-The active learning module consists of three sub-modules: training, configuration exploration, and annotation (supporting PWMAT, VASP, CP2K, and DFTB). First, the training module performs model training. Then, the trained model is passed to the exploration module, which uses the force field model for molecular dynamics simulations. After the simulation, the molecular motion trajectory is passed to the query module for uncertainty measurement. Once the query is completed, the annotated configuration points are sent to the annotation module. Finally, the annotation module performs self-consistent calculations to obtain energy and forces, which are used as labels along with the corresponding configurations in the annotated database. This process is repeated until convergence.
+The active learning module consists of three sub-modules: training, configuration exploration, and annotation (supporting PWMAT, VASP, CP2K). First, the training module performs model training. Then, the trained model is passed to the exploration module, which uses the force field model for molecular dynamics simulations. After the simulation, the molecular motion trajectory is passed to the query module for uncertainty measurement. Once the query is completed, the annotated configuration points are sent to the annotation module. Finally, the annotation module performs self-consistent calculations to obtain energy and forces, which are used as labels along with the corresponding configurations in the annotated database. This process is repeated until convergence.
 
 1. For model training, PWMLFF supports DP model, DP model with compress, DP model with type embedding and NEP(NEP4) model.
 
@@ -32,15 +32,15 @@ The active learning module consists of three sub-modules: training, configuratio
 
 # The pre-training data preparation module 
 
-It includes four sub-modules: relaxation (supporting PWMAT or VASP), supercell generation, lattice scaling, lattice perturbation, and running MD (supporting DFTB, PWMAT, or VASP). It also supports combinations of these modules.
+It includes four sub-modules: relaxation (supporting PWMAT, VASP and CP2K), supercell generation, lattice scaling, lattice perturbation, and running MD (PWMAT, VASP and CP2K). It also supports combinations of these modules.
 
 # Dependencies
 
 1. AL-PWMLFF job scheduling uses the [SLURM](https://slurm.schedmd.com/documentation.html) cluster management and job scheduling system. SLURM must be installed on your computing cluster.
 
-2. DFT calculations in AL-PWMLFF support [PWmat](https://www.pwmat.com/gpu-download), [VASP](https://www.vasp.at/), [CP2K](https://www.cp2k.org/) and DFTB. We have integrated DFTB in PWmat. You can find detailed usage instructions in the `DFTB_DETAIL section` of the [`PWmat Manual`](http://www.pwmat.com/pwmat-resource/Manual.pdf).
+2. DFT calculations in AL-PWMLFF support [PWmat](https://www.pwmat.com/gpu-download), [VASP](https://www.vasp.at/), [CP2K](https://www.cp2k.org/). 
 
-3. AL-PWMLFF model training is based on [`PWMLFF`](https://github.com/LonxunQuantum/PWMLFF). Refer to the [`PWMLFF documentation`](http://doc.lonxun.com/PWMLFF/Installation) for installation instructions ([`Download address for PWmat version integrated with DFTB`](https://www.pwmat.com/modulefiles/pwmat-resource/mstation-download/cuda-11.6-mstation-beta.zip)).
+3. AL-PWMLFF model training is based on [`PWMLFF`](https://github.com/LonxunQuantum/PWMLFF). Refer to the [`PWMLFF documentation`](http://doc.lonxun.com/PWMLFF/Installation) for installation instructions .
 
 4. AL-PWMLFF Lammps molecular dynamics simulation is based on [Lammps_for_pwmlff](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/tree/libtorch_nep). Refer to the [`Lammps_for_pwmlff documentation`](https://github.com/LonxunQuantum/Lammps_for_PWMLFF/tree/libtorch_nep/README) for installation instructions.
 
@@ -176,7 +176,7 @@ AL-PWMLFF requires two input files, `param.json` and `resource.json`, for initia
 
 [Initial Training Set Preparation - init_param.json](./init_param_zh#参数列表)
 
-Configurations (VASP, PWMAT format) for relaxation, supercell, scaling, perturbation, and AIMD (DFTB, PWMAT, VASP) settings.
+Configurations (VASP, PWMAT format) for relaxation, supercell, scaling, perturbation, and AIMD (PWMAT, VASP, CP2K) settings.
 
 [Active Learning - run_param.jso](./run_param_zh#参数列表)
 

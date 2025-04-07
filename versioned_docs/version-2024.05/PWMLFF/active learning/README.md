@@ -17,7 +17,7 @@ PWact 平台包含主任务和任务分发器两部分，如 [结构图](#Arch_d
 
 ### 预训练数据制备模块
 
-包括驰豫 `(支持 PWmat、VASP、CP2k和DFTB)`、阔胞、缩放晶格、微扰以及运行 MD `(支持 PWmat、VASP、CP2k和DFTB)` 四个模块，并支持对这些模块的组合使用。
+包括驰豫 `(支持 PWmat、VASP、CP2K )`、阔胞、缩放晶格、微扰以及运行 MD `(支持 PWmat、VASP、CP2K)` 四个模块，并支持对这些模块的组合使用。
 
 ### 主动学习模块
 
@@ -29,13 +29,13 @@ PWact 平台包含主任务和任务分发器两部分，如 [结构图](#Arch_d
 
     2. 对于不确定性度量，提供了常用了基于多模型委员会查询的方法，并且也提供了我们最新设计的 单模型的基于卡尔曼滤波的不确定性度量方法 KPU (Kalman Prediction Uncertainty, KPU)。该方法能够在接近委员会查询精度的情况下，将模型训练的计算开销减少到 1/N, N为委员会查询模型数量，欢迎用户尝试。对于 KPU 方法，仅适用于DP模型。
 
-    3. 对于标注，支持 PWmat、VASP、CP2k和DFTB。
+    3. 对于标注，支持 PWmat、VASP、CP2K。
 
 # 依赖应用
 
 1. PWact 作业调度采用 [SLURM](https://slurm.schedmd.com/documentation.html) 集群管理和作业调度系统，需要您的计算集群上已安装 SLURM。
 
-2. PWact 的 DFT 计算支持 [PWmat](https://www.pwmat.com/gpu-download) 、[VASP](https://www.vasp.at/)、 [CP2K](https://www.cp2k.org/)和DFTB，需要您的计算机群已安装PWMAT、VASP或CP2K。对于DFTB, 我们已经在 PWMAT 中集成了 DFTB，您可以在[`PWMAT手册的DFTB_DETAIL章节`](http://www.pwmat.com/pwmat-resource/Manual_cn.pdf)查看详细使用说明([`集成了DFTB的PWmat版本下载地址`](https://www.pwmat.com/modulefiles/pwmat-resource/mstation-download/cuda-11.6-mstation-beta.zip))。
+2. PWact 的 DFT 计算支持 [PWmat](https://www.pwmat.com/gpu-download) 、[VASP](https://www.vasp.at/)、 [CP2K](https://www.cp2k.org/)，需要您的计算机群已安装PWMAT、VASP或CP2K。
 
 3. PWact 模型训练基于 [PWMLFF](https://github.com/LonxunQuantum/PWMLFF) , PWMLFF 安装方式参考 [PWMLFF 文档](../Installation.md#pwmlff-编译安装)。
 
@@ -177,7 +177,7 @@ PWact 包括两个输入文件 `param.json` 和 `resource.json`，用于初始�
 
 [初始训练集制备 init_param.josn](./init_param_zh#参数列表)
 
-对构型（VASP、PWmat 格式）进行驰豫、扩胞、缩放、微扰和 AIMD（DFTB、PWMAT、VASP、DFTB）设置。
+对构型（VASP、PWmat 格式）进行驰豫、扩胞、缩放、微扰和 AIMD（PWMAT、VASP、CP2K ）设置。
 
 [主动学习 run_param.josn](./run_param_zh#参数列表)
 

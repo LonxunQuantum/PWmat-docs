@@ -13,23 +13,29 @@ PWact 平台包含主任务和任务分发器两部分，如 [结构图](#Arch_d
 
 主任务包括 `预训练数据制备` 以及 `主动学习` 两个模块。负责预训练数据制备和主动学习过程中的计算任务生成、以及结果收集。任务分发器接收到任务调度请求之后，根据计算资源使用状态以及任务申请资源情况将任务调度到对应的计算节点上，待任务执行完毕之后，收集计算节点的执行结果返回给主任务程序。
 
-![Arch_design_slurm](../models/dp/picture_wu/active_learning/Arch_design_slurm_zh.png)
+![Arch_design_slurm](./pictures/Arch_design_slurm_zh.png)
 
-### 预训练数据制备模块
+### 预训练数据制备
 
-包括驰豫 `(支持 PWmat、VASP、CP2k和DFTB)`、阔胞、缩放晶格、微扰以及运行 MD `(支持 PWmat、VASP、CP2k和DFTB)` 四个模块，并支持对这些模块的组合使用。
+![active_sampling](./pictures/init_arch_zh.png)
 
-### 主动学习模块
+包括驰豫 `(支持 PWmat、VASP、CP2K)`、阔胞、缩放晶格、微扰以及运行 MD 四个模块，并支持对这些模块的组合使用。对于 MD ， `(支持 PWmat、VASP、CP2K)`的 AIMD作为预训练集。同时，也支持使用大模型运行MD ，之后通过 direct 采样过滤掉相似构型后作为预训练集，这里同样支持使用 PWmat、VASP、CP2K 对过滤后的结构做标注（自洽计算获取能量和受力）。
 
-![active_sampling](../models/dp/picture_wu/active_learning/active_arch_zh.png)
+ - direct 采样：Qi J, Ko T W, Wood B C, et al. Robust training of machine learning interatomic potentials with dimensionality reduction and stratified sampling[J]. npj Computational Materials, 2024, 10(1): 43.
+
+### 主动学习
+
+![active_sampling](./pictures/active_arch_zh.png)
 
 包括`训练`、`构型探索`以及`标注`模块。首先，训练模块做模型训练；之后将训练好的模型送入探索模块。探索模块调用力场模型做分子动力学模拟，模拟结束后把得到的分子运动轨迹送入查询器做不确定性度量；查询完成后，把待标注构型点送入标注模块；最后标注模块做自洽计算，得到能量和力，作为标签与对应构型一起送入已标注数据库中；重复上述步骤，直到收敛。
 
     1. 对于模型训练，我们这里支持 MatPL 中的 DP model、DP model with compress 以及 DP model with type embedding，以及 NEP 模型。
 
     2. 对于不确定性度量，提供了常用了基于多模型委员会查询的方法，并且也提供了我们最新设计的 单模型的基于卡尔曼滤波的不确定性度量方法 KPU (Kalman Prediction Uncertainty, KPU)。该方法能够在接近委员会查询精度的情况下，将模型训练的计算开销减少到 1/N, N为委员会查询模型数量，欢迎用户尝试。对于 KPU 方法，仅适用于DP模型。
+    
+    3. 【可选项】通过 direct 采样方法 降低候选集中的相似结构数量。
 
-    3. 对于标注，支持 PWmat、VASP、CP2k和DFTB。
+    4. 对于标注，支持 PWmat、VASP、CP2K 或 使用大模型推理。
 
 # 依赖应用
 
@@ -41,7 +47,9 @@ PWact 平台包含主任务和任务分发器两部分，如 [结构图](#Arch_d
 
 3. PWact 使用的力场模型使用 [MatPL](https://github.com/LonxunQuantum/MatPL)训练 , MatPL 安装方式参考 [MatPL 在线手册](../install/README.md)。
 
-4. PWact Lammps 分子动力学模拟 基于 [lammps-MatPL](https://github.com/LonxunQuantum/lammps-MatPL)，安装方式参考 [MatPL 在线手册](../install/README.md)
+4. PWact Lammps 分子动力学模拟 基于 [lammps-MatPL](https://github.com/LonxunQuantum/lammps-MatPL)，安装方式参考 [MatPL 在线手册](../install/README.md)。
+
+5. Direct 采样和大模型采样，目前在 [龙讯超算云](https://mcloud.lonxun.com/)(`Mcloud`) 做了预装，支持 direct 采样和 eqv2 大模型。对于用户自己的环境，需要自己安装相应环境，并提供处理脚本。
 
 # 安装流程
 
@@ -193,7 +201,7 @@ PWact 包括两个输入文件 `param.json` 和 `resource.json`，用于初始�
 
 [初始训练集制备 init_param.josn](./init_param_zh#参数列表)
 
-对构型（VASP、PWmat 格式）进行驰豫、扩胞、缩放、微扰和 AIMD（DFTB、PWMAT、VASP、DFTB）设置。
+对构型（VASP、PWmat 格式）进行驰豫、扩胞、缩放、微扰和 AIMD（PWMAT、VASP、CP2K）设置。
 
 [主动学习 run_param.josn](./run_param_zh#参数列表)
 

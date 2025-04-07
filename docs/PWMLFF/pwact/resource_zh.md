@@ -8,9 +8,70 @@ sidebar_position: 0
 
 设置计算集群资源，包括对训练、分子动力学（MD）、DFT 计算（SCF、Relax、AIMD）使用的计算节点、CPU、GPU 资源以及对应的运行软件（Lammps、VASP、PWMAT、MatPL）。
 
-分为三个模块参数， `train`, `explore` 和 `DFT`，每个模块中的参数意义相同。对于初始训练集制备（init_bulk）只需要 `DFT` 模块即可。如下json文件中所示，设置了用于三个模块的资源设置。
+所有可设置参数按照用途分为 `train`, `explore`, `DFT`, `direct`四种模块，每个模块中的参数意义相同。
 
-加载 mcloud 环境做主动学习：
+对于初始训练集制备（init_bulk）可设置 `explore`, `DFT`, `direct`，这里以 mcloud 环境设置为例。explore 用于设置大模型 MD 环境，direct 用于设置 direct 采样环境，DFT 用于设置对结构做 SCF 或 AIMD 所用环境。
+
+``` json
+{
+    "DFT": {
+        "command":"mpirun -np 4 PWmat",
+        "task_run_num":1,
+        "number_node": 1,
+        "cpu_per_node": 4,
+        "gpu_per_node": 4,
+        "group_size": 1,
+        "queue_name": "new3080ti,3080ti,3090",
+        "custom_flags": [
+        ],
+        "_custom_flags": [
+        ],
+        "module_list": [
+            "compiler/2022.0.2",
+            "mkl/2022.0.2",
+            "mpi/2021.5.1",
+            "cuda/11.6",
+            "pwmat"
+        ]
+    },
+
+    "explore": {
+        "command": "python sevennet_md.py",
+        "group_size": 1,
+        "number_node": 1,
+        "gpu_per_node": 1,
+        "cpu_per_node": 1,
+        "queue_name": "new3080ti,3080ti",
+        "custom_flags": [],
+        "source_list": [
+            "/share/app/anaconda3/envs/SevenNet/env.sh"
+        ],
+        "module_list": [
+        ],
+        "env_list": [
+        ]
+    },
+
+    "direct": {
+        "command": "python direct.py",
+        "group_size": 1,
+        "number_node": 1,
+        "gpu_per_node": 1,
+        "cpu_per_node": 1,
+        "queue_name": "new3080ti,3080ti",
+        "custom_flags": [],
+        "source_list": [
+            "/share/app/anaconda3/envs/m3gnet/env.sh"
+        ],
+        "module_list": [
+        ],
+        "env_list": [
+        ]
+    }
+}
+```
+对于主动学习（run）可设置 `train`, `explore`, `direct`, `DFT`四个模块，这里以 mcloud 环境设置为例。train 用于设置训练环境，explore用于设置lammps分子动力学环境，direct 用于设置 direct 采样环境，DFT 用于设置对结构做 SCF环境 或者 大模型 MD 环境。
+做：
 
 ```json
 {
@@ -65,71 +126,6 @@ sidebar_position: 0
   }
 }
 ```
-
-加载自己安装软件环境做主动学习：
-
-```json
-{
-  "train": {
-    "command": "MatPL",
-    "group_size": 1,
-    "number_node": 1,
-    "gpu_per_node": 1,
-    "cpu_per_node": 1,
-    "queue_name": "new3080ti,3080ti,3090",
-    "custom_flags": [
-      "#SBATCH -x gn43,gn66"
-    ],
-    "source_list": [
-      "/the/path/anaconda3/etc/profile.d/conda.sh",
-      "/the/path/of/MatPL-2025.3/env.sh"
-    ],
-    "module_list": [
-      "cuda/11.8-share",
-      "intel/2020"
-    ],
-    "env_list":[
-      "conda activate matpl-2025.3"
-    ]
-  },
-  "explore": {
-    "command": "mpirun -np 1 lmp_mpi -in in.lammps",
-    "group_size": 1,
-    "number_node": 1,
-    "gpu_per_node": 1,
-    "cpu_per_node": 1,
-    "queue_name": "new3080ti,3080ti,3090",
-    "custom_flags": [],
-    "source_list": [
-      "/the/path/of/lammps/env.sh"
-    ],
-    "module_list": [
-      "cuda/11.8-share",
-      "intel/2020"
-    ],
-    "env_list":[]
-  },
-  "DFT": {
-    "command": "mpirun -np 4 PWmat",
-    "number_node": 1,
-    "cpu_per_node": 4,
-    "gpu_per_node": 4,
-    "group_size": 1,
-    "queue_name": "3080ti,new3080ti,3090",
-    "custom_flags": [],
-    "source_list": [],
-    "module_list": [],
-    "env_list":[
-      "compiler/2022.0.2",
-      "mkl/2022.0.2",
-      "mpi/2021.5.1",
-      "cuda/11.6",
-      "pwmat"
-    ]
-  }
-}
-```
-
 ## 参数细节
 参数可以分为3类。
 用于设置运行命令的`command`；
