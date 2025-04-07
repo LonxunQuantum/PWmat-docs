@@ -214,3 +214,5 @@ PWact 包括两个输入文件 `param.json` 和 `resource.json`，用于初始�
 ## 主动学习案例
 
 ### [硅的主动学习](./example_si_init_zh)
+
+### [硅的主动学习(bigmodel+direct)](./example_si_direct_bigmodel.md)
