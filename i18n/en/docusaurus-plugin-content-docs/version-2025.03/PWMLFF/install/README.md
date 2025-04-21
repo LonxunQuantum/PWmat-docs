@@ -9,14 +9,14 @@ MatPL 提供了 [离线安装](./Installation-offline.md) 和 [在线安装](./I
 
 ``` bash
 # 加载 MatPL
-source /share/app/MATPL/MatPL2025.3/env.sh
+source /share/app/MATPL/MatPL-2025.3/env.sh
 
 # 或者采用以下方式分步加载
 # step1. 加载 python 运行环境
 source /share/app/anaconda3/etc/profile.d/conda.sh
 module load conda/3-2020.07
 conda deactivate
-conda activate MatPL2025.3
+conda activate matpl-2025.3
 # step2. 加载MatPL
 module load matpl/2025.3
 ```
@@ -25,7 +25,7 @@ module load matpl/2025.3
 # 加载 lammps
 module load lammps4matpl/2025.3
 # 对于 Linear 和 NN 模型的lammps 接口，我们提供了 cpu 版本的接口，使用fortran 实现，请加载
-module load lammpsmatpl/fortran
+module load lammps4matpl/fortran
 ```
 lammps 接口已经预装了下列功能 
 

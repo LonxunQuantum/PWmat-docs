@@ -334,6 +334,32 @@ $$
 #### end_pre_fac_ei
 训练结束时 atomic energy 损失的 prefactor，应大于或等于 0。默认值为 `2.0`。 -->
 
+#### max_norm & norm_type (按范数裁剪)
+参数 max_norm 和 norm_type 配合使用，用于设置按照范数裁剪梯度。
+
+计算所有参数梯度的范数，如果超过max_norm，则按比例缩放梯度使范数等于max_norm。
+
+作用：保持梯度方向的相对关系（所有梯度同比例缩放）；适合防止梯度爆炸的同时保留梯度间的平衡；norm_type可选（如L2范数、L1范数等）。
+
+norm_type 取值为 1或 2，1 表示用 L1 范数，2 表示用 L2 范数。
+
+max_norm 为 浮点值。
+
+#### clip_value (按值裁剪)
+参数 max_norm 和 norm_type 配合使用，按值裁剪梯度。直接将所有梯度元素裁剪到[-clip_value, clip_value]区间，超过阈值的梯度被截断。
+
+作用：粗暴但高效，不保持梯度比例关系; 计算开销更小（无需计算范数）; 可能导致梯度方向剧烈变化。
+
+#### t_0 & t_mult
+参数 t_0 和 t_mult 配合使用，用于设置在 ADAM 优化器中使用余弦退火算法更新学习率。注意：启用了余弦退火后，学习率的更新由调度器 optim.lr_scheduler.CosineAnnealingWarmRestarts 完全接管，在[decay_step](#decay_step)中的学习率更新策略将失效。
+
+- T_0 学习率第一次回到初始值的epoch位置；
+- T_mult 控制学习率变化的速度。如果T_mult=1,则学习率在T_0,2T_0,3T_0,....,i*T_0,....处回到最大值(初始学习率)；如果T_mult>1,则学习率在T_0,(1+T_mult)T_0,(1+T_mult+T_mult**2)T_0,.....,(1+T_mult+T_mult2+...+T_0i)*T0,处回到最大值。
+
+如下图所示，该例中[初始学习率 learning_rate](#learning_rate) 为 0.001，T_0 = 1, T_mult = 2, [最小学习率 stop_lr](#stop_lr) = 3.51e-08。
+
+![AL_T0_T_mult](./pictures/lr_test_1_2_6.png)
+
 ### KF optimizer
 
 KF 优化器的完整参数设置如下：
