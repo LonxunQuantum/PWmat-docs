@@ -38,6 +38,7 @@ lammps 接口已经预装了下列功能
  - RIGID
  - MEAM
  - MC
+ - SHOCK
  - MatPL
 
 <!-- :::tip
