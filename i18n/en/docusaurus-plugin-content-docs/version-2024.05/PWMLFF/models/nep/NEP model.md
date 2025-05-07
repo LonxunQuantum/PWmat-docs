@@ -262,7 +262,7 @@ NEP and DP model training error convergence under LKF optimizer
 
 ### Test Data
 
-Test data and models have been uploaded. You can download them from our [Baidu Cloud Disk https://pan.baidu.com/s/1beFMBU1IehmNEpIQ9B8ybg?pwd=pwmt](https://pan.baidu.com/s/1beFMBU1IehmNEpIQ9B8ybg?pwd=pwmt), or from our [open-source dataset repository](https://github.com/LonxunQuantum/PWMLFF_library/tree/main/PWMLFF_NEP_test_examples).
+Test data and models have been uploaded. You can download them from our [Baidu Cloud Disk https://pan.baidu.com/s/1beFMBU1IehmNEpIQ9B8ybg?pwd=pwmt](https://pan.baidu.com/s/1beFMBU1IehmNEpIQ9B8ybg?pwd=pwmt), or from our [open-source dataset repository](https://github.com/LonxunQuantum/MatPL_library/tree/main/PWMLFF_NEP_test_examples).
 
 ## Lammps Interface Test Results
 

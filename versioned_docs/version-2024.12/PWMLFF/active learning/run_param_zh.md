@@ -31,7 +31,7 @@ sidebar_position: 2
 
 ### train
 
-模型训练参数，用于指定模型网络结构、优化器。详细的参数设置参考 [`PWMLFF文档`](http://doc.lonxun.com/PWMLFF/) 。您可以如例子中所示设置训练的全部参数，也可以使用单独的 json 文件，只需要在参数 `train_input_file` 中指定训练的 json 文件所在路径即可。
+模型训练参数，用于指定模型网络结构、优化器。详细的参数设置参考 [`PWMLFF文档`](http://doc.lonxun.com/MatPL/) 。您可以如例子中所示设置训练的全部参数，也可以使用单独的 json 文件，只需要在参数 `train_input_file` 中指定训练的 json 文件所在路径即可。
 
 #### train_input_file
 

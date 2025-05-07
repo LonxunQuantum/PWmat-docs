@@ -69,7 +69,7 @@ pip install .
 # export PYTHONPATH=/the/path/pwact:$PYTHONPATH
 ```
 
-PWact 开发语言采用 Python ，支持 Python 3.9 以及以上的版本。建议用户直接使用 PWMLFF 的 [Python 运行环境](http://doc.lonxun.com/PWMLFF/Installation) 即可。
+PWact 开发语言采用 Python ，支持 Python 3.9 以及以上的版本。建议用户直接使用 PWMLFF 的 [Python 运行环境](http://doc.lonxun.com/MatPL/Installation) 即可。
 
 如果您需要为 PWact 单独创建虚拟环境，只需要安装以下依赖包即可（与您的 Python 版本相匹配， 支持Python 3.9 以及以上）。
 ```bash

@@ -171,7 +171,7 @@ sidebar_position: 0
 ```
 -np 后面为使用的 GPU 或者 CPU 数量，需要与 [`gpu_per_node`](#gpu_per_node)或[`cpu_per_node`](#cpu_per_node) 设置保持一致。
 
-对于 [PWMLFF 文档](http://doc.lonxun.com/PWMLFF/) 模型训练设置：
+对于 [PWMLFF 文档](http://doc.lonxun.com/MatPL/) 模型训练设置：
 ```
     "command":"PWMLFF"
 ```

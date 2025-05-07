@@ -32,7 +32,7 @@ Specify the directory of the initial training set in list format. It can be an a
 
 ### train
 
-Parameters for model training, specifying the network structure and optimizer. For detailed parameter settings, refer to the [`PWMLFF documentation`](http://doc.lonxun.com/PWMLFF/). You can either set all the training parameters as shown in the example, or use a separate JSON file by specifying the path to the JSON file in the [`train_input_file`](#train_input_file) parameter.
+Parameters for model training, specifying the network structure and optimizer. For detailed parameter settings, refer to the [`PWMLFF documentation`](http://doc.lonxun.com/MatPL/). You can either set all the training parameters as shown in the example, or use a separate JSON file by specifying the path to the JSON file in the [`train_input_file`](#train_input_file) parameter.
 
 #### train_input_file
 

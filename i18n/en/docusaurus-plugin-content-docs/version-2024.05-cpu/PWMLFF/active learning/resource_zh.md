@@ -73,7 +73,7 @@ For Lammps calculations (GPU version and CPU version):
 ```
 The number after -np represents the number of GPUs or CPUs used, which should be consistent with the `gpu_per_node` or `cpu_per_node` settings.
 
-For model training settings in [PWMLFF documentation](http://doc.lonxun.com/PWMLFF/):
+For model training settings in [PWMLFF documentation](http://doc.lonxun.com/MatPL/):
 ```
 "command": "PWMLFF"
 ```

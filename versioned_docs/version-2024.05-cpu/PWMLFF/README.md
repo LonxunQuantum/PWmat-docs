@@ -56,9 +56,9 @@ PWmat Machine Learning Force Field (PWMLFF) 是一套在 GNU 许可下的开源�
 
 `pwdata` 是 PWMLFF 的数据预处理工具，可用于提取特征和标签。同时提供`PWmat`、`VASP`、`CP2K`、`Lammps` 间的结构格式转换以及相应的扩胞、晶格缩放、原子位置微扰操作。
 
-## [5. AIMD数据集以及模型仓库](https://github.com/LonxunQuantum/PWMLFF_library)
+## [5. AIMD数据集以及模型仓库](https://github.com/LonxunQuantum/MatPL_library)
 
-👉[开源仓库地址](https://github.com/LonxunQuantum/PWMLFF_library)
+👉[开源仓库地址](https://github.com/LonxunQuantum/MatPL_library)
 
 该数据仓库包含了常见体系的 `AIMD 数据集`、一些已经过充分训练的 `PWMLFF 模型`，便于用户快速复用已有数据集和模型，以及在不同模型之间的横向比较，节省数据制备和模型训练成本。
 

@@ -55,9 +55,9 @@ An efficient molecular dynamics simulation software that seamlessly integrates P
 
 `pwdata` is the data preprocessing tool for PWMLFF, used for feature and label extraction. It also provides structure format conversion between `PWmat`, `VASP`, `CP2K`, and `Lammps`, as well as operations such as supercell, lattice scaling, and atomic position perturbation.
 
-## [5. AIMD Dataset and Model Repository](https://github.com/LonxunQuantum/PWMLFF_library)
+## [5. AIMD Dataset and Model Repository](https://github.com/LonxunQuantum/MatPL_library)
 
-👉[Open source repository](https://github.com/LonxunQuantum/PWMLFF_library)
+👉[Open source repository](https://github.com/LonxunQuantum/MatPL_library)
 
 This data repository contains `AIMD datasets` for common systems, pre-trained `PWMLFF models`, and information about training accuracy. It allows users to quickly reuse existing datasets and models, compare them across different models, and `save data preparation and model training costs`.
 
