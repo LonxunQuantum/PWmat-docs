@@ -335,18 +335,42 @@ $$
 训练结束时 atomic energy 损失的 prefactor，应大于或等于 0。默认值为 `2.0`。 -->
 
 #### max_norm & norm_type (按范数裁剪)
-参数 max_norm 和 norm_type 配合使用，用于设置按照范数裁剪梯度。
 
-计算所有参数梯度的范数，如果超过max_norm，则按比例缩放梯度使范数等于max_norm。
+参数 max_norm 和 norm_type 配合使用，用于设置按照范数裁剪梯度。max_norm 默认值为 None，不使用按范数裁剪。
+
+计算所有参数梯度的范数，如果超过max_norm （max_norm 为 浮点值），则按比例缩放梯度使范数等于max_norm。
 
 作用：保持梯度方向的相对关系（所有梯度同比例缩放）；适合防止梯度爆炸的同时保留梯度间的平衡；norm_type可选（如L2范数、L1范数等）。
 
-norm_type 取值为 1或 2，1 表示用 L1 范数，2 表示用 L2 范数。
+norm_type，整形值，取值为 1或 2，1 表示用 L1 范数，2 表示用 L2 范数。默认值为2，启用了按范数裁剪时，将默认按L2范数裁剪。
 
-max_norm 为 浮点值。
+
+L1 范数是梯度的绝对值之和：
+$\left \| g \right \|_1 =  {\textstyle \sum_{i=1}^{n}}\left | g_i \right |  $ 
+，如果 $\left \| g \right \|_1 > max\_norm$ ，则梯度会被缩放为：
+
+$$
+g_{clipped}=g\cdot \frac{max\_norm}{\left \| g \right \|_1 } 
+$$ 
+
+L2 范数是梯度的欧几里得范数：
+$\left \| g \right \|_2 =  \sqrt{{\textstyle \sum_{i=1}^{n}} g_i^2} $
+，如果$\left \| g \right \|_2 > max\_norm$ ，则梯度会被缩放为：
+
+$$
+g_{clipped}=g\cdot \frac{max\_norm}{\left \| g \right \|_2 }
+$$
 
 #### clip_value (按值裁剪)
-参数 max_norm 和 norm_type 配合使用，按值裁剪梯度。直接将所有梯度元素裁剪到[-clip_value, clip_value]区间，超过阈值的梯度被截断。
+按值裁剪梯度。直接将所有梯度元素裁剪到[-clip_value, clip_value]区间，超过阈值的梯度被截断。默认值为 None, 不使用按值裁剪。
+
+$$
+g_i = \begin{cases}
+  clip\_value  & \text{ if } g_i > clip\_value \\
+  -clip\_value & \text{ if } g_i < clip\_value \\
+  g_i & \text{ otherwise. } 
+\end{cases}
+$$
 
 作用：粗暴但高效，不保持梯度比例关系; 计算开销更小（无需计算范数）; 可能导致梯度方向剧烈变化。
 
@@ -389,7 +413,7 @@ KF 优化器的完整参数设置如下：
 该参数是`LKF 优化器`的超参数，用于指定协方差矩阵 P 的块大小。较大的块大小会增加内存和 GPU 内存的消耗，导致训练速度较慢，而较小的块大小会影响收敛速度和准确性。默认值为 `5120`，如果是在 A100、H100 等高端显卡上，建议设置为 `10240`。
 
 #### p0_weight
-该参数是 `LKF`的超参数，用于正则化参数，默认值为`0.01`，即采用正则化。设置正则化项有助于减少模型的过拟合。该参数要求值小于 `1` ，经过测试 `0.01` 是较为合适的值。如果设置为 `1` 则表示不适用正则化。
+该参数是 `LKF`的超参数，用于正则化参数，默认值为`0.01`，采用正则化。设置正则化项有助于减少模型的过拟合。该参数要求值小于 `1` ，经过测试 `0.01` 是较为合适的值。如果设置为 `1` 则表示不使用正则化。
 
 #### kalman_lambda
 该参数是`LKF`的超参数，称为记忆因子（memory factor）。它决定了对先前数据的权重或关注程度。值越大，越重视先前的数据。默认值为 `0.98`。
