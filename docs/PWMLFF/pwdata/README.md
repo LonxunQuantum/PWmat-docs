@@ -4,6 +4,8 @@ title: pwdata 结构转换工具
 ---
 # pwdata
 
+`当前手册页使用 pwdata >= 0.5.0`
+
 pwdata 是 MatPL 的数据预处理工具，包括如下功能：
 
 1. `atom.config(PWmat)`、`POSCAR(VASP)`、`lmp.init(Lammps)`、`cp2k.init(CP2K)` 之间的文件互转；
@@ -74,8 +76,7 @@ pwdata count -h
 该命令用于各种结构之间的互转，您可以使用 `convert_config` 或者它的缩写 `cvt_config`
 参数如下所示
 ```bash
-pwdata convert_config [-h] -i INPUT -f INPUT_FORMAT [-s SAVENAME] [-o OUTPUT_FORMAT] [-c] [-t ATOM_TYPES [ATOM_TYPES ...]]
-
+pwdata convert_config [-h] -i INPUT -f INPUT_FORMAT -o OUTPUT_FORMAT [-s SAVENAME] [-c] [-t ATOM_TYPES [ATOM_TYPES ...]]
 ```
 
 #### `-h`
@@ -88,7 +89,7 @@ pwdata convert_config [-h] -i INPUT -f INPUT_FORMAT [-s SAVENAME] [-o OUTPUT_FOR
 可选参数，输入文件的格式，如不指定将根据输入文件自动推测输入格式，支持的格式有 ['pwmat/config','vasp/poscar', 'lammps/lmp', 'cp2k/scf']
 
 #### `-o`
-可选参数，输出文件的格式，支持的格式有['pwmat/config','vasp/poscar', 'lammps/lmp']，如果未指定该参数，将会使用输入结构的格式，此时如果输入的文件格式是`cp2k/scf`，那么将使用`pwmat/config`格式
+必选参数，输出文件的格式，支持的格式有['pwmat/config','vasp/poscar', 'lammps/lmp']
 
 #### `-s`
 输出文件的名称，与 `-o` 配合使用。如果未指定，对于 `pwmat/config` 格式将使用 `atom.config` 作为文件名，对于 `vasp/poscar` 格式使用 `POSCAR`,对于 `lammps/lmp` 格式使用 `lammps.lmp` 作为文件名
@@ -170,12 +171,12 @@ pwdata [-h] -i INPUT [INPUT ...] [-f INPUT_FORMAT] [-s SAVEPATH] [-o OUTPUT_FORM
 
 例1. 将目录 examples/pwmlff_data/LiSiC 下的所有 pwmlff/npy 格式数据提取为 xyz格式，其中训练集占80%，测试集占20%，执行完毕后，在examples/test_workdir/0_1_configs_extxyz目录下会产生train.xyz 和 valid.xyz两个文件。
 ```bash
-pwdata convert_configs -i examples/pwmlff_data/LiSiC -s examples/test_workdir/0_1_configs_extxyz -o extxyz -p 0.8
+pwdata convert_configs -i examples/pwmlff_data/LiSiC -s examples/test_workdir/0_1_configs_extxyz -o extxyz
 ```
 
 例2. 将PWmat 轨迹文件 50_LiGePS_movement 和 lisi_50_movement 每隔5步提取一帧，随机划分80%结构做为训练集20%作为测试集，存在examples/test_workdir/3_1_configs_extxyz目录下
 ```bash
-pwdata convert_configs -i examples/pwmat_data/50_LiGePS_movement examples/pwmat_data/lisi_50_movement -s examples/test_workdir/3_1_configs_extxyz -o extxyz -p 0.8 -r -g 5
+pwdata convert_configs -i examples/pwmat_data/50_LiGePS_movement examples/pwmat_data/lisi_50_movement -s examples/test_workdir/3_1_configs_extxyz -o extxyz -g 5
 ```
 
 例3. 将examples/deepmd_data/alloy目录下的所有 deepmd/npy 格式文件提取为pwmlff/npy格式，不划分测试集
@@ -185,7 +186,7 @@ pwdata convert_configs -i examples/deepmd_data/alloy -s ./test_workdir/7_0_confi
 
 例4. 将 examples/xyz_data 目录下的所有后缀为 xyz 的文件提取为pwmlff/npy格式，随机划分80%和20%作为训练和测试集，保存在examples/test_workdir/5_0_configs_PWdata目录
 ```bash
-pwdata convert_configs -i examples/xyz_data -s examples/test_workdir/5_0_configs_PWdata -p 0.8 -r -g 1
+pwdata convert_configs -i examples/xyz_data -s examples/test_workdir/5_0_configs_PWdata -g 1
 ```
 
 例5.在examples/meta_data/alex_val 目录下所有后缀为.aselmdb的 meta数据库中，查询元素类型为Pt和Ge的结构,将查询到的所有结构保存到./test_workdir/10_1_configs_extxyz目
@@ -204,27 +205,27 @@ pwdata convert_configs -i examples/meta_data.json -s ./test_workdir/10_1_configs
 例1. 查询`只包含` `Pt`和`Ge` 两种元素的结构，并将查询结果输出到为xyz格式。执行完成后将会在examples/test_workdir/10_1_configs_extxyz目录下生成一个train.xyz和valid.xyz两个文件
 
 ```bash
-pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -p 0.8 -r -t Pt Ge
+pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -t Pt Ge
 ```
 
 例2. 使用`-q 参数`查询，查询包含了`Cu`元素的所有结构
 ```bash
-pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -p 0.8 -r -q Cu
+pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -q Cu
 ```
 
 例3. 使用`-q 参数`查询，查询结构中`H`原子数目少于3个的所有结构
 ```bash
-pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -p 0.8 -r -q H<3
+pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -q H<3
 ```
 
 例4. 使用`-q 参数`查询，查询结构中，包含`Cu`原子并且`H`原子数目少于3个的所有结构
 ```bash
-pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -p 0.8 -r -q Cu,H<3
+pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -q Cu,H<3
 ```
 
 例5. 使用`-q 参数`查询，查询结构中，至少包含2个`H`原子且至少包含1个`O`原子的所有结构
 ```bash
-pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -p 0.8 -r -q H2O 
+pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -q H2O 
 ```
 
 一些其他查询语句
