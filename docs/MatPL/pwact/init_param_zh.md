@@ -164,8 +164,6 @@ CP2K 或 PWMAT 高斯基组参数设置，
 ```json
     {
         "reserve_work": true,
-        "data_shuffle":true,
-        "train_valid_ratio": 0.8,
         "sys_configs":[{
             "config":"atom.config", 
             "relax":true, 

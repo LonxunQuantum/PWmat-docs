@@ -76,14 +76,10 @@ sidebar_position: 2
             "kalman_nue": 0.9987,
             "train_energy": true,
             "train_force": true,
-            "train_ei": false,
             "train_virial": false,
-            "train_egroup": false,
             "pre_fac_force": 2.0,
             "pre_fac_etot": 1.0,
-            "pre_fac_ei": 1.0,
-            "pre_fac_virial": 1.0,
-            "pre_fac_egroup": 0.1
+            "pre_fac_virial": 1.0
         }
     }
 ```
@@ -92,8 +88,7 @@ sidebar_position: 2
 ```json
   "train": {
         "model_type": "DP",
-        "atom_type": [14],
-        "max_neigh_num": 100
+        "atom_type": [14]
   }   
 ```
 
@@ -492,15 +487,8 @@ fix  1 all nve
   "init_data": ["/path/init_data"],
 
   "train": {
-    "_train_input_file": "std_si.json",
-
     "model_type": "DP",
     "atom_type": [14],
-    "max_neigh_num": 100,
-    "seed": 2023,
-    "model_num": 1,
-    "data_shuffle": true,
-    "train_valid_ratio": 0.8,
     "recover_train": true,
     "model": {
       "descriptor": {
@@ -523,14 +511,10 @@ fix  1 all nve
       "kalman_nue": 0.9987,
       "train_energy": true,
       "train_force": true,
-      "train_ei": false,
       "train_virial": false,
-      "train_egroup": false,
       "pre_fac_force": 2.0,
       "pre_fac_etot": 1.0,
-      "pre_fac_ei": 1.0,
-      "pre_fac_virial": 1.0,
-      "pre_fac_egroup": 0.1
+      "pre_fac_virial": 1.0
     }
   },
 

@@ -486,7 +486,6 @@ fix  1 all nve
     "atom_type": [14],
     "max_neigh_num": 100,
     "seed": 2023,
-    "model_num": 1,
     "data_shuffle": true,
     "train_valid_ratio": 0.8,
     "recover_train": true,

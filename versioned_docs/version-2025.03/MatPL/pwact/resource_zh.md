@@ -21,7 +21,7 @@ sidebar_position: 0
         "cpu_per_node": 4,
         "gpu_per_node": 4,
         "group_size": 1,
-        "queue_name": "new3080ti,3080ti,3090",
+        "queue_name": "3080ti,3090",
         "custom_flags": [
         ],
         "_custom_flags": [
@@ -41,7 +41,7 @@ sidebar_position: 0
         "number_node": 1,
         "gpu_per_node": 1,
         "cpu_per_node": 1,
-        "queue_name": "new3080ti,3080ti",
+        "queue_name": "3080ti",
         "custom_flags": [],
         "source_list": [
             "/share/app/anaconda3/envs/SevenNet/env.sh"
@@ -58,7 +58,7 @@ sidebar_position: 0
         "number_node": 1,
         "gpu_per_node": 1,
         "cpu_per_node": 1,
-        "queue_name": "new3080ti,3080ti",
+        "queue_name": "3080ti",
         "custom_flags": [],
         "source_list": [
             "/share/app/anaconda3/envs/m3gnet/env.sh"
@@ -81,7 +81,7 @@ sidebar_position: 0
     "number_node": 1,
     "gpu_per_node": 1,
     "cpu_per_node": 1,
-    "queue_name": "new3080ti,3080ti,3090",
+    "queue_name": "3080ti,3090",
     "custom_flags": [
     ],
     "source_list": [
@@ -98,7 +98,7 @@ sidebar_position: 0
     "number_node": 1,
     "gpu_per_node": 1,
     "cpu_per_node": 1,
-    "queue_name": "new3080ti,3080ti,3090",
+    "queue_name": "3080ti,3090",
     "custom_flags": [],
     "source_list": [],
     "module_list": [
@@ -112,7 +112,7 @@ sidebar_position: 0
     "cpu_per_node": 4,
     "gpu_per_node": 4,
     "group_size": 1,
-    "queue_name": "3080ti,new3080ti,3090",
+    "queue_name": "3080ti,3090",
     "custom_flags": [],
     "source_list": [],
     "module_list": [],
@@ -193,7 +193,7 @@ sidebar_position: 0
 
 ### queue_name
 
-必选参数，用于设置使用的计算机群分区，为 `","` 分割的字符串列表，例如 `"queue_name":"cpu, 3080ti,new3080ti, 3090"`。
+必选参数，用于设置使用的计算机群分区，为 `","` 分割的字符串列表，例如 `"queue_name":"cpu, 3080ti, 3090"`。
 
 ### custom_flags
 
@@ -273,7 +273,7 @@ sidebar_position: 0
 
 ```bash
 
-#SBATCH --partition=3080ti,new3080ti,3090
+#SBATCH --partition=3080ti,3090
 #SBATCH -x gn43,gn66
 
 source /opt/rh/devtoolset-8/enable
@@ -294,7 +294,7 @@ source the/path/MatPL-2025.3/env.sh
     "number_node": 1,
     "gpu_per_node": 1,
     "cpu_per_node": 1,
-    "queue_name": "new3080ti,3080ti,3090",
+    "queue_name": "3080ti,3090",
     "custom_flags": [
     ],
     "source_list": [
@@ -307,7 +307,7 @@ source the/path/MatPL-2025.3/env.sh
   }
 ```
 
-这里对于每个训练任务使用`1`个计算节点，使用该节点的`1`张GPU,`1`个CPU，该节点位于分区`new3080ti`、`3080ti` 或 `3090`。
+这里对于每个训练任务使用`1`个计算节点，使用该节点的`1`张GPU,`1`个CPU，该节点位于分区`3080ti` 或 `3090`。
 
 如果从 MatPL 源码编译安装，对应的设置如下：
 
@@ -318,7 +318,7 @@ source the/path/MatPL-2025.3/env.sh
     "number_node": 1,
     "gpu_per_node": 1,
     "cpu_per_node": 1,
-    "queue_name": "new3080ti,3080ti,3090",
+    "queue_name": "3080ti,3090",
     "custom_flags": [
     ],
     "source_list": [
@@ -348,7 +348,7 @@ source the/path/MatPL-2025.3/env.sh
       "number_node": 1,
       "gpu_per_node": 1,
       "cpu_per_node": 1,
-      "queue_name": "new3080ti,3080ti,3090",
+      "queue_name": "3080ti,3090",
       "custom_flags": [
       ],
       "source_list": [
@@ -373,7 +373,7 @@ source the/path/MatPL-2025.3/env.sh
     "number_node": 1,
     "gpu_per_node": 1,
     "cpu_per_node": 1,
-    "queue_name": "new3080ti,3080ti,3090",
+    "queue_name": "3080ti,3090",
     "custom_flags": [
     ],
     "source_list": [
@@ -400,7 +400,7 @@ source the/path/MatPL-2025.3/env.sh
       "cpu_per_node": 4,
       "gpu_per_node": 4,
       "group_size": 5,
-      "queue_name": "3080ti,new3080ti,1080ti,3090",
+      "queue_name": "3080ti,1080ti,3090",
       "custom_flags": [
       "#SBATCH -x gn18,gn17"
       ],

@@ -19,7 +19,7 @@ It is divided into three module parameters: `train`, `explore`, and `DFT`. For i
     "number_node": 1,
     "gpu_per_node": 1,
     "cpu_per_node": 1,
-    "queue_name": "new3080ti,3080ti,3090",
+    "queue_name": "3080ti,3090",
     "custom_flags": [],
     "source_list": [],
     "module_list": []
@@ -30,7 +30,7 @@ It is divided into three module parameters: `train`, `explore`, and `DFT`. For i
     "number_node": 1,
     "gpu_per_node": 1,
     "cpu_per_node": 1,
-    "queue_name": "new3080ti,3080ti,3090",
+    "queue_name": "3080ti,3090",
     "custom_flags": [],
     "source_list": [],
     "module_list": []
@@ -41,7 +41,7 @@ It is divided into three module parameters: `train`, `explore`, and `DFT`. For i
     "cpu_per_node": 4,
     "gpu_per_node": 4,
     "group_size": 1,
-    "queue_name": "3080ti,new3080ti,3090",
+    "queue_name": "3080ti,3090",
     "custom_flags": [],
     "source_list": [],
     "module_list": []
@@ -107,7 +107,7 @@ In the train module, this parameter is automatically set to 1.
 
 ### 
 
-A required parameter used to set the compute cluster partition(s) to be used. It is a string list. For example, `"queue_name":"cpu, 3080ti,new3080ti, 3090"`.
+A required parameter used to set the compute cluster partition(s) to be used. It is a string list. For example, `"queue_name":"cpu, 3080ti, 3090"`.
 
 ### custom_flags
 
@@ -166,7 +166,7 @@ According to the settings in [queue_name](#queue_name),[custom_flags](#custom_fl
 
 ```bash
 
-#SBATCH --partition=3080ti,new3080ti,3090
+#SBATCH --partition=3080ti,3090
 #SBATCH -x gn43,gn66,login
 
 source /opt/rh/devtoolset-8/enable
@@ -189,7 +189,7 @@ For the `train` module, it is necessary to load the Python runtime environment o
   "number_node": 1,
   "gpu_per_node": 1,
   "cpu_per_node": 1,
-  "queue_name": "new3080ti,3080ti,3090",
+  "queue_name": "3080ti,3090",
   "custom_flags": [],
   "source_list": [
     "/share/app/PWMLFF/PWMLFF2024.5/env.sh"
@@ -201,7 +201,7 @@ For the `train` module, it is necessary to load the Python runtime environment o
 }
 ```
 
-Here, 1 compute node is used with 1 GPU and 1 CPU. The node is located in the partition `new3080ti`, `3080ti`, or `3090`.
+Here, 1 compute node is used with 1 GPU and 1 CPU. The node is located in the partition `3080ti`, or `3090`.
 
 If you compile and install PWMLFF from source code, taking my computer cluster environment configuration as an example, the corresponding settings are as follows:
 
@@ -212,7 +212,7 @@ If you compile and install PWMLFF from source code, taking my computer cluster e
   "number_node": 1,
   "gpu_per_node": 1,
   "cpu_per_node": 1,
-  "queue_name": "new3080ti,3080ti,3090",
+  "queue_name": "3080ti,3090",
   "custom_flags": [],
   "source_list": [
     "~/anaconda3/etc/profile.d/conda.sh"
@@ -241,7 +241,7 @@ For the explore module, if we take LAMMPS installed on MCLOUD as an example, sim
   "number_node": 1,
   "gpu_per_node": 1,
   "cpu_per_node": 1,
-  "queue_name": "new3080ti,3080ti,3090",
+  "queue_name": "3080ti,3090",
   "custom_flags": [],
   "source_list": [],
   "module_list": [
@@ -261,7 +261,7 @@ If you compile and install LAMMPS from source code, taking my computer cluster e
   "number_node": 1,
   "gpu_per_node": 1,
   "cpu_per_node": 1,
-  "queue_name": "new3080ti,3080ti,3090",
+  "queue_name": "3080ti,3090",
   "custom_flags": [],
   "source_list": [
     "~/anaconda3/etc/profile.d/conda.sh"
@@ -292,7 +292,7 @@ For the DFT module, let's take loading PWMAT as an example, with the following s
   "cpu_per_node": 4,
   "gpu_per_node": 4,
   "group_size": 5,
-  "queue_name": "3080ti,new3080ti,1080ti,3090",
+  "queue_name": "3080ti,1080ti,3090",
   "custom_flags": [
     "#SBATCH -x gn18,gn17"
   ],
