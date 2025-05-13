@@ -104,11 +104,17 @@ pwact run param.json resource.json
 
 `si.al` 为主动学习流程记录文件，记录已执行的主动学习流程。
 
-`iter_result.txt` 为主动学习每个轮次中探索和选取结构用于标注的记录。内容如下例所示：
-```txt
-iter.0000  Total structures 404    accurate 122 rate 30.20%    selected 187 rate 46.29%    error 95 rate 23.51%
+`iter_result.txt` 为主动学习每个轮次中探索和选取结构用于标注的记录。内容如下例所示。第一行为本轮次的选点情况。Total structures 为采集到的结构数量 = ccurate 准确点 + selected 候选点数量 + error 错误点数量。第二行为MD轨迹的总结，以例子中所示，表示共运行了16条MD轨迹，其中16条MD正确运行结束，0条轨迹运行失败。运行失败的轨迹汇总在error_traj.log文件中。运行失败的情况一般是力场不够准确，导致MD运行崩溃。
 
-iter.0001  Total structures 404    accurate 334 rate 82.67%    selected 70 rate 17.33%    error 0 rate 0%
+```txt
+iter.0000  Total structures 1296    accurate 6 rate 0.46%    selected 23 rate 1.77%    error 1267 rate 97.76%
+A total of 16 MD trajectories were run. with 16 trajectories correctly executed and 0 trajectories normally completed. 
+For detailed information, refer to File error_traj.log.
+
+iter.0001  Total structures 12816    accurate 598 rate 4.67%    selected 2926 rate 22.83%    error 9292 rate 72.50%
+A total of 16 MD trajectories were run. with 16 trajectories correctly executed and 0 trajectories normally completed. 
+For detailed information, refer to File error_traj.log.
+
 ```
 
 `iter.0000` 为第一轮次的主动学习目录，`iter.0001`为第二轮次的主动学习目录，以此类推。
@@ -151,7 +157,7 @@ model_devi.out 格式：
        40      0.065051169      0.000681319      0.089395358      0.065790218      0.000036582      0.103522832
 ```
 
-model_devi.out的第一列为当前步编号，第二列为最大里偏差的均值，计算公式如下所示：
+model_devi.out的第一列为当前步编号，第二列为最大力偏差的均值，计算公式如下所示：
 
 $\varepsilon_{t}  = max_i(\sqrt{\frac{\sum_{1}^{w} \left \| F_{w,i}(R_t) -\hat{F_{i}} \right \| ^2 }{W}} )$,  $\hat{F_{i}} = \frac{ {\textstyle \sum_{1}^{W}F_{w,i}} }{W} $
 

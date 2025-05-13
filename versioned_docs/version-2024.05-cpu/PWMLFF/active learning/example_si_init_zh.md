@@ -164,7 +164,7 @@ model_devi.out 格式：
        40      0.065051169      0.000681319      0.089395358      0.065790218      0.000036582      0.103522832
 ```
 
-model_devi.out的第一列为当前步编号，第二列为最大里偏差的均值，计算公式如下所示：
+model_devi.out的第一列为当前步编号，第二列为最大力偏差的均值，计算公式如下所示：
 
 $\varepsilon_{t}  = max_i(\sqrt{\frac{\sum_{1}^{w} \left \| F_{w,i}(R_t) -\hat{F_{i}} \right \| ^2 }{W}} )$,  $\hat{F_{i}} = \frac{ {\textstyle \sum_{1}^{W}F_{w,i}} }{W} $
 
