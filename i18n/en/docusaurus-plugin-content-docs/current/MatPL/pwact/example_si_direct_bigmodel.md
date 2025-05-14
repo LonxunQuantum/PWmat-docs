@@ -97,16 +97,16 @@ pwact run param.json resource.json
 
 主动学习的目录结构与 [si_pwmat 例子](./example_si_init_zh.md#主动学习)中相似。
 
-### train 目录
-train 目录 与 [si_pwmat 例子](./example_si_init_zh.md#train-目录) 相同
+### 00.train 目录
+00.train 目录 与 [si_pwmat 例子](./example_si_init_zh.md#00train-目录) 相同
 
-### explore 目录
+### 01.explore 目录
 
-`explore`目录除了`md`和`select`子目录外，新增加了一个名为`bigmodel`的子目录，子目录内容与 [init_bulk direct](#接入-direct-采样) 中相同。
+`01.explore`目录除了`md`和`select`子目录外，新增加了一个名为`bigmodel`的子目录，子目录内容与 [init_bulk direct](#接入-direct-采样) 中相同。
 
 `md`和`select`子目录与 [si_pwmat 例子](./example_si_init_zh.md#explore-目录) 相同
 
-### label 目录
+### 02.label 目录
 
 如果设置了使用大模型做标注[`bigmodel_script`](./run_param_zh.md#bigmodel_script)，则在 label 目录下新增一个`bigmodel`子目录。该子目录结构如下所示：
 ```txt

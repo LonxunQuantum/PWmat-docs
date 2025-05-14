@@ -118,19 +118,19 @@ For detailed information, refer to File error_traj.log.
 
 `iter.0000` 为第一轮次的主动学习目录，`iter.0001`为第二轮次的主动学习目录，以此类推。
 
-`train`、`explore`、`label` 为主动学习轮次中对应的模型训练、探索、标记三个任务所在目录。
+`00.train`、`01.explore`、`02.label` 为主动学习轮次中对应的模型训练、探索、标记三个任务所在目录。
 
-### train 目录
+### 00.train 目录
 
-对于`train`目录，这里采用`4`模型的委员会查询策略，训练`4`个模型，这`4`个模型只有网络参数的`初始化值不同`，其他完全相同。`0-train.job`、`1-train.job`、`2-train.job`、`3-train.job` 为执行训练任务的`4`个 slurm 任务脚本。训练任务执行完毕后，将生成`4`个标识任务执行成功的 tag 文件（`0-tag.train.success`、`1-tag.train.success`、`2-tag.train.success`、`3-tag.train.success`），以及`4`个模型，目录为`train.000`、`train.001`、`train.002`、`train.003`。
+对于`00.train`目录，这里采用`4`模型的委员会查询策略，训练`4`个模型，这`4`个模型只有网络参数的`初始化值不同`，其他完全相同。`0-train.job`、`1-train.job`、`2-train.job`、`3-train.job` 为执行训练任务的`4`个 slurm 任务脚本。训练任务执行完毕后，将生成`4`个标识任务执行成功的 tag 文件（`0-tag.train.success`、`1-tag.train.success`、`2-tag.train.success`、`3-tag.train.success`），以及`4`个模型，目录为`train.000`、`train.001`、`train.002`、`train.003`。
 
 以`train.000`目录为例，`train.json`为`MatPL`模型训练的输入文件。`std_input.json`为`MatPL`输出的训练参数设置汇总。`model_record`为模型的保存目录，`dp_model.ckpt`为模型文件，`epoch_train.dat`为在`每个epoch`下的平均训练误差，为每个 epoch 训练结束后在验证集上的平均误差，保存在`epoch_valid.dat`。
 
 `torch_script_module.pt`为训练结束后，使用 jitscript 工具编译 dp_model.ckpt 后的模型文件，做为力场，用于接下来在 lammps 中的模拟。
 
-### explore 目录
+### 01.explore 目录
 
-`explore`目录包括两个子目录，`md`和`select`子目录。
+`01.explore`目录包括两个子目录，`md`和`select`子目录。
 
 `md`目录为主动学习的探索目录，包括在不同温度、压强等条件下对初始结构调用 MatPL 力场做分子动力学模拟的文件（输入文件、轨迹）。
 
@@ -204,9 +204,9 @@ For detailed information, refer to File error_traj.log.
 
 ```
 
-### label 目录
+### 02.label 目录
 
-`label` 目录包括 `scf` 和 `result` 两个子目录。`scf`为对`explore`中筛选出的点做自洽计算的目录。自洽计算后，将结构和对应的能量、力、原子能、维里提取为 pwdata 格式，保存在`result`子目录，作为后面主动学习轮次的训练数据。
+`02.label` 目录包括 `scf` 和 `result` 两个子目录。`scf`为对`explore`中筛选出的点做自洽计算的目录。自洽计算后，将结构和对应的能量、力、原子能、维里提取为 pwdata 格式，保存在`result`子目录，作为后面主动学习轮次的训练数据。
 
 #### scf
 
@@ -226,7 +226,7 @@ example
 ├──si.al
 ├──iter_result.txt
 ├──iter.0000
-│    ├──train
+│    ├──00.train
 │    │   ├──0-train.job
 │    │   ├──1-train.job
 │    │   ├──3-train.job
@@ -250,7 +250,7 @@ example
 │    │   ├──1-tag.train.success
 │    │   ├──2-tag.train.success
 │    │   └──3-tag.train.success
-│    ├──explore
+│    ├──01.explore
 │    │   ├──md
 │    │   │    ├──md.000.sys.000
 │    │   │    │     ├──md.000.sys.000.t.000.p.000
@@ -268,7 +268,7 @@ example
 │    │        ├──select_summary.txt
 │    │        ├──model_devi_distribution-md.000.sys.000.png
 │    │        └──...
-│    └──label
+│    └──02.label
 │    │   ├──scf
 │    │   │    ├──md.000.sys.000
 │    │   │    │    ├──md.000.sys.000.t.001
