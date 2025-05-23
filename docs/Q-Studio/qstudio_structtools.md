@@ -60,9 +60,9 @@ sidebar_position: 2
 
 ---
 
-- ![快捷菜单](./nested/qstudio_structtools_measuredistance.png)：激活[测量距离模式](./qstudio_visualization.md#测量【距离/角度/扭转】模式)
-- ![快捷菜单](./nested/qstudio_structtools_measureangle.png)：激活[测量角度模式](./qstudio_visualization.md#测量【距离/角度/扭转】模式)
-- ![快捷菜单](./nested/qstudio_structtools_measuretorsion.png)：激活[测量扭转模式](./qstudio_visualization.md#测量【距离/角度/扭转】模式)
+- ![快捷菜单](./nested/qstudio_structtools_measuredistance.png)：激活[测量距离模式](./qstudio_visualization.md#测量距离角度扭转模式)
+- ![快捷菜单](./nested/qstudio_structtools_measureangle.png)：激活[测量角度模式](./qstudio_visualization.md#测量距离角度扭转模式)
+- ![快捷菜单](./nested/qstudio_structtools_measuretorsion.png)：激活[测量扭转模式](./qstudio_visualization.md#测量距离角度扭转模式)
 - ![快捷菜单](./nested/qstudio_structtools_clearmeasure.png)：清除测量值
 
 :::tip NOTE：
