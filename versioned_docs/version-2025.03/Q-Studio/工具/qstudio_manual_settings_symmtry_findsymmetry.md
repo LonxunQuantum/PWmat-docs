@@ -1,5 +1,7 @@
 # 查找对称性
 
+分析晶体对称性并载入对称性结构。支持调节对称性精度，显示空间群信息。
+
 ![qstudio_manual_settings_symmtry_findsymmetry](.././nested/qstudio_manual_settings_symmtry_findsymmetry.png)
 
 - 精确度：在查找对称性时使用的容忍距离，默认为Fine (0.01 $\AA$)

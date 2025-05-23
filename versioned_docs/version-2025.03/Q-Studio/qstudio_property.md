@@ -4,6 +4,8 @@ sidebar_position: 6
 
 # 属性栏
 
+展示结构晶格、化学势、对称性、原子信息
+
 ## 系统
 ![propertysystem](./nested/qstudio_property1.png)
 - `a` `b` `c` `α` `β` `γ`：显示当前窗口结构的晶格常数。若无晶格，则全部为none。点击打开[晶格常数](./%E5%B7%A5%E5%85%B7/qstudio_manual_settings_latticeconstant.md)工具

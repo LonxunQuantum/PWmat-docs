@@ -4,6 +4,8 @@ sidebar_position: 3
 
 # 设置菜单
 
+对称性操作、晶格操作、属性设置
+
 ![settings](.././nested/qstudio_manual_settings.png)
 
 

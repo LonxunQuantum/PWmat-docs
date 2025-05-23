@@ -4,6 +4,8 @@ sidebar_position: 3
 
 # 快捷操作按钮（视角）
 
+快速调整观察视角
+
 ![visiontools](./nested/qstudio_visiontools.png)
 
 - ![reset](./nested/qstudio_visiontools_reset.png)：重置视角

@@ -3,9 +3,11 @@ sidebar_position: 8
 ---
 
 # 弹出菜单
+
+执行快捷操作，或打开相应工具
+
 ![qstudio_popup_menu](./nested/qstudio_popup_menu.png)
 
-可快速执行操作，或打开相应工具，包括：
 - 剪切、复制、粘贴、删除原子
 - [显示样式](./工具/qstudio_manual_view_display.md)
 - [晶格常数](./工具/qstudio_manual_settings_latticeconstant.md)

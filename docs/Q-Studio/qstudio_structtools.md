@@ -4,6 +4,8 @@ sidebar_position: 2
 
 # 快捷操作按钮（结构）
 
+进行基础结构调整操作，或快捷打开相应结构调整工具
+
 ![structtools](./nested/qstudio_structtools.png)
 
 - ![addwindow](./nested/qstudio_structtools_addwindow.png)：[新建窗口](./%E8%8F%9C%E5%8D%95/qstudio_manual_file.md)

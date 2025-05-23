@@ -3,6 +3,9 @@ sidebar_position: 4
 ---
 
 # 构建菜单
+
+包含基础结构构建（晶体/分子/纳米管/纳米团簇），复杂体系建模（异质结/界面/输运器件），特殊构型生成（孪晶/过渡态/无序结构）和结构编辑（原子操作/切表面/优化）工具
+
 ![build](.././nested/qstudio_manual_build.png)
 <!-- <img src="nested/qstudio_manual_build.png"> -->
 

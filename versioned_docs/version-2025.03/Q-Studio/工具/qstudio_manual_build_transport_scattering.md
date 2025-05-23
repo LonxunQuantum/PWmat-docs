@@ -1,5 +1,6 @@
 # 散射态方法（输运器件建模）
 
+用于生成pwmat transport散射态计算的输入文件，支持左右元电极配置、中心区裁剪和电势边界设置，电流方向沿晶格a轴。
 
 ![qstudio_manual_build_transport_scattering](.././nested/qstudio_manual_build_transport_scattering.png)
 - 元电极设置

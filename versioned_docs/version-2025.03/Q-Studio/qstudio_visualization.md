@@ -4,6 +4,7 @@ sidebar_position: 5
 
 # 可视化区域
 
+提供交互式操作界面，详细介绍各模式下的鼠标、键盘交互方法
 
 ![visual](./nested/qstudio_visualization.png)
 ## 通用操作

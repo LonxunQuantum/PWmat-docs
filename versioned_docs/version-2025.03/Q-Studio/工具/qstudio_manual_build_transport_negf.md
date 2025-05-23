@@ -1,5 +1,5 @@
 # NEGF方法（输运器件建模）
-
+用于生成量子输运器件计算软件lonxun-negf的模型输入文件，支持电极对称性识别、散射区调整、真空层设置、介质区域定义和掺杂配置。
 ## 初始化
 
 ![build_crystal](.././nested/qstudio_transport_negf_init.png)

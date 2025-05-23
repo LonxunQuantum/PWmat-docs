@@ -1,6 +1,6 @@
 # 晶格常数
 
-可以对模型的晶格进行调整。
+调整晶胞参数，支持保持原子分数坐标或绝对坐标的两种调节模式
 
 ![qstudio_manual_settings_latticeconstant](.././nested/qstudio_manual_settings_latticeconstant.png)
 

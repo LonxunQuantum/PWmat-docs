@@ -1,4 +1,7 @@
 # 体积数据
+
+导入和操作电荷密度等体积数据文件，可进行数据叠加/差分运算。
+
 ![qstudio_manual_settings_volumedata](.././nested/qstudio_manual_settings_volumedata.png)
 - 增加、删除、修改结构的体积数据，如增加自旋向上/向下的电荷密度数据，以获得自旋差分电荷密度
 - 点击添加，选择电荷密度文件（.xsf格式），晶格信息需匹配。若已存在加载的电荷密度，两个电荷密度的格点数要匹配。

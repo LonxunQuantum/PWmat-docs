@@ -1,4 +1,7 @@
 # 平移与旋转
+
+提供基于当前视角的原子位置调整功能，支持按步长平移和绕质心旋转操作。
+
 ![translate_rotate](.././nested/qstudio_manual_translate_and_rotate.png)
 
 - 平移：以当前视角为坐标系向↑，↓，←，→或向里、向外移动所选原子，每次移动的距离为所设置的步长

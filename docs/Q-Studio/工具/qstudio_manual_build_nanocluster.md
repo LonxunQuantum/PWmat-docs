@@ -1,5 +1,5 @@
 # 构建纳米团簇
-
+从晶格结构生成指定形状（立方体或球形）和尺寸的纳米团簇结构
 
 ![build_crystal](.././nested/qstudio_manual_build_nanocluster.png)
 根据选择的结构文件和形状生成团簇结构；形状为Box时，需要设置团簇盒子的长宽高；形状为球形时，需要设置团簇球形的半径

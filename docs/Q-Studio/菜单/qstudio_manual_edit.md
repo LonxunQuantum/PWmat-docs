@@ -4,6 +4,8 @@ sidebar_position: 1
 
 # 编辑菜单
 
+操作回溯（撤销/重做）和原子操作（复制/粘贴/删除）
+
 ![编辑菜单](.././nested/qstudio_manual_edit.png)
 
 - 撤销：撤销操作

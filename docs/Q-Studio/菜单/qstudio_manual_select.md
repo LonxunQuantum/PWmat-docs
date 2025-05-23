@@ -4,6 +4,8 @@ sidebar_position: 5
 
 # 选择菜单
 
+原子选择操作和高级原子选择工具
+
 ![select](.././nested/qstudio_manual_select.png)
 - 全选原子
 - 反选原子

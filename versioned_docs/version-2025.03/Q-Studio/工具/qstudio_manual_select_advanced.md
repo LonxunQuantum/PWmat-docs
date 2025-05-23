@@ -1,5 +1,5 @@
 # 高级原子选择
-
+支持多条件组合筛选，可按元素类型、磁矩、坐标位置、径向距离等属性精确选择原子，提供多种选择模式
 ![advanced](.././nested/qstudio_manual_select_advanced.png)
 
 - 依据属性：

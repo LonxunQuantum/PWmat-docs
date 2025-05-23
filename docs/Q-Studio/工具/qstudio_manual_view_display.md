@@ -1,5 +1,7 @@
 # 显示样式
 
+调整原子化学键显示模式、晶格扩展。设置电荷密度文件的等值面及2D切面分析
+
 ## 原子
 ![display1](.././nested/qstudio_manual_view_display1.png)
 - 线：隐藏原子，以线表示键

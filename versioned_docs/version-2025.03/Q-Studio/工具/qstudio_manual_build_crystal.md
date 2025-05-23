@@ -1,5 +1,6 @@
 # 新建晶体
 
+根据用户选择的空间群和晶格常数创建晶体结构，并自动根据晶系限制调整晶格参数
 
 ![build_crystal](.././nested/qstudio_manual_build_crystal.png)
 
