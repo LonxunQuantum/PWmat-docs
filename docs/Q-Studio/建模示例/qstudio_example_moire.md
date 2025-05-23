@@ -13,19 +13,19 @@ sidebar_position: 4
 <table><tr>
     <td> 
         <center>
-            <img src={require('./nested/qstudio_example_moire1.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_moire1.png').default} alt="Drawing" />
             <font>晶格变换一</font>
         </center>
     </td>
     <td> 
         <center>
-            <img src={require('./nested/qstudio_example_moire2.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_moire2.png').default} alt="Drawing" />
             <font>晶格变换二</font>
         </center>
     </td>
     <td> 
         <center>
-            <img src={require('./nested/qstudio_example_moire3.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_moire3.png').default} alt="Drawing" />
             <font>构建异质结及设置参数</font>
         </center>
     </td>

@@ -14,13 +14,13 @@ sidebar_position: 3
 <table><tr>
     <td> 
         <center>
-            <img src={require('./nested/qstudio_example_hetero1.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_hetero1.png').default} alt="Drawing" />
             <font>构建异质结</font>
         </center>
     </td>
     <td> 
         <center>
-            <img src={require('./nested/qstudio_example_hetero2.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_hetero2.png').default} alt="Drawing" />
             <font>参数设置</font>
         </center>
     </td>
@@ -46,13 +46,13 @@ sidebar_position: 3
 <table><tr>
     <td> 
         <center>
-            <img src={require('./nested/qstudio_example_hetero3.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_hetero3.png').default} alt="Drawing" />
             <font>构建异质结</font>
         </center>
     </td>
     <td> 
         <center>
-            <img src={require('./nested/qstudio_example_hetero4.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_hetero4.png').default} alt="Drawing" />
             <font>参数设置</font>
         </center>
     </td>
@@ -78,13 +78,13 @@ sidebar_position: 3
 <table><tr>
     <td> 
         <center>
-            <img src={require('./nested/qstudio_example_hetero5.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_hetero5.png').default} alt="Drawing" />
             <font>构建异质结</font>
         </center>
     </td>
     <td> 
         <center>
-            <img src={require('./nested/qstudio_example_hetero6.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_hetero6.png').default} alt="Drawing" />
             <font>参数设置</font>
         </center>
     </td>

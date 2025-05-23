@@ -12,13 +12,13 @@ sidebar_position: 5
 <table><tr>
     <td> 
         <center>
-            <img src={require('./nested/qstudio_example_mol1.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_mol1.png').default} alt="Drawing" />
             <font>构建水分子</font>
         </center>
     </td>
     <td> 
         <center>
-            <img src={require('./nested/qstudio_example_mol2.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_mol2.png').default} alt="Drawing" />
             <font>构建无序结构</font>
         </center>
     </td>

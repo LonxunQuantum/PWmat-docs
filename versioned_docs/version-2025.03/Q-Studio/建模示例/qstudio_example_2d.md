@@ -15,19 +15,19 @@ sidebar_position: 2
 <table><tr>
     <td> 
         <center>
-            <img src={require('./nested/qstudio_example_2d1.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_2d1.png').default} alt="Drawing" />
             <font>导入晶胞</font>
         </center>
     </td>
     <td> 
         <center>
-            <img src={require('./nested/qstudio_example_2d2.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_2d2.png').default} alt="Drawing" />
             <font>构建单层二维材料</font>
         </center>
     </td>
     <td> 
         <center>
-            <img src={require('./nested/qstudio_example_2d3.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_2d3.png').default} alt="Drawing" />
             <font>晶格变换</font>
         </center>
     </td>
