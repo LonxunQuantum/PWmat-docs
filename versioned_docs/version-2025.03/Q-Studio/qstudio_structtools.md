@@ -19,7 +19,7 @@ sidebar_position: 2
 - ![dragatom_mode](./nested/qstudio_structtools_dragatom.png)：激活[拖拽原子模式](./qstudio_visualization.md#拖拽原子模式)
 - ![dragmolecule_mode](./nested/qstudio_structtools_dragmol.png)：：激活[拖拽分子模式](./qstudio_visualization.md#拖拽分子模式)
 - ![rotateatom_mode](./nested/qstudio_structtools_rotate.png)：激活[旋转原子模式](./qstudio_visualization.md#旋转原子摸式)
-- ![drawatom_mode](../nested/.png)：激活[绘制原子模式](./qstudio_visualization.md#绘制原子模式)
+<!-- - ![drawatom_mode](../nested/.png)：激活[绘制原子模式](./qstudio_visualization.md#绘制原子模式) -->
 - ![residue](./nested/qstudio_structtools_residue.png)：选择残基，仅在蛋白质结构生效
 
 ---
