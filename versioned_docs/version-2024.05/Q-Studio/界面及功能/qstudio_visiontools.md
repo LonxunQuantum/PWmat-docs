@@ -19,5 +19,5 @@ sidebar_position: 2
 - ![界面](../nested/qstudio_visiontools_rotate.png)：自动旋转视角
   
 :::tip NOTE：
-使用键盘`↑` `↓` `←` `→`可以旋转视角，旋转的角度在[平移与旋转](/next/Q-Studio/界面及功能/qstudio_structtools)弹窗中定义
+使用键盘`↑` `↓` `←` `→`可以旋转视角，旋转的角度在[平移与旋转](../界面及功能/qstudio_structtools)弹窗中定义
 :::

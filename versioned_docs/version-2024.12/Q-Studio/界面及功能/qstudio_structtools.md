@@ -6,14 +6,14 @@ sidebar_position: 1
 
 ![快捷菜单](../nested/qstudio_structtools.png)
 
-- ![快捷菜单](../nested/qstudio_structtools_addwindow.png)：[新建窗口](/next/Q-Studio/界面及功能/菜单/qstudio_manual_file)
-- ![快捷菜单](../nested/qstudio_structtools_import.png)：[导入结构](/next/Q-Studio/界面及功能/菜单/qstudio_manual_file)
-- ![快捷菜单](../nested/qstudio_structtools_undo.png)：[撤销](/next/Q-Studio/界面及功能/菜单/qstudio_manual_edit)
-- ![快捷菜单](../nested/qstudio_structtools_redo.png)：[重做](/next/Q-Studio/界面及功能/菜单/qstudio_manual_edit)
+- ![快捷菜单](../nested/qstudio_structtools_addwindow.png)：[新建窗口](./菜单/qstudio_manual_file)
+- ![快捷菜单](../nested/qstudio_structtools_import.png)：[导入结构](./菜单/qstudio_manual_file)
+- ![快捷菜单](../nested/qstudio_structtools_undo.png)：[撤销](./菜单/qstudio_manual_edit)
+- ![快捷菜单](../nested/qstudio_structtools_redo.png)：[重做](./菜单/qstudio_manual_edit)
 
 ---
 
-- ![快捷菜单](../nested/qstudio_structtools_display.png)：[显示样式](/next/Q-Studio/界面及功能/菜单/qstudio_manual_view_display)
+- ![快捷菜单](../nested/qstudio_structtools_display.png)：[显示样式](./菜单/qstudio_manual_view_display)
 - ![快捷菜单](../nested/qstudio_structtools_select.png)：选择模式
 - ![快捷菜单](../nested/qstudio_structtools_rotate.png)：观察模式
 - ![快捷菜单](../nested/qstudio_structtools_translate.png)：平移模式
@@ -21,16 +21,16 @@ sidebar_position: 1
 
 ---
 
-- ![快捷菜单](../nested/qstudio_structtools_symmetry.png)：[查找对称性](/next/Q-Studio/界面及功能/菜单/qstudio_manual_settings_symmtry_findsymmetry)
-- ![快捷菜单](../nested/qstudio_structtools_lattice.png)：[晶格常数](/next/Q-Studio/界面及功能/菜单/qstudio_manual_settings_latticeconstant)
-- ![快捷菜单](../nested/qstudio_structtools_unbuild.png)：[拆除晶格](/next/Q-Studio/界面及功能/菜单/qstudio_manual_settings_newlattice)
-- ![快捷菜单](../nested/qstudio_structtools_rebuild.png)：[新建晶格](/next/Q-Studio/界面及功能/菜单/qstudio_manual_settings_newlattice)
+- ![快捷菜单](../nested/qstudio_structtools_symmetry.png)：[查找对称性](./菜单/qstudio_manual_settings_symmtry_findsymmetry)
+- ![快捷菜单](../nested/qstudio_structtools_lattice.png)：[晶格常数](./菜单/qstudio_manual_settings_latticeconstant)
+- ![快捷菜单](../nested/qstudio_structtools_unbuild.png)：[拆除晶格](./菜单/qstudio_manual_settings_newlattice)
+- ![快捷菜单](../nested/qstudio_structtools_rebuild.png)：[新建晶格](./菜单/qstudio_manual_settings_newlattice)
 
 ---
 
-- ![快捷菜单](../nested/qstudio_structtools_addatom.png)：[添加原子](/next/Q-Studio/界面及功能/菜单/qstudio_manual_build_addatom)
-- ![快捷菜单](../nested/qstudio_structtools_element.png)：[修改元素](/next/Q-Studio/界面及功能/菜单/qstudio_manual_build)
-- ![快捷菜单](../nested/qstudio_structtools_hydrogen.png)：[自动加氢](/next/Q-Studio/界面及功能/菜单/qstudio_manual_build)
+- ![快捷菜单](../nested/qstudio_structtools_addatom.png)：[添加原子](./菜单/qstudio_manual_build_addatom)
+- ![快捷菜单](../nested/qstudio_structtools_element.png)：[修改元素](./菜单/qstudio_manual_build)
+- ![快捷菜单](../nested/qstudio_structtools_hydrogen.png)：[自动加氢](./菜单/qstudio_manual_build)
 
 ---
 

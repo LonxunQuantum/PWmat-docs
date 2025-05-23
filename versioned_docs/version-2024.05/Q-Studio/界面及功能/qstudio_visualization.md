@@ -15,14 +15,14 @@ sidebar_position: 4
 - 单击鼠标右键：弹出菜单
   
 ![visual1](../nested/qstudio_visualization2.png)
-  - [`剪切` `复制` `粘贴` `删除`](/next/Q-Studio/界面及功能/菜单/qstudio_manual_edit)
-  - [`显示样式`](/next/Q-Studio/界面及功能/菜单/qstudio_manual_view_display)
-  - [`晶格常数`](/next/Q-Studio/界面及功能/菜单/qstudio_manual_settings_latticeconstant)
-  - [`限制原子移动`](/next/Q-Studio/界面及功能/菜单/qstudio_manual_settings_fixatom)
-  - [`设置磁矩`](/next/Q-Studio/界面及功能/菜单/qstudio_manual_settings_magmom)
-  - [`全选原子` `选择等价原子` `选择同种元素原子`](/next/Q-Studio/界面及功能/菜单/qstudio_manual_select)
+  - [`剪切` `复制` `粘贴` `删除`](./%E8%8F%9C%E5%8D%95/qstudio_manual_edit.md)
+  - [`显示样式`](./%E8%8F%9C%E5%8D%95/qstudio_manual_view_display.md)
+  - [`晶格常数`](./%E8%8F%9C%E5%8D%95/qstudio_manual_settings_latticeconstant.md)
+  - [`限制原子移动`](./%E8%8F%9C%E5%8D%95/qstudio_manual_settings_fixatom.md)
+  - [`设置磁矩`](./%E8%8F%9C%E5%8D%95/qstudio_manual_settings_magmom.md)
+  - [`全选原子` `选择等价原子` `选择同种元素原子`](./%E8%8F%9C%E5%8D%95/qstudio_manual_select.md)
 - 按住鼠标右键移动鼠标：旋转视角
-- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](/next/Q-Studio/界面及功能/qstudio_structtools)弹窗中定义
+- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](../界面及功能/qstudio_structtools.md)弹窗中定义
 - 键盘Delete：删除选中原子
 
 ## 观察模式
@@ -32,7 +32,7 @@ sidebar_position: 4
 - 按住鼠标左键拖拽鼠标：旋转视角
 - 单击鼠标右键：弹出菜单
 - 按住鼠标右键移动鼠标：旋转视角
-- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](/next/Q-Studio/界面及功能/qstudio_structtools)弹窗中定义
+- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](../界面及功能/qstudio_structtools.md)弹窗中定义
 - 键盘Delete：删除选中原子
 
 ## 平移模式
@@ -42,7 +42,7 @@ sidebar_position: 4
 - 按住鼠标左键拖拽鼠标：平移视角
 - 单击鼠标右键：弹出菜单
 - 按住鼠标右键移动鼠标：旋转视角
-- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](/next/Q-Studio/界面及功能/qstudio_structtools)弹窗中定义
+- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](../界面及功能/qstudio_structtools.md)弹窗中定义
 - 键盘Delete：删除选中原子
 
 ## 拖拽原子模式
@@ -50,18 +50,18 @@ sidebar_position: 4
 - 在原子上按住鼠标左键拖拽鼠标：拖拽原子移动
 - 在空白处按住鼠标左键移动鼠标：旋转视角
 - 按住鼠标右键移动鼠标：旋转视角
-- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](/next/Q-Studio/界面及功能/qstudio_structtools)弹窗中定义
+- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](../界面及功能/qstudio_structtools.md)弹窗中定义
 
 ## 拖拽分子模式
 
 - 在属于分子的某个原子上按住鼠标左键拖拽鼠标：拖拽分子移动
 - 在空白处按住鼠标左键移动鼠标：旋转视角
 - 按住鼠标右键移动鼠标：旋转视角
-- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](/next/Q-Studio/界面及功能/qstudio_structtools)弹窗中定义
+- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](../界面及功能/qstudio_structtools.md)弹窗中定义
 
 ## 测量模式
 
 - 在原子上单击鼠标左键：开始/结束测量
 - 在空白处按住鼠标左键移动鼠标：旋转视角
 - 按住鼠标右键移动鼠标：旋转视角
-- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](/next/Q-Studio/界面及功能/qstudio_structtools)弹窗中定义
+- 键盘`↑` `↓` `←` `→`：按固定角度旋转视角，旋转的角度在[平移与旋转](../界面及功能/qstudio_structtools.md)弹窗中定义

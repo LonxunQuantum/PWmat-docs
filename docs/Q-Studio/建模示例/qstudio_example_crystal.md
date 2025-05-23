@@ -14,19 +14,19 @@ sidebar_position: 0
 <table><tr>
     <td> 
         <center>
-            <img src={require('.../nested/qstudio_example_crystal1.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_crystal1.png').default} alt="Drawing" />
             <font>导入晶胞</font>
         </center>
     </td>
     <td> 
         <center>
-            <img src={require('.../nested/qstudio_example_crystal2.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_crystal2.png').default} alt="Drawing" />
             <font>扩胞</font>
         </center>
     </td>
     <td> 
         <center>
-            <img src={require('.../nested/qstudio_example_crystal3.png').default} alt="Drawing" />
+            <img src={require('../nested/qstudio_example_crystal3.png').default} alt="Drawing" />
             <font>替换原子</font>
         </center>
     </td>
