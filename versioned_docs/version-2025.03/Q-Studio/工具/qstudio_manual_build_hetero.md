@@ -1,4 +1,4 @@
-# 构建异质结构
+# 构建异质结构(superlattice)
 支持将2-3个晶格匹配的结构沿指定方向堆叠，提供晶格调整、堆叠方式选择、镜像操作和边界原子保留等功能，并可设置缓冲层和原子平移
 ![build_crystal](.././nested/qstudio_manual_build_hetero.png)
 

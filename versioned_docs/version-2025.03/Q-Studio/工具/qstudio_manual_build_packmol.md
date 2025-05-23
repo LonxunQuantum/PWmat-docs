@@ -1,4 +1,4 @@
-# 构建无序结构(superlattice)
+# 构建无序结构
 通过指定填充规则和容忍距离，将多个分子/结构单元按固定位置或区域填充方式混合成无序结构。
 
 ![build_crystal](.././nested/qstudio_manual_build_packmol.png)
