@@ -228,31 +228,199 @@ $\varepsilon_{t}  = max_i(\sqrt{\frac{\sum_{1}^{w} \left \| F_{w,i}(R_t) -\hat{F
 
 用于设置待探索的结构文件路径前缀，`可选参数`，与 [`sys_configs`](#sys_configs) 配合使用。可以是绝对路径或者相对路径，相对路径为当前目录。
 
-例子：`"sys_config_prefix":"/data/structure"`, `"sys_configs":"atom.config"`, 则 `atom.config` 的实际路径是 `/data/structure/atom.config`。
-
 ### sys_configs
 
 设置待探索的结构文件路径，如果设置了 [`sys_config_prefix`](#sys_config_prefix) 则进行路径拼接，否则使用 sys_configs 中设置的路径作为 config 路径。
 
 该参数为 list 格式，对于 PWMAT 格式结构文件，直接写出文件路径即可，对于 VASP 格式结构文件，需要设置 `format` 格式，如下例中所示。
+```json
+        "sys_config_prefix": "../../structures",
+        "sys_configs": [
+                        {"config":"POSCAR", "format":"vasp/poscar"},
+                        "49.config",
+                        "45.config",
+                        "41.config",
+                        "37.config",
+                        "33.config",
+                        "29.config",
+                        "25.config",
+                        "21.config",
+                        "17.config",
+                        "1.config"
+            ]
+```
+例如对于 `49.config`文件，它的文件路径为`../../structures/49.config`。
+
+### lmps_prefix
+
+可选参数，用于设置 lammps 探索的输入控制文件路径前缀，`可选参数`，与 [`lmps_in`](#lmps_in) 配合使用。可以是绝对路径或者相对路径，相对路径为当前目录。
+
+例子：`"lmps_prefix":"/data/in_lmps_files"`, `"lmps_in":"in0.lmps"`, 则 `in0.lmps` 的实际路径是 `/data/in_lmps_files/in0.lmps`。
+
+### lmps_in
+
+可选参数，设置设置 lammps 探索的输入控制文件路径，如果设置了 [`lmps_prefix`](#lmps_prefix) 则进行路径拼接，否则使用 lmps_in 中设置的路径作为 lammps 控制文件的路径。
+
+该参数为 list 格式，如下例中所示。
 
 ```json
-    "sys_configs": [
-        {"config":"POSCAR", "format":"vasp/poscar"},
-        "atom1.config",
-        "atom2.config"
-    ]
+        "lmps_prefix": "../../in_lmps_files",
+        "lmps_in": [
+                        "in0.lmps",
+                        "in1.lmps",
+                        "in2.lmps",
+                        "in3.lmps",
+                        "in4.lmps",
+                        "in5.lmps"
+            ]
 ```
 
 ### md_jobs
 
-设置每个轮次的主动学习分子动力学参数。为 list 格式，第 `i` 个元组代表第 `i` 个轮次主动学习对应设置。每个元组内部可以为 dict 格式，或者 dict 格式的 list 数组。
+设置每个轮次的主动学习分子动力学参数。为 list 格式，第 `i` 个元组代表第 `i` 个轮次主动学习对应设置。每个元组内部可以为 dict 格式，或者 dict 格式的 list 数组。注意：以下 md 设置中，对于时间的单位都使用 `units metal`。
 
-注意：以下 md 设置中，对于时间的单位都使用 `units metal`。
+对于lammps的输入控制，pwact 提供了两种方式。第一种是在 param.json 中提供的关键字设置，控制探索需要的步数、以及lammps温度、压强、系综，可参考[例子](#案例参考)。第二种是通过`用户提供的lammps.in文件`控制，参数为 [`lmps_prefix`](#lmps_prefix) 和 [`lmps_in`](#lmps_in)。可参考 [金银合金主动学习操作案例](./example_auag_init_zh.md)。
+
+:::tip
+第二种设置方式在 `pwact-0.4` 版本中开始支持。
+:::
+
+对于第二种，如果用户提供了lammps.in文件，pwact在运行时，会自动维护 lammps.in 文件中的以下字段。
+
+- "dump_freq"，该参数通过 [trj_freq](#trj_freq) 设置，用于设置每隔多少步采样一次
+- "units"、 "boundary"、 "atom_style"，由于 MatPL 力场只支持周期性的体系模拟，因此这三个关键字是固定格式，内容为
+  ```txt
+    units           metal
+    boundary        p p p
+    atom_style      atomic
+  ```
+- "restart"，pwact 中自动设置每个1万步保存一次运行状态
+- "read_data"，该参数用设置初始结构所在路径，在 pwact 在探索时该值会自动设置为所需路径
+- "mass"、 "pair_style"、 "pair_coeff"，该三个参数用于设置机器学习的力场，以对硅元素体系的探索为例，在 pwact 在探索时该值会自动设置为：
+  ```txt
+    mass    1    28.086
+    pair_style   matpl  0_torch_script_module.pt 1_torch_script_module.pt 2_torch_script_module.pt 3_torch_script_module.pt  out_freq ${DUMP_FREQ}  out_file model_devi.out 
+    pair_coeff   * * 14
+  ```
+- "dump"，该值用于设置轨迹的保存格式，在pwact中该值会自动设置为如下内容，并插入到lammps.in文件中的第一个 run 命令所在行前面，这里 DUMP_FREQ 值为[trj_freq](#trj_freq)参数中所设值：
+  ```txt
+    dump 1 all custom ${DUMP_FREQ} traj/*.lammpstrj id type x y z fx fy fz
+  ```
+
+这里以如下设置为例，该lmp.in 文件为硅的lammps模拟输入文件：
+```txt
+variable        NSTEPS          equal 400
+variable        THERMO_FREQ     equal 5
+variable        DUMP_FREQ       equal 5
+variable        restart         equal 0
+variable        TEMP            equal 500.000000
+variable        PRESS           equal 100.000000
+variable        TAU_T           equal 0.100000
+variable        TAU_P           equal 0.500000
+
+units           metal
+boundary        p p p
+atom_style      atomic
+
+neighbor        1.0 bin
+neigh_modify    delay 10
+
+box              tilt large
+if "${restart} > 0" then "read_restart lmps.restart.*" else "read_data lmp.config"
+change_box       all triclinic
+
+thermo_style    custom step temp pe ke etotal press vol lx ly lz xy xz yz
+thermo          ${THERMO_FREQ}
+restart         10000 lmps.restart
+
+if "${restart} == 0" then "velocity        all create ${TEMP} 76752"
+fix             1 all npt temp ${TEMP} ${TEMP} ${TAU_T} iso ${PRESS} ${PRESS} ${TAU_P}
+
+timestep        0.001000
+run             ${NSTEPS} upto
+
+```
+运行时，lmp.in会替换为如下内容：
+```txt
+variable        DUMP_FREQ       equal 5
+variable        restart         equal 0
+units           metal
+boundary        p p p
+atom_style      atomic
+
+if "${restart} > 0" then "read_restart lmps.restart.*" else "read_data lmp.config"
+
+mass   1    28.086
+pair_style   matpl  0_torch_script_module.pt 1_torch_script_module.pt 2_torch_script_module.pt 3_torch_script_module.pt  out_freq ${DUMP_FREQ} out_file model_devi.out 
+pair_coeff       * * 14
+
+variable        NSTEPS          equal 400
+variable        THERMO_FREQ     equal 5
+variable        TEMP            equal 500.000000
+variable        PRESS           equal 100.000000
+variable        TAU_T           equal 0.100000
+variable        TAU_P           equal 0.500000
+
+neighbor        1.0 bin
+neigh_modify    delay 10
+
+box              tilt large
+change_box       all triclinic
+
+
+thermo_style    custom step temp pe ke etotal press vol lx ly lz xy xz yz
+thermo          ${THERMO_FREQ}
+
+fix             1 all npt temp ${TEMP} ${TEMP} ${TAU_T} iso ${PRESS} ${PRESS} ${TAU_P}
+
+timestep        0.001000
+dump            1 all custom ${DUMP_FREQ} traj/*.lammpstrj id type x y z fx fy fz
+restart         10000 lmps.restart
+
+if "${restart} == 0" then "velocity        all create ${TEMP} 75740"
+run             ${NSTEPS} upto
+```
+
+#### sys_idx
+用于设置 md 的初始结构，为 list 格式，值为 [`sys_configs`](#sys_configs)中的结构下标，这里可以指定多个结构。
+
+#### select_sys
+与 [`sys_idx`](#sys_idx) 配合使用，用于限制 `sys_idx` 中每个初始探索结构的最多用于标注的构型数量，默认不设置，采用 [`max_select`](#max_select)中的设置。如果参数 `max_select` 也未设置，将采用默认值 `100`。例如对于如下设置：
+```json
+  "sys_idx": [0, 1],
+  "select_sys":[20, 30],
+```
+sys_idx指定了`0`号结构 POSCAR 和 `1`号结构 49.config，在`0`号结构对应的轨迹中最多选取`20`个结构用于标注，在`1`号结构对应的轨迹中最多最多选取`30`个结构用于标注。如果不设置 select_sys，则对0和1号结构分别最多选取[`max_select`](#max_select)个结构做标记。
+
+您也可以设置为`"select_sys":20`，等效于`"select_sys":[20, 20]`。
+
+#### trj_freq
+用于设置轨迹采样频率（ `thermo` ），默认值为`10`，即间隔 10 步采样一次。
+
+#### lmps_in_idx
+用于第二种lammps输入控制方式。设置对[`sys_idx`](#sys_idx)中对应的初始结构做分子动力学探索的lammps.in文件所在路径。使用如下例子中所示：
+```json
+        "md_jobs": [
+            [{
+                "sys_idx": [ 1,3,4],
+                "select_sys":[10,15,20],
+                "lmps_in_idx":[0, 1, 2],
+                "trj_freq": 5
+            },{
+                "sys_idx": [0, 1],
+                "lmps_in_idx":3
+            }
+            ]]
+```
+在该例中，对于"sys_idx": [ 1,3,4] 指定了需要探索的结构，即[上例](#sys_configs)中的49.config、41.config、37.config。分别设置lammps控制文件为in0.lmps、 in1.lmps、in2.lmps。设置每隔5步，采样一次。
+
+对于"sys_idx": [0, 1] 指定的结构49.config、41.config，设置lammps输入控制文件in3.lmps。采样间隔用默认值，每个10步采样一次。
+
+存在 lmps_in_idx 设置时，[`ensemble`](#ensemble)、[`nsteps`](#nsteps)、[`md_dt`](#md_dt)、[`press`](#press)、[`taup`](#taup)、[`temps`](#temps)、[`taut`](#taut) 参数将自动失效。
 
 #### ensemble
 
-设置 系综，默认值 `"nve"`,支持如下设置：
+用于第一种lammps输入控制方式。设置 系综，默认值 `"nve"`,支持如下设置：
 
 `npt`、`npt-i`或`npt-iso` 对应 lammps 设置
 ```txt
@@ -281,62 +449,30 @@ fix  1 all nve
 
 #### nsteps
 
-设置 md 总的步数，为必选参数，需要用户提供。
-
+用于第一种lammps输入控制方式。设置 md 总的步数，为必选参数，需要用户提供。
 #### md_dt
 
-用于设置 `timestep` ，默认值为 `0.001`，即 `1飞秒`。
-
-#### trj_freq
-
-用于设置轨迹采样频率（ `thermo` ），默认值为`10`，即间隔 10 步采样一次。
-
-#### sys_idx
-
-用于设置 md 的初始结构，为 list 格式，值为 [`sys_configs`](#sys_configs)中的结构下标，这里可以指定多个结构。在探索中，会对每个构型分别按照 [`"press"`](#press) 和 [`"temps"`](#temps) 中指定的压强和温度做探索。
-
-例如对于如下设置， `"sys_idx":[0, 1]`、 `"press":[100, 200]`、 `"temps":[300, 400]`，将对下标为 0 和 1 的结构，分别在 压强、温度为[100, 300]、[100, 400]、[200, 300]、[200, 400]下做 md，将产生 `8条` 轨迹。
-```json
-{  
-  "ensemble": "npt",
-  "nsteps": 1000,
-  "md_dt": 0.002,
-  "trj_freq": 10,
-  "sys_idx": [0, 1],
-  "select_sys":[20, 30],
-  "temps": [300, 400],
-  "taut":0.1,
-  "press": [100, 200],
-  "taup": 0.5,
-  "boundary":true
-}
-```
-### select_sys
-与 [`sys_idx`](#sys_idx) 配合使用，用于限制 `sys_idx` 中每个初始探索结构的最多用于标注的构型数量，默认不设置，采用 [`max_select`](#max_select)中的设置。如果参数 `max_select` 也未设置，将采用默认值 `100`。
-
-例如 对于[`sys_idx`](#sys_idx)的例子，设置`"select_sys":[20, 30]`，将对`0`号结构对应的`4`条轨迹中最多选取`20`个结构用于标注，对于`1`号结构对应的`4`条轨迹中最多最多选取`30`个结构用于标注。
-
-您也可以设置为`"select_sys":20`，等效于`"select_sys":[20, 20]`。
+用于第一种lammps输入控制方式。用于设置 `timestep` ，默认值为 `0.001`，即 `1飞秒`。
 
 #### press
 
-用于设置 md 探索的压强，为 list 格式。
+用于第一种lammps输入控制方式。用于设置 md 探索的压强，为 list 格式。
 
 #### taup
 
-稳压器的耦合时间（ps）, 默认值 `0.5`。
+用于第一种lammps输入控制方式。稳压器的耦合时间（ps）, 默认值 `0.5`。
 
 #### temps
 
-用于设置 md 探索的温度，为 list 格式。
+用于第一种lammps输入控制方式。用于设置 md 探索的温度，为 list 格式。
 
 #### taut
 
-恒温器的耦合时间（ps），默认值 `0.1`。
+用于第一种lammps输入控制方式。恒温器的耦合时间（ps），默认值 `0.1`。
 
 #### boundary
 
-设置模拟系统的边界条件，默认值为 `true`，即采用 `p p p`， 设置为 `false` 则使用 `f f f`。
+用于第一种lammps输入控制方式。设置模拟系统的边界条件，由于MatPL力场只支持对周期性体系的模拟，因此该值为 `true`，即采用 `p p p`。不需要用户设置。
 
 #### 例子
 
@@ -380,14 +516,51 @@ fix  1 all nve
 
 对于第二个dict，使用 `nvt` 系综，在`sys_idx` 配置了`1`个构型，对应 `0_pertub.poscar`，温度为 `400`，即在 温度`400K` 下做`lammps`模拟。模拟结束后获得`1`条轨迹。
 
+下面是"ensemble": "npt", "nsteps": 1000, "md_dt": 0.002, "trj_freq": 10, "sys_idx": 0, "temps": 500, "taut":0.1, "press" :100, "taup": 0.5, "boundary":true 设置下，自动生成的lammps.in输入控制文件内容：
+```txt
+variable        NSTEPS          equal 400
+variable        THERMO_FREQ     equal 5
+variable        DUMP_FREQ       equal 5
+variable        restart         equal 0
+variable        TEMP            equal 500.000000
+variable        PRESS           equal 100.000000
+variable        TAU_T           equal 0.100000
+variable        TAU_P           equal 0.500000
 
+units           metal
+boundary        p p p
+atom_style      atomic
+
+neighbor        1.0 bin
+neigh_modify    delay 10
+
+box              tilt large
+if "${restart} > 0" then "read_restart lmps.restart.*" else "read_data lmp.config"
+change_box       all triclinic
+
+mass   1    28.086
+pair_style   matpl  0_torch_script_module.pt 1_torch_script_module.pt 2_torch_script_module.pt 3_torch_script_module.pt  out_freq ${DUMP_FREQ} out_file model_devi.out 
+pair_coeff       * * 14
+
+thermo_style    custom step temp pe ke etotal press vol lx ly lz xy xz yz
+thermo          ${THERMO_FREQ}
+dump            1 all custom ${DUMP_FREQ} traj/*.lammpstrj id type x y z fx fy fz
+restart         10000 lmps.restart
+
+if "${restart} == 0" then "velocity        all create ${TEMP} 76752"
+fix             1 all npt temp ${TEMP} ${TEMP} ${TAU_T} iso ${PRESS} ${PRESS} ${TAU_P}
+
+timestep        0.001000
+run             ${NSTEPS} upto
+```
+文件中velocity 中的`76752`为随机生成值。
 ## DFT
 
 设置自洽计算，为 dict 格式。
 
 ### dft_style
 
-设置标注（自洽计算）使用哪种 DFT 计算软件，默认值为 `pwmat`, 也支持 VASP 格式，如果是 VASP 格式，则设置为 `vasp`。如果设置为 `bigmodel`，则必须在 [`bigmodel_script`](#bigmodel_script) 中设置处理脚本。
+设置标注（自洽计算）使用哪种 DFT 计算软件，默认值为 `pwmat`, 也支持 VASP 或 CP2K 格式，分别设置为 `vasp` 或 `cp2k`。如果设置为 `bigmodel`，则必须在 [`bigmodel_script`](#bigmodel_script) 中设置处理脚本。
 
 ### bigmodel_script
 用于设置 大模型做标记（推理能量和受力）时的处理脚本。
@@ -413,37 +586,35 @@ fix  1 all nve
 
 <!-- ### in_skf
 设置 `DFTB`(PWMAT封装) 的赝势文件上一级目录所在路径，为string 格式，绝对路径或相对路径（相对于当前路径）。 -->
-
-### basis_set_file
-参考 [potential_file](#potential_file)。
-
-### potential_file
-设置 `CP2K` 赝势文件 `BASIS_MOLOPT` 和 `POTENTIAL` 文件所在路径。例如
-```josn
-    "basis_set_file":"~/datas/systems/cp2k/data/BASIS_MOLOPT",
-    "potential_file":"~/datas/systems/cp2k/data/POTENTIAL"
+### gaussian_param
+CP2K 或 PWMAT 高斯基组参数设置，
+`basis_set_file` 和 `potential_file` 指定基组和势函数文件路径。
+`atom_list`, `basis_set_list`, `potential_list` 配合使用，分别指定元素对应的基组和势函数设置。kspacing 用于设置 K点，用法与 [PWMAT KSPACKING 设置](#kspacing) 相同。
+```json
+"gaussian_param": {
+    "basis_set_file":"./init_bulk/BASIS_MOLOPT_1",
+    "potential_file":"./init_bulk/POTENTIAL_1",
+    "atom_list":["Si"],
+    "kspacing" :0.4,
+    "basis_set_list":["SZV-MOLOPT-SR-GTH"],
+    "potential_list":["GTH-PBE-q4"]
+}
 ```
 
-### 例子
+### DFT设置例子
 由于自洽计算任务使用的输入控制相同，因此只需要单文件的设置，对于不同的DFT软件，分别设置如下。
 
+#### PWMat 设置
 对于PWMAT，设置与 [INIT_BULK](./init_param_zh.md) 中相似，如果您未在scf_etot.input中指定 "MP_N123" 参数，则您需要设置 kspacing 和 flag_symm 参数。
 ```json
-    "DFT": {
-            "dft_style": "pwmat",
-            "input": "scf_etot.input",
-            "kspacing":0.3,
-            "flag_symm":0
-    }
-```
-
-您也可以不设置，将使用默认参数 kspacing=0.5， flag_symm = 0，此时设置如下
-```json
-"DFT": {
-      "dft_style": "pwmat",
-      "input": "scf_etot.input",
-      "pseudo":["~/NCPP-SG15-PBE/Si.SG15.PBE.UPF"]
-    }
+  "DFT": {
+          "dft_style": "pwmat",
+          "input": "scf_etot.input",
+          "kspacing":0.5,
+          "flag_symm":0,
+          "pseudo" : ["../Ag.SG15.PBE.UPF","../Au.SG15.PBE.UPF"],
+          "_flag":"1个整数，or scf 0 , aimd 3, 磁性体系2"
+  }
 ```
 <!-- 
 如果您使用了集成在PWMAT中的DFTB，则设置为：
@@ -455,26 +626,34 @@ fix  1 all nve
     }
 ``` -->
 
-对于 VASP，设置如下：
+#### VASP 设置
 ```json
-"DFT": {
-      "dft_style": "vasp",
-      "input": "scf_INCAR",
-      "pseudo":["~/Si/POTCAR"]
-    }
+  "DFT": {
+          "dft_style":"vasp",
+          "input":"INCAR_scf",
+          "pseudo" : ["../Ag_POTCAR", "../Au_POTCAR"]
+  }
 ```
 
-对于 CP2K，设置如下：
+#### CP2K 设置
 ```json
-"DFT": {
-    "dft_style": "cp2k",
-    "input": "scf_cp2k.inp",
-    "basis_set_file":"~/datas/systems/cp2k/data/BASIS_MOLOPT",
-    "potential_file":"~/datas/systems/cp2k/data/POTENTIAL"
-    }
+  "DFT": {
+          "dft_style":"cp2k",
+          "input":"scf.inp",
+          "gaussian_param": {
+              "basis_set_file":"../BASIS_MOLOPT_1",
+              "potential_file":"../POTENTIAL_1",
+              "atom_list":["Ag", "Au"],
+              "basis_set_list":["SZV-MOLOPT-SR-GTH-q11", "SZV-MOLOPT-SR-GTH-q11"],
+              "potential_list":["GTH-PBE", "GTH-PBE"],
+              "_kspacing":0.5
+          }
+  }
 ```
 
-### 例子
+注意，请在 scf_cp2k.inp 文件中设置 IGNORE_CONVERGENCE_FAILURE 参数，设置后对于不收敛的情况，CP2K 将正常退出，pwact在检测到 CP2K 正常退出后，将会继续向下执行。否则，pwact 在检测到CP2K 异常停止后，将重新提交任务三次，三次失败后，将会停止运行。
+
+### 案例参考
 
 如下例子，为一个标准的主动学习流程，两个轮次的主动学习，采用多模型委员会查询策略。更多使用案例，请参考源码根目录的 [`example`](https://github.com/LonxunQuantum/PWact/tree/main/examples)。
 

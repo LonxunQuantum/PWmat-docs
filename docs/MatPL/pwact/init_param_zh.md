@@ -251,42 +251,78 @@ CP2K 或 PWMAT 高斯基组参数设置，
     }]
 ```
 
-### vasp 的 relax 和 aimd 输入控制文件设置
-
-vasp
+### pwmat 设置例子
+pwmat K点通过在控制文件中设置 MP_N123，例子：
 ``` json
-设置 dft 计算软件类型
-"dft_style":"vasp",
-赝势设置
-"pseudo" : ["POTCAR"]
-
-单文件
-"relax_input":"relax_incar"
-多文件
-"relax_input":["relax_incar1", "relax_incar2"]
-
-单文件
-"aimd_input":"aimd_incar"
-多文件
-"aimd_input":["aimd_incar1", "aimd_incar2"]
+    "dft_style":"PWmat",
+    "relax_input":["relax-agau-etot.input", "relax_ag-etot.input", "relax_au-etot.input"],
+    "aimd_input": ["aimd_agau-etot.input",   "aimd_ag-etot.input", "aimd_au-etot.input" ],
+    "pseudo" : ["../Ag.SG15.PBE.UPF", "../Au.SG15.PBE.UPF"]
 ```
 
-### cp2k的 relax 和 aimd 输入控制文件设置
-```json
-设置 dft 计算软件类型
-"dft_style":"cp2k",
-赝势设置
-"basis_set_file_name":"BASIS_MOLOPT",
-"potential_file_name":"POTENTIAL",
-设置K点
- "kspacing":0.5
-单文件
-"relax_input":"relax_cp2k.inp"
-多文件
-"relax_input":["relax_cp2k.inp", "relax_cp2k2.inp"]
+pwmat K点通过 kspacing 设置，例子：
+``` json
+    "dft_style":"PWmat",
+    "relax_input":[{
+            "input":"relax_etot0.input",
+            "kspacing":0.5,
+            "flag_symm":"0"
+        },{
+            "input":"relax_etot1.input",
+            "kspacing":0.3,
+            "flag_symm":"0"
+        },{
+            "input":"relax_etot2.input",
+            "kspacing":0.4,
+            "flag_symm":"0",
+            "_flag":"1个整数，relax or scf 0 , aimd 3, 磁性体系2"
+        }],
 
-单文件
-"aimd_input":"aimd_cp2k.inp"
-多文件
-"aimd_input":["aimd_cp2k.inp", "aimd_cp2k2.inp"]
+    "aimd_input":[{
+            "input":"aimd_etot0.input",
+            "kspacing":0.5,
+            "flag_symm":"3"
+        },{
+            "input":"aimd_etot1.input",
+            "kspacing":0.5,
+            "flag_symm":"3"
+        }],
+    "pseudo" : ["../Ag.SG15.PBE.UPF", "../Au.SG15.PBE.UPF"]
+```
+
+pwmat gaussian基组设置例子：
+``` json
+    "dft_style":"PWmat",
+    "relax_input":["relax_etot.input", "relax_etot1.input","relax_etot2.input"],
+    "aimd_input": ["aimd_etot1.input", "aimd_etot2.input"],
+    "gaussian_param": {
+        "basis_set_file":"./BASIS_MOLOPT_1",
+        "potential_file":"./POTENTIAL_1",
+        "atom_list":["Si"],
+        "basis_set_list":["SZV-MOLOPT-SR-GTH"],
+        "potential_list":["GTH-PBE-q4"]
+    }
+```
+
+### vasp 设置例子
+``` json
+    "dft_style":"vasp",
+    "relax_input":["INCAR_relax_AgAu", "INCAR_relax_Ag", "INCAR_relax_Au"],
+    "aimd_input": ["INCAR_md_AgAu",   "INCAR_md_Ag", "INCAR_md_Au" ],
+    "pseudo" : ["../Ag_POTCAR", "../Au_POTCAR"]
+```
+
+### cp2k 设置例子
+```json
+    "dft_style":"cp2k",
+    "gaussian_param": {
+        "basis_set_file":"../BASIS_MOLOPT_1",
+        "potential_file":"../POTENTIAL_1",
+        "atom_list":["Ag", "Au"],
+        "basis_set_list":["SZV-MOLOPT-SR-GTH-q11", "SZV-MOLOPT-SR-GTH-q11"],
+        "potential_list":["GTH-PBE", "GTH-PBE"],
+        "kspacing":0.5
+    },
+    "aimd_input":["aimd_cp2k_AgAu.inp", "aimd_cp2k_Ag.inp", "aimd_cp2k_Au.inp"],
+    "relax_input":["relax_cp2k_AgAu.inp", "relax_cp2k_Ag.inp", "relax_cp2k_Au.inp"]
 ```

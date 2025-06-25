@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # Example for Si active learning (Bigmodel and Direct)
 
-本案例为硅体系的主动学习过程，采用了大模型（eqv2）和direct采样。在 [`PWact/examples/`](https://github.com/LonxunQuantum/PWact/tree/main/pwact/example) 下准备了多种组合设置，每种组合的信息请参考[`PWact/examples/README.md`](https://github.com/LonxunQuantum/PWact/blob/main/examples/README.md)。这里以[`PWact/examples/si_pwmatgaussion_bigmodel_direct`] 为例介绍 大模型和 direct 方法的参数设置、脚本设置。
+本案例为硅体系的主动学习过程，采用了大模型（eqv2）和direct采样。在 [`PWact/examples/`](https://github.com/LonxunQuantum/PWact/tree/main/pwact/example) 下准备了多种组合设置，每种组合的信息请参考[`PWact/examples/README.md`](https://github.com/LonxunQuantum/PWact/blob/main/examples/README.md)。对于 Mcloud用户，请访问路径`/share/public/PWMLFF_test_data/pwact_examples/25-pwact-demo`即可。这里以[`PWact/examples/si_pwmatgaussion_bigmodel_direct`] 为例介绍 大模型和 direct 方法的参数设置、脚本设置。
 对于 `INIT_BULK` 构造初始训练集，以[`examples/si_pwmatgaussion_bigmodel_direct/init_bulk_bigmodel`](https://github.com/LonxunQuantum/PWact/tree/main/examples/si_pwmatgaussion_bigmodel_direct/init_bulk_bigmodel)为例：
 
  - step1. 用 PWmat (gaussion 基组) 做relax；

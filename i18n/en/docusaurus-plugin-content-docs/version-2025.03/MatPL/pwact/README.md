@@ -145,15 +145,18 @@ pwact to_pwdata -i mvm_init_000_50 mvm_init_001_50 mvm_init_002_50 -s pwdata -f 
 # -m 指定合并转换后的数据，如果您的MOVMENT 文件列表元素种类相同和原子数量相同，您可以使用该参数，将训练集作为一个文件夹保存
 # -o 指定训练集和测试集划分比例，默认为0.8
 ``` -->
-
 #### gather_pwdata 命令
 
-搜索主动学习目录下所有探索到的结构，并将结果转换为 pwmlff/npy 格式训练集，
+搜索主动学习目录下所有探索到的所有结构，并将结果保存到 final_pwdata 目录下，数据格式与主动学习中设置的['data_format'](./run_param_zh.md#data_format) 格式相同。目录结构如下所示，final_pwdata_list.txt 保存了当前目录下每个iter数据的目录。
+```txt
+final_pwdata/
+final_pwdata_list.txt  iter.0000  iter.0001  iter.0002 ...
+```
 
 ```bash
 pwact gather_pwdata -i .
 ```
-这里 `-i` 指定主动学习的目录所在路径
+这里 `-i` 指定主动学习的根目录所在路径（案例中对应run_iter目录）。
 
 #### kill 命令
 
