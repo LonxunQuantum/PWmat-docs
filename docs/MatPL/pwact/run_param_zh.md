@@ -307,6 +307,8 @@ $\varepsilon_{t}  = max_i(\sqrt{\frac{\sum_{1}^{w} \left \| F_{w,i}(R_t) -\hat{F
     dump 1 all custom ${DUMP_FREQ} traj/*.lammpstrj id type x y z fx fy fz
   ```
 
+- "dump_modify"，如果用户设置了该值，pwact在使用时会自动将该行的'dump_modify dump-ID' 替换为 'dump_modify 1', 即设置 dump-ID 与 dump 中一致，其他不变
+
 这里以如下设置为例，该lmp.in 文件为硅的lammps模拟输入文件：
 ```txt
 variable        NSTEPS          equal 400

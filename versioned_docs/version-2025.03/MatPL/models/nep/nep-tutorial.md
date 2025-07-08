@@ -172,6 +172,21 @@ mpirun -np N lmp_mpi -in in.lammps
 
 此外，lammps 接口允许跨节点以及跨节点GPU卡并行，只需要指定节点数、GPU卡数即可。
 
+## ASE 接口
+NEP 模型提供了 ase 接口，使用方式如下脚本例子所示[gitee](https://gitee.com/pfsuo/MatPL/tree/main/example/ase_calculator/test_nep) 或 [github](https://github.com/LonxunQuantum/MatPL/tree/main/example/ase_calculator/test_nep)。 
+
+```python
+from src.ase.calculate import MatPL_calculator
+calc = MatPL(model_file='nep_model.ckpt or nep.txt')
+atoms = ..... # create ase.atoms.Atoms
+atoms.calc = calc # or atoms.set_calculator(calc)
+energy = atoms.get_potential_energy()
+forces = atoms.get_forces()
+stress = atoms.get_stress()
+```
+注意，在使用本ase接口时确保已经导入了[MatPL的环境变量](../../install/README.md)。
+
+
 <!-- ## NEP 模型的训练测试
 
 替换为最新的结果、是否把测试这部分结果单独提取出来作为NEP的README(介绍NEP的原理) -->

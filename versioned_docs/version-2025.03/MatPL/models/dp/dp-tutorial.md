@@ -169,3 +169,18 @@ mpirun -np N lmp_mpi -in in.lammps
 这里 N 为md中的使用的 CPU 核数，如果您的设备中存在可用的GPU资源（例如 M 张GPU卡）,则在运行中，N个lammps线程将平均分配到这M张卡上。我们建议您使用的 CPU 核数与您设置的 GPU 数量相同，多个线程在单个 GPU 上会由于资源竞争导致运行速度降低。
 
 此外，lammps 接口允许跨节点以及跨节点GPU卡并行，只需要指定节点数、GPU卡数即可。
+
+
+## ASE 接口
+DP 模型提供了 ase 接口，使用方式如下脚本例子所示[gitee](https://gitee.com/pfsuo/MatPL/tree/main/example/ase_calculator/test_dp) 或 [github](https://github.com/LonxunQuantum/MatPL/tree/main/example/ase_calculator/test_dp)。 
+
+```python
+from src.ase.calculate import MatPL_calculator
+calc = MatPL(model_file='dp_model.ckpt')
+atoms = ..... # create ase.atoms.Atoms
+atoms.calc = calc # or atoms.set_calculator(calc)
+energy = atoms.get_potential_energy()
+forces = atoms.get_forces()
+stress = atoms.get_stress()
+```
+注意，在使用本ase接口时确保已经导入了[MatPL的环境变量](../../install/README.md)。

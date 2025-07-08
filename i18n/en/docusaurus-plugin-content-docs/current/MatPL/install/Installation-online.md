@@ -158,7 +158,7 @@ You can load the environment variables by running (recommended):
 
 Or by executing the following commands:
 
-  export PYTHONPATH=/the/path/of/MatPL-2025.3/src:$PYTHONPATH
+  export PYTHONPATH=/the/path/of/MatPL-2025.3:$PYTHONPATH
   export PATH=/the/path/of/MatPL-2025.3/src/bin:$PATH
 
 ==================================
@@ -170,7 +170,7 @@ Or by executing the following commands:
 
 也可以通过如下命令加载
 ```
-  export PYTHONPATH=/the/path/of/MatPL-2025.3/src:$PYTHONPATH
+  export PYTHONPATH=/the/path/of/MatPL-2025.3:$PYTHONPATH
   export PATH=/the/path/of/MatPL-2025.3/src/bin:$PATH
 ```
 
