@@ -1,5 +1,5 @@
 # 机器学习力场优化
-采用MACE-MPA-0模型进行结构弛豫计算，支持力收敛标准和步数设置，集成DFT-D3范德华修正，并提供实时结构刷新和查看收敛情况
+使用大模型进行结构弛豫计算，可实时查看收敛情况。
 
 ![mlff_relax](.././nested/qstudio_mlff_relax.png)
 - 选择结构：仅支持选择有晶格的结构
@@ -7,7 +7,9 @@
 ---
 
 - 参数设置
-  - 模型：[MACE-MPA-0](https://github.com/ACEsuit/mace?tab=readme-ov-file#latest-recommended-foundation-models)
+  - 模型：
+    - [MACE-MPA-0](https://github.com/ACEsuit/mace?tab=readme-ov-file#latest-recommended-foundation-models)
+    - [SevenNet-MF-ompa](https://github.com/MDIL-SNU/SevenNet?tab=readme-ov-file#sevennet-mf-ompa-17mar2025)
   - 力收敛标准：在达到标准后计算停止
   - 最大优化步数：在达到最大优化步数后计算停止
   - DFT-D3：考虑范德华力

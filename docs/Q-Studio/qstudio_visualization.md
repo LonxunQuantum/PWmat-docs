@@ -92,13 +92,13 @@ sidebar_position: 5
 - `Ctrl+left-drag` `Shift+left-drag` `Ctrl+right-drag`：平移视角
 - `Shift+right-drag`：绕z轴旋转视角
 
-<!-- ## 绘制原子模式
+## 绘制原子模式
 - 在原子上`left-click`：修改元素为所选元素
 - 在原子上`left-drag`：绘制新原子，元素为所选元素
 - 在空白处`left-drag`：平移视角
 - `right-drag`：旋转视角
 - `Ctrl+left-drag` `Shift+left-drag` `Ctrl+right-drag`：平移视角
-- `Shift+right-drag`：绕z轴旋转视角 -->
+- `Shift+right-drag`：绕z轴旋转视角
 
 ## 测量距离/角度/扭转模式
 - 在原子上`left-click`：开始/结束测量

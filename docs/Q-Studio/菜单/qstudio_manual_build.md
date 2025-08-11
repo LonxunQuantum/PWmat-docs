@@ -11,8 +11,9 @@ sidebar_position: 4
 
 - [新建晶体](../%E5%B7%A5%E5%85%B7/qstudio_manual_build_crystal.md)
 - [构建分子](../%E5%B7%A5%E5%85%B7/qstudio_manual_build_molecule.md)
-- [构建纳米管](../%E5%B7%A5%E5%85%B7/qstudio_manual_build_nanotube.md)
-- [构建纳米团簇](../%E5%B7%A5%E5%85%B7/qstudio_manual_build_nanocluster.md)
+- 构建纳米结构
+  - [构建纳米管](../%E5%B7%A5%E5%85%B7/qstudio_manual_build_nanotube.md)
+  - [构建纳米团簇](../%E5%B7%A5%E5%85%B7/qstudio_manual_build_nanocluster.md)
 - [构建无序结构(superlattice)](../%E5%B7%A5%E5%85%B7/qstudio_manual_build_packmol.md)
 - [构建异质结构](../%E5%B7%A5%E5%85%B7/qstudio_manual_build_hetero.md)
 - 输运器件建模：
