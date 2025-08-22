@@ -379,7 +379,7 @@ $$
 参数 t_0 和 t_mult 配合使用，用于设置在 ADAM 优化器中使用余弦退火算法更新学习率。注意：启用了余弦退火后，学习率的更新由调度器 optim.lr_scheduler.CosineAnnealingWarmRestarts 完全接管，在[decay_step](#decay_step)中的学习率更新策略将失效。
 
 - T_0 学习率第一次回到初始值的epoch位置；
-- T_mult 控制学习率变化的速度。如果T_mult=1,则学习率在T_0,2T_0,3T_0,....,i*T_0,....处回到最大值(初始学习率)；如果T_mult>1,则学习率在T_0,(1+T_mult)T_0,(1+T_mult+T_mult**2)T_0,.....,(1+T_mult+T_mult2+...+T_0i)*T0,处回到最大值。
+- T_mult 控制学习率变化的速度。如果T_mult=1,则学习率在T_0,2T_0,3T_0,....,i*T_0,....处回到最大值(初始学习率)；如果T_mult>1,则学习率在T_0,(1+T_mult)*T_0,(1+T_mult+T_mult**2)*T_0,.....,(1+T_mult+T_mult2+...+T_0i)*T0,处回到最大值。
 
 如下图所示，该例中[初始学习率 learning_rate](#learning_rate) 为 0.001，T_0 = 1, T_mult = 2, [最小学习率 stop_lr](#stop_lr) = 3.51e-08。
 

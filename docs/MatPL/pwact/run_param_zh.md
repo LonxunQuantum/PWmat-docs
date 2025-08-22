@@ -282,10 +282,10 @@ $\varepsilon_{t}  = max_i(\sqrt{\frac{\sum_{1}^{w} \left \| F_{w,i}(R_t) -\hat{F
 对于lammps的输入控制，pwact 提供了两种方式。第一种是在 param.json 中提供的关键字设置，控制探索需要的步数、以及lammps温度、压强、系综，可参考[例子](#案例参考)。第二种是通过`用户提供的lammps.in文件`控制，参数为 [`lmps_prefix`](#lmps_prefix) 和 [`lmps_in`](#lmps_in)。可参考 [金银合金主动学习操作案例](./example_auag_init_zh.md)。
 
 :::tip
-第二种设置方式在 `pwact-0.4` 版本中开始支持。
+`lmps_in` 设置方式在 `>= pwact-0.4` 版本中开始支持。
 :::
 
-对于第二种，如果用户提供了lammps.in文件，pwact在运行时，会自动维护 lammps.in 文件中的以下字段。
+对于`lmps_in`，如果用户提供了lammps.in文件，pwact在运行时，会自动维护 lammps.in 文件中的以下字段。
 
 - "dump_freq"，该参数通过 [trj_freq](#trj_freq) 设置，用于设置每隔多少步采样一次
 - "units"、 "boundary"、 "atom_style"，由于 MatPL 力场只支持周期性的体系模拟，因此这三个关键字是固定格式，内容为
@@ -400,7 +400,7 @@ sys_idx指定了`0`号结构 POSCAR 和 `1`号结构 49.config，在`0`号结构
 用于设置轨迹采样频率（ `thermo` ），默认值为`10`，即间隔 10 步采样一次。
 
 #### lmps_in_idx
-用于第二种lammps输入控制方式。设置对[`sys_idx`](#sys_idx)中对应的初始结构做分子动力学探索的lammps.in文件所在路径。使用如下例子中所示：
+配合 [`lmps_in`](#lmps_in) 使用。设置对[`sys_idx`](#sys_idx)中对应的初始结构做分子动力学探索的lammps.in文件所在路径。使用如下例子中所示：
 ```json
         "md_jobs": [
             [{

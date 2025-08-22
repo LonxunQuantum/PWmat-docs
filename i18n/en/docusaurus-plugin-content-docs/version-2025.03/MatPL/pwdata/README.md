@@ -156,7 +156,7 @@ pwdata [-h] -i INPUT [INPUT ...] [-f INPUT_FORMAT] [-s SAVEPATH] [-o OUTPUT_FORM
 可选参数，int类型，该参数用于提取轨迹文件时，指定每隔多少步取一帧结构。默认值为1
 
 #### `-q`
-可选参数，str类型，该参数值在输入类型为`meta`时生效，用于查询数据库操作，详细的使用参考 [meta查询演示](#convert_configs-meta-查询例子)
+可选参数，str类型，该参数值在输入类型为`meta`时生效，用于查询数据库操作，对于 -q 指定的参数，建议用请用引号包裹，避免特殊字符如`H>4`，shell会把`>`符号解释为重定向符号，详细的使用参考 [meta查询演示](#convert_configs-meta-查询例子)。
 
 #### `-n`
 可选参数，int类型，该参数在输入类型为`meta`时生效，用于设置并行查询数据库时使用的CPU核数，默认使用单核
@@ -210,22 +210,22 @@ pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb ex
 
 例2. 使用`-q 参数`查询，查询包含了`Cu`元素的所有结构
 ```bash
-pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -q Cu
+pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -q 'Cu'
 ```
 
 例3. 使用`-q 参数`查询，查询结构中`H`原子数目少于3个的所有结构
 ```bash
-pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -q H<3
+pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -q 'H<3'
 ```
 
 例4. 使用`-q 参数`查询，查询结构中，包含`Cu`原子并且`H`原子数目少于3个的所有结构
 ```bash
-pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -q Cu,H<3
+pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -q 'Cu,H<3'
 ```
 
 例5. 使用`-q 参数`查询，查询结构中，至少包含2个`H`原子且至少包含1个`O`原子的所有结构
 ```bash
-pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -q H2O 
+pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -q 'H2O' 
 ```
 
 一些其他查询语句

@@ -141,7 +141,8 @@ GCC version is exactly 8, current version is 8.
 执行如下命令开始编译：
 ```bash
 sh clean.sh
-sh build.sh
+sh build.sh [-jN]
+# 这里N为并行编译的核数，例如 sh build.sh -j4 将采用4核编译。默认采用单核编译，即 sh build.sh
 ```
 :::tip
 如果您在编译过程中出错，请在[MATPL 常见安装错误总结](./error-record/InstallError.md) 中查询。
@@ -265,7 +266,8 @@ conda activate matpl-2025.3
 ``` bash
 cd lammps/src/MATPL/NEP_GPU
 make clean
-make
+make [-jN]
+# 这里 N 为并行编译的核数，例如 make -j4 将采用4核编译。默认采用单核编译，即 make
 # 编译完成后您将得到一个/lammps/src/libnep_gpu.so的共享库文件
 ```
 #### step2. 编译 lammps 接口
@@ -285,7 +287,10 @@ make yes-MEAM
 make yes-MC
 make yes-SHOCK
 # 开始编译
-make clean-all && make mpi
+make clean-all 
+make mpi [-jN] [mode=shared]
+# 这里 N 为并行编译的核数，例如 make mpi -j4 mode=shared 将采用4核编译。默认采用单核编译，即 make mpi mode=shared  
+# mode=shared 可选项，表示同时编译lammps共享库，该共享库可用于各类python接口中，推荐安装
 ```
 
 如果编译过程中找不到 `cuda_runtime.h` 头文件，请在 `src/MAKE/Makefile.mpi` 文件的 `第24行` 替换为您自己的 CUDA 路径，`/the/path/cuda/cuda-11.8`，`cuda_runtime.h` 位于该目录下的 `include` 目录下。CPU 版本不存在该问题。
@@ -394,9 +399,11 @@ source /opt/rh/devtoolset-8/enable
 ``` bash
 cd lammps/src/MATPL/fortran_code
 make clean
-make
+make [-jN]
 # 编译完成后您将得到一个/lammps/src/MATPL/f2c_calc_energy_force.a 文件
+# 这里 N 为并行编译的核数，例如 make -j4 将采用4核编译。默认采用单核编译，即 make  
 ```
+
 #### step2. 编译lammps 接口
 
 ```bash
@@ -415,7 +422,9 @@ make yes-MC
 make yes-SHOCK
 # 开始编译
 make clean-all
-make mpi -j4 mode=shared # 这里4为并行编译数量，shared为编译出一个共享库文件，可以用于python相关操作中
+make mpi [-j4] [mode=shared] # 这里4为并行编译数量，shared为编译出一个共享库文件，可以用于python相关操作中
+# 这里 N 为并行编译的核数，例如 make mpi -j4 mode=shared 将采用4核编译。默认采用单核编译，即 make mpi mode=shared  
+# mode=shared 可选项，表示同时编译lammps共享库，该共享库可用于各类python接口中，推荐安装
 ```
 
 编译完成将在窗口输出如下信息，并在lammps源码根目录生成一个env.sh文件，使用lammps前加载该文件即可。

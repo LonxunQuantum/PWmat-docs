@@ -6,7 +6,7 @@ sidebar_position: 5
 
 本案例为金银合金体系的主动学习过程，案例位于 [`pwact/example/auag_pwmat/`](https://github.com/LonxunQuantum/PWact/tree/main/pwact/example/auag_pwmat) 首先通过 `INIT_BULK` 构造初始训练集，之后使用初始训练集训练模型，并使用在 INIT_BULK 中使用微扰产生的结构做为初始构型，使用`用户输入的lammp.in`输入控制文件下做主动学习采样。
 :::tip
-使用`用户输入的lammp.in`输入控制文件下做主动学习采样在 `pwact-0.4` 版本中开始支持。
+使用`用户输入的lammp.in`输入控制文件下做主动学习采样在 `>= pwact-0.4` 版本中开始支持。
 :::
 
 以下案例使用的 DFT 计算软件为 PWMAT，案例也提供了使用 VASP 的对应设置[`pwact/example/auag_vasp/`](https://github.com/LonxunQuantum/PWact/tree/main/pwact/example/auag_vasp)、 CP2K的对应设置[`pwact/example/auag_cp2k/`](https://github.com/LonxunQuantum/PWact/tree/main/pwact/example/auag_cp2k)。

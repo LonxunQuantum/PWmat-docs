@@ -95,12 +95,14 @@ CPU 版本不需要 CUDA 和 nvcc 编译器支持。
 ## 4. 执行安装命令
 环境检查完毕后，执行如下命令即可完成安装
 ```bash
-sh MatPL-2025.3.sh
+sh MatPL-2025.3.sh [-jN]
+# 这里N为并行编译的核数，例如 sh MatPL-2025.3.sh -j4 将采用4核编译。默认采用单核编译，即 sh MatPL-2025.3.sh
 ```
 
 对于CPU版本，执行如下命令：
 ```bash
-sh MatPL_cpu-2025.3.sh
+sh MatPL_cpu-2025.3.sh [-jN]
+# 这里N为并行编译的核数，例如 sh MatPL_cpu-2025.3.sh -j4 将采用4核编译。默认采用单核编译，即 sh MatPL_cpu-2025.3.sh
 ```
 
 是否安装成功检查：
