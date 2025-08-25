@@ -141,8 +141,9 @@ GCC version is exactly 8, current version is 8.
 执行如下命令开始编译：
 ```bash
 sh clean.sh
-sh build.sh [-jN]
-# 这里N为并行编译的核数，例如 sh build.sh -j4 将采用4核编译。默认采用单核编译，即 sh build.sh
+sh build.sh [-jN] [-nN]
+# -jN 这里N为并行编译的核数，例如 sh build.sh -j4 将采用4核编译。默认采用单核编译，即 sh build.sh
+# -nN 这里N为NEP力场支持的元素类型数量，默认为20，即支持最多20种元素的力场训练，对于通用力场，可设置为为-n100，例如 sh build.sh -j4 -n100。注意，较大的N会导致力场训练速度变慢
 ```
 :::tip
 如果您在编译过程中出错，请在[MATPL 常见安装错误总结](./error-record/InstallError.md) 中查询。
