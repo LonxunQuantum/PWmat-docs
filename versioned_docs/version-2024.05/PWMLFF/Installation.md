@@ -60,10 +60,10 @@ PWMLFF 离线安装包集成了 PWMLFF 和 Lammps 接口。 包含 `Fortran`、`
 由于 conda 环境配置较为耗时，且部分用户设备无法联网。我们在离线安装包中配置好了conda 环境，用户只需要下载离线包，安装后即可使用。
 
 ### 1. 下载离线安装包
-方法一 请访问百度网盘下载，链接如果失效请邮件联系 `wuxingxing@pwmat.com` 或`support@pwmat.com`：
+方法一 请访问百度网盘下载，链接如果失效请邮件联系 `matpl@pwmat`、`wuxingxing@pwmat.com` 或 `support@pwmat.com`：
 👉 [离线安装包下载 pwmlff-2024.5.sh.tar.gz](https://pan.baidu.com/s/1sPB9gBEFJd3q9A__O_wpBQ?pwd=pwmt)
 
-方法二 邮件获取，建议您发送邮件到 `wuxingxing@pwmat.com` 或 `support@pwmat.com` 获取离线安装包。相比于百度网盘，通过邮件链接下载的速度更快（几十倍以上）。
+方法二 邮件获取，建议您发送邮件到 `matpl@pwmat`、`wuxingxing@pwmat.com` 或 `support@pwmat.com` 获取离线安装包。相比于百度网盘，通过邮件链接下载的速度更快（几十倍以上）。
 
 ### 2. 解压安装包
 离线安装包内容较大，我们拆分成了4个文件，安装方式如下所示：
@@ -311,7 +311,7 @@ sh build.sh
 如果您在编译过程中出错，请在[PWMLFF常见安装错误总结](./Error%20Record/InstallError.md) 中查询。
 
 :::tip
-如果仍未解决您的问题，请将您的机器环境信息、编译错误日志以及您执行的编译操作过程描述 发送到邮箱 support@pwmat.com 或者 wuxingxing@pwmat.com，我们将及时联系您处理。
+如果仍未解决您的问题，请将您的机器环境信息、编译错误日志以及您执行的编译操作过程描述 发送到邮箱 `matpl@pwmat`、`wuxingxing@pwmat.com` 或 `support@pwmat.com`，我们将及时联系您处理。
 
 - `编译完成后会自动将 PWMLFF 环境变量加入.bashrc 文件中，如果不需要，请您在.bashrc中手动删除环境变量`。
 ```txt

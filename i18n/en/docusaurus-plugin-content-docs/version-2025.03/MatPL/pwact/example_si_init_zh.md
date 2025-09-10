@@ -166,21 +166,14 @@ model_devi.out 格式：
        40      0.065051169      0.000681319      0.089395358      0.065790218      0.000036582      0.103522832
 ```
 
-model_devi.out的第一列为当前步编号，第二列为最大力偏差的均值，计算公式如下所示：
+model_devi.out的第1列为当前步编号，第2列为力偏差的均值，第3列为力偏差最小值，第4列为力偏差最大值。力偏差最大值计算公式如下所示：
 
-$\varepsilon_{t}  = max_i(\sqrt{\frac{\sum_{1}^{w} \left \| F_{w,i}(R_t) -\hat{F_{i}} \right \| ^2 }{W}} )$,  $\hat{F_{i}} = \frac{ {\textstyle \sum_{1}^{W}F_{w,i}} }{W} $
+$\varepsilon_{t}  = max_i\sqrt{\left \langle \sum_{1}^{w} \left \| F_{w,i}(R_t) -\hat{F_{i}} \right \| ^2 \right \rangle }
+$ ,  $\hat{F_{i}} = \frac{ {\textstyle \sum_{1}^{W}F_{w,i}} }{W} $
 
-第二列为最大力偏差值，计算公式如下所示:
+这里 $W$ 为模型数量，$i$为原子下标，$<>$为取平均。
 
-$\varepsilon_{t}  = max_i(\sqrt{ \left \| F_{w,i}(R_t) -\hat{F_{i}} \right \| ^2 })$
-
-第三列为最小里偏差值，计算公式如下所示：
-
-$\varepsilon_{t}  = min_i(\sqrt{ \left \| F_{w,i}(R_t) -\hat{F_{i}} \right \| ^2 })$
-
-这里 $W$ 为模型数量，$i$为原子下标。
-
-后三列分别是原子能量的最大偏差均值、最大值和最小值。在PWact主动学习中使用的是第二列的最大力偏差均值。
+后三列分别是原子能量的偏差均值、最小值和最大值。在PWact主动学习中使用的是`第4列的最大力偏差值`。
 
 #### select 子目录
 
