@@ -3,14 +3,14 @@ sidebar_position: 2
 title: DP
 ---
 
-# DP
+## DP 模型
 
-## **[操作演示](./dp-tutorial.md)**
+**[操作演示](./dp-tutorial.md)**
 
-## 模型介绍
-<div style={{ display: 'inline-block', marginRight: '10px' }}>
-  <img src={require("./picture_wu/dpnet.png").default} alt="nep_net" width="450" />
-</div>
+### DP 模型介绍
+
+![DP 网络结构](./pictures/dpnet.png)
+
 
 DP 模型请参考文献：
 
@@ -29,7 +29,7 @@ DP 模型请参考文献：
 
 对于$S_{ij}$，$i$为中心原子，这里将$j$对应的元素类型的[物理属性](../../Parameter%20details#type_physical_property)与$S_{ij}$做拼接，组成一个长度为 1+物理属性数量的 Vector 送入 Embedding Net。在我们[五元合金(钌、铑、铱、钯、镍)数据集](https://github.com/LonxunQuantum/MatPL_library/tree/main/alloy/Ru_Rh_Ir_Pd_Ni)以及[LiGePS 四元数据集(1200K)](https://github.com/LonxunQuantum/MatPL_library/tree/main/LiGePS)的测试中，基于这种 Type embedding 方法的 DP 模型，能够在达到或者超过标准的 DP 模型预测精度的同时，对训练时间减少 27%，详细结果见[性能测试](#type_performance)。
 
-## 使用方法
+**使用方法**
 
 用户只需要在控制训练的 json 文件中加入$type\_embedding$参数，即可开启模型训练，将使用默认物理属性训练，参见项目案例 **example/LiGePS/ligeps.json**。
 
@@ -41,54 +41,59 @@ DP 模型请参考文献：
 
 用户也可以在该 Json 文件的 [model 参数](../../Parameter%20details#type_physical_property) 中指定所需要的物理属性。
 
-## 性能测试{#type_performance}
+### 性能测试-精度{#type_performance}
 
-### 精度
 
 [五元合金混合数据集(9486 个构型)](https://github.com/LonxunQuantum/MatPL_library/tree/main/alloy/Ru_Rh_Ir_Pd_Ni)下，Type embedding 方法相对于标准的 DP 模型在验证集上的预测精度对比:
 
-<table>
+![五元合金体系验证集上的能量和受力误差下降](./pictures/menual_valid_alloy_dp_type_ef_rmse.png)
+
+<!-- <table>
   <tr>
     <td>
-      <img src={require("./picture_wu/menual_valid_alloy_dp_type_energy_rmse.png").default} alt="menual_valid_alloy_dp_type_energy_rmse" width="400" />
+      <img src={require("./pictures/menual_valid_alloy_dp_type_energy_rmse.png").default} alt="menual_valid_alloy_dp_type_energy_rmse" width="400" />
       <p>图1: 五元合金体系验证集上的能量误差下降</p>
     </td>
     <td>
-      <img src={require("./picture_wu/manual_train_alloy_dp_type_force_rmse.png").default} alt="manual_train_alloy_dp_type_force_rmse" width="400" />
+      <img src={require("./pictures/manual_train_alloy_dp_type_force_rmse.png").default} alt="manual_train_alloy_dp_type_force_rmse" width="400" />
       <p>图2: 五元合金体系验证集上的力误差下降</p>
     </td>
   </tr>
-</table>
+</table> -->
 
 [四元 LiGePS 构型的数据集（10000 个构型 1200K）](https://github.com/LonxunQuantum/MatPL_library/tree/main/LiGePS)下 Type embedding 方法相对于标准的 DP 模型在验证集上的预测精度对比:
 
-<table>
+![四元LiGePS体系验证集上的能量和受力误差下降](./pictures/manumal_valid_ligeps_dp_type_ef_rmse.png)
+
+<!-- <table>
   <tr>
     <td>
-      <img src={require("./picture_wu/manumal_valid_ligeps_dp_type_energy_rmse.png").default} alt="manumal_valid_ligeps_dp_type_energy_rmse" width="400" />
+      <img src={require("./pictures/manumal_valid_ligeps_dp_type_energy_rmse.png").default} alt="manumal_valid_ligeps_dp_type_energy_rmse" width="400" />
       <p>图1: 四元LiGePS体系验证集上的能量误差下降</p>
     </td>
     <td>
-      <img src={require("./picture_wu/manumal_valid_ligeps_dp_type_force_rmse.png").default} alt="manumal_valid_ligeps_dp_type_force_rmse" width="400" />
+      <img src={require("./pictures/manumal_valid_ligeps_dp_type_force_rmse.png").default} alt="manumal_valid_ligeps_dp_type_force_rmse" width="400" />
       <p>图2: 四元LiGePS体系验证集上的力误差下降</p>
     </td>
   </tr>
-</table>
+</table> -->
 
-### 训练时间
+### 性能测试-训练时间
 
-<table>
+![四元LiGePS体系验证集上的能量和受力误差下降](./pictures/manual_train_alloy_ligeps_dp_type_time.png)
+
+<!-- <table>
   <tr>
     <td>
-      <img src={require("./picture_wu/manual_train_alloy_dp_type_time.png").default} alt="manual_train_alloy_dp_type_time" width="400" />
+      <img src={require("./pictures/manual_train_alloy_dp_type_time.png").default} alt="manual_train_alloy_dp_type_time" width="400" />
       <p>图1: 五元合金体系训练总时间</p>
     </td>
     <td>
-      <img src={require("./picture_wu/manumal_valid_ligeps_dp_type_time.png").default} alt="manumal_valid_ligeps_dp_type_time" width="400" />
+      <img src={require("./pictures/manumal_valid_ligeps_dp_type_time.png").default} alt="manumal_valid_ligeps_dp_type_time" width="400" />
       <p>图2: 四元LiGePS体系训练总时间</p>
     </td>
   </tr>
-</table>
+</table> -->
 在 Lammps 中的力场调用方式与前述标准的 DP 模型调用方法相同。
 
 ### 多项式模型压缩
@@ -97,9 +102,9 @@ DP 模型的 Embedding net 网络数目是原子类型数目$N$的$N^2$倍，随
 
 这里实现论文[Lu D, Jiang W, Chen Y, et al. DP compress: A model compression scheme for generating efficient deep potential models](https://pubs.acs.org/doi/10.1021/acs.jctc.2c00102?fig=fig3&ref=pdf)中使用的[五阶多项式](#5order_cmp)压缩方法，同时我们也提供了基于 Hermite 插值方法的[三阶多项式](#3order_cmp)压缩方法供用户自由选择。
 
-![proportion_time](./picture_wu/proportion_time_inference.png)
+![proportion_time](./pictures/proportion_time_inference.png)
 
-## 使用方法
+**使用方法**
 
 对于一个训练后 DP 模型做模型压缩，完整的模型压缩指令如下：
 
@@ -114,162 +119,201 @@ MatPL compress dp_model.ckpt -d 0.01 -o 3 -s cmp_dp_model
 
 模型压缩之后，在 lammps 中做分子动力学模拟使用方式与标准的[DP 模型](./dp-tutorial.md/#lammps-md)相同。
 
-## 性能测试{#cmp_time}
+<!-- ### 性能测试{#cmp_time} -->
 
 <!--
  type embedding的模型压缩还没有加入到lammps中，所以先不写
  -->
 
-### 模型压缩精度
+**模型压缩精度**
 
 我们在 Bulk 铜和五元合金体系上对 DP 模型做了模型压缩，并在测试集上分别做了测试。结果如下图中所示，对于铜体系，我们加入了对二阶插值方法的精度对比，相比于三阶和五阶方法，二阶方法的精度达不到要求。
 
-<table>
+![模型压缩不同阶精度对比](./pictures/cu_alloy_compress_dp_valid_abs_error.png)
+
+<!-- <table>
   <tr>
     <td>
-      <img src={require("./picture_wu/compress/cu_compress_dp_valid_abs_error.png").default} alt="cu_compress_dp_valid_abs_error" width="500" />
+      <img src={require("./pictures/cu_compress_dp_valid_abs_error.png").default} alt="cu_compress_dp_valid_abs_error" width="500" />
       <p>图1: Bulk铜体系DP模型二阶、三阶与五阶多项式压缩对比</p>
     </td>
     <td>
-      <img src={require("./picture_wu/compress/alloy_compress_dp_valid_abs_error.png").default} alt="alloy_compress_dp_valid_abs_error" width="400" />
+      <img src={require("./pictures/alloy_compress_dp_valid_abs_error.png").default} alt="alloy_compress_dp_valid_abs_error" width="400" />
       <p>图2: 五元合金体系DP模型三阶与五阶多项式压缩对比</p>
     </td>
   </tr>
-</table>
+</table> -->
 
 <!-- #### 不同的 dx 计算时间开销统计？ -->
 
-### 推理速度
+<!-- ### 推理速度 -->
 
-<!-- #### embedding net 和 grad 速度提升？ -->
-
-我们统计了五元合金体系下 DP 模型三阶多项式压缩以及未压缩时，在整个测试集上的推理时间。经过多项式压缩后明显减少了反向求导（autograd）时间，这是因为多项式方法能够显著减少 Embedding net 在 pytorch 自动求导时的计算图大小。
+<!-- 我们统计了五元合金体系下 DP 模型三阶多项式压缩以及未压缩时，在整个测试集上的推理时间。经过多项式压缩后明显减少了反向求导（autograd）时间，这是因为多项式方法能够显著减少 Embedding net 在 pytorch 自动求导时的计算图大小。
 
 <table>
   <tr>
     <td>
-      <img src={require("./picture_wu/compress/alloy_compress_forward_time.png").default}  alt="alloy_compress_forward_time" width="400" />
+      <img src={require("./pictures/alloy_compress_forward_time.png").default}  alt="alloy_compress_forward_time" width="400" />
       <p>图1: 五元合金体系三阶多项式压缩（dx=0.01）与未压缩对比</p>
     </td>
   </tr>
-</table>
+</table> -->
 
 <!-- #### 在 Lammps 中的速度提升 -->
 
-## 三阶多项式模型压缩过程{#3order_cmp}
+### 多项式模型压缩过程
 
-### 网格划分
+#### 网格划分
 
-我们扫描全部训练集，得到$s_{ij}$的最大值，由于$s_{ij}$是原子$i$和$j$的三维坐标距离$r_{ij}$函数，当$r_{ij}$ = $r_{cut}$时取最小值。根据$s_{ij}$取值范围按照$dx$值等分为$L$份，则共有$l+1$个插值点，分别记为$x_1,x_2,\cdots,x_l+1$。在实际的使用中，由于训练集的不完备，可能存在一些$s_{ij}$值超出训练集之外，这里我们在上述网格之外，继续增加了$s_{ij}$到$ 10\times s_{ij}$的网格，网格大小设置为$ 10 \times dx$。
+我们扫描全部训练集，得到 $s_{ij}$ 的最大值，由于 $s_{ij}$ 是原子 $i$ 和 $j$ 的三维坐标距离 $r_{ij}$ 函数，当 $r_{ij} = r_{\text{cut}}$ 时取最小值。根据 $s_{ij}$ 取值范围按照 $dx$ 值等分为 $L$ 份，则共有 $L+1$ 个插值点，分别记为 $x_1, x_2, \cdots, x_{L+1}$。在实际的使用中，由于训练集的不完备，可能存在一些 $s_{ij}$ 值超出训练集之外，这里我们在上述网格之外，继续增加了 $s_{ij}$ 到 $10 \times s_{ij}$ 的网格，网格大小设置为 $10 \times dx$。
 
-### 三阶多项式
+#### 三阶多项式{#3order_cmp}
 
-对于每个$[x_l,x_{l+1})$区间，采用如下的三阶多项式替代 Embedding net:
-
-$$
-g^l_m(x)=a^l_mx^3 + b^l_mx^2 + c^l_mx + d^l_m
-$$
-
-这里$m$为 Embedding net 最后一层神经元数量，即 Embedding net 输出值数目，多项式的自变量$x$值应为$s_{ij}-x_l$。在每个网格点上，都需要满足如下两个限定条件。
-在每个网格点上限制如下条件。
-多项式值与 Embedding net 输出值一致：
+对于每个 $[x_l, x_{l+1})$ 区间，采用如下的三阶多项式替代 Embedding net:
 
 $$
-y_l = G_m(x_l)
+g^l_m(x) = a^l_m x^3 + b^l_m x^2 + c^l_m x + d^l_m
 $$
 
-多项式一阶导数与 Embedding net 对$S_{ij}$的一阶导一致：
+这里 $m$ 为 Embedding net 最后一层神经元数量，即 Embedding net 输出值数目，多项式的自变量 $x$ 值应为 $s_{ij} - x_l$。在每个网格点上，都需要满足如下两个限定条件：
 
-$$
-y'_l = G'_m(x_l)
-$$
+1. 多项式值与 Embedding net 输出值一致：
+   $$
+   y_l = \mathcal{G}_m(x_l)
+   $$
+
+2. 多项式一阶导数与 Embedding net 对 $s_{ij}$ 的一阶导一致：
+   $$
+   y'_l = \mathcal{G}'_m(x_l)
+   $$
 
 解得对应系数为
 
 $$
-    a^l_m=\frac{1}{\Delta t^3}[(y'_{l+1} + y'_l)\Delta t - 2h]
+a^l_m = \frac{1}{\Delta t^3} \left[ (y'_{l+1} + y'_l) \Delta t - 2h \right]
 $$
 
 $$
-    b^l_m=\frac{1}{\Delta t^2}[-(y'_{l+1} + 2y'_l)\Delta t + 3h]
+b^l_m = \frac{1}{\Delta t^2} \left[ -(y'_{l+1} + 2y'_l) \Delta t + 3h \right]
 $$
 
 $$
-    c^l_m=y'_l
+c^l_m = y'_l
 $$
 
 $$
-    d^l_m=y_l
+d^l_m = y_l
 $$
 
-### 五阶多项式{#5order_cmp}
+其中 $h = y_{l+1} - y_l$，$\Delta t = x_{l+1} - x_l$。
 
-我们也实现了[DP Compress](https://pubs.acs.org/doi/10.1021/acs.jctc.2c00102?fig=fig3&ref=pdf)中的五阶多项式压缩方法。
+#### 五阶多项式{#5order_cmp}
 
-对于五阶多项式，对$S_{ij}$的划分方法与五阶方法相同，采用如下的多项式代替 Embedding net：
-$$g^l_m(x)=a^l_mx^5+b^l_mx^4+c^l_mx^3+d^l_mx^2+e^l_mx+f^l_m$$
+我们也实现了 [DP Compress](https://pubs.acs.org/doi/10.1021/acs.jctc.2c00102?fig=fig3&ref=pdf) 中的五阶多项式压缩方法。
 
-注意：此时多项式的自变量$x$值应为$s_{ij}-x_l$。在每个网格点上，都需要满足如下三个限定条件。
+对于五阶多项式，对 $s_{ij}$ 的划分方法与三阶方法相同，采用如下的多项式代替 Embedding net：
 
-多项式值与 Embedding net 输出值一致：
-$$y_l=\mathcal{G}_m(x_l)$$
+$$
+g^l_m(x) = a^l_m x^5 + b^l_m x^4 + c^l_m x^3 + d^l_m x^2 + e^l_m x + f^l_m
+$$
 
-多项式一阶导数与 Embedding net 对$S_{ij}$的一阶导一致：
-$$y'_l=\mathcal{G}'_m(x_l)$$
+注意：此时多项式的自变量 $x$ 值应为 $s_{ij} - x_l$。在每个网格点上，都需要满足如下三个限定条件：
 
-多项式二阶导数与 Embedding net 对$S_{ij}$的二阶导一致：
-$$y''_l=\mathcal{G}''_m(x_l)$$
+1. 多项式值与 Embedding net 输出值一致：
+   $$
+   y_l = \mathcal{G}_m(x_l)
+   $$
+
+2. 多项式一阶导数与 Embedding net 对 $s_{ij}$ 的一阶导一致：
+   $$
+   y'_l = \mathcal{G}'_m(x_l)
+   $$
+
+3. 多项式二阶导数与 Embedding net 对 $s_{ij}$ 的二阶导一致：
+   $$
+   y''_l = \mathcal{G}''_m(x_l)
+   $$
 
 由此可得六个系数值分别为：
 
-$$a^l_m=\frac{1}{2\Delta t^5}[12h-6(y'_{l+1}+y'_l)\Delta t+(y''_{l+1}-y''_l)\Delta t^2]$$
+$$
+a^l_m = \frac{1}{2\Delta t^5} \left[ 12h - 6(y'_{l+1} + y'_l) \Delta t + (y''_{l+1} - y''_l) \Delta t^2 \right]
+$$
 
-$$b^l_m=\frac{1}{2\Delta t^4}[-30h+(14y'_{l+1}+16y'_l)\Delta t+(-2y''_{l+1}+3y''_l)\Delta t^2]$$
+$$
+b^l_m = \frac{1}{2\Delta t^4} \left[ -30h + (14y'_{l+1} + 16y'_l) \Delta t + (-2y''_{l+1} + 3y''_l) \Delta t^2 \right]
+$$
 
-$$c^l_m=\frac{1}{2\Delta t^3}[20h-(8y'_{l+1}+12y'_l)\Delta t+(y''_{l+1}-3y''_l)\Delta t^2]$$
+$$
+c^l_m = \frac{1}{2\Delta t^3} \left[ 20h - (8y'_{l+1} + 12y'_l) \Delta t + (y''_{l+1} - 3y''_l) \Delta t^2 \right]
+$$
 
-$$d^l_m=\frac{1}{2}y''_l$$
+$$
+d^l_m = \frac{1}{2} y''_l
+$$
 
-$$e^l_m=y'_l$$
+$$
+e^l_m = y'_l
+$$
 
-$$f^l_m=y_l$$
+$$
+f^l_m = y_l
+$$
 
-其中 $h=y_{l+1}-y_l$，$\Delta t=x_{l+1}-x_l$
+其中 $h = y_{l+1} - y_l$，$\Delta t = x_{l+1} - x_l$。
 
+#### 模型压缩公式验证
 
-### model compression verification
+Model compress 方案，将 $s_{ij}$ 取值范围分成 $L$ 等份，则共有 $L+1$ 个插值点，分别记为 $x_1, x_2, \cdots, x_{L+1}$。对于每个 $[x_l, x_{l+1})$ 区间，采用如下的五阶多项式替代 embedding network：
 
-model compress 方案，将$s_{ij}$取值范围分成$L$等份，则共有$l+1$个插值点，分别记为$x_1,x_2,\cdots,x_{l+1}$。对于每个$[x_l,x_{l+1})$区间，采用如下的五阶多项式替代 embedding network:
-$$g^l_m(x)=a^l_mx^5+b^l_mx^4+c^l_mx^3+d^l_mx^2+e^l_mx+f^l_m$$
-注意：此时多项式的自变量$x$值应为$s_{ij}-x_l$。在每个网格点上，都需要满足如下三个边界条件：
+$$
+g^l_m(x) = a^l_m x^5 + b^l_m x^4 + c^l_m x^3 + d^l_m x^2 + e^l_m x + f^l_m
+$$
 
-函数值一致
+注意：此时多项式的自变量 $x$ 值应为 $s_{ij} - x_l$。在每个网格点上，都需要满足如下三个边界条件：
 
-$$y_l=\mathcal{G}_m(x_l)$$
+1. 函数值一致：
+   $$
+   y_l = \mathcal{G}_m(x_l)
+   $$
 
-函数一阶导数一致
+2. 函数一阶导数一致：
+   $$
+   y'_l = \mathcal{G}'_m(x_l)
+   $$
 
-$$y'_l=\mathcal{G}'_m(x_l)$$
+3. 函数二阶导数一致：
+   $$
+   y''_l = \mathcal{G}''_m(x_l)
+   $$
 
-函数二阶导数一致
+由此可得六个系数值分别为：
 
-$$y''_l=\mathcal{G}''_m(x_l)$$
+$$
+a^l_m = \frac{1}{2\Delta t^5} \left[ 12h - 6(y'_{l+1} + y'_l) \Delta t + (y''_{l+1} - y''_l) \Delta t^2 \right]
+$$
 
-由此可得六个系数值分别为
+$$
+b^l_m = \frac{1}{2\Delta t^4} \left[ -30h + (14y'_{l+1} + 16y'_l) \Delta t + (-2y''_{l+1} + 3y''_l) \Delta t^2 \right]
+$$
 
-$$a^l_m=\frac{1}{2\Delta t^5}[12h-6(y'_{l+1}+y'_l)\Delta t+(y''_{l+1}-y''_l)\Delta t^2]$$
+$$
+c^l_m = \frac{1}{2\Delta t^3} \left[ 20h - (8y'_{l+1} + 12y'_l) \Delta t + (y''_{l+1} - 3y''_l) \Delta t^2 \right]
+$$
 
-$$b^l_m=\frac{1}{2\Delta t^4}[-30h+(14y'_{l+1}+16y'_l)\Delta t+(-2y''_{l+1}+3y''_l)\Delta t^2]$$
+$$
+d^l_m = \frac{1}{2} y''_l
+$$
 
-$$c^l_m=\frac{1}{2\Delta t^3}[20h-(8y'_{l+1}+12y'_l)\Delta t+(y''_{l+1}-3y''_l)\Delta t^2]$$
+$$
+e^l_m = y'_l
+$$
 
-$$d^l_m=\frac{1}{2}y''_l$$
+$$
+f^l_m = y_l
+$$
 
-$$e^l_m=y'_l$$
-
-$$f^l_m=y_l$$
-
-其中 $h=y_{l+1}-y_l$，$\Delta t=x_{l+1}-x_l$
+其中 $h = y_{l+1} - y_l$，$\Delta t = x_{l+1} - x_l$。
 <!-- 
 ## 验证
 

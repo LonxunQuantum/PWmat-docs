@@ -3,7 +3,8 @@ sidebar_position: 4
 title: MatPL 案例实操
 slug: /Models
 ---
-# MATPL
+# MatPL 案例实操
+
 👉[开源仓库地址](https://github.com/LonxunQuantum/MatPL)
 
 包括 `8` 种具有平移、旋转和置换不变性的特征类型

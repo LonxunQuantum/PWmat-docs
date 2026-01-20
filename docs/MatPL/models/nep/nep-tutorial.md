@@ -1,8 +1,9 @@
 ---
 sidebar_position: 2
+title: NEP 操作演示
 ---
 
-# NEP 操作演示
+## NEP 操作演示
 这里，我们以 MatPL [`源码根目录/example/HfO2/nep_demo`](https://github.com/LonxunQuantum/MatPL/tree/main/example/HfO2/nep_demo) 为例（[HfO2 训练集来源](https://www.aissquare.com/datasets/detail?pageType=datasets&name=HfO2-dpgen&id=6)），演示 NEP 模型的训练、测试、lammps模拟以及其他功能。案例目录结构如下所示。
 ``` txt
 HfO2/
@@ -29,7 +30,7 @@ HfO2/
   - 控制文件 in.lammps
   - runcpu.job 和 rungpu.job 是 slurm 脚本例子
 
-## train 训练
+### train 训练
 
 在 nep_demo 目录下使用如下命令即可开始训练：
 ``` bash
@@ -37,7 +38,8 @@ MatPL train nep_train.json
 # 或修改环境变量之后通过slurm 提交训练任务 sbatch train.job
 ```
 
-#### 输入文件解释
+**输入文件解释**
+
 nep_train.json 中的内容如下所示，关于 NEP 的参数解释，请参考 [NEP 参数手册](../../Parameter%20details.md#nep-model)：
 ``` json
 {
@@ -81,7 +83,8 @@ nep_train.json 中的内容如下所示，关于 NEP 的参数解释，请参考
 
 训练结束后的力场文件目录请参考 [model_record 详解](../../matpl-cmd.md#train-文件目录)
 
-## test 测试 
+### test 测试
+
 test 命令支持来自  MatPL `nep_model.ckpt` 力场文件，以及在 lammps 或 GPUMD 中使用的 `nep5.txt` 格式文件。
 
 ``` bash
@@ -109,7 +112,8 @@ test.json 中的内容如下所示，参数解释请参考 [参数手册](../../
 ```
 测试结束后的力场文件目录请参考 [test_result 详解](../../matpl-cmd.md#test-文件目录)
 
-## infer 推理单结构
+### infer 推理单结构
+
 infer 命令支持来自MatPL `nep_model.ckpt` 力场文件、`GPUMD 的 nep4.txt `文件、 lammps 和 GPUMD 中通用的`nep5.txt` 格式文件。
 
 ``` bash
@@ -119,9 +123,8 @@ MatPL infer gpumd_nep.txt 0.lammpstrj lammps/dump Hf O
 ```
 推理成功后，将在窗口输出推理的总能、每原子能量、每原子受力和维里
 
-## 其他命令
+### totxt 转ckpt训练文件为nep5.txt
 
-### totxt
 用于把 `MatPL` 训练的 `nep_model.ckpt` 文件转换为 txt 格式的`nep5.txt` 文件，该文件可用于 GPUMD 或 lammps-MatPL 中做分子动力学模拟。
 
 ``` bash
@@ -129,9 +132,10 @@ MatPL totxt nep_model.ckpt
 ```
 执行成功将在执行该命令的所在目录生成名称为`nep5.txt`文件
 
-## lammps MD
+### lammps MD
 
-### step1. 准备力场文件
+**step1. 准备力场文件**
+
 将训练完成后生成的`nep_model.ckpt`力场文件用于 lammps 模拟，您需要
 提取力场文件，您只需要输入如下命令
 ```
@@ -143,7 +147,8 @@ MatPL totxt nep_model.ckpt
 
 此外，也`支持 GPUMD 的 NEP5、 NEP4 力场文件`。
 
-### step2. 准备输入控制文件
+**step2. 准备输入控制文件**
+
 您需要在lammps的输入控制文件中设置如下力场，这里以HfO2为例（[`HfO2/nep_demo/nep_lmps`](https://github.com/LonxunQuantum/MatPL/blob/master/example/HfO2/nep_demo/nep_lmps)
 
 ``` bash
@@ -161,7 +166,8 @@ pair_coeff   * *     8 72
 
 这里也可以将 `nep_to_lmps.txt` 文件替换为您的 GPUMD 中的 NEP4 或 NEP5 力场文件。
 
-### step3 启动lammps模拟
+**step3 启动lammps模拟**
+
 ``` bash
 # 加载 lammps 环境变量env.sh 文件，正确安装后，该文件位于 lammps 源码根目录下
 source /the/path/of/lammps/env.sh
@@ -172,7 +178,7 @@ mpirun -np N lmp_mpi -in in.lammps
 
 此外，lammps 接口允许跨节点以及跨节点GPU卡并行，只需要指定节点数、GPU卡数即可。
 
-## ASE 接口
+### ASE 接口
 NEP 模型提供了 ase 接口，使用方式如下脚本例子所示[gitee](https://gitee.com/pfsuo/MatPL/tree/main/example/ase_calculator/test_nep) 或 [github](https://github.com/LonxunQuantum/MatPL/tree/main/example/ase_calculator/test_nep)。 
 
 ```python

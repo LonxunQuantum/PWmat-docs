@@ -1,31 +1,32 @@
 ---
 sidebar_position: 3
+title: 硅体系案例
 ---
 
-# Example for Si active learning
+## 硅体系的主动学习案例
 
 本案例为硅体系的主动学习过程，案例位于 [`pwact/example/si_pwmat/`](https://github.com/LonxunQuantum/PWact/tree/main/pwact/example/si_pwmat)。对于 Mcloud用户，请访问路径`/share/public/PWMLFF_test_data/pwact_examples/25-pwact-demo`即可。
 
-案例首先通过 `INIT_BULK` 构造初始训练集，之后使用初始训练集训练模型，并使用在 INIT_BULK 中使用微扰产生的结构做为初始构型在 `300K` 、`500K` 和 `900K` 做主动学习采样。
+案例首先通过 `init_bulk` 构造初始训练集，之后使用初始训练集训练模型，并使用在 init_bulk 中使用微扰产生的结构做为初始构型在 `300K` 、`500K` 和 `900K` 做主动学习采样。
 
 请注意，案例中提供的DFT设置仅用于程序执行流程测试，不保证计算精度。
 
-![SI_POSCAR](./pictures/SI_POSCAR.png)
+![硅体相](./pictures/SI_POSCAR.png)
 
-# INIT_BULK
+### init_bulk 案例
 
-## 启动命令
+`启动命令`如下
 
 进入 `pwact/example/si_pwmat/init_bulk` 目录 
-```JSON
+```bash
 pwact init_bulk init_param.json resource.json
 ```
 
-## INIT_BULK 目录结构
+### init_bulk 目录结构
 
-INIT_BULK 的[目录结构](#目录1)如下所示，`atom.config`、`POSCAR`、`resource.json`、`init_param.json`、`relax_etot.input`、`relax_etot1.input`、`aimd_etot1.input`、`aimd_etot2.input`为输入文件，`collection` 为执行后的结果汇总目录。
+init_bulk 的[目录结构](#init_bulk 目录结构图)如下所示，`atom.config`、`POSCAR`、`resource.json`、`init_param.json`、`relax_etot.input`、`relax_etot1.input`、`aimd_etot1.input`、`aimd_etot2.input`为输入文件，`collection` 为执行后的结果汇总目录。
 
-### collection 目录
+### init_bulk 目录结构- collection 目录
 
 `datapath.txt`文件内容是预训练数据所在目录记录。
 
@@ -48,7 +49,7 @@ init_config_0 目录为 atom.config 进过驰豫、阔胞、缩放、微扰、ai
 └── virials.npy
 ```
 
-## 目录1
+### init_bulk 目录结构- init_bulk 目录结构图
 
 ```
 example/init_bulk
@@ -86,19 +87,19 @@ example/init_bulk
     ...
 ```
 
-# 主动学习
+### run 主动学习案例
 
-我们使用 INIT_BULK 案例中的预训练数据和微扰后的结构，在 500K、800K 和 1100K 下做主动学习。
+我们使用 init_bulk 案例中的预训练数据和微扰后的结构，在 500K、800K 和 1100K 下做主动学习。
 
-启动命令：
+`启动命令`:
 执行完毕 init_bulk 命令之后，进入 `pwact/example/si_pwmat/` 目录：
-```
+```bash
 pwact run param.json resource.json
 ```
 
-## 主动学习文件目录
+### run 主动学习文件目录
 
-主动学习的[目录结构](#目录2)如下所示。
+主动学习的[目录结构](#run 主动学习目录结构图)如下所示。
 
 `param.json`和`resource.json`为主动学习输入控制文件，`scf_etot.input`为主动学习做自洽计算的输入文件。
 
@@ -130,7 +131,7 @@ List of non-converged files:
 
 `00.train`、`01.explore`、`02.label` 为主动学习轮次中对应的模型训练、探索、标记三个任务所在目录。
 
-### 00.train 目录
+### run 00.train 目录
 
 对于`00.train`目录，这里采用`4`模型的委员会查询策略，训练`4`个模型，这`4`个模型只有网络参数的`初始化值不同`，其他完全相同。`0-train.job`、`1-train.job`、`2-train.job`、`3-train.job` 为执行训练任务的`4`个 slurm 任务脚本。训练任务执行完毕后，将生成`4`个标识任务执行成功的 tag 文件（`0-tag.train.success`、`1-tag.train.success`、`2-tag.train.success`、`3-tag.train.success`），以及`4`个模型，目录为`train.000`、`train.001`、`train.002`、`train.003`。
 
@@ -138,7 +139,7 @@ List of non-converged files:
 
 `torch_script_module.pt`为训练结束后，使用 jitscript 工具编译 dp_model.ckpt 后的模型文件，做为力场，用于接下来在 lammps 中的模拟。
 
-### 01.explore 目录
+### run 01.explore 目录
 
 `01.explore`目录包括两个子目录，`md`和`select`子目录。
 
@@ -146,7 +147,7 @@ List of non-converged files:
 
 之后把模拟得到的结构（轨迹）根据委员会查询方法的上下界设置做筛选，筛选的结果保存在`select`子目录。
 
-#### md 子目录
+### run 01.explore 目录- md 子目录
 
 md 子目录包括两个子目录，目录名称为 `md.***.sys.***/md.***.sys.***.t.***`，例如 `md.000.sys.000/md.000.sys.000.t.000`，
 对于`md.000.sys.000`目录，这里`md.000`的 000 指`param.json`中的[`md_jobs`](./run_param_zh.md#md_jobs) 对第 0 个 md 设置；sys.000 为[`sys_index`](./run_param_zh.md#sys_idx) 的下标 0 对应的结构。包括`md.000.sys.000.t.000`、m`d.000.sys.000.t.001`两个子目录，分别表示在温度 [`temps`](./run_param_zh.md#temps) 对应下标为`0`和`1`温度下的分子动力学模拟。
@@ -168,14 +169,13 @@ model_devi.out 格式：
 
 model_devi.out的第1列为当前步编号，第2列为力偏差的均值，第3列为力偏差最小值，第4列为力偏差最大值。力偏差最大值计算公式如下所示：
 
-$\varepsilon_{t}  = max_i\sqrt{\left \langle \sum_{1}^{w} \left \| F_{w,i}(R_t) -\hat{F_{i}} \right \| ^2 \right \rangle }
-$ ,  $\hat{F_{i}} = \frac{ {\textstyle \sum_{1}^{W}F_{w,i}} }{W} $
+$$\varepsilon_{t} = \max_i \sqrt{ \left\langle \sum_{w=1}^{W} \| F_{w,i}(R_t) - \hat{F_{i}} \|^2 \right\rangle }, \quad \hat{F_{i}} = \frac{1}{W} \sum_{w=1}^{W} F_{w,i}$$
 
 这里 $W$ 为模型数量，$i$为原子下标，$<>$为取平均。
 
 后三列分别是原子能量的偏差均值、最小值和最大值。在PWact主动学习中使用的是`第4列的最大力偏差值`。
 
-#### select 子目录
+### run 01.explore 目录- select 子目录
 
 以下`.csv`文件内容包含 3 列，分别是`力偏差（devi_force）`、 `结构在轨迹中对应的编号（config_index）`、`轨迹的文件路径（file_path）`。
 
@@ -207,19 +207,19 @@ For detailed information, refer to File error_traj.log.
 
 ```
 
-### 02.label 目录
+### run 02.label 目录
 
 `02.label` 目录包括 `scf` 和 `result` 两个子目录。`scf`为对`explore`中筛选出的点做自洽计算的目录。自洽计算后，将结构和对应的能量、力、原子能、维里提取为 pwdata 格式，保存在`result`子目录，作为后面主动学习轮次的训练数据。
 
-#### scf
+### run 02.label 目录- scf
 
 scf 下的一级和二级子目录 `md.*.sys.*/md.*.sys.*.t.*` 与[md 子目录](#md子目录)的结构和名称意义完全相同。在二级子目录下，是自洽计算的目录。以`scf/md.000.sys.000/md.000.sys.000.t.000/820-scf`目录为例，这里 820 指`md.000.sys.000/md.000.sys.000.t.000`轨迹的第 820 步对应的结构。该目录下，`820.config`为自洽计算的输入结构，`etot.input`为自洽计算的输入控制文件，`REOPORT`和`OUT.MLMD`为 PWMAT 的输出文件。其中`OUT.MLMD`文件包括了自洽计算后的结构原子位置信息、能量、力等信息。
 
-#### result
+### run 02.label 目录- result
 
 `result` 为标记结束后的带标签数据集汇总，如果设置 `data_format` 为 `extxyz` 格式，将提取为 train.xyz 文件。如果为 `pwmlff/npy` 格式，则为 PWdata 目录，目录下是具体数据。
 
-## 目录2
+### run 主动学习目录结构图
 
 ```
 example

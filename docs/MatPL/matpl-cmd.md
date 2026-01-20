@@ -1,7 +1,7 @@
 ---
 sidebar_position: 2
+title: MatPL 操作命令
 ---
-
 # MatPL 操作命令
 
 在MatPL中，您可以使用 `matpl`、`MatPL`、`MATPL`或者 `PWMLFF` 作为起始命令。其中 `PWMLFF` 为 MatPL-2025.3 之前的版本，新版本兼容该命令。
@@ -13,7 +13,7 @@ MatPL -h
 或者 MatPL --help
 ```
 
-## 1. train 训练
+## train 训练
 
 train 命令是 MatPL 的训练命令，使用该命令需要用户提前准备好训练设置的 json 文件。
 ``` bash
@@ -24,7 +24,8 @@ MatPL train input.json
  - NN的训练请参考 [NN 训练](./models/nn/nn-tutorial.md#train-训练)
  - LINEAR训练请参考 [LINEAR 训练](./models/linear/linear-tutorial.md#train-训练)
 
-#### train 文件目录
+**train 文件目录**
+
 力场训练结束后产生如下目录如下所示
 ``` txt
 ├── model_record
@@ -46,14 +47,15 @@ MatPL train input.json
 
 - `model_record/epoch_train.dat` 为训练过程中"train_data"中，每个 epoch 的训练集的 loss 信息汇总，内容如下所示。
 从左到右分别为 训练 epoch 步；总 loss；L2 loss ，不开启 L2 训练则不存在该列（ADAM 优化器对应`lambda_2`、LKF优化器对应`po_weight`）；原子能量 rmse(eV/atom)；原子力 rmse(ev/Å)；原子位力 rmse(eV/atom)，不开启`train_virial`则不存在该列；学习率；epoch耗时(秒)。
+
 ```txt
 # epoch              loss           Loss_l2   RMSE_Etot(eV/atom)         RMSE_F(eV/Å)   RMSE_virial(eV/atom)           real_lr        time(s)
     1    4.7907987747e+04  1.3987758802e-01     2.2508174106e+00     7.7088011034e-01       5.4796850561e+00  1.0000000000e-03         3.5540
     ......
 ```
 
-
 - `model_record/epoch_valid.dat` 为训练过程中"valid_data"中，每个 epoch训练结束时验证集的 loss 信息汇总，如果不设置验证集则不输出改文件，文件内容如下所示。从左到右分别为 训练 epoch 步；总 loss；原子能量 rmse(eV/atom)；原子力 rmse(ev/Å)；原子位力 rmse(eV/atom)，不开启 `train_virial` 则不存在该列；学习率；epoch耗时(秒)。
+
 ```txt
 # epoch              loss   RMSE_Etot(eV/atom)         RMSE_F(eV/Å)   RMSE_virial(eV/atom)
     1    2.9945036197e+04     1.8128180972e+00     6.5953191220e-01       5.2145886493e+00
@@ -62,7 +64,7 @@ MatPL train input.json
 
 - `forcefield` 目录为 NN 或 linear 力场提取出的txt格式力场文件目录，用于[fortran 版本的lammps接口](https://github.com/LonxunQuantum/lammps-MatPL/tree/fortran#)
 
-## 2. test 测试
+## test 测试
 
 test 命令是 MatPL 的测试命令，使用该命令需要用户提前准备好推理设置的 json 文件。执行成功后，该命令将输出力场对测试数据的能量和受力信息。
 ``` bash
@@ -73,10 +75,11 @@ MatPL test input.json
  - NN的测试请参考 [NN 测试](./models/nn/nn-tutorial.md#test-测试)
  - LINEAR测试请参考 [LINEAR 测试](./models/linear/linear-tutorial.md#test-测试)
 
-#### test 文件目录
+**test 文件目录**
+
 test 结束后，在当前目录生成一个 test_result 目录，保存了 测试 结构，文件目录如下所示。
 
-```
+```txt
 test_result/
 │   ├──image_atom_nums.txt
 │   ├── dft_total_energy.txt
@@ -131,11 +134,9 @@ More details can be found under the file directory:
 
 MatPL 对不同的模型提供了不同的功能性命令
 
-<div style={{ display: 'inline-block', marginRight: '10px' }}>
-  <img src={require("./pictures/cmd_list.png").default} alt="MatPL 功能性命令" width="450" />
-</div>
+![MatPL 功能性命令](./pictures/cmd_list.png)
 
-## 3. extract_ff
+### extract_ff
 
 该命令用于提取 NN 力场的ckpt文件为txt格式，提取后的力场文件可以用于 [fortran语言 实现的 lammps 接口](https://github.com/LonxunQuantum/lammps-MatPL/tree/fortran#)。
 
@@ -143,10 +144,11 @@ MatPL 对不同的模型提供了不同的功能性命令
 # 提取nn力场模型
 MatPL extract_ff nn_model.ckpt
 ```
+
 操作使用请参考 
 - [提取 NN 力场](./models/nn/nn-tutorial.md#extract_ff)
 
-## 4. infer
+### infer
 
 该命令用于使用 NEP 或 DP 模型对单结构文件做能量和受力推理。
 
@@ -162,7 +164,7 @@ MatPL infer dp_model.ckpt 0.lammpstrj lammps/dump Hf O
 - [NEP力场 单结构推理](./models/nep/nep-tutorial.md#infer-推理单结构)
 - [DP力场 单结构推理](./models/dp/dp-tutorial.md#infer-推理单结构)
 
-## 5. totxt
+### totxt
 
 该命令为 NEP 力场独有，用于将 NEP 的 ckpt 力场文件转换为 lammps 或 GPUMD 中使用的 txt 格式力场。
 ``` bash
@@ -171,7 +173,7 @@ MatPL totxt nep_model.ckpt
 操作请参考 
 - [NEP 力场转为 Lammps 或 GPUMD 格式](./models/nep/nep-tutorial.md#totxt)
 
-## 6. compress
+### compress
 该命令为 DP 力场独有，用于DP模型的推理加速，原理是将 DP 模型中的 embedding net 网络拟合为多项式，在训练集的原子类型较多时有明显的加速效果。完整的模型压缩指令如下：
 ```json
 MatPL compress dp_model.ckpt -d 0.01 -o 3 -s cmp_dp_model
@@ -186,7 +188,7 @@ MatPL compress dp_model.ckpt -d 0.01 -o 3 -s cmp_dp_model
 操作请参考 
 - [DP 力场多项式压缩](./models/dp/dp-tutorial.md#compress-模型压缩)
 
-## 7. script
+### script
 该命令为 DP 力场独有，用于将 DP 的ckpt 力场文件转换为 libtorch 格式，之后该文件可用于 lammps 模拟。
 
 ```bash
@@ -200,7 +202,7 @@ MatPL script cmp_dp_model.ckpt
 操作请参考 
 - [DP 力场转 libtorch格式](./models/dp/dp-tutorial.md#script-转-md-力场)
 
-## 8. Lammps 力场应用
+## Lammps 力场应用
 
 MatPL 提供了 lammps 力场接口，安装方式请参考 [`在线安装`](./install/Installation-online.md#matpl-编译安装) 或 离线安装
 
@@ -212,11 +214,13 @@ source /the/path/of/lammps/env.sh
 # 执行lammps命令
 mpirun -np N lmp_mpi -in in.lammps
 ```
+
 这里 N 为md中的使用的 CPU 核数，如果您的设备中存在可用的GPU资源（例如 M 张GPU卡）,则在运行中，N个lammps线程将平均分配到这M张卡上。我们建议您使用的 CPU 核数与您设置的 GPU 数量相同，多个线程在单个 GPU 上会由于资源竞争导致运行速度降低。
 
 此外，lammps 接口允许跨节点以及跨节点GPU卡并行，只需要指定节点数、GPU卡数即可。
 
 运行lammps时需要在lammps控制文件中指定力场文件所在路径，如下所示。
+
 ``` bash
 pair_style   matpl   力场文件路径 
 pair_coeff   * *     8 72
@@ -226,8 +230,9 @@ pair_coeff   * *     8 72
 - pair_style 设置力场文件路径，这里 `matpl` 为固定格式，代表使用MatPL中力场
 
   这里也支持多模型的偏差值输出，该功能一般用于主动学习采用中。您可以指定多个模型，在模拟中将使用第1个模型做MD，其他模型参与偏差值计算，例如例子中所示，此时pair_style设置为如下:
+  
   ```txt
-  pair_style   matpl   0_jit_dp.pt 1_jit_dp.pt 2_jit_dp.pt 3_jit_dp.pt  out_freq ${DUMP_FREQ} out_file model_devi.out 
+  pair_style   matpl   0_jit_dp.pt 1_jit_dp.pt 2_jit_dp.pt 3_jit_dp.pt  out_freq DUMP_FREQ_VALUE out_file model_devi.out 
   ```
 
 - pair_coeff 指定待模拟结构中的原子类型对应的原子序号。例如，如果您的结构中 `1` 为 `O` 元素，`2` 为 `Hf` 元素，设置 `pair_coeff * * 8 72`即可。

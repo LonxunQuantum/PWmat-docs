@@ -22,7 +22,7 @@ $$
 
 ## 2-b and 3-b features with piecewise cosine functions (feature 1 & 2)
 
-给定一个中心原子，利用分断余弦函数来描述其局部环境。通过下面的图表，可以大致了解它们的原理。
+给定一个中心原子，利用分段余弦函数来描述其局部环境。通过下面的图表，可以大致了解它们的原理。
 
 ![features](pictures/piecewise_cos.png)
 

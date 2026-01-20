@@ -1,7 +1,8 @@
 ---
 sidebar_position: 1
+title: DP 操作演示
 ---
-# DP 操作演示
+## DP 操作演示
 
 这里，我们以 MatPL [[源码根目录/example/HfO2/dp_demo]](https://github.com/LonxunQuantum/MatPL/blob/master/example/HfO2/dp_demo/) 为例（[HfO2 训练集来源](https://www.aissquare.com/datasets/detail?pageType=datasets&name=HfO2-dpgen&id=6)），演示 DP 模型的训练、测试、lammps模拟以及其他功能。案例目录结构如下所示。
 
@@ -30,13 +31,16 @@ HfO2/
   - 控制文件 in.lammps
   - runcpu.job 和 rungpu.job 是 slurm 脚本例子
 
-## train 训练
+### train 训练
+
 在 dp_demo 目录下使用如下命令即可开始训练：
 ``` bash
 MatPL train dp_train.json
 # 或修改环境变量之后通过slurm 提交训练任务 sbatch train.job
 ```
-#### 输入文件解释
+
+**输入文件解释**
+
 dp_train.json 中的内容如下所示，关于 DP 的参数解释，请参考 [DP 参数手册](../../Parameter%20details.md#dp-model)：
 
 ```json
@@ -72,11 +76,12 @@ dp_train.json 中的内容如下所示，关于 DP 的参数解释，请参考 [
 训练结束后的力场文件目录请参考 [model_record 详解](../../matpl-cmd.md#train-文件目录)
 
 
-## test 测试 
+### test 测试 
 ``` bash
 MatPL test dp_test.json
 ```
 test.json 中的内容如下所示，参数解释请参考 [参数手册](../../Parameter%20details.md)
+
 ``` json
 {
     "model_type": "DP",
@@ -96,9 +101,10 @@ test.json 中的内容如下所示，参数解释请参考 [参数手册](../../
     ]
 }
 ```
+
 测试结束后的力场文件目录请参考 [test_result 详解](../../matpl-cmd.md#test-文件目录)
 
-## infer 推理单结构
+### infer 推理单结构
 ``` bash
 MatPL infer dp_model.ckpt atom.config pwmat/config
 MatPL infer dp_model.ckpt 0.lammpstrj lammps/dump Hf O
@@ -106,7 +112,8 @@ MatPL infer dp_model.ckpt 0.lammpstrj lammps/dump Hf O
 ```
 推理成功后，将在窗口输出推理的总能、每原子能量、每原子受力和维里
 
-## compress 模型压缩
+### compress 模型压缩
+
 对于一个训练后 DP 力场做模型压缩，完整的模型压缩指令如下：
 
 ```json
@@ -120,7 +127,7 @@ MatPL compress dp_model.ckpt -d 0.01 -o 3 -s cmp_dp_model
 
 压缩后，将在当前目录得到一个名称为`cmp_dp_model.ckpt`的力场文件。
 
-## script 转 MD 力场
+### script 转 MD 力场
 本命令用于将 dp_model.ckpt 文件转换为 lammps中可识别的 libtorch 格式。
 ```bash
 MatPL script dp_model.ckpt
@@ -129,9 +136,10 @@ MatPL script cmp_dp_model.ckpt
 ```
 转换后将在当前目录下生成一个 `jit_dp.pt`文件，改文件可用于后续的 lammps md。
 
-## lammps MD
+### lammps MD
 
-### step1. 准备力场文件
+**step1. 准备力场文件**
+
 将训练完成后生成的`dp_model.ckpt`力场文件用于 lammps 模拟，您需要
 提取力场文件，您只需要输入如下命令
 ```
@@ -139,7 +147,8 @@ MatPL script dp_model.ckpt
 ```
 转换成功之后，将得到一个力场文件`jit_dp.pt`。
 
-### step2. 准备输入控制文件
+**step2. 准备输入控制文件**
+
 您需要在lammps的输入控制文件中设置如下力场，这里以HfO2为例（[`HfO2/dp_demo/dp_lmps`](https://github.com/LonxunQuantum/MatPL/blob/master/example/HfO2/dp_demo/dp_lmps)
 
 ``` bash
@@ -158,7 +167,7 @@ pair_coeff   * *     8 72
 
 - pair_coeff 指定待模拟结构中的原子类型对应的原子序号。例如，如果您的结构中 `1` 为 `O` 元素，`2` 为 `Hf` 元素，设置 `pair_coeff * * 8 72`即可。
 
-### step3 启动lammps模拟
+**step3 启动lammps模拟**
 
 ``` bash
 # 加载 lammps 环境变量env.sh 文件，正确安装后，该文件位于 lammps 源码根目录下
@@ -170,7 +179,8 @@ mpirun -np N lmp_mpi -in in.lammps
 
 此外，lammps 接口允许跨节点以及跨节点GPU卡并行，只需要指定节点数、GPU卡数即可。
 
-## ASE 接口
+### ASE 接口
+
 DP 模型提供了 ase 接口，使用方式如下脚本例子所示[gitee](https://gitee.com/pfsuo/MatPL/tree/main/example/ase_calculator/test_dp) 或 [github](https://github.com/LonxunQuantum/MatPL/tree/main/example/ase_calculator/test_dp)。 
 
 ```python

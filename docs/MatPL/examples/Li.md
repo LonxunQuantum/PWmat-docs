@@ -1,8 +1,9 @@
 ---
 sidebar_position: 7
+title: 锂枝晶形态演化过程
 ---
 
-# Morphology Evolution of Lithium Dendrites
+## 锂枝晶形态演化过程
 
 案例细节可以参考 [[龙讯公众号文章]](https://mp.weixin.qq.com/s/kapzIrPvL2AcGTUzdHgglg) 以及 [[文献 Revealing Morphology Evolution of Lithium Dendrites by Large-Scale Simulation Based on Machine Learning Force Field ]](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb)
 
@@ -14,18 +15,24 @@ sidebar_position: 7
 
 本案例 采用基于 `机器学习力场（MatPL）` 的分子动力学方法，模拟了在电解质环境中锂枝晶的形态演化过程，揭示了锂枝晶生长机制，对于推动锂金属负极材料的应用具有重要意义。
 
-### 结合DFT精度原子能标签，加速模型构建
+**结合DFT精度原子能标签，加速模型构建**
 
 ![proportion_time](./pictures/exp_7_1.png)
+
 (a) 小尺度枝晶数据集构成（b）MLFF模型结构（c）体心立方结构剖面图与特征-原子能关系可视化分析
 
-### 针对跨尺度力场应用的主动学习与验证方案
+**针对跨尺度力场应用的主动学习与验证方案**
+
 ![proportion_time](./pictures/exp_7_2.png)
+
 跨尺度模拟主动学习法示意图。（a）主动学习拓展模型中的数据采样示意图（b）机器学习力场-分子动力学中发生变化的关键部分截取采样（c）截取部分由DFT计算数据集重新训练模型
 
-### 不同初始构型枝晶的形态演化过程与驱动力分析
+**不同初始构型枝晶的形态演化过程与驱动力分析**
+
 ![proportion_time](./pictures/exp_7_3.png)
- 圆柱形结构的形态演化过程
+
+ **圆柱形结构的形态演化过程**
 
 ![proportion_time](./pictures/exp_7_4.png)
-不同暴露面下矩形体结构的形态演化过程
+
+**不同暴露面下矩形体结构的形态演化过程**

@@ -25,7 +25,7 @@ sidebar_position: 1
 # 合并4个文件到1个压缩文件
 cat matpl-2025.3.sh.tar.gz.part_aa  matpl-2025.3.sh.tar.gz.part_ab  matpl-2025.3.sh.tar.gz.part_ac  matpl-2025.3.sh.tar.gz.part_ad  matpl-2025.3.sh.tar.gz.part_ae > MatPL-2025.3.sh.tar.gz
 # 解压文件
-tar -xzvf MatPL.2025.3.sh.tar.gz
+tar -xzvf MatPL-2025.3.sh.tar.gz
 ```
 解压后得到如下文件：
 `MatPL-2025.3.sh`， `check_offenv.sh`

@@ -1,10 +1,11 @@
 ---
 sidebar_position: 5
+title: 金银合金体系案例
 ---
 
-# Example for AuAg active learning
+## 金银合金体系案例
 
-本案例为金银合金体系的主动学习过程，案例位于 [`pwact/example/auag_pwmat/`](https://github.com/LonxunQuantum/PWact/tree/main/pwact/example/auag_pwmat) 首先通过 `INIT_BULK` 构造初始训练集，之后使用初始训练集训练模型，使用在 INIT_BULK 中使用微扰产生的结构做为初始构型，使用`用户输入的lammp.in`输入控制文件做主动学习采样。
+本案例为金银合金体系的主动学习过程，案例位于 [`pwact/example/auag_pwmat/`](https://github.com/LonxunQuantum/PWact/tree/main/pwact/example/auag_pwmat) 首先通过 `init_bulk` 构造初始训练集，之后使用初始训练集训练模型，使用在 init_bulk 中使用微扰产生的结构做为初始构型，使用`用户输入的lammp.in`输入控制文件做主动学习采样。
 :::tip
 使用`用户输入的lammp.in`输入控制文件下做主动学习采样在 `>= pwact-0.4` 版本中开始支持。
 :::
@@ -13,30 +14,28 @@ sidebar_position: 5
 
 请注意，案例中提供的DFT设置仅用于程序执行流程测试，不保证计算精度!
 
-# INIT_BULK
-
-## 启动命令
-
+### 预训练数据制备 init_bulk
+`启动命令`:
 进入 `pwact/example/auag_pwmat/init_bulk` 目录 
-```JSON
+```bash
 pwact init_bulk init_param.json resource.json
 ```
 
-## INIT_BULK 目录结构
+### init_bulk 目录结构
 
-INIT_BULK 目录与 [si_pwmat 案例](./example_si_init_zh.md#init_bulk) 目录结构相同。
+init_bulk 目录与 [si_pwmat 案例](./example_si_init_zh.md#init_bulk-目录结构) 目录结构相同。
 
-# 主动学习
+### 主动学习 run
 
-执行完毕 init_bulk 命令之后，进入 `examples/auag_pwmat/run_iter_lmps` 目录：
-启动命令：
-```
+`启动命令`:
+执行完毕 init_bulk 命令之后，进入 `examples/auag_pwmat/run_iter_lmps` 目录
+```bash
 pwact run param.json resource.json
 ```
 
-## 主动学习文件目录
+### 主动学习文件目录
 
-主动学习目录结构与 [si_pwmat 例子](./example_si_init_zh.md#主动学习)目录结构相同。唯一区别是对md的目录名称，如'md.000.sys.000/md.000.sys.000.t.000.p.000' 将变成'md.000.sys.000/md.000.sys.000.lmps.000'，这里`lmps.000`用于标示使用的lammps.in文件编号。
+主动学习目录结构与 [si_pwmat 例子](./example_si_init_zh.md#run-主动学习文件目录)目录结构相同。唯一区别是对md的目录名称，如'md.000.sys.000/md.000.sys.000.t.000.p.000' 将变成'md.000.sys.000/md.000.sys.000.lmps.000'，这里`lmps.000`用于标示使用的lammps.in文件编号。
 
 ``` txt
 example

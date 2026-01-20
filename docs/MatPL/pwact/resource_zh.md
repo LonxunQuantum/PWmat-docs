@@ -1,11 +1,11 @@
 ---
 sidebar_position: 0
+title: resource 参数设置
 ---
 
-# resource.json
+## resource 参数设置
 
-## resource.json
-
+### resource.json 文件
 设置计算集群资源，包括对训练、分子动力学（MD）、DFT 计算（SCF、Relax、AIMD）使用的计算节点、CPU、GPU 资源以及对应的运行软件（Lammps、VASP、PWMAT、MatPL）。
 
 所有可设置参数按照用途分为 `train`, `explore`, `DFT`, `direct`四种模块，每个模块中的参数意义相同。
@@ -126,7 +126,8 @@ sidebar_position: 0
   }
 }
 ```
-## 参数细节
+
+### 参数细节
 参数可以分为3类。
 用于设置运行命令的`command`；
 
@@ -282,9 +283,7 @@ module load intel/2020
 source the/path/MatPL-2025.3/env.sh
 ```
 
-# 配置案例详解
-
-## train模块
+### 配置案例详解-train模块
 
 对于 `train` 模块，需要加载 MatPL 的 Python运行环境，如果使用 [MCLOUD](../install/README.md) 上已安装的 MatPL 做训练，对应的设置如下：
 ```json
@@ -338,7 +337,7 @@ source the/path/MatPL-2025.3/env.sh
 
 这里 `"~/anaconda3/etc/profile.d/conda.sh"`为笔者计算集群中的conda加载路径，`matpl-2025.3` 为 MatPL 的 Python 环境，`the/path/MatPL-2025.3`为源码所在路径。
 
-## explore模块
+### 配置案例详解-explore模块
 
 对于explore模块，如果使用 MCLOUD 已安装的 LAMMPS 为例，直接加载`lammps4matpl` 软件即可，完整的设置如下：
 ```json
@@ -390,7 +389,7 @@ source the/path/MatPL-2025.3/env.sh
 ``` 
 这里 `the/path/of/lammps/env.sh`为 lammps 源码所在路径，lammps力场接口
 
-## DFT 模块
+### 配置案例详解-DFT 模块
 
 对于DFT 模块，这里以加载PWMAT为例，设置如下。
 ```json
