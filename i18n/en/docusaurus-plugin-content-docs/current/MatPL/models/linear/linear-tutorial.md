@@ -1,7 +1,8 @@
 ---
 sidebar_position: 1
+title: LINEAR 操作演示
 ---
-# LINEAR 操作演示
+## LINEAR 操作演示
 
 这里，我们以 MatPL [[源码根目录/example/SiC]](https://github.com/LonxunQuantum/MatPL/blob/master/example/SiC/) 为例，演示 Linear 模型的训练、测试、lammps模拟以及其他功能。案例目录结构如下所示。
 
@@ -26,7 +27,7 @@ SiC
   - 控制文件 in.lammps
   - runcpu.job slurm 脚本例子
 
-## train 训练
+### train 训练
 
 在 SiC 目录下使用如下命令即可开始训练：
 **etot.input**输入文件示例：
@@ -36,8 +37,9 @@ MatPL train linear_train.json
 # 或修改环境变量之后通过slurm 提交训练任务 sbatch train.job
 ```
 
-#### 输入文件解释
-linear_train.json 中的内容如下所示，关于 Linear 的参数解释，请参考 [参数手册](../../Parameter%20details.md#nn-model)：
+**输入文件解释**
+
+linear_train.json 中的内容如下所示，关于 Linear 的参数解释，请参考 [参数手册](../../parameterdetail.md#linear-模型超参数)：
 ```json
 {   
     "train_data":["./1_300_MOVEMENT", "./2_300_MOVEMENT"],
@@ -69,11 +71,12 @@ forcefield
 
 ```
 
-## test 测试 
+### test 测试 
+
 ``` bash
 MatPL test linear_test.json
 ```
-test.json 中的内容如下所示，参数解释请参考 [参数手册](../../Parameter%20details.md)
+test.json 中的内容如下所示，参数解释请参考 [参数手册](../../parameterdetail.md)
 
 ```json
 {   
@@ -86,7 +89,7 @@ test.json 中的内容如下所示，参数解释请参考 [参数手册](../../
 注意，这里MOVEMENT文件必须放在名为 `MD`的目录下面，否则无法识别。
 测试结束后的力场文件目录test_result 内容如下：
 
-## lammps MD
+### lammps MD
 
 Linear 模型的 lammps 接口请参考 [lammps-fortran](https://github.com/LonxunQuantum/lammps-MatPL/blob/fortran/README.md) 安装和使用。
 

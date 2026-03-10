@@ -230,7 +230,7 @@ pair_coeff   * *     8 72
   pair_style   matpl   0_jit_dp.pt 1_jit_dp.pt 2_jit_dp.pt 3_jit_dp.pt  out_freq ${DUMP_FREQ} out_file model_devi.out 
   ```
 
-- pair_coeff 指定待模拟结构中的原子类型对应的原子序号。例如，如果您的结构中 `1` 为 `O` 元素，`2` 为 `Hf` 元素，设置 `pair_coeff * * 8 72`即可。
+- pair_coeff 指定待模拟结构中的原子类型对应的元素序号。例如，如果您的结构中 `1` 为 `O` 元素，`2` 为 `Hf` 元素，设置 `pair_coeff * * 8 72`即可。
 
 对于 DP 和 NEP 力场在 Lammps 中的设置，请参考
  - [NEP lammps MD](./models/nep/nep-tutorial.md#lammps-md) 
@@ -244,7 +244,7 @@ pair_coeff   * * 3 1 forcefield.ff 29
 ```
 - pair_style 设置使用 matpl 力场
 
-- pair_coeff 设置力场文件和原子类型。这里 `3` 表示使用 Neural Network 模型产生的力场，如果使用 Liear 力场，请设置为`1`；第二个数字 `1` 表示读取 1 个力场文件，forcefield.ff为 MatPL 生成的力场文件名称，29 为 Cu 的原子序数
+- pair_coeff 设置力场文件和原子类型。这里 `3` 表示使用 Neural Network 模型产生的力场，如果使用 Liear 力场，请设置为`1`；第二个数字 `1` 表示读取 1 个力场文件，forcefield.ff为 MatPL 生成的力场文件名称，29 为 Cu 的元素序号
 
  - [NN lammps MD](./models/nn/nn-tutorial.md#lammps-md)
  - [LINEAR lammps MD](./models/linear/linear-tutorial.md#lammps-md)

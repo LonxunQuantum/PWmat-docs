@@ -1,8 +1,9 @@
 ---
 sidebar_position: 2
+title: NEP 操作演示
 ---
 
-# NEP 操作演示
+## NEP 操作演示
 这里，我们以 MatPL [`源码根目录/example/HfO2/nep_demo`](https://github.com/LonxunQuantum/MatPL/tree/main/example/HfO2/nep_demo) 为例（[HfO2 训练集来源](https://www.aissquare.com/datasets/detail?pageType=datasets&name=HfO2-dpgen&id=6)），演示 NEP 模型的训练、测试、lammps模拟以及其他功能。案例目录结构如下所示。
 ``` txt
 HfO2/
@@ -29,7 +30,8 @@ HfO2/
   - 控制文件 in.lammps
   - runcpu.job 和 rungpu.job 是 slurm 脚本例子
 
-## train 训练
+
+### train 训练
 
 在 nep_demo 目录下使用如下命令即可开始训练：
 ``` bash
@@ -37,8 +39,9 @@ MatPL train nep_train.json
 # 或修改环境变量之后通过slurm 提交训练任务 sbatch train.job
 ```
 
-#### 输入文件解释
-nep_train.json 中的内容如下所示，关于 NEP 的参数解释，请参考 [NEP 参数手册](../../Parameter%20details.md#nep-model)：
+**输入文件解释**
+
+nep_train.json 中的内容如下所示，关于 NEP 的参数解释，请参考 [NEP 参数手册](../../parameterdetail.md#nep-模型超参数)：
 ``` json
 {
     "model_type": "NEP",
@@ -81,13 +84,44 @@ nep_train.json 中的内容如下所示，关于 NEP 的参数解释，请参考
 
 训练结束后的力场文件目录请参考 [model_record 详解](../../matpl-cmd.md#train-文件目录)
 
-## test 测试 
-test 命令支持来自  MatPL `nep_model.ckpt` 力场文件，以及在 lammps 或 GPUMD 中使用的 `nep5.txt` 格式文件。
+### 多节点多卡训练
+多节点多卡训练的目录结构与上面相同，案例请参考
+MatPL [`源码根目录/example/parallelnep`](https://github.com/LonxunQuantum/MatPL/tree/main/example/parallelnep) 为例（[HfO2 训练集来源](https://www.aissquare.com/datasets/detail?pageType=datasets&name=HfO2-dpgen&id=6)）。
+
+该目录下提供了单节点单卡 `1node-1g-run.job` 、单节点多卡 `1node-4g-run.job` 、多节点多卡 `2node-8g-run.job` 三种启动脚本供参考，该脚本适用于 mcloud 用户。
+对于在线安装用户，MatPL-2026.3 的环境加载请参考文件`env.sh`。
+
+多节点多卡训练启动时要求提供`主机节点的地址`以及`可用端口`，建议通过如下shell 命令自动获取
+```bash
+MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
+# 动态分配空闲端口
+function get_free_port() {
+    python -c 'import socket; s = socket.socket(socket.AF_INET, socket.SOCK_STREAM); s.bind(("", 0)); print(s.getsockname()[1]); s.close()'
+}
+MASTER_PORT=$(get_free_port)
+
+export MASTER_ADDR=$MASTER_ADDR
+export MASTER_PORT=$MASTER_PORT
+
+echo "addrs: $MASTER_ADDR"
+echo "port:  $MASTER_PORT"
+echo "tasks: $SLURM_NTASKS"
+
+srun MATPL train train.json 
+```
+
+:::caution
+注意，NEP 多卡训练只支持使用 ADAM 优化器，不支持 LKF 或 GKF 优化器。
+:::
+
+### test 测试
+
+test 命令支持来自  MatPL `nep_model.ckpt` 力场文件，以及在 lammps 或 GPUMD 中使用的 `nep5.txt`、`nep4.txt` 格式文件。
 
 ``` bash
 MatPL test nep_test.json
 ```
-test.json 中的内容如下所示，参数解释请参考 [参数手册](../../Parameter%20details.md)
+test.json 中的内容如下所示，参数解释请参考 [参数手册](../../parameterdetail.md)
 ```json
 {
     "model_type": "NEP",
@@ -109,7 +143,8 @@ test.json 中的内容如下所示，参数解释请参考 [参数手册](../../
 ```
 测试结束后的力场文件目录请参考 [test_result 详解](../../matpl-cmd.md#test-文件目录)
 
-## infer 推理单结构
+### infer 推理单结构
+
 infer 命令支持来自MatPL `nep_model.ckpt` 力场文件、`GPUMD 的 nep4.txt `文件、 lammps 和 GPUMD 中通用的`nep5.txt` 格式文件。
 
 ``` bash
@@ -119,9 +154,8 @@ MatPL infer gpumd_nep.txt 0.lammpstrj lammps/dump Hf O
 ```
 推理成功后，将在窗口输出推理的总能、每原子能量、每原子受力和维里
 
-## 其他命令
+### totxt 转ckpt训练文件为nep5.txt
 
-### totxt
 用于把 `MatPL` 训练的 `nep_model.ckpt` 文件转换为 txt 格式的`nep5.txt` 文件，该文件可用于 GPUMD 或 lammps-MatPL 中做分子动力学模拟。
 
 ``` bash
@@ -129,9 +163,10 @@ MatPL totxt nep_model.ckpt
 ```
 执行成功将在执行该命令的所在目录生成名称为`nep5.txt`文件
 
-## lammps MD
+### lammps MD
 
-### step1. 准备力场文件
+**step1. 准备力场文件**
+
 将训练完成后生成的`nep_model.ckpt`力场文件用于 lammps 模拟，您需要
 提取力场文件，您只需要输入如下命令
 ```
@@ -143,36 +178,45 @@ MatPL totxt nep_model.ckpt
 
 此外，也`支持 GPUMD 的 NEP5、 NEP4 力场文件`。
 
-### step2. 准备输入控制文件
+**step2. 准备输入控制文件**
+
 您需要在lammps的输入控制文件中设置如下力场，这里以HfO2为例（[`HfO2/nep_demo/nep_lmps`](https://github.com/LonxunQuantum/MatPL/blob/master/example/HfO2/nep_demo/nep_lmps)
 
+对于lammps nep的 kokkos 加速版本：
 ``` bash
-pair_style   matpl   nep_to_lmps.txt 
-pair_coeff   * *     8 72
+pair_style   matpl/nep/kk   力场文件路径 
+pair_coeff   * *     O Hf
 ```
-- pair_style 设置力场文件路径，这里 `matpl` 为固定格式，代表使用MatPL中力场，`nep_to_lmps.txt`为力场文件路径
+
+- pair_style 设置力场文件路径，这里 `matpl/nep/kk` 为固定格式，代表使用MatPL中的 NEP kokkos GPU 加速功能，如果是 `matpl/nep` 则使用只使用 cpu。如果是使用 DP 模型，则对应`matpl/dp`，此时如果存在GPU，将会自动调用GPU做加速，否则只使用CPU。
 
   这里也支持多模型的偏差值输出，该功能一般用于主动学习采用中。您可以指定多个模型，在模拟中将使用第1个模型做MD，其他模型参与偏差值计算，例如例子中所示，此时pair_style设置为如下:
+  
   ```txt
-  pair_style   matpl   0_nep_to_lmps.txt 1_nep_to_lmps.txt 2_nep_to_lmps.txt 3_nep_to_lmps.txt  out_freq ${DUMP_FREQ} out_file model_devi.out 
-  pair_coeff   * *     8 72
+  pair_style   matpl/nep/kk   0_nep.txt 1_nep.txt 2_nep.txt 3_nep.txt  out_freq DUMP_FREQ_VALUE out_file model_devi.out 
   ```
-- pair_coeff 指定待模拟结构中的原子类型对应的原子序号。例如，如果您的结构中 `1` 为 `O` 元素，`2` 为 `Hf` 元素，设置 `pair_coeff * * 8 72`即可。
 
-这里也可以将 `nep_to_lmps.txt` 文件替换为您的 GPUMD 中的 NEP4 或 NEP5 力场文件。
+- pair_coeff 指定待模拟结构中的原子类型对应的元素序号。例如，如果您的结构中 `1` 为 `O` 元素，`2` 为 `Hf` 元素，设置 `pair_coeff * * 8 72`即可。这里支持使用元素序号或者元素名称，只要顺序与输入结构文件中保持一致即可。
 
-### step3 启动lammps模拟
+**step3 启动lammps模拟**
+
 ``` bash
 # 加载 lammps 环境变量env.sh 文件，正确安装后，该文件位于 lammps 源码根目录下
 source /the/path/of/lammps/env.sh
+
 # 执行lammps命令
-mpirun -np N lmp_mpi -in in.lammps
+# 对于 NEP 力场，提供了kokkos 加速，对应pair设置为 matpl/nep/kk 采用如下命令启动
+# 单节点多卡（如下为单节点4卡）
+mpirun -np 4 lmp -k on g 4 -sf kk -pk kokkos -in kkin.lmp
+
+# 多节点多卡（如下为2个节点，每个节点4张卡）
+mpirun -np 8 --map-by ppr:4:node lmp -k on g 4 -sf kk -pk kokkos -in kkin.lmp
+
+# 下面的这种方式适合于matpl/nep cpu版本或者matpl/dp的启动
+mpirun -np N lmp -in in.lammps
 ```
-这里 N 为md中的使用的 CPU 核数，如果您的设备中存在可用的GPU资源（例如 M 张GPU卡）,则在运行中，N个lammps线程将平均分配到这M张卡上。我们建议您使用的 CPU 核数与您设置的 GPU 数量相同，多个线程在单个 GPU 上会由于资源竞争导致运行速度降低。
 
-此外，lammps 接口允许跨节点以及跨节点GPU卡并行，只需要指定节点数、GPU卡数即可。
-
-## ASE 接口
+### ASE 接口
 NEP 模型提供了 ase 接口，使用方式如下脚本例子所示[gitee](https://gitee.com/pfsuo/MatPL/tree/main/example/ase_calculator/test_nep) 或 [github](https://github.com/LonxunQuantum/MatPL/tree/main/example/ase_calculator/test_nep)。 
 
 ```python
@@ -185,7 +229,6 @@ forces = atoms.get_forces()
 stress = atoms.get_stress()
 ```
 注意，在使用本ase接口时确保已经导入了[MatPL的环境变量](../../install/README.md)。
-
 
 <!-- ## NEP 模型的训练测试
 

@@ -146,7 +146,7 @@ pwact to_pwdata -i mvm_init_000_50 mvm_init_001_50 mvm_init_002_50 -s pwdata -f 
 
 #### gather_pwdata 命令
 
-搜索主动学习目录下所有探索到的所有结构，并将结果保存到 final_pwdata 目录下，数据格式与主动学习中设置的['data_format'](./run_param_zh.md#data_format) 格式相同。目录结构如下所示，final_pwdata_list.txt 保存了当前目录下每个iter数据的目录。
+搜索主动学习目录下所有探索到的所有结构，并将结果保存到 final_pwdata 目录下，数据格式与主动学习中设置的 `data_format` 格式相同。目录结构如下所示，final_pwdata_list.txt 保存了当前目录下每个iter数据的目录。
 ```txt
 final_pwdata/
 final_pwdata_list.txt  iter.0000  iter.0001  iter.0002 ...
