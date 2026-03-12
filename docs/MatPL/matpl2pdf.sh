@@ -1,7 +1,7 @@
 #!/bin/bash
 ## wuxing
 date=$(date +"%Y-%m-%d")
-output="MatPL-2026.3_完整手册_$date.pdf"
+output="MatPL-2026.3-userdoc.pdf"
 
 echo "创建合并文档..."
 
@@ -55,8 +55,15 @@ for f in README.md Installation-offline.md Installation-online.md InstallError.m
     if [ -f "install/$f" ]; then
         echo "处理: install/$f"
         # 复制文件内容，修复图片路径
-        awk '/^---$/ {if (++count == 2) next} count < 2 {next} 1' "install/$f" | \
-            sed 's|\./pictures/|install/pictures/|g' >> temp.md
+        awk '{
+            gsub(/\r$/, "")
+            if (NR == 1) sub(/^\xef\xbb\xbf/, "")
+            if (/^---$/) {
+                if (++count == 2) { in_front = 0; next }
+                else { in_front = 1; next }
+            }
+            if (!in_front) print
+        }' "install/$f" | sed 's|\./pictures/|install/pictures/|g' >> temp.md
         echo "" >> temp.md
     fi
 done
@@ -183,7 +190,7 @@ pandoc temp.md -o "$output" \
   --resource-path=.
 
 # 清理临时文件
-rm -f temp.md latex_header.tex
+# rm -f temp.md latex_header.tex
 
 if [ -f "$output" ]; then
     echo "✅ 成功: $output"

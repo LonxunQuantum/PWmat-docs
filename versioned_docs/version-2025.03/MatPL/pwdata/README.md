@@ -10,7 +10,7 @@ pwdata 是 MatPL 的数据预处理工具，包括如下功能：
 
 1. `atom.config(PWmat)`、`POSCAR(VASP)`、`lmp.init(Lammps)`、`cp2k.init(CP2K)` 之间的文件互转；
 
-2. 对这些结构做阔胞、晶格缩放、晶格或原子位置微扰；
+2. 对这些结构做扩胞、晶格缩放、晶格或原子位置微扰；
 
 3. 提取各种轨迹文件 `MOVEMENT(PWmat)`、`OUTCAR(VASP)`、`lammps dump file(Lammps)`、`cp2k md file(CP2K)` 或常用训练数据` pwmlff/npy`、`extxyz`、`deepmd/npy`、`deepmd/raw`、[`meta OMAT24 开源数据集`](https://huggingface.co/datasets/fairchem/OMAT24) 之后转换为 `pwmlff/npy` 或者 `extxyz` 格式文件。
 对于meta数据集，增加了cpu并行和查询操作，以快速从超过一亿结构的数据库中查找自己想要的结构。
@@ -302,7 +302,7 @@ pwdata scale -r 0.98 0.99 0.97 0.95 -i examples/pwmat_data/lisi_atom.config -f p
 #执行完毕后将在examples/test_workdir目录下生成4个缩放后的文件，分被名为 0.98_scale_atom.config、0.99_scale_atom.config、0.97_scale_atom.config、0.95_scale_atom.config
 ```
 
-### 4. 阔胞 super_cell
+### 4. 扩胞 super_cell
 该命令用于对结构的晶格做缩放，您可以使用 `super_cell` 或者它的缩写 `super`。
 参数如下所示
 
@@ -350,7 +350,7 @@ pwdata super_cell -m 2 3 4 -i examples/pwmat_data/lisi_atom.config -s examples/t
 #或命令的缩写
 pwdata super -m 2 0 0 0 3 0 0 0 4 -i examples/pwmat_data/lisi_atom.config -s examples/test_workdir/super_atom.config -o pwmat/config 
 
-# 执行完成后将在 examples/test_workdir 目录下生成一个名为 super_atom.config 的文件，采用了2X3X4阔胞
+# 执行完成后将在 examples/test_workdir 目录下生成一个名为 super_atom.config 的文件，采用了2X3X4扩胞
 ```
 
 ### 5. 晶格和原子位置微扰 perturb

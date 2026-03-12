@@ -220,7 +220,7 @@ source /the/path/of/lammps/env.sh
 # 执行lammps命令
 # 对于 NEP 力场，提供了kokkos 加速，对应pair设置为 matpl/nep/kk 采用如下命令启动
 # 单节点多卡（如下为4卡）
-mpirun -np 4 lmp -k on g 4 -sf kk -pk kokkos -in kkin.lmp
+mpirun -np 4 --bind-to numa lmp -k on g 4 -sf kk -pk kokkos -in kkin.lmp
 
 # 多节点多卡（如下为2个节点，每个节点4张卡）
 mpirun -np 8 --map-by ppr:4:node lmp -k on g 4 -sf kk -pk kokkos -in kkin.lmp
@@ -233,18 +233,29 @@ mpirun -np N lmp -in in.lammps
 
 对于lammps nep的 kokkos 加速版本：
 ``` bash
+# 2024版本的lammps 需要设置 neigh half (2023版本的lammps 设置 half 或者 full 都可)
+package kokkos neigh half comm device
+newton on
+
 pair_style   matpl/nep/kk   力场文件路径 
 pair_coeff   * *     O Hf
 ```
 
 其中：
+- 2024版本的lammps 需要设置 neigh half (2023版本的lammps 设置 half 或者 full 都可)
+
 - pair_style 设置力场文件路径，这里 `matpl/nep/kk` 为固定格式，代表使用MatPL中的 NEP kokkos GPU 加速功能，如果是 `matpl/nep` 则使用只使用 cpu。如果是使用 DP 模型，则对应`matpl/dp`，此时如果存在GPU，将会自动调用GPU做加速，否则只使用CPU。
 
   这里也支持多模型的偏差值输出，该功能一般用于主动学习采用中。您可以指定多个模型，在模拟中将使用第1个模型做MD，其他模型参与偏差值计算，例如例子中所示，此时pair_style设置为如下:
   
   ```txt
-  pair_style   matpl/nep/kk   0_nep.txt 1_nep.txt 2_nep.txt 3_nep.txt  out_freq DUMP_FREQ_VALUE out_file model_devi.out 
+    # 2024版本的lammps 需要设置 neigh half (2023版本的lammps 设置 half 或者 full 都可)
+    package kokkos neigh half comm device
+    newton on
+
+    pair_style   matpl/nep/kk   0_nep.txt 1_nep.txt 2_nep.txt 3_nep.txt  out_freq DUMP_FREQ_VALUE out_file model_devi.out 
   ```
+- 2024版本的lammps 需要设置 neigh half (2023版本的lammps 设置 half 或者 full 都可)
 
 - pair_coeff 指定待模拟结构中的原子类型对应的元素序号。例如，如果您的结构中 `1` 为 `O` 元素，`2` 为 `Hf` 元素，设置 `pair_coeff * * 8 72`即可。这里支持使用元素序号或者元素名称，只要顺序与输入结构文件中保持一致即可。
 

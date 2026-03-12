@@ -30,9 +30,9 @@ init_bulk 的[目录结构](#init_bulk 目录结构图)如下所示，`atom.conf
 
 `datapath.txt`文件内容是预训练数据所在目录记录。
 
-init_config_0 目录为 atom.config 进过驰豫、阔胞、缩放、微扰、aimd 后的结果汇总。
+init_config_0 目录为 atom.config 进过驰豫、扩胞、缩放、微扰、aimd 后的结果汇总。
 
-`relax.config` 是对`atom.config` 做驰豫后得到的结构文件；`super_cell.config`是对`relax.config`做 阔胞后得到结构文件；`0.9_scale.config`和`0.95_scale.config`是对`super_cell.config`做晶格缩放后得到的结构文件；
+`relax.config` 是对`atom.config` 做驰豫后得到的结构文件；`super_cell.config`是对`relax.config`做 扩胞后得到结构文件；`0.9_scale.config`和`0.95_scale.config`是对`super_cell.config`做晶格缩放后得到的结构文件；
 
 `0.9_scale_pertub`目录包括对`0.9_scale.config`结构做晶格和原子位置微扰后得到的 30 个结构；
 
@@ -179,9 +179,9 @@ $$\varepsilon_{t} = \max_i \sqrt{ \left\langle \sum_{w=1}^{W} \| F_{w,i}(R_t) - 
 
 以下`.csv`文件内容包含 3 列，分别是`力偏差（devi_force）`、 `结构在轨迹中对应的编号（config_index）`、`轨迹的文件路径（file_path）`。
 
-`accurate.csv`是力偏差小于设置的[`力偏差下限`](./run_param_zh.md#lower_model_deiv_f)的结构汇总。
+`accurate.csv`是力偏差小于设置的[`力偏差下限`](./run_param_zh.md#lower_model_devi_f)的结构汇总。
 
-`fail.csv`是力偏差大于设置的[`力偏差上限`](./run_param_zh.md#upper_model_deiv_f)的结构。
+`fail.csv`是力偏差大于设置的[`力偏差上限`](./run_param_zh.md#upper_model_devi_f)的结构。
 
 
 如果候选的结构（力偏差介于设置的力偏差上下限之间的结构）超过设置的最大选点数量 [`max_select`](./run_param_zh.md#max_select)，则将候选的结构随机选取 `max_select`个，存入`candidate.csv`文件，其余的存入`candidate_delete.csv`文件。

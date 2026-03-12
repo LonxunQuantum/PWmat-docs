@@ -51,7 +51,8 @@ module load intel/2020
 source /the/path/of/lammps/env.sh
 
 #3. 运行 lammps 命令
-mpirun -np 4 lmp_mpi -in in.lammps
+# --bind-to numa 把进程绑定到socket中空闲的core中，避免绑定到默认core中，导致多任务提交后运行速度下降
+mpirun -np 4 --bind-to numa lmp_mpi -in in.lammps
 ```
 
 #### Lammps NEP 模型

@@ -184,9 +184,15 @@ MatPL totxt nep_model.ckpt
 
 对于lammps nep的 kokkos 加速版本：
 ``` bash
+# 2024版本的lammps 需要设置 neigh half (2023版本的lammps 设置 half 或者 full 都可)
+package kokkos neigh half comm device
+newton on
+
 pair_style   matpl/nep/kk   力场文件路径 
 pair_coeff   * *     O Hf
 ```
+
+- 2024版本的lammps 需要设置 neigh half (2023版本的lammps 设置 half 或者 full 都可)
 
 - pair_style 设置力场文件路径，这里 `matpl/nep/kk` 为固定格式，代表使用MatPL中的 NEP kokkos GPU 加速功能，如果是 `matpl/nep` 则使用只使用 cpu。如果是使用 DP 模型，则对应`matpl/dp`，此时如果存在GPU，将会自动调用GPU做加速，否则只使用CPU。
 
@@ -207,7 +213,7 @@ source /the/path/of/lammps/env.sh
 # 执行lammps命令
 # 对于 NEP 力场，提供了kokkos 加速，对应pair设置为 matpl/nep/kk 采用如下命令启动
 # 单节点多卡（如下为单节点4卡）
-mpirun -np 4 lmp -k on g 4 -sf kk -pk kokkos -in kkin.lmp
+mpirun -np 4 --bind-to numa lmp -k on g 4 -sf kk -pk kokkos -in kkin.lmp
 
 # 多节点多卡（如下为2个节点，每个节点4张卡）
 mpirun -np 8 --map-by ppr:4:node lmp -k on g 4 -sf kk -pk kokkos -in kkin.lmp

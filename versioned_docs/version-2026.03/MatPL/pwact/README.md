@@ -17,7 +17,7 @@ PWact 平台包含主任务和任务分发器两部分，如 [结构图](#PWact 
 
 ![预训练数据制备流程](./pictures/init_arch_zh.png)
 
-预训练数据制备流程包括驰豫 `(支持 PWmat、VASP、CP2K)`、阔胞、缩放晶格、微扰以及运行 MD 四个模块，并支持对这些模块的组合使用。对于 MD ， `(支持 PWmat、VASP、CP2K)`的 AIMD作为预训练集。同时，也支持使用大模型运行MD ，之后通过 direct 采样过滤掉相似构型后作为预训练集，这里同样支持使用 PWmat、VASP、CP2K 对过滤后的结构做标注（自洽计算获取能量和受力）。
+预训练数据制备流程包括驰豫 `(支持 PWmat、VASP、CP2K)`、扩胞、缩放晶格、微扰以及运行 MD 四个模块，并支持对这些模块的组合使用。对于 MD ， `(支持 PWmat、VASP、CP2K)`的 AIMD作为预训练集。同时，也支持使用大模型运行MD ，之后通过 direct 采样过滤掉相似构型后作为预训练集，这里同样支持使用 PWmat、VASP、CP2K 对过滤后的结构做标注（自洽计算获取能量和受力）。
 
  - direct 采样：Qi J, Ko T W, Wood B C, et al. Robust training of machine learning interatomic potentials with dimensionality reduction and stratified sampling[J]. npj Computational Materials, 2024, 10(1): 43.
 

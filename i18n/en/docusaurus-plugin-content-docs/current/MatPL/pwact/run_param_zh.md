@@ -103,15 +103,15 @@ PWact 同时支持 MatPL 的 DP 和 NEP 力场。
 
 <!-- `KPU`方法我们在做探索，后续将面向用户开放。 -->
 <!-- 
-默认值为 `committee`，即采用多模型查询的方式计算模型预测偏差。该值 需要配合 [`model_num`](#model_num) 、[`lower_model_deiv_f`](#lower_model_deiv_f) 和 [`upper_model_deiv_f`](#upper_model_deiv_f) 参数使用，将模型预测偏差值介于 `lower_model_deiv_f` 和 `upper_model_deiv_f` 之间结构作为候选结构，之后使用 DFT 做标注，`model_num` 用于设置模型的数量，如果使用 `committee` 方法，默认值为 `4`。
+默认值为 `committee`，即采用多模型查询的方式计算模型预测偏差。该值 需要配合 [`model_num`](#model_num) 、[`lower_model_devi_f`](#lower_model_devi_f) 和 [`upper_model_devi_f`](#upper_model_devi_f) 参数使用，将模型预测偏差值介于 `lower_model_devi_f` 和 `upper_model_devi_f` 之间结构作为候选结构，之后使用 DFT 做标注，`model_num` 用于设置模型的数量，如果使用 `committee` 方法，默认值为 `4`。
 
 如果设置为 `kpu`，则采用单模型的基于卡尔曼滤波的不确定性度量。该值 需要配合 [`kpu_lower`](#kpu_lower) 和 [`kpu_upper`](#kpu_upper) 使用，其中 `kpu_lower` 用于设置不确定性下界，`kpu_upper` 用于设置不确定性上界。
 
-##### lower_model_deiv_f
+##### lower_model_devi_f
 
 该参数需要配合 [`"uncertainty":"committee"`](#uncertainty) 使用，用于设置偏差的下界，如果偏差值小于该下界，则认为模型对构型的预测准确，不需要标注，默认值为 `0.05`。
 
-##### upper_model_deiv_f
+##### upper_model_devi_f
 
 该参数需要配合 [`"uncertainty":"committee"`](#uncertainty) 使用，用于设置偏差的上界，如果偏差值大于该上界，则该构型本身不符合物理意义，不需要标注，默认值为 `0.15`。
 
@@ -130,11 +130,11 @@ PWact 同时支持 MatPL 的 DP 和 NEP 力场。
 
 当lammps 部分轨迹由于各种原因（如力场不准确导致丢失了原子、原子距离太近等）造成 MD 过程为正常执行结束时，是否终止主动学习过程。默认值为 true，即不终止。
 
-#### lower_model_deiv_f
+#### lower_model_devi_f
 
 该参数用于设置偏差的下界，如果偏差值小于该下界，则认为模型对构型的预测准确，不需要标注，默认值为 `0.05`。
 
-#### upper_model_deiv_f
+#### upper_model_devi_f
 
 该参数用于设置偏差的上界，如果偏差值大于该上界，则该构型本身不符合物理意义，不需要标注，默认值为 `0.15`。
 
@@ -185,8 +185,8 @@ $$\varepsilon_{t} = \max_i\left(\sqrt{\frac{\sum_{1}^{w} \left\| F_{w,i}(R_t) - 
 ```json
     "strategy": {
         "uncertainty":"committee",
-        "lower_model_deiv_f": 0.1,
-        "upper_model_deiv_f": 0.2,
+        "lower_model_devi_f": 0.1,
+        "upper_model_devi_f": 0.2,
         "model_num": 4,
         "max_select": 50,
         "compress": false
@@ -207,8 +207,8 @@ $$\varepsilon_{t} = \max_i\left(\sqrt{\frac{\sum_{1}^{w} \left\| F_{w,i}(R_t) - 
 ```json
     "strategy": {
         "uncertainty":"committee",
-        "lower_model_deiv_f": 0.1,
-        "upper_model_deiv_f": 0.2,
+        "lower_model_devi_f": 0.1,
+        "upper_model_devi_f": 0.2,
         "model_num": 4,
         "max_select": 50,
         "compress": true,
@@ -701,8 +701,8 @@ CP2K 或 PWMAT 高斯基组参数设置，
 
   "strategy": {
     "uncertainty": "committee",
-    "lower_model_deiv_f": 0.05,
-    "upper_model_deiv_f": 0.15,
+    "lower_model_devi_f": 0.05,
+    "upper_model_devi_f": 0.15,
     "model_num": 4,
     "max_select": 10
   },

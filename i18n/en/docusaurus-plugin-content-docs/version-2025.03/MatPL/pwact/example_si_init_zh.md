@@ -29,9 +29,9 @@ INIT_BULK 的[目录结构](#目录1)如下所示，`atom.config`、`POSCAR`、`
 
 `datapath.txt`文件内容是预训练数据所在目录记录。
 
-init_config_0 目录为 atom.config 进过驰豫、阔胞、缩放、微扰、aimd 后的结果汇总。
+init_config_0 目录为 atom.config 进过驰豫、扩胞、缩放、微扰、aimd 后的结果汇总。
 
-`relax.config` 是对`atom.config` 做驰豫后得到的结构文件；`super_cell.config`是对`relax.config`做 阔胞后得到结构文件；`0.9_scale.config`和`0.95_scale.config`是对`super_cell.config`做晶格缩放后得到的结构文件；
+`relax.config` 是对`atom.config` 做驰豫后得到的结构文件；`super_cell.config`是对`relax.config`做 扩胞后得到结构文件；`0.9_scale.config`和`0.95_scale.config`是对`super_cell.config`做晶格缩放后得到的结构文件；
 
 `0.9_scale_pertub`目录包括对`0.9_scale.config`结构做晶格和原子位置微扰后得到的 30 个结构；
 

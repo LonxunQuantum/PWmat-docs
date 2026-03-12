@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # init_bulk param.json
 
-初始训练集制备，包括对构型（VASP、PWmat等格式）进行`驰豫`、`阔胞`、`缩放`、`微扰`和`AIMD`（支持 DFTB、PWMAT、VASP）设置。参数列表如下。
+初始训练集制备，包括对构型（VASP、PWmat等格式）进行`驰豫`、`扩胞`、`缩放`、`微扰`和`AIMD`（支持 DFTB、PWMAT、VASP）设置。参数列表如下。
 
 ## data_format
 用于设置init_bulk 执行结束后的得到的数据格式，默认为扩展的xyz格式 `extxyz`。
@@ -21,7 +21,7 @@ sidebar_position: 1
 例子：`"sys_config_prefix":"/data/structure"`, `"config":"atom.config"`, 则 `atom.config` 的实际路径是 `/data/structure/atom.config`
 
 ## sys_configs
-设置构型的文件路径、驰豫（relax）、阔胞（super cell）、缩放晶格（scale）、微扰原子位置（pertub）、AIMD。完整的参数如下例所示。
+设置构型的文件路径、驰豫（relax）、扩胞（super cell）、缩放晶格（scale）、微扰原子位置（pertub）、AIMD。完整的参数如下例所示。
 
 ### config
 设置构型的文件路径，如果设置了 [`sys_config_prefix`](#sys_config_prefix) 则进行路径拼接，否则使用 config 中设置的路径作为config路径。
@@ -36,7 +36,7 @@ sidebar_position: 1
 设置驰豫使用的控制文件，与 [relax_input](#relax_input) 配合使用，指定控制文件的位置，如 [例子](#例子) 中所示，使用 `relax_input` 中设置的 `relax_etot1.input` 文件作为 PWMAT 控制文件。默认值为0，即使用 `relax_input` 中的第一个文件作为控制文件。
 
 ### super_cell
-用于阔胞设置，可选参数，如不设置，则对结构不做阔胞。数据格式为 list，支持如下格式输入：`[1, 1, 2]` 或 `[[1,0,0],[0, 2, 0],[0,0,1]]` 或 `[1,0,0,0, 2, 0,0,0,1]`。
+用于扩胞设置，可选参数，如不设置，则对结构不做扩胞。数据格式为 list，支持如下格式输入：`[1, 1, 2]` 或 `[[1,0,0],[0, 2, 0],[0,0,1]]` 或 `[1,0,0,0, 2, 0,0,0,1]`。
 
 ### scale
 用于对晶格的缩放设置，可选参数，如不设置，则对结构不做缩放。数据格式为 list，如 `[0.9, 0.95，0.96, 0.97]`，表示对结构晶格分别进行 0.9, 0.95，0.96, 0.97 微扰，将得到四个微扰后的结构。
@@ -92,7 +92,7 @@ sidebar_position: 1
 ```
 这里设置了`49.config` 和 `44_POSCAR` 两个结构，分别是 pwmat/config （默认格式）和 vasp/poscar格式。
 - 对 49.config 操作如下：step1. 对 49.config 做 relax，使用的 relax 控制文件为 `relax_input` 中的第一个文件；step2.对relax得到的结构，分别对晶格做0.9, 0.95缩放，[缩放方式参考](../pwdata/README.md#3-晶格缩放-scale_cell)；step3. 对缩放后得到两个文件做晶格和原子位置微扰，各自微扰出3个结构，[微扰方式参考](../pwdata/README.md#5-晶格和原子位置微扰-perturb)；step4. 对微扰后得到的6个结构做 AIMD，使用的 md 控制文件为 `aimd_input` 中设置的第1个文件。init_bulk执行结束后将得到6条 AIMD 轨迹。
-- 对 44_POSCAR 操作如下：step1. 对 49.config 做阔胞，按照 [1,0,0],[0, 2, 0],[0,0,1] 阔胞，[阔胞方式参考](../pwdata/README.md#4-阔胞-super_cell)；step2. 对阔胞后的结构做微扰；step3. 对微扰后得到的2个结构做 AIMD，使用的 md 控制文件为 `aimd_input` 中设置的第2个文件。init_bulk 执行结束后将得到2条AIMD轨迹。
+- 对 44_POSCAR 操作如下：step1. 对 49.config 做扩胞，按照 [1,0,0],[0, 2, 0],[0,0,1] 扩胞，[扩胞方式参考](../pwdata/README.md#4-扩胞-super_cell)；step2. 对扩胞后的结构做微扰；step3. 对微扰后得到的2个结构做 AIMD，使用的 md 控制文件为 `aimd_input` 中设置的第2个文件。init_bulk 执行结束后将得到2条AIMD轨迹。
 
 因此init_bulk执行结束后将得到6条轨迹，之后会自动将轨迹提取为`data_format`中指定的文件格式。
 
@@ -208,8 +208,8 @@ CP2K 或 PWMAT 高斯基组参数设置，
 ```
 ### 上述参数作用
 1. 对 atom.config 做relax；
-2. 对relax后的结构做阔胞（1,1,2）；
-3. 对阔胞后的结构对晶格分别进行0.9、0.95缩放;
+2. 对relax后的结构做扩胞（1,1,2）；
+3. 对扩胞后的结构对晶格分别进行0.9、0.95缩放;
 4. 对缩放后得到两个结构的原子位置微扰，各自扰动生成20个结构；
 5. 对扰动后得到的40个结构做AIMD模拟；
 6. 将AIMD轨迹自动提取为 `PWdata` 数据格式作为预训练数据。
