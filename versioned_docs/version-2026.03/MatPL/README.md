@@ -9,9 +9,7 @@ title: MatPL
 
 MatPL 提供了一套完备的软件、工具以及数据仓库，用于快速生成生成媲美从头算分子动力学（AIMD）的机器学习力场。包括模型训练平台 `MatPL`、`Lammps` 分子动力学接口、主动学习数据生成平台 `pwact`、数据格式转换工具 `pwdata`、数据和模型仓库。您可以通过下列链接访问它们的源码以及使用手册
 
-**[MatPL用户手册下载-MatPL-2026.3 用户手册下载.pdf](./MatPL-2026.3-userdoc.pdf)**
-
-[<kbd>📥 MatPL用户手册下载-MatPL-2026.3用户手册下载.pdf</kbd>](./MatPL-2026.3-userdoc.pdf)
+**[gitee MatPL用户手册下载](https://gitee.com/pfsuo/PWmat-docs/blob/master/docs/MatPL/MatPL-2026.3-userdoc.pdf) 或访问 [github MatPL用户手册下载](https://github.com/LonxunQuantum/PWmat-docs/blob/dev-matpl/docs/MatPL/MatPL-2026.3-userdoc.pdf)**
 
 **[1. MatPL机器学习平台](./models/README.md)**
 
