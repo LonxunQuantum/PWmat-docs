@@ -11,9 +11,9 @@ sidebar_position: 1
 - 对于 CPU 版本，MatPL 需要待安装机器提供`gcc 编译器`、`intel编译器套件`（包括`ifort`、`icc` 编译器、`mkl`和`mpi`库）即可。
 
 ## 1. 下载离线安装包
-方法一（推荐）邮件获取，建议您发送邮件到 `matpl@pwmat`、`wuxingxing@pwmat.com` 或 `support@pwmat.com` 获取离线安装包。相比于百度网盘，通过邮件链接下载的速度更快（几十倍以上）。
+方法一（推荐）邮件获取，建议您发送邮件到 `matpl@pwmat.com`、`wuxingxing@pwmat.com` 或 `support@pwmat.com` 获取离线安装包。相比于百度网盘，通过邮件链接下载的速度更快（几十倍以上）。
 
-方法二 请访问百度网盘下载，链接如果失效请邮件联系 `matpl@pwmat`、`wuxingxing@pwmat.com` 或 `support@pwmat.com`：
+方法二 请访问百度网盘下载，链接如果失效请邮件联系 `matpl@pwmat.com`、`wuxingxing@pwmat.com` 或 `support@pwmat.com`：
 👉 [离线安装包下载 MatPL-2025.3.sh.tar.gz](https://pan.baidu.com/s/1JgPdSNAIvmc9HBEaCHG3Gw?pwd=pwmt)，如果安装CPU版本，请选择CPU版本下载。
 
 ## 2. 解压安装包

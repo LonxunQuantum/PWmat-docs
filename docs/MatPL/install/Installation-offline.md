@@ -77,7 +77,9 @@ bash matpl-2026.3.sh [-jN] [-m nn] [-u] [-h]
 
 - -jN 这里N为并行编译的核数，例如 bash build.sh -j4 将采用4核编译。默认采用单核编译，即 bash build.sh
 
-- -m nn 指定后将 fortran 代码也纳入编译（需要intel ifort icc mkl 支持），用于 linear 和 NN 模型。默认不编译 fortran 代码。
+- -m nn 指定后将 fortran 代码也纳入编译（需要intel ifort icc mkl 支持），用于 linear 和 NN 模型。默认不编译 fortran 代码
+
+- -u 用于解压安装包，解压后是一个lammps的源码目录、MatPL-2026.3源码目录和matpl-2026.3 python环境目录
 
 是否安装成功检查：
 编译完成后，MatPL-2026.3 目录下生成如下目录结构：

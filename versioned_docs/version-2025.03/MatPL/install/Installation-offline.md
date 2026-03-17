@@ -11,9 +11,9 @@ sidebar_position: 1
 - 对于 CPU 版本，MatPL 需要待安装机器提供`gcc 编译器`、`intel编译器套件`（包括`ifort`、`icc` 编译器、`mkl`和`mpi`库）即可。
 
 ## 1. 下载离线安装包
-方法一（推荐）邮件获取，建议您发送邮件到 `matpl@pwmat`、`wuxingxing@pwmat.com` 或 `support@pwmat.com` 获取离线安装包。相比于百度网盘，通过邮件链接下载的速度更快（几十倍以上）。
+方法一（推荐）邮件获取，建议您发送邮件到 `matpl@pwmat.com`、`wuxingxing@pwmat.com` 或 `support@pwmat.com` 获取离线安装包。相比于百度网盘，通过邮件链接下载的速度更快（几十倍以上）。
 
-方法二 请访问百度网盘下载，链接如果失效请邮件联系 `matpl@pwmat`、`wuxingxing@pwmat.com` 或 `support@pwmat.com`：
+方法二 请访问百度网盘下载，链接如果失效请邮件联系 `matpl@pwmat.com`、`wuxingxing@pwmat.com` 或 `support@pwmat.com`：
 👉 [离线安装包下载 MatPL-2025.3.sh.tar.gz](https://pan.baidu.com/s/1JgPdSNAIvmc9HBEaCHG3Gw?pwd=pwmt)，如果安装CPU版本，请选择CPU版本下载。
 
 ## 2. 解压安装包
@@ -50,17 +50,34 @@ tar -xzvf MatPL_cpu-2025.3.sh.tar.gz
 大部分的安装失败问题都源于编译器的版本不匹配，我们提供了检查编译器版本的脚本`check_offenv.sh` 供用户检查环境，执行如下命令
 
 ```bash
-sh check_offenv.sh
+bash check_offenv.sh
 ```
 
 命令执行后会列出需要的编译器版本以及当前检测到的版本，如下是一个正确的环境配置检查结果：
 
 ```txt
-ifort version is no less than 19.1, current version is 19.1.
-MKL library is installed.
-GCC version is exactly 8, current version is 8.
-CUDA version is 11.8 or higher, current version is 11.8.89.
-nvcc command exists.
+========================================
+      Environment Check Starting
+========================================
+
+=== Checking ifort compiler and MKL library ===
+✓ ifort version: 19.1 (>= 19.1)
+✓ MKL library is installed
+
+=== Checking GCC version ===
+✓ GCC version: 8 (>= 8.0)
+
+=== Checking CUDA version ===
+✓ CUDA version: 11.8.89 (>= 11.8)
+
+=== Checking nvcc availability ===
+✓ nvcc command exists
+
+========================================
+        Environment Summary
+========================================
+✓ Environment check completed. All requirements are satisfied.
+========================================
 ```
 
 第1行输出了 ifort 编译器要求的版本不低于19.1，检测到当前的版本是19.1，满足要求；
@@ -80,9 +97,22 @@ sh check_offenv_cpu.sh
 ```
 命令执行后会列出需要的编译器版本以及当前检测到的版本，如下是一个正确的环境配置检查后的结果：
 ```
-ifort version is no less than 19.1, current version is 19.1.
-MKL library is installed.
-GCC version is exactly 8, current version is 8.
+========================================
+      CPU Environment Check Starting
+========================================
+
+=== Checking ifort compiler and MKL library ===
+✓ ifort version: 19.1 (>= 19.1)
+✓ MKL library is installed
+
+=== Checking GCC version ===
+✓ GCC version: 8 (>= 8.0)
+
+========================================
+        Environment Summary
+========================================
+✓ Environment check completed. All requirements are satisfied.
+========================================
 ```
 第1行输出了 ifort 编译器要求的版本不低于19.1，检测到当前的版本是19.1，满足要求；
 
@@ -95,20 +125,22 @@ CPU 版本不需要 CUDA 和 nvcc 编译器支持。
 ## 4. 执行安装命令
 环境检查完毕后，执行如下命令即可完成安装
 ```bash
-sh MatPL-2025.3.sh [-jN] [-nN]
-# -jN 这里N为并行编译的核数，例如 sh MatPL-2025.3.sh -j4 将采用4核编译。默认采用单核编译，即 sh MatPL-2025.3.sh
-# -nN 这里N为NEP力场支持的元素类型数量，默认为20，即支持最多20种元素的力场训练，对于通用力场，可设置为为-n100，例如 sh MatPL-2025.3.sh -j4 -n100 注意，较大的N会导致力场训练速度变慢
+bash MatPL-2025.3.sh [-jN] [-m nn] [-u] [-h]
 ```
+
+- -jN 这里N为并行编译的核数，例如 bash build.sh -j4 将采用4核编译。默认采用单核编译，即 bash build.sh
+
+- -m nn 指定后将 fortran 代码也纳入编译（需要intel ifort icc mkl 支持），用于 linear 和 NN 模型。默认不编译 fortran 代码
+
+- -u 用于解压安装包，解压后是一个lammps的源码目录、MatPL-2026.3源码目录和matpl-2026.3 python环境目录
 
 对于CPU版本，执行如下命令：
 ```bash
-sh MatPL_cpu-2025.3.sh [-jN] [-nN]
-# 这里N为并行编译的核数，例如 sh MatPL_cpu-2025.3.sh -j4 将采用4核编译。默认采用单核编译，即 sh MatPL_cpu-2025.3.sh
-# -nN 这里N为NEP力场支持的元素类型数量，默认为20，即支持最多20种元素的力场训练，对于通用力场，可设置为为-n100，例如 sh MatPL_cpu-2025.3.sh -j4 -n100 注意，较大的N会导致力场训练速度变慢
+bash MatPL_cpu-2025.3.sh [-jN] [-m nn] [-u] [-h]
 ```
 
 是否安装成功检查：
-编译完成后，MatPL_cpu-2025.3 目录下生成如下目录结构：
+编译完成后，MatPL-2025.3 目录下生成如下目录结构：
 ```txt
 MatPL-2025.3 (或MatPL_cpu-2025.3)
     ├── lammps-2025.3/

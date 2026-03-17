@@ -148,7 +148,7 @@ sh build.sh [-jN] [-nN]
 :::tip
 如果您在编译过程中出错，请在[MATPL 常见安装错误总结](./error-record/InstallError.md) 中查询。
 
-如果仍未解决您的问题，请将您的机器环境信息、编译错误日志以及您执行的编译操作过程描述 发送到邮箱 `matpl@pwmat`、`wuxingxing@pwmat.com` 或 `support@pwmat.com`，我们将及时联系您处理。
+如果仍未解决您的问题，请将您的机器环境信息、编译错误日志以及您执行的编译操作过程描述 发送到邮箱 `matpl@pwmat.com`、`wuxingxing@pwmat.com` 或 `support@pwmat.com`，我们将及时联系您处理。
 :::
 编译完成后，最后输出如下信息：
 ```

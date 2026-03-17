@@ -95,14 +95,37 @@ sh ./check/check_env.sh
 ```
 执行后，将输出您的编译环境信息，一个正确的环境如下所示。
 ```txt
-ifort version is no less than 19.1, current version is 19.1.
-MKL library is installed.
-GCC version is exactly 8, current version is 8.
-PyTorch is installed.
-PyTorch version is 2.0 or above, current version is 2.2.
-PyTorch is compiled with CUDA 11.8.
-CUDA version is 11.8 or higher, current version is 11.8.89.
-nvcc command exists.
+========================================
+      Environment Check Starting
+========================================
+
+=== Checking ifort compiler and MKL library ===
+✓ ifort version: 19.1 (>= 19.1)
+✓ MKL library is installed
+
+=== Checking GCC version ===
+✓ GCC version: 8 (>= 8.0)
+
+=== Checking PyTorch installation ===
+✓ PyTorch is installed
+
+=== Checking PyTorch version ===
+✓ PyTorch version: 2.2.0+cu118 (>= 2.0)
+
+=== Checking PyTorch CUDA support ===
+✓ PyTorch is compiled with CUDA 11.8
+
+=== Checking CUDA version ===
+✓ CUDA version: 11.8.89 (>= 11.8)
+
+=== Checking nvcc availability ===
+✓ nvcc command exists
+
+========================================
+        Environment Summary
+========================================
+✓ Environment check completed. All requirements are satisfied.
+========================================
 ```
 
 第1行输出了 ifort 编译器要求的版本不低于19.1，检测到当前的版本是19.1，满足要求；
@@ -125,15 +148,29 @@ nvcc command exists.
 ##### CPU 版本
 对于 CPU 版本，不需要 CUDA 支持，检测脚本为 check_env_cpu.sh，位于 `'/src/check/check_env_cpu.sh'`。命令执行后会列出需要的编译器版本以及当前检测到的版本，如下是一个正确的环境配置检查后的结果：
 ```
-ifort version is no less than 19.1, current version is 19.1.
-MKL library is installed.
-GCC version is exactly 8, current version is 8.
+========================================
+      CPU Environment Check Starting
+========================================
+
+=== Checking ifort compiler and MKL library ===
+✓ ifort version: 19.1 (>= 19.1)
+✓ MKL library is installed
+
+=== Checking GCC version ===
+✓ GCC version: 8 (>= 8.0)
+
+=== Checking PyTorch installation ===
+✓ PyTorch is installed
+
+=== Checking PyTorch version ===
+✓ PyTorch version: 2.2.0+cu118 (>= 2.0)
+
+========================================
+        Environment Summary
+========================================
+✓ Environment check completed. All requirements are satisfied.
+========================================
 ```
-第1行输出了 ifort 编译器要求的版本不低于19.1，检测到当前的版本是19.1，满足要求；
-
-第2行查找 MKL 库是否存在，检测到已安装，满足要求；
-
-第3行输出了 GCC 要求的版本 8.n， 检测到当前的GCC版本是8，满足要求。
 
 #### step2. 编译代码
 
@@ -141,14 +178,16 @@ GCC version is exactly 8, current version is 8.
 执行如下命令开始编译：
 ```bash
 sh clean.sh
-sh build.sh [-jN] [-nN]
-# -jN 这里N为并行编译的核数，例如 sh build.sh -j4 将采用4核编译。默认采用单核编译，即 sh build.sh
-# -nN 这里N为NEP力场支持的元素类型数量，默认为20，即支持最多20种元素的力场训练，对于通用力场，可设置为为-n100，例如 sh build.sh -j4 -n100。注意，较大的N会导致力场训练速度变慢
+sh build.sh [-jN] [-m nn]
 ```
+- -jN 这里N为并行编译的核数，例如 sh build.sh -j4 将采用4核编译。默认采用单核编译，即 bash build.sh
+
+- -m nn 指定后将 fortran 代码也纳入编译（需要intel编译器支持），用于 linear 和 NN 模型。`默认不编译 fortran 代码`。
+
 :::tip
 如果您在编译过程中出错，请在[MATPL 常见安装错误总结](./error-record/InstallError.md) 中查询。
 
-如果仍未解决您的问题，请将您的机器环境信息、编译错误日志以及您执行的编译操作过程描述 发送到邮箱 `matpl@pwmat`、`wuxingxing@pwmat.com` 或 `support@pwmat.com`，我们将及时联系您处理。
+如果仍未解决您的问题，请将您的机器环境信息、编译错误日志以及您执行的编译操作过程描述 发送到邮箱 `matpl@pwmat.com`、`wuxingxing@pwmat.com` 或 `support@pwmat.com`，我们将及时联系您处理。
 :::
 编译完成后，最后输出如下信息：
 ```
