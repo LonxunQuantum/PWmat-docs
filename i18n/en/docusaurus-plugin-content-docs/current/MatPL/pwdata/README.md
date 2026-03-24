@@ -167,40 +167,34 @@ pwdata [-h] -i INPUT [INPUT ...] [-f INPUT_FORMAT] [-s SAVEPATH] [-o OUTPUT_FORM
 ### pwdata convert_configs 案例
 我们在源码的根目录下提供了 [examples](https://github.com/LonxunQuantum/pwdata/tree/master/examples)，您可以下载后使用这些测试例子：
 
-例1. 将目录 examples/pwmlff_data/LiSiC 下的所有 pwmlff/npy 格式数据提取为 xyz格式，其中训练集占80%，测试集占20%，执行完毕后，在examples/test_workdir/0_1_configs_extxyz目录下会产生train.xyz 和 valid.xyz两个文件。
-```bash
-pwdata convert_configs -i examples/pwmlff_data/LiSiC -s examples/test_workdir/0_1_configs_extxyz -o extxyz
-```
-
-例2. 将PWmat 轨迹文件 50_LiGePS_movement 和 lisi_50_movement 每隔5步提取一帧，随机划分80%结构做为训练集20%作为测试集，存在examples/test_workdir/3_1_configs_extxyz目录下
+例1. 将PWmat 轨迹文件 50_LiGePS_movement 和 lisi_50_movement 每隔5步提取一帧，存在examples/test_workdir/3_1_configs_extxyz目录下
 ```bash
 pwdata convert_configs -i examples/pwmat_data/50_LiGePS_movement examples/pwmat_data/lisi_50_movement -s examples/test_workdir/3_1_configs_extxyz -o extxyz -g 5
 ```
 
-例3. 将examples/deepmd_data/alloy目录下的所有 deepmd/npy 格式文件提取为pwmlff/npy格式，不划分测试集
+例2. 将examples/deepmd_data/alloy目录下的所有 deepmd/npy 格式文件提取为pwmlff/npy格式
 ```bash
 pwdata convert_configs -i examples/deepmd_data/alloy -s ./test_workdir/7_0_configs_PWdata
 ```
 
-例4. 将 examples/xyz_data 目录下的所有后缀为 xyz 的文件提取为pwmlff/npy格式，随机划分80%和20%作为训练和测试集，保存在examples/test_workdir/5_0_configs_PWdata目录
+例3. 将 examples/xyz_data 目录下的所有后缀为 xyz 的文件提取为pwmlff/npy格式，保存在examples/test_workdir/5_0_configs_PWdata目录
 ```bash
 pwdata convert_configs -i examples/xyz_data -s examples/test_workdir/5_0_configs_PWdata -g 1
 ```
 
-例5.在examples/meta_data/alex_val 目录下所有后缀为.aselmdb的 meta数据库中，查询元素类型为Pt和Ge的结构,将查询到的所有结构保存到./test_workdir/10_1_configs_extxyz目
-录下不划分测试集
+例4.在examples/meta_data/alex_val 目录下所有后缀为.aselmdb的 meta数据库中，查询元素类型为Pt和Ge的结构,将查询到的所有结构保存到./test_workdir/10_1_configs_extxyz目录下
 ```bash
 pwdata convert_configs -i examples/meta_data/alex_val -s ./test_workdir/10_1_configs_extxyz -t Pt Ge
 ```
 
-例6. 在meta_data['data_path']中列出的所有目录或者文件下的所有后缀为.aselmdb的 meta数据库中，查询元素类型为Pt和Ge的结构,把查询到的所有结构保存到./test_workdir/
-10_1_configs_extxyz目录下，不划分测试集
+例5. 在meta_data['data_path']中列出的所有目录或者文件下的所有后缀为.aselmdb的 meta数据库中，查询元素类型为Pt和Ge的结构,把查询到的所有结构保存到./test_workdir/
+10_1_configs_extxyz目录下
 ```bash
 pwdata convert_configs -i examples/meta_data.json -s ./test_workdir/10_1_configs_extxyz -o extxyz -t Pt Ge
 ```
 
 ### pwdata convert_configs meta 查询例子
-例1. 查询`只包含` `Pt`和`Ge` 两种元素的结构，并将查询结果输出到为xyz格式。执行完成后将会在examples/test_workdir/10_1_configs_extxyz目录下生成一个train.xyz和valid.xyz两个文件
+例1. 查询`只包含` `Pt`和`Ge` 两种元素的结构，并将查询结果输出到为xyz格式。
 
 ```bash
 pwdata convert_configs -i examples/meta_data/alex_val/alex_go_aao_001.aselmdb examples/meta_data/alex_val/alex_go_aao_002.aselmdb -s examples/test_workdir/10_1_configs_extxyz -o extxyz -t Pt Ge
@@ -529,7 +523,7 @@ Config.to (self, data_path, format = None, **kwargs)
     - **direct**: bool, **必选**. 原子坐标是分数坐标还是笛卡尔坐标。(0 0 0) -> (1 1 1)
 - 用于保存标签文件的关键字参数。用于 `pwmlff/npy` 格式的文件。
     - **data_name**: 字符串, **必选**. 数据集文件夹的保存名称。
-    - **random**: bool, 可选. 是否对原始数据进行随机打乱，然后将数据划分为训练集和验证集。默认为 True。
+    - **random**: bool, 可选. 是否对原始数据进行随机打乱。
     - **seed**: int, 可选. 随机数种子。默认为 2024。
 
 :::caution

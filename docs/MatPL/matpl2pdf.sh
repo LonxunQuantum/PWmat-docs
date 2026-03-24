@@ -190,7 +190,7 @@ pandoc temp.md -o "$output" \
   --resource-path=.
 
 # 清理临时文件
-# rm -f temp.md latex_header.tex
+rm -f temp.md latex_header.tex
 
 if [ -f "$output" ]; then
     echo "✅ 成功: $output"
