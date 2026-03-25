@@ -8,7 +8,7 @@ title: 离线安装
 
 - 离线安装包集成了 MatPL-2026.3 和 MatPL-2026.3 lammps 接口源码和依赖的Python环境。要求待安装的机器提供 `gcc 编译器(8.n 以及以上)`、`CUDA(11.8及以上)`、`openmpi(4.1.4及以上)` 以及 `nvidia GPU` 硬件支持。`如果需要使用 NN 和 Linear 模型，还需要加载 intel 相关编译器（ifort icc mkl）。`
 
-- 由于 MatPL-2026.3 对纯CPU训练或者模拟没有收益，所以不提供 MatPL-2026.3 CPU 版本的在线或者离线安装包支持。纯CPU用户请使用 [MatPL-2025.3](http://doc.lonxun.com/2025.3/) 即可。
+- 由于 MatPL-2026.3 对纯CPU训练或者模拟没有收益，所以不提供 MatPL-2026.3 CPU 版本的在线或者离线安装包支持。纯CPU用户请使用 [MatPL-2025.3](http://doc.lonxun.com/2025.03/MatPL/install/) 即可。
 
 
 ### 下载离线安装包
