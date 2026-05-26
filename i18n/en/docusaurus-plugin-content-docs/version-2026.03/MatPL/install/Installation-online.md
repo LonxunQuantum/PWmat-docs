@@ -366,7 +366,7 @@ lammps-MatPL (fortran 版本) 用于 MatPL 的 NN 和 Linear 力场，未提供 
 
 lammps-MatPL (fortran 版本) 力场接口源码位于 MatPL 源码目录 `lmps/lammps-fortran` 下，您也可以通过 [github fortran 分支下载](https://github.com/LonxunQuantum/lammps-MatPL/tree/fortran) 下载 lammps-MatPL (fortran 版本) 源码，或下载 release 包。
 
-安装过程请参考 [2025.3 fortran lammps 接口安装](http://doc.lonxun.com/MatPL/install/Installation-online/#lammps-matpl-fortran-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85)
+安装过程请参考 [2025.3 fortran lammps 接口安装](http://doc.lonxun.com/2025.03/MatPL/install/Installation-online/#lammps-matpl-fortran-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85)
 
 详细的使用，请参考 
 - [MatPL 操作演示：Linear lammps](../models/linear/linear-tutorial.md#lammps-md)

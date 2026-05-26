@@ -108,7 +108,8 @@ NEP 两体描述符的数量为 n_max[0]+1；三体描述符的数量为 (n_max[
 <!-- 这里支持使用多层神经网络，如您可以设置为`[50, 50, 50, 1]`这类网络，但是建议您使用默认值即可，更多网络层数在我们的测试中对模型拟合精度的提升有限，反而会造成推理负担，降低推理速度。 -->
 
 ### zbl
-该参数用于设置Ziegler-Biersack-Littmark (ZBL) 势，处理原子距离非常近的情况。默认不设置。该值的允许范围是 1.0 $\le$ zbl $\le$ 2.5。
+该参数用于设置 Ziegler-Biersack-Littmark (ZBL) 势(`DOI: 10.1007/978-1-4615-8103-1_3`)的 outer cutoff 值。默认不设置。推荐该值的范围不超过 1.0 $\le$ zbl $\le$ 3.0。
+
 
 ### fix_cij
 该参数用于在训练中固定 NEP 两体和三体特征值对应的系数项，默认为false。设置为true之后，训练过程中将不再训练更新系数项。
@@ -409,12 +410,24 @@ g_i^{\text{(clipped)}} =
 $$
 
 ### t_0 & t_mult
-参数 t_0 和 t_mult 配合使用，用于设置在 ADAM 优化器中使用余弦退火算法更新学习率。注意：启用了余弦退火后，学习率的更新由调度器 optim.lr_scheduler.CosineAnnealingWarmRestarts 完全接管，在[decay_step](#decay_step)中的学习率更新策略将失效。
 
-- T_0 学习率第一次回到初始值的epoch位置；
-- T_mult 控制学习率变化的速度。如果T_mult=1,则学习率在T_0,2T_0,3T_0,....,i*T_0,....处回到最大值(初始学习率)；如果T_mult>1,则学习率在T_0,(1+T_mult)*T_0,(1+T_mult+T_mult**2)*T_0,.....,(1+T_mult+T_mult2+...+T_0i)*T0,处回到最大值。如果开启余弦退火策略，在训练过程中，每次重启学习率前（即学习率最低点）的模型将保存在 `model_record/saved_models`目录下。
+参数 t_0 和 t_mult 配合使用，用于设置在 ADAM 优化器中使用余弦退火算法更新学习率，要求都是正整数。注意： 启用了余弦退火后，学习率的更新由调度器 optim.lr_scheduler.CosineAnnealingWarmRestarts 完全接管，在 decay_step 中的学习率更新策略将失效。
 
-如下图所示，该例中[初始学习率 learning_rate](#learning_rate) 为 0.001，T_0 = 1, T_mult = 2, [最小学习率 stop_lr](#stop_lr) = 3.51e-08。
+- T_0：学习率第一次回到初始值（重启）的 Epoch 位置（即第一个周期的长度）。
+- T_mult：周期增长倍率，控制每次重启后下一个周期的拉长幅度。
+
+- 学习率重启位置的数学规律在训练过程中，第 $n$ 次周期结束、即将重启学习率前（即学习率下降到最低点）的 Epoch 位置（记为 $E_n$），可以通过以下规律计算：
+   - T_mult = 1 时（固定周期）：每个周期的长度保持不变，学习率在以下位置重启：
+   
+   $$E_n = n \times T_0 \quad (n = 1, 2, 3, \dots)$$
+   
+   - T_mult > 1 时（周期递增）：每个周期的长度呈指数级拉长，第 $n$ 次重启前的 Epoch 符合等比数列求和通项公式：
+   
+   $$E_n = T_0 \times \frac{T_{mult}^n - 1}{T_{mult} - 1} \quad (n = 1, 2, 3, \dots)$$
+
+- 模型保存机制： 如果开启余弦退火策略，在训练过程中，每次重启学习率前（即上述计算出的 $E_n$ 位置，学习率处于最低点）的模型将自动保存在 model_record/saved_models 目录下。
+
+如下图所示，该例中[初始学习率 learning_rate](#learning_rate) 为 0.001，T_0 = 1, T_mult = 2, [最小学习率 stop_lr](#stop_lr) = 3.51e-08，学习率分别在第1、3、7、15、... 等epoch 重启。
 
 ![AL_T0_T_mult](./pictures/lr_test_1_2_6.png)
 
