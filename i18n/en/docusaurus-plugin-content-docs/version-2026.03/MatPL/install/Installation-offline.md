@@ -10,12 +10,16 @@ title: 离线安装
 
 - 由于 MatPL-2026.3 对纯CPU训练或者模拟没有收益，所以不提供 MatPL-2026.3 CPU 版本的在线或者离线安装包支持。纯CPU用户请使用 [MatPL-2025.3](http://doc.lonxun.com/2025.03/MatPL/install/) 即可。
 
+- `离线安装补丁包`：如果已经安装过MatPL-2026.3，后续的更新可以通过我们提供的补丁包安装即可（避免安装耗时、庞大的python执行环境）。补丁包中只包含了更新的代码内容，约6MB左右的，只对有更新的模块做编译，因此安装编译耗时更短。
 
-### 下载离线安装包
+### 下载离线安装包或补丁包
 方法一（推荐）邮件获取，建议您发送邮件到 `matpl@pwmat.com`、`wuxingxing@pwmat.com` 或 `support@pwmat.com` 获取离线安装包。相比于百度网盘，通过邮件链接下载的速度更快（几十倍以上）。
 
 方法二 请访问百度网盘下载，链接如果失效请邮件联系 `matpl@pwmat.com`、`wuxingxing@pwmat.com` 或 `support@pwmat.com`：
-👉 [离线安装包下载 MatPL-2026.3.sh.tar.gz](https://pan.baidu.com/s/1dyaLxTKbOIu8JRZB3WvOfQ?pwd=pwmt)，提取码: pwmt。
+👉 [离线安装包下载](https://pan.baidu.com/s/1dyaLxTKbOIu8JRZB3WvOfQ?pwd=pwmt)，提取码: pwmt。
+
+👉 [离线补丁包下载 patch-packages](https://pan.baidu.com/s/1veyMqqX5g0Ie5NEL3xU0Zw?pwd=pwmt)，提取码: pwmt。
+
 
 ### 解压安装包
 
@@ -29,6 +33,8 @@ tar -xzvf MatPL-2026.3.sh.tar.gz
 ```
 解压后得到如下文件：
 `MatPL-2026.3.sh`， `check_offenv.sh`
+
+补丁包不需要解压操作，直接bash 命令安装即可。
 
 ### 检查编译器版本
 
@@ -70,33 +76,51 @@ bash check_offenv.sh
 ```
 
 ### 执行安装命令
-环境检查完毕后，执行如下命令即可完成安装
+环境检查完毕后，执行如下命令即可完成安装：
+
 ```bash
-bash matpl-2026.3.sh [-jN] [-m nn] [-u] [-h]
+bash matpl-2026.3.sh [-jN] [-m nn] [-a ARCH] [-d] [-u] [-h]
 ```
 
-- -jN 这里N为并行编译的核数，例如 bash build.sh -j4 将采用4核编译。默认采用单核编译，即 bash build.sh
+如果是补丁包，执行如下命令：
+```bash
+bash 补丁包名称.sh [-jN] [-m nn] [-a ARCH] [-d] [-u] [-h]
+```
 
-- -m nn 指定后将 fortran 代码也纳入编译（需要intel ifort icc mkl 支持），用于 linear 和 NN 模型。默认不编译 fortran 代码。
+- `-jN` 这里 `N` 为并行编译的核数，例如 `bash matpl-2026.3.sh -j4` 将采用 4 核编译。默认采用单核编译。
+
+- `-m nn` 指定后将 Fortran 代码也纳入编译，需要 Intel ifort、icc、MKL 支持，用于 Linear 和 NN 模型。默认不编译 Fortran 代码。
+
+- `-a ARCH` 指定编译 `lammps-2026.3` 时使用的 Kokkos CUDA 架构，默认是 `AMPERE86`。例如：
+  ```bash
+  bash matpl-2026.3.sh -a AMPERE80
+  ```
+  `ARCH` 是 Kokkos CUDA architecture suffix，例如 `AMPERE80`、`AMPERE86`、`ADA89`、`HOPPER90`。更多架构说明请参考：https://docs.lammps.org/Build_extras.html#kokkos
+
+- `-d` 开启 `lammps-2026.3` 的 64 位精度 NEP 推理编译选项：
+  ```bash
+  -DPREC_NEPINFER=ON
+  ```
+  开启后 `lammps-2026.3` 将编译到 `build-64` 目录；默认不开启，默认编译目录为 `build`。
+
+- `-u` 用于解压安装包，解压后是一个 `lammps-2026.3` 源码目录、`MatPL-2026.3` 源码目录和 `matpl-2026.3` Python 环境目录。
 
 是否安装成功检查：
-编译完成后，MatPL-2026.3 目录下生成如下目录结构：
+
+编译完成后，`MatPL-2026.3` 目录下生成如下目录结构：
+
 ```txt
 MatPL-2026.3
     ├── lammps-2026.3/
-    ├── lammps-fortran/
     ├── matpl-2026.3/
     ├── MatPL-2026.3/
-    ├── matpl-env.sh
-    └── matpl-fortran-env.sh
+    └── matpl-env.sh
 ```
 
-- MatPL-2026.3 为机器学习力场训练平台
-- matpl-2026.3 为python环境
-- lammps-2026.3 为支持 DP 和 NEP 力场的lammps力场接口
-- lammps-fortran 为支持 NN 和 Linear 力场的lammps力场接口 
-- matpl-env.sh 为 MatPL-2026.3 和 lammps-2026.3 的所有环境变量
-- matpl-fortran-env.sh 为 MatPL-2026.3 和 lammps-fortran 的所有环境变量
+- `MatPL-2026.3` 为机器学习力场训练平台。
+- `matpl-2026.3` 为 Python 环境。
+- `lammps-2026.3` 为支持 DP 和 NEP 力场的 LAMMPS 力场接口。
+- `matpl-env.sh` 为 MatPL-2026.3 和 `lammps-2026.3` 的所有环境变量。
 
 ### 加载使用
 

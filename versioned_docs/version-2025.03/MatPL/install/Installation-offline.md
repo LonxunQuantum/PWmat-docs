@@ -10,11 +10,16 @@ sidebar_position: 1
  
 - 对于 CPU 版本，MatPL 需要待安装机器提供`gcc 编译器`、`intel编译器套件`（包括`ifort`、`icc` 编译器、`mkl`和`mpi`库）即可。
 
-## 1. 下载离线安装包
+- `离线安装补丁包`：如果已经安装过MatPL-2026.3，后续的更新可以通过我们提供的补丁包安装即可（避免安装耗时、庞大的python执行环境）。补丁包中只包含了更新的代码内容，约6MB左右的，只对有更新的模块做编译，因此安装编译耗时更短。
+
+## 1. 下载离线安装包或补丁包
 方法一（推荐）邮件获取，建议您发送邮件到 `matpl@pwmat.com`、`wuxingxing@pwmat.com` 或 `support@pwmat.com` 获取离线安装包。相比于百度网盘，通过邮件链接下载的速度更快（几十倍以上）。
 
 方法二 请访问百度网盘下载，链接如果失效请邮件联系 `matpl@pwmat.com`、`wuxingxing@pwmat.com` 或 `support@pwmat.com`：
+
 👉 [离线安装包下载 MatPL-2025.3.sh.tar.gz](https://pan.baidu.com/s/1JgPdSNAIvmc9HBEaCHG3Gw?pwd=pwmt)，如果安装CPU版本，请选择CPU版本下载。
+
+👉 [离线补丁包下载 patch-packages](https://pan.baidu.com/s/1nICvJ_MzMF4No6B3FbIF2g?pwd=pwmt)，提取码: pwmt。
 
 ## 2. 解压安装包
 
@@ -41,6 +46,8 @@ tar -xzvf MatPL_cpu-2025.3.sh.tar.gz
 
 解压后得到如下文件：
 `MatPL_cpu-2025.3.sh`， `check_offenv_cpu.sh`
+
+补丁包不需要解压操作，直接bash 命令安装即可。
 
 ## 3. 检查编译器版本
 ### GPU 版本
@@ -138,6 +145,12 @@ bash MatPL-2025.3.sh [-jN] [-m nn] [-u] [-h]
 ```bash
 bash MatPL_cpu-2025.3.sh [-jN] [-m nn] [-u] [-h]
 ```
+
+对于补丁包，执行如下命令，补丁包不区分CPU或GPU，会根据已安装版本自动识别
+```bash
+bash 补丁包名称.sh [-jN] [-m nn] [-u] [-h]
+```
+
 
 是否安装成功检查：
 编译完成后，MatPL-2025.3 目录下生成如下目录结构：
