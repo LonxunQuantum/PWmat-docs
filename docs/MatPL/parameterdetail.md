@@ -275,6 +275,10 @@ ADAM 优化器的完整参数设置如下:
         "stop_lr": 3.51e-08,
         "stop_step": 1000000,
         "decay_step": 5000,
+        "max_norm": 0.5,
+        "norm_type": 2,
+        "t_0": 6,
+        "t_mult": 1,
         "train_energy": true,
         "train_force": true,
         "train_virial": false,
@@ -346,34 +350,117 @@ $$
 
 其中，iter_num 代表训练过程中的迭代次数。
 
-### start_pre_fac_force
-训练开始时 force 损失的 prefactor，应大于或等于 0。默认值为 `1000`。
+### Loss 中能量、受力权重 prefactor 设置
 
-### start_pre_fac_etot
-训练开始时 total energy 损失的 prefactor，应大于或等于 0。默认值为 `0.02`。
+受力、能量、维里的precator 参数设置：
 
-### start_pre_fac_virial
-训练开始时 virial 损失的 prefactor，应大于或等于 0。默认值为 `50.0`。
+- start_pre_fac_force ：训练开始时 force 损失的 prefactor，应大于或等于 0。默认值为 `1000`。
 
-!-- #### start_pre_fac_egroup
-训练开始时 egroup 损失的 prefactor，应大于或等于 0。默认值为 `0.02`。
+- end_pre_fac_force ：训练结束时 force 损失的 prefactor，应大于或等于 0。默认值为 `1.0`。
 
-<!-- ### start_pre_fac_ei 
-训练开始时 atomic energy 损失的 prefactor，应大于或等于 0。默认值为 `0.1`。-->
+- start_pre_fac_etot ：训练开始时 total energy 损失的 prefactor，应大于或等于 0。默认值为 `0.02`。
 
-### end_pre_fac_force
-训练结束时 force 损失的 prefactor，应大于或等于 0。默认值为 `1.0`。
+- end_pre_fac_etot ：训练结束时 total energy 损失的 prefactor，应大于或等于 0。默认值为 `1.0`。
 
-### end_pre_fac_etot
-训练结束时 total energy 损失的 prefactor，应大于或等于 0。默认值为 `1.0`。
+- start_pre_fac_virial ：训练开始时 virial 损失的 prefactor，应大于或等于 0。默认值为 `50.0`。
 
-### end_pre_fac_virial
-训练结束时 virial 损失的 prefactor，应大于或等于 0。默认值为 `1.0`。
+- end_pre_fac_virial ：训练结束时 virial 损失的 prefactor，应大于或等于 0。默认值为 `1.0`。
 
-<!-- ### end_pre_fac_ei
-训练结束时 atomic energy 损失的 prefactor，应大于或等于 0。默认值为 `2.0`。 -->
 
-### max_norm & norm_type (按范数裁剪)
+`Loss prefactor 计算方式`:
+
+在 Adam 训练中，每一项 loss 的 prefactor 会根据当前学习率 `real_lr` 进行计算：
+
+```python
+lr_ratio = real_lr / learning_rate
+lr_ratio = min(max(lr_ratio, 0.0), 1.0)
+
+prefactor = end_prefactor + (start_prefactor - end_prefactor) * lr_ratio
+```
+
+对应数学公式为：
+
+$$
+r =
+\mathrm{clip}
+\left(
+\frac{\text{real\_lr}}{\text{learning\_rate}},
+0,
+1
+\right)
+$$
+
+$$
+p_x =
+p_x^{\mathrm{end}}
++
+\left(
+p_x^{\mathrm{start}} - p_x^{\mathrm{end}}
+\right)
+r
+$$
+
+其中，x 可以是 `force`, `etot`, `virial` 等 loss 项。
+因此训练开始时：
+
+$$
+\text{real\_lr} \approx \text{learning\_rate}, \quad r \approx 1
+$$
+
+此时：
+
+$$
+p_x \approx p_x^{\mathrm{start}}
+$$
+
+训练后期学习率降低时：
+
+$$
+\text{real\_lr} \to 0, \quad r \to 0
+$$
+
+此时：
+
+$$
+p_x \to p_x^{\mathrm{end}}
+$$
+
+`Loss 计算公式`:
+
+
+总 loss 由 force、total energy、virial 等部分组成。启用对应训练项时，其计算方式为：
+
+$$
+L =
+p_F L_F^{\mathrm{MSE}}
++
+p_{\mathrm{etot}}
+\frac{L_{\mathrm{Etot}}^{\mathrm{MSE}}}{N_{\mathrm{avg}}}
++
+p_{\mathrm{virial}}
+\frac{L_{\mathrm{Virial}}^{\mathrm{MSE}}}{N_{\mathrm{avg}}}
+$$
+
+- 其中各项 loss 均由 `MSELoss` 计算得到，MSE 形式为：
+
+$$
+L_{\mathrm{}}^{\mathrm{MSE}}
+=
+\frac{1}{n}\sum_{i}^{n}\left(Y_i-\hat{Y_i}\right)^2
+$$
+
+- $L_F$ 是 force loss；
+- $L_{Etot}$ 是 total energy loss；
+- $L_{Virial}$ 是 total virial loss；
+- $N_{\mathrm{avg}}$ 是当前 batch 中每个结构的平均原子数；
+- $p_F$, $p_{Etot}$, $p_{Virial}$ 分别是 force、energy、virial 的 prefactor。
+
+
+由于 `Etot`、`Virial` 是结构级 total quantity，因此在总 loss 中除以 `N_avg`，使它们的尺度更接近 per-atom 量，避免大体系天然产生更大的 loss 权重。
+
+### 梯度裁剪
+
+#### 按范数裁剪 max_norm & norm_type
 
 参数 max_norm 和 norm_type 配合使用，用于设置按照范数裁剪梯度。max_norm 默认值为 None，不使用按范数裁剪。
 
@@ -399,7 +486,7 @@ $$
 g_{\text{clipped}} = g \cdot \frac{\text{max\_norm}}{\|g\|_2}
 $$
 
-### clip_value (按值裁剪)
+#### 按值裁剪 clip_value
 按值裁剪梯度。直接将所有梯度元素裁剪到[-clip_value, clip_value]区间，超过阈值的梯度被截断。默认值为 None, 不使用按值裁剪。
 
 $$
@@ -411,25 +498,23 @@ g_i^{\text{(clipped)}} =
 \end{cases}
 $$
 
-### t_0 & t_mult
+### 周期性热重启的余弦退火更新学习率设置 t_0 & t_mult
 
 参数 t_0 和 t_mult 配合使用，用于设置在 ADAM 优化器中使用余弦退火算法更新学习率，要求都是正整数。注意： 启用了余弦退火后，学习率的更新由调度器 optim.lr_scheduler.CosineAnnealingWarmRestarts 完全接管，在 decay_step 中的学习率更新策略将失效。
 
-- T_0：学习率第一次回到初始值（重启）的 Epoch 位置（即第一个周期的长度）。
-- T_mult：周期增长倍率，控制每次重启后下一个周期的拉长幅度。
+- t_0：学习率第一次回到初始值（重启）的 Epoch 位置（即第一个周期的长度）。
+- t_mult：周期增长倍率，控制每次重启后下一个周期的拉长幅度。
 
 - 学习率重启位置的数学规律在训练过程中，第 $n$ 次周期结束、即将重启学习率前（即学习率下降到最低点）的 Epoch 位置（记为 $E_n$），可以通过以下规律计算：
-   - T_mult = 1 时（固定周期）：每个周期的长度保持不变，学习率在以下位置重启：
+   - t_mult = 1 时（固定周期）：每个周期的长度保持不变，学习率在每间隔 t_0 个周期后重启一次
+
+   - t_mult > 1 时（周期递增）：每个周期的长度呈指数级拉长，第 $n$ 次重启前的 Epoch 符合等比数列求和通项公式：
    
-   $$E_n = n \times T_0 \quad (n = 1, 2, 3, \dots)$$
-   
-   - T_mult > 1 时（周期递增）：每个周期的长度呈指数级拉长，第 $n$ 次重启前的 Epoch 符合等比数列求和通项公式：
-   
-   $$E_n = T_0 \times \frac{T_{mult}^n - 1}{T_{mult} - 1} \quad (n = 1, 2, 3, \dots)$$
+   $$E_n = t_0 \times \frac{T_{mult}^n - 1}{T_{mult} - 1} \quad (n = 1, 2, 3, \dots)$$
 
 - 模型保存机制： 如果开启余弦退火策略，在训练过程中，每次重启学习率前（即上述计算出的 $E_n$ 位置，学习率处于最低点）的模型将自动保存在 model_record/saved_models 目录下。
 
-如下图所示，该例中[初始学习率 learning_rate](#learning_rate) 为 0.001，T_0 = 1, T_mult = 2, [最小学习率 stop_lr](#stop_lr) = 3.51e-08，学习率分别在第1、3、7、15、... 等epoch 重启。
+如下图所示，该例中[初始学习率 learning_rate](#learning_rate) 为 0.001，t_0 = 1, t_mult = 2, [最小学习率 stop_lr](#stop_lr) = 3.51e-08，学习率分别在第1、3、7、15、... 等epoch 重启。
 
 ![AL_T0_T_mult](./pictures/lr_test_1_2_6.png)
 
