@@ -80,41 +80,86 @@ $ pip install setuptools==68.0.0
 ```
 
 
-### 问题：V100安装时 PyTorch Caffe2 报 `Unknown CUDA Architecture Name 9.0a`
+### 问题：离线安装包编译时报 `Unknown CUDA Architecture Name 9.0a`
 
 #### 1. 错误现象
 
-在 CMake 配置阶段，触发 PyTorch 内部脚本报错：
+在 MatPL 离线安装包中编译自定义算子，执行 `cmake ..` 时，PyTorch CMake 配置阶段报错：
 
 ```text
+-- PyTorch built with CUDA support: TRUE
+-- CUDA toolkit found: /share/app/cuda/cuda-12.4/bin/nvcc
+-- Enabling GPU compilation: PyTorch has CUDA support AND CUDA toolkit is available
+-- Automatic GPU detection failed. Building for common architectures.
+-- Autodetected CUDA architecture(s): 3.5;5.0;8.0;8.6;8.9;9.0;9.0a
+
 CMake Error at .../torch/share/cmake/Caffe2/Modules_CUDA_fix/upstream/FindCUDA/select_compute_arch.cmake:225 (message):
   Unknown CUDA Architecture Name 9.0a in CUDA_SELECT_NVCC_ARCH_FLAGS
-
 ```
+
+该问题常见于如下组合：
+
+```bash
+module load cuda/12.4-share openmpi/4.1.6 cmake/3.31.6
+source /opt/rh/devtoolset-8/enable
+source /path/to/MatPL-2026.3/matpl-2026.3/bin/activate
+```
+
+其中 PyTorch 版本为 `2.2`，CUDA Toolkit 版本为 `12.4`。
 
 #### 2. 原因分析
 
-* **自动检测失败：** 日志中出现 `-- Automatic GPU detection failed. Building for common architectures.`，表明 PyTorch 没能直接读取到当前显卡的架构（V100 应为 `7.0`），转而使用系统默认的“通用架构列表”。
-* **HPC SDK 引入新架构：** 环境中的 NVIDIA HPC SDK 23.9 默认的通用架构列表包含了 Hopper 架构演进版 `9.0a`。
-* **脚本解析 Bug：** 旧版本 PyTorch 的 `select_compute_arch.cmake` 脚本只能解析纯数字架构（如 `9.0`, `8.9`），碰到带字母的 `9.0a` 时无法识别，导致解析崩溃。
+这不是 MatPL 算子源码的编译错误，而是 PyTorch 自带的 CMake CUDA 架构选择脚本在配置阶段失败。
+
+当 PyTorch 没有成功自动识别当前 GPU 架构时，会退回到一组通用 CUDA 架构列表。CUDA 12.4 环境下，这个列表中可能包含：
+
+```text
+9.0a
+```
+
+但是 PyTorch 2.2 随带的 `select_compute_arch.cmake` 不能识别带字母后缀的 `9.0a`，因此在 `find_package(Torch REQUIRED)` 阶段直接报错。
 
 #### 3. 解决方案
 
-在 `find_package(Torch REQUIRED)` 执行之前，通过变量显式锁死需要编译的 CUDA 架构列表，阻止 PyTorch 启动自动检测。
+在执行 `cmake ..` 之前，显式指定需要编译的 GPU 架构，避免 PyTorch 自动探测。
 
-**修改 `./cmake/gpu/CMakeLists.txt`：**
+如果主要用于 NVIDIA RTX 4090，可设置：
+
+```bash
+export TORCH_CUDA_ARCH_LIST="8.9"
+cmake ..
+```
+
+如果离线包希望同时支持 A100、3090、4090 等常见 GPU，推荐设置为：
+
+```bash
+export TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9"
+cmake ..
+```
+
+如果需要支持 H100，可以使用：
+
+```bash
+export TORCH_CUDA_ARCH_LIST="9.0"
+cmake ..
+```
+
+注意不要设置为 `9.0a`。
+
+也可以直接在 CMake 命令中指定：
+
+```bash
+cmake .. -DTORCH_CUDA_ARCH_LIST="8.0;8.6;8.9"
+```
+<!-- 
+如果希望在源码中固定该行为，可以在调用 `find_package(Torch REQUIRED)` 之前加入：
 
 ```cmake
-# =================================================================
-# 强制指定 PyTorch 编译的 CUDA 架构，阻止其自动检测和使用默认列表
-# =================================================================
-set(TORCH_CUDA_ARCH_LIST "6.0;6.1;7.0;7.5;8.0")
-
-# 随后再引入 Torch
+set(TORCH_CUDA_ARCH_LIST "8.0;8.6;8.9")
 find_package(Torch REQUIRED)
-enable_language(CUDA)
-
 ```
+
+该方法的作用是绕过 PyTorch 的自动 CUDA 架构探测，避免生成包含 `9.0a` 的架构列表。 -->
 
 ### 问题：NVCC 编译时报 `fatal error: math.h: 没有那个文件或目录`
 

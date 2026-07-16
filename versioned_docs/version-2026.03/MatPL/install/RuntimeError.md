@@ -17,6 +17,67 @@ module load intel/2020 cuda/11.8
 source /the/path/MatPL-2025.3/env.sh
 ```
 
+### 问题：CUDA driver version is insufficient for CUDA runtime version
+
+#### 1. 错误现象
+
+在运行 MatPL GPU 相关功能或自定义 CUDA 算子时，程序报如下错误：
+
+```text
+CUDA Error:
+    File:       /data/home/wuxingxing/pack/pack-2026.3/gpu-install/MatPL-2026.3/MatPL-2026.3/src/op/kernel/calculateNepNeighbor.cu
+    Line:       331
+    Error code: 35
+    Error text: CUDA driver version is insufficient for CUDA runtime version
+```
+
+其中 `Error code: 35` 表示当前机器上的 NVIDIA 显卡驱动版本过低，不能支持程序运行时使用的 CUDA Runtime 版本。
+
+#### 2. 原因分析
+
+CUDA 程序运行时需要同时满足两个条件：
+
+1. 当前环境中加载的 CUDA Runtime 版本与程序编译、打包时使用的 CUDA 版本兼容；
+2. 机器上的 NVIDIA Driver 版本足够新，能够支持该 CUDA Runtime。
+
+如果显卡驱动版本过低，即使已经正确加载 conda 环境、CUDA module 和 MatPL 环境，也会在程序启动 CUDA kernel 时失败。
+
+可以使用下面命令查看当前驱动信息：
+
+```bash
+nvidia-smi
+```
+
+例如，下面的驱动版本较旧，只支持到 CUDA 11.6：
+
+```text
+NVIDIA-SMI 510.39.01    Driver Version: 510.39.01    CUDA Version: 11.6
+```
+
+如果当前 MatPL 离线包或编译环境使用的是 CUDA 12.4，则该驱动版本不足，会触发上述错误。
+
+#### 3. 解决方案
+
+请升级 NVIDIA 显卡驱动，使其支持当前 MatPL 环境使用的 CUDA Runtime 版本。
+
+例如，升级后驱动信息可以为：
+
+```text
+NVIDIA-SMI 550.100      Driver Version: 550.100      CUDA Version: 12.4
+```
+
+升级完成后，重新登录节点或重启相关服务，再执行：
+
+```bash
+nvidia-smi
+```
+
+确认 `Driver Version` 和 `CUDA Version` 已更新到兼容版本后，再重新运行 MatPL。
+
+:::caution
+该问题不能通过只切换 conda 环境或重新加载 CUDA module 解决。`CUDA Version` 是由 NVIDIA 驱动决定的兼容能力上限，如果驱动版本过低，需要由系统管理员升级显卡驱动。
+:::
+
 ### 动态库加载错误-mkl库
 ``` bash
     exec(code, run_globals)

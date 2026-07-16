@@ -32,14 +32,15 @@ title: 在线安装
 
 - 或下载 release 离线源码包，您可以直接浏览器输入下面的地址下载，或者加前缀 wget 下载:
 ``` bash
-  wget https://github.com/LonxunQuantum/MatPL/archive/refs/tags/MatPL-2026.3.zip
-  或
+  wget https://github.com/LonxunQuantum/MatPL/archive/refs/tags/MatPL-2026.3_update2.zip
+  或通过gitee下载
   wget https://gitee.com/pfsuo/MatPL/repository/archive/2026.3
 ```
 下载 release 离线源码包后，通过 unzip 命令解压。
 ``` bash
-  ## 解压后您将得到一个名称为 MatPL-2026.3 的源码目录
-  unzip 2026.3.zip
+  ## 解压后您将得到一个名称为 MatPL-MatPL-2026.3_update2 的源码目录
+  unzip MatPL-MatPL-2026.3_update2.zip
+  mv MatPL-MatPL-2026.3_update2 MatPL-2026.3 # 为了后续手册表述统一，这里将文件名重名为MatPL-2026.3 
 ```
 
 #### 创建 conda 虚拟环境
@@ -68,9 +69,9 @@ conda activate matpl-2026.3
 #### Python虚拟环境安装依赖包
 接下来安装 MATPL 所需的第三方依赖包，我们已经把所有依赖的第三方包写在requirement.txt中，只需要在该文件所在目录下执行 pip 命令即可完成所有的依赖包安装。操作过程如下。该步骤会安装pytorch等python环境较耗时，请您耐心等待。
 
-- matpl-2026.3/requirement.txt 是 MatPL GPU 版本的 python 环境
+- MatPL-2026.3/requirement.txt 是 MatPL GPU 版本的 python 环境
 
-- matpl-2026.3/requirements_cpu.txt 是 MatPL CPU 版本的 python 环境
+- MatPL-2026.3/requirements_cpu.txt 是 MatPL CPU 版本的 python 环境
 
 ```bash
 #第一步 激活conda 环境
