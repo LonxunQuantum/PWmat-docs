@@ -10,7 +10,7 @@ title: 离线安装
 
 - 由于 MatPL-2026.3 对纯CPU训练或者模拟没有收益，所以不提供 MatPL-2026.3 CPU 版本的在线或者离线安装包支持。纯CPU用户请使用 [MatPL-2025.3](http://doc.lonxun.com/2025.03/MatPL/install/) 即可。
 
-- 离线安装包中的pytorch 版本为2.2，当前离线包最新版本为 `matpl-2026.3-update2`，相比于updata1，对 NEP 模型 新增了 zbl type wise；对lammps NEP kokkos 在NVIDIA 显卡做了加速，并扩展了lammps kokkos 的6分量 virial 为 9分量，以支持热流计算功能。
+- 离线安装包中的pytorch 版本为2.2，当前离线包最新版本为 `matpl-2026.3-update3`，相比于updata1，对 NEP 模型 新增了 zbl type wise；对lammps NEP kokkos 在NVIDIA 显卡做了加速，并扩展了lammps kokkos 的6分量 virial 为 9分量，以支持热流计算功能。
 
 <!-- - `离线安装补丁包`：如果已经安装过MatPL-2026.3，后续的更新可以通过我们提供的补丁包安装即可（避免安装耗时、庞大的python执行环境）。补丁包中只包含了更新的代码内容，约6MB左右的，只对有更新的模块做编译，因此安装编译耗时更短。 -->
 
@@ -22,9 +22,9 @@ title: 离线安装
 
 <!-- 👉 [离线补丁包下载 patch-packages](https://pan.baidu.com/s/1veyMqqX5g0Ie5NEL3xU0Zw?pwd=pwmt)，提取码: pwmt。 -->
 
-方法三 请访问 [Github tag MatPL-2026.3_update2](https://github.com/LonxunQuantum/MatPL/releases/tag/MatPL-2026.3_update2) 下载以下文件：
+方法三 请访问 [Github tag MatPL-2026.3_update3](https://github.com/LonxunQuantum/MatPL/releases/tag/MatPL-2026.3_update3) 下载以下文件：
 ```txt
-matpl-2026.3-update2.sh.tar.gz.part_aa  matpl-2026.3-update2.sh.tar.gz.part_ab  matpl-2026.3-update2.sh.tar.gz.part_ac  matpl-2026.3-update2.sh.tar.gz.part_ad  matpl-2026.3-update2.sh.tar.gz.part_ae
+matpl-2026.3-update3.sh.tar.gz.part_aa  matpl-2026.3-update3.sh.tar.gz.part_ab  matpl-2026.3-update3.sh.tar.gz.part_ac  matpl-2026.3-update3.sh.tar.gz.part_ad  matpl-2026.3-update3.sh.tar.gz.part_ae
 ```
 
 ### 解压安装包
@@ -33,12 +33,12 @@ matpl-2026.3-update2.sh.tar.gz.part_aa  matpl-2026.3-update2.sh.tar.gz.part_ab  
 
 ```bash
 #合并4个文件到1个压缩文件
-cat matpl-2026.3-update2.sh.tar.gz.part_aa  matpl-2026.3-update2.sh.tar.gz.part_ab  matpl-2026.3-update2.sh.tar.gz.part_ac  matpl-2026.3-update2.sh.tar.gz.part_ad  matpl-2026.3-update2.sh.tar.gz.part_ae > matpl-2026.3-update2.sh.tar.gz
+cat matpl-2026.3-update3.sh.tar.gz.part_aa  matpl-2026.3-update3.sh.tar.gz.part_ab  matpl-2026.3-update3.sh.tar.gz.part_ac  matpl-2026.3-update3.sh.tar.gz.part_ad  matpl-2026.3-update3.sh.tar.gz.part_ae > matpl-2026.3-update3.sh.tar.gz
 #解压文件
-tar -xzvf matpl-2026.3-update2.sh.tar.gz
+tar -xzvf matpl-2026.3-update3.sh.tar.gz
 ```
 解压后得到如下文件：
-`matpl-2026.3-update2.sh`， `check_offenv.sh`
+`matpl-2026.3-update3.sh`， `check_offenv.sh`
 
 <!-- 补丁包不需要解压操作，直接bash 命令安装即可。 -->
 
@@ -85,7 +85,7 @@ bash check_offenv.sh
 环境检查完毕后，执行如下命令即可完成安装：
 
 ```bash
-bash matpl-2026.3-update2.sh [-jN] [-m nn] [-a ARCH] [-d] [-u] [-h]
+bash matpl-2026.3-update3.sh [-jN] [-m nn] [-a ARCH] [-d] [-u] [-h]
 ```
 
 <!-- 如果是补丁包，执行如下命令：
@@ -93,13 +93,13 @@ bash matpl-2026.3-update2.sh [-jN] [-m nn] [-a ARCH] [-d] [-u] [-h]
 bash 补丁包名称.sh [-jN] [-m nn] [-a ARCH] [-d] [-u] [-h]
 ``` -->
 
-- `-jN` 这里 `N` 为并行编译的核数，例如 `bash matpl-2026.3-update2.sh -j4` 将采用 4 核编译。默认采用单核编译。
+- `-jN` 这里 `N` 为并行编译的核数，例如 `bash matpl-2026.3-update3.sh -j4` 将采用 4 核编译。默认采用单核编译。
 
 - `-m nn` 指定后将 Fortran 代码也纳入编译，需要 Intel ifort、icc、MKL 支持，用于 Linear 和 NN 模型。默认不编译 Fortran 代码。
 
 - `-a ARCH` 指定编译 `lammps-2026.3` 时使用的 Kokkos CUDA 架构，默认是 `AMPERE86`。例如：
   ```bash
-  bash matpl-2026.3-update2.sh -a AMPERE80
+  bash matpl-2026.3-update3.sh -a AMPERE80
   ```
   `ARCH` 是 Kokkos CUDA architecture suffix，例如 `AMPERE80`、`AMPERE86`、`ADA89`、`HOPPER90`。更多架构说明请参考：https://docs.lammps.org/Build_extras.html#kokkos
 
