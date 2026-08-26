@@ -6,11 +6,11 @@ title: 离线安装
 
 对于 [龙讯超算云](https://mcloud.lonxun.com/)(`Mcloud`) 用户，已做预装，[加载即用](./README.md)。离线包提供了 GPU 版本。
 
-- 离线安装包集成了 MatPL-2026.3 和 MatPL-2026.3 lammps 接口源码和依赖的Python环境。要求待安装的机器提供 `gcc 编译器(8.n 以及以上)`、`CUDA(11.8及以上)`、`openmpi(4.1.4及以上)` 以及 `nvidia GPU` 硬件支持。`如果需要使用 NN 和 Linear 模型，还需要加载 intel 相关编译器（ifort icc mkl）。`
+- 离线安装包集成了 MatPL-2026.3、 MatPL-2026.3 lammps 接口源码(开源版本)和依赖的Python环境。要求待安装的机器提供 `gcc 编译器(8.n 以及以上)`、`CUDA(11.8及以上)`、`openmpi(4.1.4及以上)` 以及 `nvidia GPU` 硬件支持。`如果需要使用 NN 和 Linear 模型，还需要加载 intel 相关编译器（ifort icc mkl）。`
 
 - 由于 MatPL-2026.3 对纯CPU训练或者模拟没有收益，所以不提供 MatPL-2026.3 CPU 版本的在线或者离线安装包支持。纯CPU用户请使用 [MatPL-2025.3](http://doc.lonxun.com/2025.03/MatPL/install/) 即可。
 
-- 离线安装包中的pytorch 版本为2.2，当前离线包最新版本为 `matpl-2026.3-update3`，相比于updata1，对 NEP 模型 新增了 zbl type wise；对lammps NEP kokkos 在NVIDIA 显卡做了加速，并扩展了lammps kokkos 的6分量 virial 为 9分量，以支持热流计算功能。
+- 离线安装包中的pytorch 版本为2.2，当前离线包最新版本为 `matpl-2026.3-update3`，相比于updata1，对 NEP 模型 新增了 zbl type wise；对lammps NEP kokkos 在NVIDIA 显卡做了加速，并扩展了lammps kokkos 的6分量 virial 为 9分量，以支持热流计算功能；内置 lammps 版本为 stable_22Jul2025_update4。
 
 <!-- - `离线安装补丁包`：如果已经安装过MatPL-2026.3，后续的更新可以通过我们提供的补丁包安装即可（避免安装耗时、庞大的python执行环境）。补丁包中只包含了更新的代码内容，约6MB左右的，只对有更新的模块做编译，因此安装编译耗时更短。 -->
 
@@ -148,4 +148,8 @@ source /the/path/MatPL-2026.3/MatPL-2026.3/env.sh
 source /the/path/MatPL-2026.3/lammps-2026.3/env.sh
 ```
 
-<!-- MatPL 相关软件的常见 [安装错误](./InstallError.md) 和 [运行时错误](./RuntimeError.md)  -->
+### lammps 离线安装包功能介绍
+
+本lammps 离线安装包已经预装了下面lammps 常用功能：
+
+`CG-SPICA`  `CLASS2`  `COLLOID` `COLVARS`  `COMPRESS`  `CORESHELL` `DIELECTRIC` `DIFFRACTION`  `DIPOLE`  `DPD-BASIC` `DPD-MESO` `DPD-REACT`  `DPD-SMOOTH`  `DRUDE` `EFF`  `ELECTRODE` `EXTRA-COMMAND`  `EXTRA-COMPUTE` `EXTRA-FIX`  `EXTRA-DUMP`  `EXTRA-MOLECULE`  `EXTRA-PAIR`  `FEP` `GRANULAR` `INTEL`  `INTERLAYER`  `KSPACE`  `LATBOLTZ`  `LEPTON`  `MANIFOLD`  `MANYBODY`  `MC`  `MEAM`  `MGPT`  `MISC`  `MOFFF` `MOLECULE` `MOLFILE`  `OPENMP`  `OPT` `ORIENT` `PERI` `PHONON` `PLUMED` `POEMS`  `PTM` `PYTHON` `QEQ`  `QMMM`  `QTB` `REACTION` `REAXFF` `REPLICA`  `RIGID` `SHOCK`  `SMTBQ` `SPH`  `SPIN`  `SRD` `TALLY`  `UEF` `VORONOI`  `YAFF` 

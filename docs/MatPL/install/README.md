@@ -13,7 +13,7 @@ MatPL-2026.3 提供了 [离线安装](./Installation-offline.md) 和 [在线安�
 :::tip
 MatPL-2026.3 相比于MatPL-2025.3 核心区别是对 NEP 做了极致优化。在训练上，针对单卡，我们优化了梯度算子，单卡相比 MatPL2025.3版本 训练速度`提升3倍以上`。并且，引入了多节点多卡的大batch训练，并缓解了大batch训练时的精度下降问题，让大规模的训练集训练效率得到`巨幅提升`。
 
-因此对纯CPU训练或者模拟没有收益，这里不提供 MatPL-2026.3 CPU 版本的在线或者离线安装包支持。纯CPU用户请使用 [MatPL-2025.3-cpu](http://doc.lonxun.com/2025.03/MatPL/install/) 即可。
+由于本版本更新对纯CPU训练或者模拟没有收益，这里不提供 MatPL-2026.3 CPU 版本的在线或者离线安装包支持。纯CPU用户请使用 [MatPL-2025.3-cpu](http://doc.lonxun.com/2025.03/MatPL/install/) 即可。
 :::
 
 ### 龙讯超算云(Mcloud)用户
@@ -44,7 +44,8 @@ module load lammps4matpl/fortran
 
 ``` bash
 #加载 MatPL 和 lammps
-module load intel/2020 cuda/11.8
+module load cuda/11.8 openmpi/4.1.6 # lammps 运行需要openmpi
+# 请查询和替换为真实的安装路径
 source /share/app/MATPL/MatPL-2026.3/matpl-env.sh
 ```
 
@@ -60,11 +61,10 @@ source /share/app/MATPL/MatPL-2026.3/matpl-fortran-env.sh
 
 
 :::tip
-`mcloud 超算平台 lammps4matpl/2026.3` 还预装了 cmake/presets/most.cmake 中指定的所有包
+`mcloud 超算平台 lammps4matpl/2026.3` 以及`离线安装包`中预装了以下lammps 常用功能：
 
-`AMOEBA`   `ASPHERE`   `BOCS`   `BODY`   `BPM`   `BROWNIAN`   `CG-DNA`   `CG-SPICA`   `CLASS2`   `COLLOID`   `COLVARS`   `COMPRESS`   `CORESHELL`   `DIELECTRIC`   `DIFFRACTION`   `DIPOLE`   `DPD-BASIC`   `DPD-MESO`   `DPD-REACT`   `DPD-SMOOTH`   `DRUDE`   `ELECTRODE`   `EFF`   `EXTRA-COMPUTE`   `EXTRA-DUMP`   `EXTRA-FIX`   `EXTRA-MOLECULE`   `EXTRA-PAIR`   `FEP`   `GRANULAR`   `INTERLAYER`   `KSPACE`   `LEPTON`   `MACHDYN`   `MANYBODY`   `MC`   `MEAM`   `MESONT`   `MISC`   `ML-IAP`   `ML-POD`   `ML-SNAP`   `MOFFF`   `MOLECULE`   `OPENMP`   `OPT`   `ORIENT`   `PERI`   `PHONON`   `PLUGIN`   `POEMS`   `QEQ`   `REACTION`   `REAXFF`   `REPLICA`   `RIGID`   `SHOCK`   `SPH`   `SPIN`   `SRD`   `TALLY`   `UEF`   `VORONOI`   `YAFF`
+`CG-SPICA`  `CLASS2`  `COLLOID` `COLVARS`  `COMPRESS`  `CORESHELL` `DIELECTRIC` `DIFFRACTION`  `DIPOLE`  `DPD-BASIC` `DPD-MESO` `DPD-REACT`  `DPD-SMOOTH`  `DRUDE` `EFF`  `ELECTRODE` `EXTRA-COMMAND`  `EXTRA-COMPUTE` `EXTRA-FIX`  `EXTRA-DUMP`  `EXTRA-MOLECULE`  `EXTRA-PAIR`  `FEP` `GRANULAR` `INTEL`  `INTERLAYER`  `KSPACE`  `LATBOLTZ`  `LEPTON`  `MANIFOLD`  `MANYBODY`  `MC`  `MEAM`  `MGPT`  `MISC`  `MOFFF` `MOLECULE` `MOLFILE`  `OPENMP`  `OPT` `ORIENT` `PERI` `PHONON` `PLUMED` `POEMS`  `PTM` `PYTHON` `QEQ`  `QMMM`  `QTB` `REACTION` `REAXFF` `REPLICA`  `RIGID` `SHOCK`  `SMTBQ` `SPH`  `SPIN`  `SRD` `TALLY`  `UEF` `VORONOI`  `YAFF` 
 
 您可以通过`lmp -h` 输出所有编译通过的pairstyle.
-
-离线包默认安装了 basic.cmake 中的包（如需要其他功能，请在安装完毕MatPL-2026.3 离线包后进入离线包的 MatPL-2026.3/lammps-2026.3 目录下自行构建安装）.
 :::
+

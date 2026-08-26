@@ -67,7 +67,6 @@ Error! maxNeighborNum too small
 完整的 NEP 模型参数设置如下：
 
 ```json
-    "batch_max_types":-1,
     "model": {
         "descriptor": {
             "cutoff": [6.0,6.0],
@@ -84,8 +83,8 @@ Error! maxNeighborNum too small
         }
     }
 ```
-### batch_max_types
-该参数用于设置batch内允许的最大元素数量，超过该数量的结构在本次训练中会被丢弃。一般用于大batchsize下训练通用力场（如89种元素的训练数据集），防止个别数据由于元素类型较多或近邻数量过大造成的显存溢出错误。默认不设置，即不控制。
+<!-- ### batch_max_types
+该参数用于设置batch内允许的最大元素数量，超过该数量的结构在本次训练中会被丢弃。一般用于大batchsize下训练通用力场（如89种元素的训练数据集），防止个别数据由于元素类型较多或近邻数量过大造成的显存溢出错误。默认不设置，即不控制。 -->
 
 ### cutoff
 该参数用于设置 `radial` 和 `angular` 的截断能。默认值为 `[8.0, 4.0]`。
@@ -114,13 +113,13 @@ NEP 两体描述符的数量为 n_max[0]+1；三体描述符的数量为 (n_max[
 按元素类型区分的 ZBL 截断半径。启用后，两元素间的外 ZBL 截断半径取 min(zbl, use_typewise_cutoff_zbl * 两元素共价半径之和 )，此时内截断半径固定为0.0。 参数默认不启用。该参数在`MatPL-2026.3(UPDATE1)版本`开始引入。
 
 ### fix_cij
-该参数用于在训练中固定 NEP 两体和三体特征值对应的系数项，默认为false。设置为true之后，训练过程中将不再训练更新系数项。
+微调参数，该参数用于在训练中固定 NEP 两体和三体特征值对应的系数项，默认为false。设置为true之后，训练过程中将不再训练更新系数项。
 
 ### fix_hiddenlayer
-该参数用于在训练中固定 NEP 隐藏层参数，默认为false。设置为true之后，训练过程中将不再训练更新隐藏层参数。这里 NEP 的隐藏层指输入层的W0、B0项。
+微调参数，该参数用于在训练中固定 NEP 隐藏层参数，默认为false。设置为true之后，训练过程中将不再训练更新隐藏层参数。这里 NEP 的隐藏层指输入层的W0、B0项。
 
 ### fix_outlayer
-该参数用于在训练中固定 NEP 输出层参数，默认为false。设置为true之后，训练过程中将不再训练更新输出层参数。这里 NEP 的输出层指W1、B1项。
+微调参数，该参数用于在训练中固定 NEP 输出层参数，默认为false。设置为true之后，训练过程中将不再训练更新输出层参数。这里 NEP 的输出层指W1、B1项。
 
 ### NEP.txt 中的每行参数解读
 
@@ -268,6 +267,7 @@ ADAM 优化器的完整参数设置如下:
     "optimizer": {
         "optimizer": "ADAM",
         "epochs": 30,
+        "reset_epoch":false,
         "batch_size": 1,
         "print_freq": 10,
         "lambda_2" : 0.1,
@@ -293,6 +293,9 @@ ADAM 优化器的完整参数设置如下:
 
 ### optimizer
 该参数用于指定优化器名称，默认为`ADAM`。对 LKF 优化器，指定名称为 `'LKF'`。关于优化器的详细信息参考 [LKF](https://dl.acm.org/doi/abs/10.1609/aaai.v37i7.25957)，其中提供了有关优化器实现和特性的更深入的细节说明。 
+
+### reset_epoch
+训练重启时是否重置当前训练从第 0 个 epoch 开始，默认为 true。如果要求从ckpt保存时的断点开始继续训练，请设置 为 false，训练时将自动加载ckpt中保存的ADAM 一阶和二阶动量信息。
 
 ### epochs
 该参数用于指定训练的轮数（epochs）。在机器学习中，一个 epoch 指的是整个训练数据集通过神经网络的完整传递，包括前向传播和反向传播。在每个 epoch 中，训练数据集分为多个 `小批量（mini-batches）` 样本，之后把每个批次输入到神经网络，进行前向传播、损失计算和参数更新的反向传播过程。训练的轮数决定了整个训练数据集在训练过程中被处理的次数。默认值为 `30`。
@@ -354,17 +357,17 @@ $$
 
 受力、能量、维里的precator 参数设置：
 
-- start_pre_fac_force ：训练开始时 force 损失的 prefactor，应大于或等于 0。默认值为 `1000`。
+- start_pre_fac_force ：训练开始时 force 损失的 prefactor，应大于或等于 0。默认值为 `100`。
 
 - end_pre_fac_force ：训练结束时 force 损失的 prefactor，应大于或等于 0。默认值为 `1.0`。
 
-- start_pre_fac_etot ：训练开始时 total energy 损失的 prefactor，应大于或等于 0。默认值为 `0.02`。
+- start_pre_fac_etot ：训练开始时 total energy 损失的 prefactor，应大于或等于 0。默认值为 `1.0`。
 
 - end_pre_fac_etot ：训练结束时 total energy 损失的 prefactor，应大于或等于 0。默认值为 `1.0`。
 
-- start_pre_fac_virial ：训练开始时 virial 损失的 prefactor，应大于或等于 0。默认值为 `50.0`。
+- start_pre_fac_virial ：训练开始时 virial 损失的 prefactor，应大于或等于 0。默认值为 `0.1`。
 
-- end_pre_fac_virial ：训练结束时 virial 损失的 prefactor，应大于或等于 0。默认值为 `1.0`。
+- end_pre_fac_virial ：训练结束时 virial 损失的 prefactor，应大于或等于 0。默认值为 `0.1`。
 
 
 `Loss prefactor 计算方式`:
@@ -517,6 +520,23 @@ $$
 如下图所示，该例中[初始学习率 learning_rate](#learning_rate) 为 0.001，t_0 = 1, t_mult = 2, [最小学习率 stop_lr](#stop_lr) = 3.51e-08，学习率分别在第1、3、7、15、... 等epoch 重启。
 
 ![AL_T0_T_mult](./pictures/lr_test_1_2_6.png)
+
+### 学习率缩放
+
+`scale_lr` 用于控制是否按批大小和 GPU 数量缩放学习率，默认值为 `false`。关闭时不进行缩放，实际学习率等于 `learning_rate`。
+
+开启后，默认使用 `sqrt` 缩放方式：
+
+$$
+\mathrm{real\_lr}=\mathrm{learning\_rate}\times\sqrt{\mathrm{batch\_size}\times N_{\mathrm{GPU}}}
+$$
+
+```json
+"scale_lr": true,
+"scaling_method": "sqrt"
+```
+
+该设置适用于 ADAM、ADAMW 和 SGD；增大 batch size 或 GPU 数量时，实际学习率会相应提高。
 
 ## KF optimizer 优化器超参数
 

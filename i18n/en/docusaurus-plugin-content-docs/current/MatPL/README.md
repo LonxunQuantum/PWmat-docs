@@ -11,6 +11,8 @@ MatPL 提供了一套完备的软件、工具以及数据仓库，用于快速�
 
 **[gitee MatPL用户手册下载](https://gitee.com/pfsuo/PWmat-docs/blob/master/docs/MatPL/MatPL-2026.3-userdoc.pdf) 或访问 [github MatPL用户手册下载](https://github.com/LonxunQuantum/PWmat-docs/blob/dev-matpl/docs/MatPL/MatPL-2026.3-userdoc.pdf)**
 
+此外，我们也在国家超算互联网节点上架了 [`MatPL 开源机器学习力场（免费）`](https://scnet.cn/ui/mall/detail/goods?type=software&shopId=1717790158329552898&common1=APP_SOFTWARE&id=2074441100162269185&resource=APP_SOFTWARE&keyword=MatPL)，欢迎大家试用。
+
 **[1. MatPL机器学习平台](./models/README.md)**
 
 👉[开源仓库地址](https://github.com/LonxunQuantum/MatPL)

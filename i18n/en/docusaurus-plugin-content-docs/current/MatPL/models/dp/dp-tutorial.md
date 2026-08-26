@@ -152,16 +152,16 @@ MatPL script dp_model.ckpt
 您需要在lammps的输入控制文件中设置如下力场，这里以HfO2为例（[`HfO2/dp_demo/dp_lmps`](https://github.com/LonxunQuantum/MatPL/blob/master/example/HfO2/dp_demo/dp_lmps)
 
 ``` bash
-pair_style   matpl   jit_dp.pt 
+pair_style   matpl/dp   jit_dp.pt
 pair_coeff   * *     8 72
 ```
 
 其中：
-- pair_style 设置力场文件路径，这里 `matpl` 为固定格式，代表使用MatPL中力场，`jit_dp.pt`为力场文件路径
+- pair_style 设置力场文件路径，这里 `matpl/dp` 为固定格式，代表使用MatPL中力场，`jit_dp.pt`为力场文件路径
 
   这里也支持多模型的偏差值输出，该功能一般用于主动学习采用中。您可以指定多个模型，在模拟中将使用第1个模型做MD，其他模型参与偏差值计算，例如例子中所示，此时pair_style设置为如下:
   ```txt
-  pair_style   matpl   0_jit_dp.pt 1_jit_dp.pt 2_jit_dp.pt 3_jit_dp.pt  out_freq ${DUMP_FREQ} out_file model_devi.out 
+  pair_style   matpl/dp    0_jit_dp.pt 1_jit_dp.pt 2_jit_dp.pt 3_jit_dp.pt  out_freq ${DUMP_FREQ} out_file model_devi.out 
   pair_coeff   * *     8 72
   ```
 
@@ -173,7 +173,7 @@ pair_coeff   * *     8 72
 # 加载 lammps 环境变量env.sh 文件，正确安装后，该文件位于 lammps 源码根目录下
 source /the/path/of/lammps/env.sh
 # 执行lammps命令
-mpirun -np N lmp_mpi -in in.lammps
+mpirun -np N lmp -in in.lammps
 ```
 这里 N 为md中的使用的 CPU 核数，如果您的设备中存在可用的GPU资源（例如 M 张GPU卡）,则在运行中，N个lammps线程将平均分配到这M张卡上。我们建议您使用的 CPU 核数与您设置的 GPU 数量相同，多个线程在单个 GPU 上会由于资源竞争导致运行速度降低。
 

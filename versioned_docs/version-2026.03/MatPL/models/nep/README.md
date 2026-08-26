@@ -50,6 +50,7 @@ NEP模型最初是在 GPUMD 软件包中实现的 ([2022b GPUMD](https://doi.org
 
 
 ### lammps 接口测试
-下表展示了 NEP KOKOS 版本在lammps中的模拟速度，超大规模模拟结果会在后续放出。
+下表展示了 NEP KOKOS 版本在lammps中的模拟速度。NEP/KK LAMMPS Kokkos 接口现已发布。与标准版相比，Pro 版的速度提升了 2 到 3 倍。
 
-![NEP lammps 速度测试](./pictures/lmps_speed_nepkk.png)
+![NEP lammps 速度测试](./pictures/lmps-kk-pro-speed.png)
+![NEP lammps 速度测试](./pictures/lmps-kk-pro-speed-2.png)

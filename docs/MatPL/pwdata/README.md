@@ -5,7 +5,7 @@ title: pwdata 结构转换工具
 # pwdata 数据转换工具
 ## pwdata 数据转换工具介绍
 
-`当前手册页使用 pwdata >= 0.5.6`
+`当前手册页使用 pwdata >= 0.5.10`
 
 pwdata 是 MatPL 的数据预处理工具，包括如下功能：
 
@@ -45,8 +45,8 @@ pip install pwdata --upgrade
 # 列出所有可安装版本 
 pip index versions pwdata
 # 输出结果示例：
-# pwdata (0.5.6)
-# Available versions: 0.5.6, 0.5.5, 0.5.4, 0.5.3, 0.4.7, 0.4.0
+# pwdata (0.5.10)
+# Available versions: 0.5.10, 0.5.9, 0.5.8, 0.5.7, 0.5.6, 0.5.5, 0.5.4, 0.5.3, 0.4.7, 0.4.0, 0.3.2, 0.2.16
 
 # 安装指定版本
 pip install pwdata==n.m.o

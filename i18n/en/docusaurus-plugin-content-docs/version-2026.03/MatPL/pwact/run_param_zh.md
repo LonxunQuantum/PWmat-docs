@@ -47,6 +47,7 @@ title: run 参数设置
 
 可选参数，如果您有单独的 MatPL 输入文件，您可以使用该参数指定文件所在路径。否则您需要设置如下例中所示参数。参数的详细解释您在可以在 [MatPL 参数列表](../parameterdetail.md)中查看。
 
+#### train 设置例子
 ```json
     "train": {
         "model_type": "DP",
@@ -66,29 +67,32 @@ title: run 参数设置
             }
         },
         "optimizer": {
-            "optimizer": "LKF",
+            "optimizer": "ADAM",
             "epochs": 30,
-            "batch_size": 4,
+            "batch_size": 1,
             "print_freq": 10,
-            "block_size": 5120,
-            "kalman_lambda": 0.98,
-            "kalman_nue": 0.9987,
             "train_energy": true,
             "train_force": true,
-            "train_virial": false,
-            "pre_fac_force": 2.0,
-            "pre_fac_etot": 1.0,
-            "pre_fac_virial": 1.0
+            "train_virial": false
         }
     }
 ```
 
-由于 MatPL 中设置的默认参数已经能够支持大部分的训练需求，因此，您可以简写为如下形式，将采用标准的 `DP` 模型 使用 `LKF 优化器`训练。
+也可将train的设置写如一个独立的json文件中，例如nep.json，只是配置使用该json文件即可：
 ```json
   "train": {
-        "model_type": "DP",
+      "model_type": "NEP",
+      "atom_type": [14],
+      "train_input_file":"nep.json"
+  }
+```
+
+由于 MatPL 中设置的默认参数已经能够支持大部分的训练需求，因此，您可以简写为如下形式，将采用标准的 `NEP` 模型 使用 `ADAM 优化器`训练。
+```json
+  "train": {
+        "model_type": "NEP",
         "atom_type": [14]
-  }   
+  }
 ```
 
 PWact 同时支持 MatPL 的 DP 和 NEP 力场。
@@ -279,8 +283,14 @@ $$\varepsilon_{t} = \max_i\left(\sqrt{\frac{\sum_{1}^{w} \left\| F_{w,i}(R_t) - 
 对于lammps的输入控制，pwact 提供了两种方式。第一种是在 param.json 中提供的关键字设置，控制探索需要的步数、以及lammps温度、压强、系综，可参考[例子](#案例参考)。第二种是通过`用户提供的lammps.in文件`控制，参数为 [`lmps_prefix`](#lmps_prefix) 和 [`lmps_in`](#lmps_in)。可参考 [金银合金主动学习操作案例](./example_auag_init_zh.md)。
 
 :::tip
-`lmps_in` 设置方式在 `>= pwact-0.4` 版本中开始支持。
+`lmps_in` 设置方式在 `>= pwact-0.4` 版本中开始支持
 :::
+
+对于`lmps_in`，如果用户提供了lammps.in文件，如果用户使用kokkos 运行MD，必须在 lammps.in 中开启如下设置：
+```txt
+package kokkos neigh half comm device
+newton on
+```
 
 对于`lmps_in`，如果用户提供了lammps.in文件，pwact在运行时，会自动维护 lammps.in 文件中的以下字段。
 
@@ -296,7 +306,7 @@ $$\varepsilon_{t} = \max_i\left(\sqrt{\frac{\sum_{1}^{w} \left\| F_{w,i}(R_t) - 
 - "mass"、 "pair_style"、 "pair_coeff"，该三个参数用于设置机器学习的力场，以对硅元素体系的探索为例，在 pwact 在探索时该值会自动设置为：
   ```txt
     mass    1    28.086
-    pair_style   matpl  0_torch_script_module.pt 1_torch_script_module.pt 2_torch_script_module.pt 3_torch_script_module.pt  out_freq ${DUMP_FREQ}  out_file model_devi.out 
+    pair_style   matpl/dp  0_torch_script_module.pt 1_torch_script_module.pt 2_torch_script_module.pt 3_torch_script_module.pt  out_freq ${DUMP_FREQ}  out_file model_devi.out 
     pair_coeff   * * 14
   ```
 - "dump"，该值用于设置轨迹的保存格式，在pwact中该值会自动设置为如下内容，并插入到lammps.in文件中的第一个 run 命令所在行前面，这里 DUMP_FREQ 值为[trj_freq](#trj_freq)参数中所设值：
@@ -350,7 +360,7 @@ atom_style      atomic
 if "${restart} > 0" then "read_restart lmps.restart.*" else "read_data lmp.config"
 
 mass   1    28.086
-pair_style   matpl  0_torch_script_module.pt 1_torch_script_module.pt 2_torch_script_module.pt 3_torch_script_module.pt  out_freq ${DUMP_FREQ} out_file model_devi.out 
+pair_style   matpl/dp  0_torch_script_module.pt 1_torch_script_module.pt 2_torch_script_module.pt 3_torch_script_module.pt  out_freq ${DUMP_FREQ} out_file model_devi.out 
 pair_coeff       * * 14
 
 variable        NSTEPS          equal 400
@@ -538,7 +548,7 @@ if "${restart} > 0" then "read_restart lmps.restart.*" else "read_data lmp.confi
 change_box       all triclinic
 
 mass   1    28.086
-pair_style   matpl  0_torch_script_module.pt 1_torch_script_module.pt 2_torch_script_module.pt 3_torch_script_module.pt  out_freq ${DUMP_FREQ} out_file model_devi.out 
+pair_style   matpl/dp  0_torch_script_module.pt 1_torch_script_module.pt 2_torch_script_module.pt 3_torch_script_module.pt  out_freq ${DUMP_FREQ} out_file model_devi.out 
 pair_coeff       * * 14
 
 thermo_style    custom step temp pe ke etotal press vol lx ly lz xy xz yz
@@ -683,19 +693,13 @@ CP2K 或 PWMAT 高斯基组参数设置，
       }
     },
     "optimizer": {
-      "optimizer": "LKF",
-      "epochs": 10,
-      "batch_size": 16,
+      "optimizer": "ADAM",
+      "epochs": 30,
+      "batch_size": 1,
       "print_freq": 10,
-      "block_size": 5120,
-      "kalman_lambda": 0.98,
-      "kalman_nue": 0.9987,
       "train_energy": true,
       "train_force": true,
-      "train_virial": false,
-      "pre_fac_force": 2.0,
-      "pre_fac_etot": 1.0,
-      "pre_fac_virial": 1.0
+      "train_virial": false
     }
   },
 

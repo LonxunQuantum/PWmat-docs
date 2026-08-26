@@ -4,31 +4,46 @@ title: NEP 操作演示
 ---
 
 ## NEP 操作演示
-这里，我们以 MatPL [`源码根目录/example/HfO2/nep_demo`](https://github.com/LonxunQuantum/MatPL/tree/main/example/HfO2/nep_demo) 为例（[HfO2 训练集来源](https://www.aissquare.com/datasets/detail?pageType=datasets&name=HfO2-dpgen&id=6)），演示 NEP 模型的训练、测试、lammps模拟以及其他功能。案例目录结构如下所示。
+这里，我们以 MatPL [`源码根目录/example/HfO2/nep_demo`](https://github.com/LonxunQuantum/MatPL/tree/main/example/HfO2/nep_demo) 为例（[HfO2 训练集来源](https://www.aissquare.com/datasets/detail?pageType=datasets&name=HfO2-dpgen&id=6)），演示 NEP 模型的训练、测试、lammps 模拟以及其他功能。当前案例目录结构如下所示：
+
 ``` txt
-HfO2/
-├── atom.config
-├── pwdata/
-└── nep_demo/
-    ├── nep_test.json
-    ├── nep_train.json
-    ├── train.job
-    └── nep_lmps/
-        ├── in.lammps
-        ├── lmp.config
-        ├── nep_to_lmps.txt
-        ├── runcpu.job
-        └── rungpu.job
+nep_demo/
+├── nep_kokkos_lmps/
+│   ├── kkin.lmp
+│   ├── lmp.config
+│   ├── nep_to_lmps.txt
+│   ├── rungpu_mcloud.job
+│   └── rungpu_station.job
+├── nep_lmps/
+│   ├── in.lmp-cpu-25
+│   ├── in.lmp-kk
+│   ├── lmp.config
+│   ├── nep_to_lmps.txt
+│   ├── runcpu_mcloud.job
+│   ├── runcpu_station.job
+│   ├── rungpu_mcloud.job
+│   └── rungpu_station.job
+├── nep_lmps_deviation/
+│   ├── in.lmp-kk
+│   ├── lmp.config
+│   ├── nep0.txt
+│   ├── nep1.txt
+│   ├── nep2.txt
+│   ├── nep3.txt
+│   ├── rungpu_mcloud.job
+│   └── rungpu_station.job
+├── nep_test.json
+├── nep_train.json
+├── train_mcloud.job
+└── train_station.job
 ```
-- pwdata 目录为训练数据目录
-- nep_train.json 是训练 NEP 力场输入参数文件
-- nep_test.json 是测试 NEP 力场输入参数文件
-- train.job 是slurm 提交训练任务例子
-- nep_lmps 目录下 为 NEP 力场的 lammps md例子
-  - 力场文件 nep_to_lmps.txt
-  - 初始结构 lmp.config 
-  - 控制文件 in.lammps
-  - runcpu.job 和 rungpu.job 是 slurm 脚本例子
+
+- `nep_train.json` 和 `nep_test.json` 分别是 NEP 模型的训练和测试参数文件，其中的 `../pwdata/` 指向 `HfO2/pwdata` 训练数据目录。
+- `train_mcloud.job` 和 `train_station.job` 分别是 mcloud 和自建集群的 Slurm 训练任务示例。
+- `nep_lmps` 同时提供 CPU 和 NEP KOKKOS GPU 模拟的输入文件与作业脚本。
+- `nep_kokkos_lmps` 提供 NEP KOKKOS GPU 模拟示例。
+- `nep_lmps_deviation` 提供四模型偏差计算示例，用于主动学习流程。
+- 各 lammps 案例目录中，`lmp.config` 为初始结构，`nep_to_lmps.txt` 或 `nep*.txt` 为 NEP 力场文件，`*.lmp*` 为 lammps 输入文件，`*.job` 为 Slurm 作业脚本。
 
 
 ### train 训练
@@ -36,7 +51,9 @@ HfO2/
 在 nep_demo 目录下使用如下命令即可开始训练：
 ``` bash
 MatPL train nep_train.json
-# 或修改环境变量之后通过slurm 提交训练任务 sbatch train.job
+# 或根据运行环境修改 Slurm 脚本后提交训练任务
+sbatch train_mcloud.job
+# 自建集群使用 sbatch train_station.job
 ```
 
 **输入文件解释**
@@ -165,62 +182,117 @@ MatPL totxt nep_model.ckpt
 
 ### lammps MD
 
-**step1. 准备力场文件**
+HfO2 案例分别提供了单模型、NEP KOKKOS 和多模型偏差计算目录。下面按“准备力场—选择案例—修改输入—启动模拟”的顺序说明。
 
-将训练完成后生成的`nep_model.ckpt`力场文件用于 lammps 模拟，您需要
-提取力场文件，您只需要输入如下命令
-```
+#### 1. 准备力场文件
+
+正常训练结束后，`model_record` 目录中会生成 `nep5.txt`，可直接用于 lammps。如果只有 `nep_model.ckpt`，可使用前文介绍的 `totxt` 命令转换：
+
+```bash
 MatPL totxt nep_model.ckpt
 ```
-转换成功之后，您将得到一个力场文件`nep5.txt`。
 
-如果您的模型正常训练结束，在`model_record`目录下会存在一个`nep5.txt` 文件，您可以直接使用。
+将生成的 `nep5.txt` 复制到相应案例目录，并按输入脚本中的文件名设置为 `nep_to_lmps.txt`。lammps-MatPL 同样支持 GPUMD 的 NEP4 和 NEP5 力场文件。
 
-此外，也`支持 GPUMD 的 NEP5、 NEP4 力场文件`。
+#### 2. 选择 lammps 案例
 
-**step2. 准备输入控制文件**
+| 案例目录 | 用途 | 主要输入文件 |
+| --- | --- | --- |
+| [`nep_lmps`](https://github.com/LonxunQuantum/MatPL/tree/main/example/HfO2/nep_demo/nep_lmps) | CPU 和 NEP KOKKOS GPU 模拟 | `in.lmp-cpu-25`、`in.lmp-kk` |
+| [`nep_kokkos_lmps`](https://github.com/LonxunQuantum/MatPL/tree/main/example/HfO2/nep_demo/nep_kokkos_lmps) | NEP KOKKOS GPU 模拟 | `kkin.lmp` |
+| [`nep_lmps_deviation`](https://github.com/LonxunQuantum/MatPL/tree/main/example/HfO2/nep_demo/nep_lmps_deviation) | 四模型偏差计算 | `in.lmp-kk`、`nep0.txt`—`nep3.txt` |
 
-您需要在lammps的输入控制文件中设置如下力场，这里以HfO2为例（[`HfO2/nep_demo/nep_lmps`](https://github.com/LonxunQuantum/MatPL/blob/master/example/HfO2/nep_demo/nep_lmps)
+每个目录都分别提供了 `*_mcloud.job` 和 `*_station.job`，请根据运行环境选择并修改模块名称、软件路径、分区和 GPU 资源参数。
 
-对于lammps nep的 kokkos 加速版本：
-``` bash
-# 2024版本的lammps 需要设置 neigh half (2023版本的lammps 设置 half 或者 full 都可)
+#### 3. 设置 lammps 输入文件
+
+NEP KOKKOS GPU 接口使用 half 近邻表并开启 Newton 通信。HfO2 单模型案例的核心设置如下：
+
+```lammps
 package kokkos neigh half comm device
 newton on
 
-pair_style   matpl/nep/kk   力场文件路径 
-pair_coeff   * *     O Hf
+pair_style   matpl/nep/kk nep_to_lmps.txt
+pair_coeff   * * 72 8
 ```
 
-- 2024版本的lammps 需要设置 neigh half (2023版本的lammps 设置 half 或者 full 都可)
+`pair_coeff * *` 后的元素按 data 文件中的原子类型顺序排列。可使用元素名称，也可使用原子序数；本案例中 `1` 号类型为 Hf（`72`），`2` 号类型为 O（`8`）。
 
-- pair_style 设置力场文件路径，这里 `matpl/nep/kk` 为固定格式，代表使用MatPL中的 NEP kokkos GPU 加速功能，如果是 `matpl/nep` 则使用只使用 cpu。如果是使用 DP 模型，则对应`matpl/dp`，此时如果存在GPU，将会自动调用GPU做加速，否则只使用CPU。
+多模型案例使用第一个模型进行 MD，其他模型参与偏差计算：
 
-  这里也支持多模型的偏差值输出，该功能一般用于主动学习采用中。您可以指定多个模型，在模拟中将使用第1个模型做MD，其他模型参与偏差值计算，例如例子中所示，此时pair_style设置为如下:
-  
-  ```txt
-  pair_style   matpl/nep/kk   0_nep.txt 1_nep.txt 2_nep.txt 3_nep.txt  out_freq DUMP_FREQ_VALUE out_file model_devi.out 
-  ```
-
-- pair_coeff 指定待模拟结构中的原子类型对应的元素序号。例如，如果您的结构中 `1` 为 `O` 元素，`2` 为 `Hf` 元素，设置 `pair_coeff * * 8 72`即可。这里支持使用元素序号或者元素名称，只要顺序与输入结构文件中保持一致即可。
-
-**step3 启动lammps模拟**
-
-``` bash
-# 加载 lammps 环境变量env.sh 文件，正确安装后，该文件位于 lammps 源码根目录下
-source /the/path/of/lammps/env.sh
-
-# 执行lammps命令
-# 对于 NEP 力场，提供了kokkos 加速，对应pair设置为 matpl/nep/kk 采用如下命令启动
-# 单节点多卡（如下为单节点4卡）
-mpirun -np 4 --bind-to numa lmp -k on g 4 -sf kk -pk kokkos -in kkin.lmp
-
-# 多节点多卡（如下为2个节点，每个节点4张卡）
-mpirun -np 8 --map-by ppr:4:node lmp -k on g 4 -sf kk -pk kokkos -in kkin.lmp
-
-# 下面的这种方式适合于matpl/nep cpu版本或者matpl/dp的启动
-mpirun -np N lmp -in in.lammps
+```lammps
+pair_style   matpl/nep/kk nep0.txt nep1.txt nep2.txt nep3.txt \
+             out_freq ${DUMP_FREQ} out_file model_devi.out
+pair_coeff   * * 72 8
 ```
+
+`out_freq` 用于设置偏差输出频率，`out_file` 用于设置输出文件名。完整 NPT 控制参数请直接参考案例中的 `in.lmp-kk`、`in.lmp-cpu-25` 或 `kkin.lmp`，无需重复复制输入脚本。
+
+#### 4. 启动 lammps 模拟
+
+在案例目录中，可直接提交与运行环境对应的 Slurm 脚本，例如：
+
+```bash
+sbatch rungpu_mcloud.job
+# 或
+sbatch rungpu_station.job
+```
+
+也可在加载 lammps 环境后直接运行：
+
+```bash
+# 单 GPU，nep_kokkos_lmps/kkin.lmp
+mpirun -np 1 --bind-to numa lmp -k on g 1 -sf kk -pk kokkos -in kkin.lmp
+
+# 单节点 4 GPU，nep_lmps/in.lmp-kk
+mpirun -np 4 --bind-to numa lmp -k on g 4 -sf kk -pk kokkos -in in.lmp-kk
+
+# 2 节点，每节点 4 GPU
+mpirun -np 8 --bind-to numa --map-by ppr:4:node \
+    lmp -k on g 4 -sf kk -pk kokkos -in in.lmp-kk
+```
+
+如果使用 MatPL Pro 闭源版本，运行前还需要设置 `NEP_GPU_LIB_PATH` 和 `NEP_LICENSE_PATH`。多节点运行时，所有节点必须能访问共享库、License、输入文件和力场文件。
+
+#### MatPL 热流计算
+
+> **接口区别**：开放源码版本使用 `matpl/heatflux`；MatPL Pro 闭源版本使用 KOKKOS GPU 热流接口 `matpl/heatflux/kk`。请根据已安装的 lammps-MatPL 接口版本选择对应命令。
+
+开放源码版本的热流 compute 设置为：
+
+```lammps
+compute      flux all matpl/heatflux
+```
+
+MatPL Pro 闭源版本的 `matpl/heatflux/kk` 直接在 GPU 上计算 MatPL 热流，无需使用传统的 `ke/atom + pe/atom + centroid/stress/atom + heat/flux` 后处理链：
+
+```lammps
+package kokkos neigh half comm device
+newton on
+
+pair_style   matpl/nep/kk nep.txt
+pair_coeff   * * C
+
+compute      flux all matpl/heatflux/kk
+fix          fluxout all matpl/heatflux/ave/kk 10 100 1000 flux file compute_HeatFlux.out
+```
+
+`compute matpl/heatflux/kk` 输出包含 6 个分量的全局向量，依次为：
+
+1. `Jx`：x 方向总热流。
+2. `Jy`：y 方向总热流。
+3. `Jz`：z 方向总热流。
+4. `Jconv,x`：x 方向对流热流。
+5. `Jconv,y`：y 方向对流热流。
+6. `Jconv,z`：z 方向对流热流。
+
+因此，virial 热流贡献可由总热流减去对流热流得到，即 `(1-4, 2-5, 3-6)`。`fix matpl/heatflux/ave/kk` 用于对热流向量进行时间平均，并将结果写入 `compute_HeatFlux.out`。
+
+#### 热流案例
+
+- [开放源码版本 Heat_flux 案例](https://github.com/LonxunQuantum/lammps-MatPL/tree/main/examples/Heat_flux)
+- [MatPL Pro 闭源版本 Heat_flux 案例](https://github.com/LonxunQuantum/lammps-MatPL/tree/MatPL-pro-v2026.6/examples/Heat_flux)
+
 
 ### ASE 接口
 NEP 模型提供了 ase 接口，使用方式如下脚本例子所示[gitee](https://gitee.com/pfsuo/MatPL/tree/main/example/ase_calculator/test_nep) 或 [github](https://github.com/LonxunQuantum/MatPL/tree/main/example/ase_calculator/test_nep)。 

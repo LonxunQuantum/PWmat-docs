@@ -7,7 +7,7 @@ title: pwact 主动学习
 ## PWact 平台介绍
 机器学习力场相比于传统方法，能够更快和精确地预测材料性质和反应机理，当前最先进的基于深度学习的分子动力学已经能够做到百亿原子体系的模拟。但是由于机器学习方法的插值特性，对于训练集之外的相空间，MLFF 很难做出准确预测。由于训练数据通常是使用昂贵的第一性原理计算生成的，现实中很难获取到大量的从头算数据集，生成具有足够代表性的训练数据但不依赖大量从头算数据，对于提升模型的外推能力至关重要。[PWact](https://github.com/LonxunQuantum/PWact) (Active learning based on PWmat Machine Learning Force Field) 是开源的基于 MatPL 的一套自动化主动学习平台，用于高效的数据采样。
 
-PWact 平台包含主任务和任务分发器两部分，如 [结构图](#PWact 平台架构) 所示。
+PWact 平台包含主任务和任务分发器两部分
 
 ![PWact 平台架构](./pictures/Arch_design_slurm_zh.png)
 
@@ -64,8 +64,8 @@ pip install pwact --upgrade
 # 列出所有可安装版本 
 pip index versions pwact
 # 输出结果示例：
-# pwact (0.4.4)
-# Available versions: 0.4.4, 0.4.2, 0.3.4, 0.3.3, 0.2.4, 0.1.28, 0.1.10
+# pwact (0.4.8)
+# Available versions: 0.4.8, 0.4.7, 0.4.6, 0.4.5, 0.4.4, 0.4.2, 0.3.4, 0.3.3, 0.2.4, 0.1.28, 0.1.10
 
 # 安装指定版本
 pip install pwact==n.m.o

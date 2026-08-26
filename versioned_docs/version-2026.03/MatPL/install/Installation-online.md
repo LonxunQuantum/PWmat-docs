@@ -12,7 +12,11 @@ title: 在线安装
 
 - 如果需要使用 NN 和 Linear 模型，还需要加载 intel 相关编译器（ifort icc mkl）。对于 `intel/2020`编译套件，使用了它的 `ifort` 和 `icc` 编译器(`19.1.3`)、`mkl库`，如果单独加载，请确保版本不低于它们。
 
-- MatPL-2026.3 lammps 接口 是用于运行 NEP 和 DP 模型的lammps 接口。lammps接口安装和运行需要使用 openmpi，我们推荐 `openmpi/4.1.4` 版本以上。
+- MatPL-2026.3 lammps 接口 是用于运行 NEP 和 DP 模型的lammps 接口。lammps接口安装和运行需要使用 openmpi，我们推荐 `openmpi/4.1.4` 版本以上。对于 lammps 接口，我们提供了两个版本的安装方式：
+
+  开放源码的接口安装方式，该接口速度与 GPUMD 速度持平；
+  
+  闭源接口的安装方式，闭源接口的速度是开放源码的接口速度两倍以上。
 
 ### MatPL 编译安装
 
@@ -214,52 +218,58 @@ source /the/path/of/MatPL-2026.3/env.sh
 ```
 之后即可使用 MatPL 命令开始训练，使用教程请参考 [教学案例](../models/README.md)
 
-### MatPL lammps 2026.3 接口编译安装 
+### MatPL lammps 2026.3 开放源码版本接口编译安装
 
-MatPL-2026.3 lammps 接口用于 MatPL 的DP 和 NEP 力场。对于 NN 和 Linear 力场，提供了 fortran 版本的 接口，安装请参考 [lammps-fortran 编译安装](#lammps-matpl-fortran-编译安装)。
+MatPL-2026.3 lammps 接口支持 NEP（包含 QNEP）、DP 和 D3。对于 NN 和 Linear 力场，提供了 fortran 版本的接口，安装请参考 [lammps-fortran 编译安装](#lammps-matpl-fortran-编译安装)。
 
 MatPL-2026.3 lammps 接口安装过程中，需要您下载 lammps 源码、加载编译器、编译源码，过程如下所示。
 
 #### 下载 MatPL-2026.3 lammps 接口源码
 
-MatPL-2026.3 lammps 接口源码位于 MatPL 源码目录 `MatPL-2026.3/lmps/lammps-2026.3` 下。您也可以通过 [github 仓库](https://github.com/LonxunQuantum/lammps-MatPL) 下载源码，或下载 release 包。
-- 通过 github 或 gitee clone 源码:
+MatPL-2026.3 lammps 开放源码版本接口位于 [GitHub 仓库](https://github.com/LonxunQuantum/lammps-MatPL)，可通过以下命令下载：
+
 ```bash
 git clone https://github.com/LonxunQuantum/lammps-MatPL.git
-或
-git clone https://gitee.com/pfsuo/lammps-MatPL.git
+cd lammps-MatPL
 ```
 
-- 或下载release 包:
-```bash
-wget https://github.com/LonxunQuantum/lammps-MatPL/archive/refs/tags/2026.3.zip
-或
-wget https://gitee.com/pfsuo/lammps-MatPL/repository/archive/2026.3
+MatPL-2026.3 lammps 力场接口源码目录如下所示：
 
-unzip 2026.3.zip    #解压源码
-```
-MatPL-2026.3 lammps力场接口源码目录如下所示
 ```txt
-├── dp_lmps_demo/
-├── LICENSE
-├── lmp_for_cmake/
-├── lmp_nepkokkos_cmake/
-├── Makefile.mpi
-├── MATPL/
-├── nep_lmps_demo/
+├── .gitignore
+├── KOKKOS/
+├── MATPLD3/
+├── MATPLDP/
+├── compute_qnep_bec_atom.cpp
+├── compute_qnep_bec_atom.h
+├── examples/
+├── kknep-patch.sh
+├── nep_cpu.cpp
+├── nep_cpu.h
+├── nep_gpu/
+├── pair_nep.cpp
+├── pair_nep.h
+├── test/
+├── test_qnep/
 └── README.md
 ```
-- `lmp_nepkokkos_cmake` 为MatPL-2026.3 的 lammps 力场接口，支持 NEP KOKKOS GPU 加速、NEP CPU版本、DP（CPU和GPU 加速）。使用 cmake 编译。
 
-- `MATPL`、`Makefile.mpi` 为MatPL-2025.3 的 lammps 力场接口，支持 NEP (CPU和GPU加速)、DP(CPU和GPU加速)。使用 make 编译。`nep_lmps_demo` 和 `dp_lmps_demo` 分别是 MatPL-2025.3 的 NEP、DP 的力场 MD 测试例子。
+- `KOKKOS`、`nep_gpu`、`nep_cpu.cpp`、`nep_cpu.h`、`pair_nep.cpp` 和 `pair_nep.h` 是 NEP lammps 接口源码，支持 NEP KOKKOS GPU 加速。`compute_qnep_bec_atom.cpp` 和 `compute_qnep_bec_atom.h` 用于输出 QNEP 的逐原子 Born 有效电荷张量。
 
-- 2025.3 版本的 NEP GPU 加速相比于2026.3 NEP KOKKOS GPU加速的核心区别是，NEP KOKKOS 将近邻的构建也卸载到了GPU上，让速度提了一个量级以上。并且2026.3对推理的核函数也做了更细致的优化。
+- `MATPLDP` 为 DP 接口源码；`MATPLD3` 为 D3 接口源码，D3 需要 CUDA 支持，不能与 `matpl/nep/kk` 同时使用。
 
-- MatPL-2026.3 lammps 接口要求 lammps 源码的版本不能超过2024。
+- `examples` 为力场 MD 示例，`test` 和 `test_qnep` 分别为 NEP 和 QNEP 测试用例。
 
-#### 复制MatPL-2026.3 lammps 接口源码到 Lammps 源码下
+- `kknep-patch.sh` 用于将上述接口源码复制到 lammps 源码目录，并修改 `cmake/CMakeLists.txt`，之后使用 cmake 编译。
 
-lmp_nepkokkos_cmake 目录下，存在一个 `kknep-patch.sh` 脚本，用于自动将接口文件复制到lammmps目录下，以及修改lammps源码/cmake/CMakeLists.txt文件，通过如下命令执行。
+- 与 MatPL-2025.3 版本相比，NEP KOKKOS 接口将近邻表计算交给 KOKKOS 在 GPU 上执行，能量和力计算则由定制的 C++/CUDA 算子完成，同时减少了显存占用并提高了推理速度。
+
+- 当前仓库支持 LAMMPS 2023、2024 和 2025 发布版，推荐使用 `stable_2Aug2023_update4`、`stable_29Aug2024_update4` 或 `stable_22Jul2025_update4`。
+
+#### 复制 MatPL-2026.3 lammps 接口源码到 LAMMPS 源码目录
+
+`kknep-patch.sh` 位于 `lammps-MatPL` 仓库根目录。在仓库根目录执行以下命令，脚本会自动将接口文件复制到 LAMMPS 源码目录，并修改 `cmake/CMakeLists.txt`：
+
 ```bash
 bash kknep-patch.sh /the/rootpath/of/lammps
 ```
@@ -298,10 +308,11 @@ Then, add the following option in cmake:
 -DCMAKE_CXX_STANDARD=17 \
 -DPKG_MATPLDP=yes \
 
-For the D3 interface, please add the following option in cmake. Note that D3 requires CUDA support and cannot be used in combination with matpl/nep/kk.
--DPKG_MATPLD3=yes \
 
 ```
+
+<!-- For the D3 interface, please add the following option in cmake. Note that D3 requires CUDA support and cannot be used in combination with matpl/nep/kk.
+-DPKG_MATPLD3=yes \ -->
 
 #### 加载编译环境以及编译
 文件复制完成后，需要在编译前加载环境。lammps 接口编译，依赖的编译器环境有 `cuda`、`gcc`、`cmake`、`openmpi`，我们推荐 `openmpi/4.1.4` 版本及以上，`cuda-11.6`及以上、`cmake 3.n `及以上，`gcc8.n`及以上 。
@@ -336,7 +347,7 @@ export Torch_DIR=$(python -c "import torch; print(torch.utils.cmake_prefix_path)
 -DPKG_MATPLDP=yes \
 ```
 
-`-DPKG_MATPLD3=yes` 是来自[github SevenNet](https://github.com/MDIL-SNU/SevenNet/tree/main/sevenn/pair_e3gnn) 下的代码。这里 D3 不能与 matpl/nep/kk 混合使用。
+<!-- `-DPKG_MATPLD3=yes` 是来自[github SevenNet](https://github.com/MDIL-SNU/SevenNet/tree/main/sevenn/pair_e3gnn) 下的代码。这里 D3 不能与 matpl/nep/kk 混合使用。 -->
 
 编译完成将在窗口输出如下信息，并在lammps源码根目录生成一个env.sh文件，使用lammps前加载该文件即可。
 
@@ -357,11 +368,291 @@ module load cuda/11.8 openmpi/4.1.6
 export PATH=/the/path/of/lammpsroot/dir/build:$PATH
 ```
 
-详细的使用请参考 
+<!-- 详细的使用请参考 
 - [MatPL 操作演示：NEP lammps](../models/nep/nep-tutorial.md#lammps-md)
-- [MatPL 操作演示：DP lammps](../models/dp/dp-tutorial.md#3-lammps-模拟)
+- [MatPL 操作演示：DP lammps](../models/dp/dp-tutorial.md#3-lammps-模拟) -->
 
-### Lammps-MatPL (fortran) 编译安装 
+### MatPL lammps 2026.3 闭源版本接口编译安装
+
+MatPL lammps 2026.3 闭源版本将 lammps 接口代码与 NEP GPU 推理核函数分离：`pair_nep.cpp`、KOKKOS 包装层和 `nep_gpu_loader.h` 等 C++ 接口代码会编译到 lammps 中，优化后的 NEP GPU 推理核函数则以预编译共享库 `libnep_gpu.so` 的形式提供。运行时，接口通过 `dlopen` 动态加载共享库，并验证 License 文件。
+
+因此，使用闭源版本时不需要编译 NEP GPU 推理库，只需下载 lammps 接口源码、与 CUDA 版本匹配的预编译共享库以及有效的 License，然后编译 C++ 接口代码即可。
+
+#### 下载闭源版本接口文件
+
+闭源版本的接口源码、预编译共享库和评估 License 可从 [MatPL-pro-v2026.6 Release](https://github.com/LonxunQuantum/lammps-MatPL/releases/tag/MatPL-pro-v2026.6) 下载。
+
+| 文件 | CUDA / 精度 |
+| --- | --- |
+| [`libnep_gpu_cu118.so`](https://github.com/LonxunQuantum/lammps-MatPL/releases/download/MatPL-pro-v2026.6/libnep_gpu_cu118.so) | CUDA 11.8，默认混合精度 |
+| [`libnep_gpu_cu118_fp64.so`](https://github.com/LonxunQuantum/lammps-MatPL/releases/download/MatPL-pro-v2026.6/libnep_gpu_cu118_fp64.so) | CUDA 11.8，FP64 |
+| [`libnep_gpu_cu128.so`](https://github.com/LonxunQuantum/lammps-MatPL/releases/download/MatPL-pro-v2026.6/libnep_gpu_cu128.so) | CUDA 12.8，默认混合精度 |
+| [`libnep_gpu_cu128_fp64.so`](https://github.com/LonxunQuantum/lammps-MatPL/releases/download/MatPL-pro-v2026.6/libnep_gpu_cu128_fp64.so) | CUDA 12.8，FP64 |
+| [`summer_holiday.lic 或 2026.lic`](https://github.com/LonxunQuantum/lammps-MatPL/releases/download/MatPL-pro-v2026.6/summer_holiday.lic) |  License |
+| [Source code (zip)](https://github.com/LonxunQuantum/lammps-MatPL/archive/refs/tags/MatPL-pro-v2026.6.zip) | lammps 接口源码 |
+| [Source code (tar.gz)](https://github.com/LonxunQuantum/lammps-MatPL/archive/refs/tags/MatPL-pro-v2026.6.tar.gz) | lammps 接口源码 |
+
+根据运行环境选择一个共享库即可：
+
+- `cu118` 共享库需要 CUDA 11.x 运行时（`libcudart.so.11.0`）。
+- `cu128` 共享库需要 CUDA 12.x 运行时（`libcudart.so.12`）。
+- 不带 `_fp64` 后缀的共享库为默认混合精度版本；使用 `_fp64` 共享库时，lammps 接口也必须使用 `-DPREC_NEPINFER=ON` 编译。
+
+> **注意**：共享库的 CUDA 主版本必须与运行时的 `libcudart` 主版本一致。CUDA 11.x 和 CUDA 12.x 共享库不能交叉使用。
+
+#### 闭源版本接口源码目录
+
+Source code 压缩包解压后，根目录结构如下：
+
+```txt
+├── .gitignore
+├── examples/
+├── kknep-patch-cpu.sh
+├── kknep-patch.sh
+├── KOKKOS/
+├── matpl-patch.sh
+├── MATPLD3/
+├── MATPLDP/
+├── MatPLPackages.cmake
+├── nep_cpu.cpp
+├── nep_cpu.h
+├── nep_gpu/
+│   ├── cuda-11.8/
+│   ├── cuda-12.8/
+│   └── 2026.lic # 2026年底到期
+│   └── summer_holiday.lic # 2026年8月底到期
+├── nep_gpu_loader.h
+├── pair_nep.cpp
+├── pair_nep.h
+├── README.md
+└── test/
+```
+
+其中：
+
+- `kknep-patch.sh` 用于备份并修改 lammps 的 `cmake/CMakeLists.txt`，同时复制 NEP CPU 接口、`nep_gpu_loader.h`、KOKKOS 包装层以及 MatPL 热流接口文件。
+- `nep_gpu_loader.h` 负责在运行时加载 `libnep_gpu.so`，因此编译 lammps 时不需要将闭源共享库直接链接到 lammps。
+- `KOKKOS` 目录包含 NEP KOKKOS 接口、MatPL 热流 compute 和时间平均 fix。
+- `examples` 和 `test` 分别包含使用示例和测试脚本。
+
+#### 编译环境
+
+推荐使用以下软件环境：
+
+| 组件 | 推荐版本 | 说明 |
+| --- | --- | --- |
+| lammps | `stable_2Aug2023_update4`、`stable_29Aug2024_update4` 或 `stable_22Jul2025_update4` | `kknep-patch.sh` 支持 2023—2025 发布版 |
+| CUDA Toolkit | 11.8 或 12.8 | 必须与下载的共享库主版本匹配 |
+| GCC | 8.3 及以上 | 需要 C++17 支持 |
+| OpenMPI | 4.1.x | 用于多进程和多节点并行 |
+| CMake | 3.18 及以上 | lammps 编译系统 |
+
+以 CUDA 11.8 和 CUDA 12.8 为例，加载编译环境：
+
+```bash
+# CUDA 11.8，对应 libnep_gpu_cu118*.so
+module --ignore-cache load openmpi/4.1.6 cuda/11.8-share gcc/8.3.1 cmake/3.31.6
+
+# CUDA 12.8，对应 libnep_gpu_cu128*.so
+module --ignore-cache load openmpi/4.1.6 cuda/12.8-share gcc/11.2.1 cmake/3.31.6
+```
+
+> 上述 `module` 名称是集群环境中的使用示例，请根据实际软件环境调整。
+
+#### 复制接口文件到 lammps 源码
+
+进入 Source code 解压后的根目录，执行：
+
+```bash
+cd /the/path/of/lammps-MatPL-MatPL-pro-v2026.6
+bash kknep-patch.sh /the/path/of/lammps
+```
+
+脚本会将接口文件复制到 lammps 源码的 `src` 目录，并在 `cmake/CMakeLists.txt` 中增加 `PKG_NEP_KK` 编译选项。脚本结束时输出 `Patch process completed successfully!` 表示复制成功。
+
+#### 使用 cmake 编译 lammps
+
+进入 lammps 源码目录，创建独立的构建目录：
+
+```bash
+cd /the/path/of/lammps
+mkdir build && cd build
+
+cmake -C ../cmake/presets/basic.cmake \
+    -DPKG_MESONT=no \
+    -DPKG_JPEG=no \
+    -DPKG_KOKKOS=yes \
+    -DPKG_NEP_KK=yes \
+    -DKokkos_ENABLE_CUDA=yes \
+    -DKokkos_ENABLE_OPENMP=yes \
+    -DKokkos_ENABLE_CUDA_LAMBDA=yes \
+    -DFFT_KOKKOS=CUFFT \
+    -DKokkos_ARCH_AMPERE86=ON \
+    ../cmake
+
+cmake --build . --parallel 8
+```
+
+`-DKokkos_ARCH_AMPERE86=ON` 只是 A6000、RTX 3090 等 SM 8.6 GPU 的示例。请根据 GPU 型号替换 KOKKOS 架构选项，例如 A100 使用 `-DKokkos_ARCH_AMPERE80=ON`，RTX 4090 使用 `-DKokkos_ARCH_ADA89=ON`，H100 使用 `-DKokkos_ARCH_HOPPER90=ON`。
+
+如果使用 `_fp64.so` 共享库，需要在上述 cmake 命令中另外加入：
+
+```bash
+-DPREC_NEPINFER=ON \
+```
+
+#### 配置共享库和 License
+
+编译完成后，使用 `NEP_GPU_LIB_PATH` 指定预编译共享库的完整路径，使用 `NEP_LICENSE_PATH` 指定 License 文件路径：
+
+```bash
+# lammps 可执行文件
+export PATH=/the/path/of/lammps/build:$PATH
+
+# CUDA 11.8 默认混合精度版本示例
+export NEP_GPU_LIB_PATH=/the/path/of/libnep_gpu_cu118.so
+export NEP_LICENSE_PATH=/the/path/of/summer_holiday.lic
+```
+
+也可以将共享库所在目录加入 `LD_LIBRARY_PATH`，并将共享库重命名为 `libnep_gpu.so`：
+
+```bash
+export LD_LIBRARY_PATH=/the/path/of/libnep_gpu_dir:$LD_LIBRARY_PATH
+```
+
+`NEP_GPU_LIB_PATH` 的优先级高于系统共享库搜索路径，因此推荐直接指定 `.so` 文件。`NEP_LICENSE_PATH` 也建议直接指向下载的 `summer_holiday.lic`。
+
+> **License 说明**：Release 中的 `summer_holiday.lic` 为最多支持 16 块 GPU 的非商业评估 License，有效期至 2026 年 8 月 31 日。商业使用或 License 续期请联系 `matpl@pwmat.com`。
+
+### 运行 lammps
+
+#### 运行命令
+
+在运行 lammps 前，请确保已设置 `NEP_GPU_LIB_PATH` 和 `NEP_LICENSE_PATH`，并且输入文件、原子结构文件和 NEP 力场文件均已准备完成。
+
+```bash
+# 单 GPU
+mpirun -np 1 --bind-to numa lmp -k on g 1 -sf kk -pk kokkos -in input.in
+
+# 单节点多 GPU（4 卡）
+mpirun -np 4 --bind-to numa lmp -k on g 4 -sf kk -pk kokkos -in input.in
+
+# 多节点（2 节点，每节点 4 卡）
+mpirun -np 8 --bind-to numa --map-by ppr:4:node lmp -k on g 4 -sf kk -pk kokkos -in input.in
+```
+
+多节点运行时，必须在每个计算节点设置相同的 `NEP_GPU_LIB_PATH` 和 `NEP_LICENSE_PATH`，并确保所有节点都能访问共享库、License、输入文件和力场文件。
+
+#### lammps 输入脚本
+
+NEP KOKKOS 接口需要使用 half 近邻表并开启 Newton 通信：
+
+```lammps
+package kokkos neigh half comm device
+newton on
+```
+
+单模型推理的 `pair_style` 设置如下：
+
+```lammps
+pair_style   matpl/nep/kk nep.txt
+pair_coeff   * * Hf O
+```
+
+`pair_coeff * *` 后的元素名与 data 文件中的原子类型一一对应，并映射到 NEP 力场文件中的元素顺序。
+
+#### 多模型偏差计算
+
+在主动学习流程中，可同时加载多个 NEP 力场文件并输出模型偏差：
+
+```lammps
+pair_style   matpl/nep/kk nep1.txt nep2.txt nep3.txt out_freq 10 out_file explr.error
+pair_coeff   * * Hf O
+```
+
+- 多个 `nep*.txt` 文件用于启用模型偏差计算。
+- `out_freq N` 表示每 `N` 步输出一次偏差，默认值为 `1`。
+- `out_file name` 用于指定偏差输出文件，默认文件名为 `explr.error`。
+
+#### NPT 运行示例
+
+以 HfO2 NEP 力场为例，完整的 NPT 输入脚本如下：
+
+```lammps
+package kokkos neigh half comm device
+newton on
+
+units           metal
+boundary        p p p
+atom_style      atomic
+neighbor        1.0 bin
+neigh_modify    delay 10
+
+read_data       structure.lmp
+replicate       10 10 10
+
+mass            1 178.49
+mass            2 15.999
+
+pair_style      matpl/nep/kk nep.txt
+pair_coeff      * * Hf O
+
+velocity        all create 300.0 12345
+fix             1 all npt/kk temp 300 300 0.1 iso 0.0 0.0 0.5
+
+thermo_style    custom step temp pe ke etotal press vol
+thermo          10
+timestep        0.002
+
+run             1000
+```
+
+#### MatPL 热流计算
+
+> **接口区别**：开放源码版本只支持 `matpl/heatflux`；闭源版本支持 KOKKOS GPU 热流接口 `matpl/heatflux/kk`。下面的命令仅适用于闭源版本。
+
+`matpl/heatflux/kk` 直接在 GPU 上计算 MatPL 热流，无需使用传统的 `ke/atom + pe/atom + centroid/stress/atom + heat/flux` 后处理链：
+
+```lammps
+package kokkos neigh half comm device
+newton on
+
+pair_style   matpl/nep/kk nep.txt
+pair_coeff   * * C
+
+compute      flux all matpl/heatflux/kk
+fix          fluxout all matpl/heatflux/ave/kk 10 100 1000 flux file compute_HeatFlux.out
+```
+
+`compute matpl/heatflux/kk` 输出包含 6 个分量的全局向量，依次为：
+
+1. `Jx`：x 方向总热流。
+2. `Jy`：y 方向总热流。
+3. `Jz`：z 方向总热流。
+4. `Jconv,x`：x 方向对流热流。
+5. `Jconv,y`：y 方向对流热流。
+6. `Jconv,z`：z 方向对流热流。
+
+因此，virial 热流贡献可由总热流减去对流热流得到，即 `(1-4, 2-5, 3-6)`。`fix matpl/heatflux/ave/kk` 用于对热流向量进行时间平均，并将结果写入 `compute_HeatFlux.out`。
+
+#### 更多运行示例
+
+- [H2O 多节点多 GPU 示例](https://github.com/LonxunQuantum/lammps-MatPL/tree/MatPL-pro-v2026.6/examples/H2O)
+- [HfO2 多节点多 GPU 示例](https://github.com/LonxunQuantum/lammps-MatPL/tree/MatPL-pro-v2026.6/examples/HfO2)
+- [石墨烯热流计算与验证示例](https://github.com/LonxunQuantum/lammps-MatPL/tree/MatPL-pro-v2026.6/examples/Heat_flux)
+
+#### 常见问题
+
+| 错误信息或现象 | 原因 | 处理方法 |
+| --- | --- | --- |
+| `Failed to load NEP GPU library` | 找不到共享库 | 检查 `NEP_GPU_LIB_PATH`，或将共享库目录加入 `LD_LIBRARY_PATH` |
+| `Symbol not found: nep_*` | 接口代码与共享库版本不匹配 | 使用同一 Release 中的 Source code 和 `libnep_gpu*.so` |
+| `NEP GPU license check failed` 或 `License file not found` | License 不存在、路径错误或已过期 | 检查 `NEP_LICENSE_PATH`、文件权限和有效期 |
+| 加载 `.so` 时报 `libcudart` 错误 | CUDA 主版本不匹配 | CUDA 11.x 使用 `cu118` 库，CUDA 12.x 使用 `cu128` 库 |
+| GPU 与 License 绑定不匹配或 GPU 数量超限 | 当前硬件不在 License 授权范围内 | 使用 `nvidia-smi --query-gpu=uuid` 检查 GPU，必要时限制 `CUDA_VISIBLE_DEVICES` 或更新 License |
+
+
+<!-- ### Lammps-MatPL (fortran) 编译安装 
 
 lammps-MatPL (fortran 版本) 用于 MatPL 的 NN 和 Linear 力场，未提供 GPU 加速。
 
@@ -374,4 +665,4 @@ lammps-MatPL (fortran 版本) 力场接口源码位于 MatPL 源码目录 `lmps/
 - [MatPL 操作演示：NN lammps](../models/nn/nn-tutorial.md#lammps-md)
 
 
-<!-- MatPL 相关软件的常见 [安装错误](./InstallError.md) 和 [运行时错误](./RuntimeError.md)   -->
+MatPL 相关软件的常见 [安装错误](./InstallError.md) 和 [运行时错误](./RuntimeError.md)   -->
