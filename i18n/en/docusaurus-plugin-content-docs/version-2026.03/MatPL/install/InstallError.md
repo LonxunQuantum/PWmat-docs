@@ -1,17 +1,17 @@
 ---
 sidebar_position: 3
-title: 常见安装错误
+title: Common Installation Errors
 ---
-## 常见安装错误
-### 关于编译环境
-大部分的安装失败问题，都来源于编译安装环境版本不匹配，或找不到相关环境变量。请先检查下列编译器是否已正确安装，并且版本适配。
+## Common Installation Errors
+### Build Environment
+Most installation failures are caused by incompatible build-environment versions or missing environment variables. First, verify that the following compilers and tools are installed correctly and have compatible versions.
 
-我们推荐使用 `intel2020`版本，`cuda/11.8`，`cmake版本 >= 3.21`，`gcc 版本 8.n`。
-MatPL 中使用的`pytorch`版本为`2.0`以上，必须使用 `cuda/11.8`或更高版本。
+We recommend `intel2020`, `cuda/11.8`, `CMake >= 3.21`, and `GCC 8.x`.
+MatPL uses `PyTorch >= 2.0` and requires `CUDA 11.8` or later.
 
-对于 `intel/2020`编译套件，使用了它的 `ifort` 和 `icc` 编译器(`19.1.3`)、`mpi(2019)`、`mkl库(2020)`，如果单独加载，请确保版本不低于它们。
+The `intel/2020` toolchain provides the `ifort` and `icc` compilers (`19.1.3`), `MPI 2019`, and `MKL 2020`. If you load these components separately, use versions no older than these.
 
-您可以通过位于源码根目录的src/check/check_env.sh 脚本检查环境。一个正确的环境如下所示。
+You can check the environment with `src/check/check_env.sh` in the source root. A valid environment produces output similar to the following.
 ``` txt
 1. CUDA version is 11.8.
 2. nvcc command exists.
@@ -22,18 +22,18 @@ MatPL 中使用的`pytorch`版本为`2.0`以上，必须使用 `cuda/11.8`或更
 7. PyTorch version is 2.0 or above, current version is 2.2.
 ```
 
-### 问题：找不到 `cuda_runtime.h` 头文件
+### Issue: `cuda_runtime.h` Header Not Found
 
-如果编译过程中找不到 `cuda_runtime.h` 头文件，请在 `src/MAKE/Makefile.mpi` 文件的 `第24行` 替换为您自己的 CUDA 路径，`/the/path/cuda/cuda-11.8`，`cuda_runtime.h` 位于该目录下的 `include` 目录下。
+If `cuda_runtime.h` cannot be found during compilation, replace line `24` of `src/MAKE/Makefile.mpi` with the path to your CUDA installation, such as `/the/path/cuda/cuda-11.8`. The header is located in the `include` subdirectory.
 
 ```txt
 CUDA_HOME = $(CUDADIR)
-替换为CUDA_HOME = /the/path/cuda/cuda-11.8
+Replace with CUDA_HOME = /the/path/cuda/cuda-11.8
 ```
 
-### 问题：NeighConst.so 编译错误
-#### 错误描述
-在编译 fortran 代码过程中出现如下错误
+### Issue: NeighConst.so Compilation Error
+#### Error Description
+The following error occurs while compiling the Fortran code:
 
 ```
 ifort -O3 least_squares.f90 counts_atom.f90 scan_title.f90 transform_to_upper.f90 \
@@ -67,24 +67,24 @@ make: Leaving directory `/data/home/wuxingxing/codespace/PWMLFF_gpu/src/pre_data
 make: Entering directory `/data/home/wuxingxing/codespace/PWMLFF_gpu/src/pre_data/fit'
 ```
 
-#### 错误原因
-该错误出自 setuptools 版本不匹配，一般是版本过高造成的，您需要降低 setuptools，执行如下命令：
+#### Cause
+This error is caused by an incompatible `setuptools` version, usually one that is too recent. Downgrade `setuptools` as follows:
 ``` bash
-#卸载 setuptools
+# Uninstall setuptools
 $ pip uninstall setuptools
-#清除本地缓存
+# Clear the local cache
 $ pip cache purge
-#重新安装 setuptools
+# Reinstall setuptools
 $ pip install setuptools==68.0.0
-#在我们的测试中不高于 68.0.0 即可
+# In our tests, version 68.0.0 or earlier works
 ```
 
 
-### 问题：离线安装包编译时报 `Unknown CUDA Architecture Name 9.0a`
+### Issue: `Unknown CUDA Architecture Name 9.0a` When Building the Offline Package
 
-#### 1. 错误现象
+#### 1. Symptom
 
-在 MatPL 离线安装包中编译自定义算子，执行 `cmake ..` 时，PyTorch CMake 配置阶段报错：
+When compiling custom operators in the MatPL offline package, the PyTorch CMake configuration fails during `cmake ..` with the following error:
 
 ```text
 -- PyTorch built with CUDA support: TRUE
@@ -97,7 +97,7 @@ CMake Error at .../torch/share/cmake/Caffe2/Modules_CUDA_fix/upstream/FindCUDA/s
   Unknown CUDA Architecture Name 9.0a in CUDA_SELECT_NVCC_ARCH_FLAGS
 ```
 
-该问题常见于如下组合：
+This issue commonly occurs with the following environment:
 
 ```bash
 module load cuda/12.4-share openmpi/4.1.6 cmake/3.31.6
@@ -105,97 +105,97 @@ source /opt/rh/devtoolset-8/enable
 source /path/to/MatPL-2026.3/matpl-2026.3/bin/activate
 ```
 
-其中 PyTorch 版本为 `2.2`，CUDA Toolkit 版本为 `12.4`。
+Here, the PyTorch version is `2.2` and the CUDA Toolkit version is `12.4`.
 
-#### 2. 原因分析
+#### 2. Cause
 
-这不是 MatPL 算子源码的编译错误，而是 PyTorch 自带的 CMake CUDA 架构选择脚本在配置阶段失败。
+This is not a compilation error in the MatPL operator source. It occurs because the CMake CUDA architecture-selection script bundled with PyTorch fails during configuration.
 
-当 PyTorch 没有成功自动识别当前 GPU 架构时，会退回到一组通用 CUDA 架构列表。CUDA 12.4 环境下，这个列表中可能包含：
+When PyTorch cannot automatically identify the current GPU architecture, it falls back to a list of common CUDA architectures. Under CUDA 12.4, that list may include:
 
 ```text
 9.0a
 ```
 
-但是 PyTorch 2.2 随带的 `select_compute_arch.cmake` 不能识别带字母后缀的 `9.0a`，因此在 `find_package(Torch REQUIRED)` 阶段直接报错。
+However, the `select_compute_arch.cmake` script bundled with PyTorch 2.2 cannot recognize the letter-suffixed architecture `9.0a`, so configuration fails at `find_package(Torch REQUIRED)`.
 
-#### 3. 解决方案
+#### 3. Solution
 
-在执行 `cmake ..` 之前，显式指定需要编译的 GPU 架构，避免 PyTorch 自动探测。
+Before running `cmake ..`, explicitly specify the GPU architectures to compile and bypass PyTorch's automatic detection.
 
-如果主要用于 NVIDIA RTX 4090，可设置：
+For an NVIDIA RTX 4090, use:
 
 ```bash
 export TORCH_CUDA_ARCH_LIST="8.9"
 cmake ..
 ```
 
-如果离线包希望同时支持 A100、3090、4090 等常见 GPU，推荐设置为：
+To support common GPUs such as the A100, RTX 3090, and RTX 4090 in the same offline package, use:
 
 ```bash
 export TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9"
 cmake ..
 ```
 
-如果需要支持 H100，可以使用：
+To support the H100, use:
 
 ```bash
 export TORCH_CUDA_ARCH_LIST="9.0"
 cmake ..
 ```
 
-注意不要设置为 `9.0a`。
+Do not set the value to `9.0a`.
 
-也可以直接在 CMake 命令中指定：
+You can also specify it directly in the CMake command:
 
 ```bash
 cmake .. -DTORCH_CUDA_ARCH_LIST="8.0;8.6;8.9"
 ```
 <!-- 
-如果希望在源码中固定该行为，可以在调用 `find_package(Torch REQUIRED)` 之前加入：
+To enforce this behavior in the source, add the following before `find_package(Torch REQUIRED)`:
 
 ```cmake
 set(TORCH_CUDA_ARCH_LIST "8.0;8.6;8.9")
 find_package(Torch REQUIRED)
 ```
 
-该方法的作用是绕过 PyTorch 的自动 CUDA 架构探测，避免生成包含 `9.0a` 的架构列表。 -->
+This bypasses PyTorch's automatic CUDA architecture detection and prevents generation of a list containing `9.0a`. -->
 
-### 问题：NVCC 编译时报 `fatal error: math.h: 没有那个文件或目录`
+### Issue: NVCC Reports `fatal error: math.h: No such file or directory`
 
-#### 1. 错误现象
+#### 1. Symptom
 
-在 `make` 编译 `.cu` 文件阶段，抛出标准库找不到的底层错误：
+While `make` is compiling `.cu` files, it reports a low-level error indicating that a standard-library header cannot be found:
 
 ```text
-/usr/include/c++/11/cmath:45:15: fatal error: math.h: 没有那个文件或目录
+/usr/include/c++/11/cmath:45:15: fatal error: math.h: No such file or directory
    45 | #include_next <math.h>
       |                ^~~~~~~~
 
 ```
 
-#### 2. 原因分析
+#### 2. Cause
 
-* **本质原因（路径污染）：** CMake 在检测或配置环境时，将系统的 `/usr/include` 作为一个显式路径（通过 `-isystem /usr/include` 或 `-I`）传给了 `nvcc`。
-* **`#include_next` 机制失效：** GCC 在处理 `cmath` 时使用 `#include_next <math.h>` 指令，意思是“跳过当前目录，去后面的系统搜索路径中寻找下一个 `math.h`”。当 `/usr/include` 被显式指定后，GCC 误以为自己已经越过了该目录，导致在后续路径中死活找不到真正的 C 语言 `math.h`。
-* **引发情况 A（自定义算子）：** 混用了系统旧版 CUDA 11.5 与 GCC 11，触发了低版本 NVCC 无法识别 GCC 11 参数包的 Bug。
-* **引发情况 B（LAMMPS 编译）：** 自定义 Package 内部使用了 `find_package(CUDAToolkit)`，其返回的 `CUDAToolkit_INCLUDE_DIRS` 被解析为了 `/usr/include`，从而污染了全局目标的包含路径。
+* **Root cause (path contamination):** While detecting or configuring the environment, CMake passes the system `/usr/include` directory explicitly to `nvcc`, through either `-isystem /usr/include` or `-I`.
+* **Broken `#include_next` behavior:** When processing `cmath`, GCC uses `#include_next <math.h>`, meaning “skip the current directory and search later system paths for the next `math.h`.” Once `/usr/include` is supplied explicitly, GCC incorrectly treats that directory as already traversed and cannot find the actual C `math.h` in subsequent paths.
+* **Trigger A (custom operators):** An older system CUDA 11.5 installation is mixed with GCC 11, exposing a bug in which the older NVCC cannot interpret the GCC 11 option set.
+* **Trigger B (LAMMPS build):** A custom package calls `find_package(CUDAToolkit)`, and the returned `CUDAToolkit_INCLUDE_DIRS` resolves to `/usr/include`, contaminating the include paths of global targets.
 
-#### 3. 解决方案
+#### 3. Solution
 
-修改 LAMMPS 根目录的 **`CMakeLists.txt`**，在 `project(lammps CXX CUDA)` 正下方注入防护盾代码：
+Edit **`CMakeLists.txt`** in the LAMMPS root and add the following workaround immediately after `project(lammps CXX CUDA)`:
 
 ```cmake
 project(lammps CXX CUDA)
 
-# ================= 强制修复 math.h 找不到的 Bug =================
+# ================ Work around the missing math.h issue ================
 list(APPEND CMAKE_CUDA_IMPLICIT_INCLUDE_DIRECTORIES "/usr/include")
 string(APPEND CMAKE_CUDA_FLAGS " -Xcompiler -idirafter,/usr/include")
 # ===============================================================
 
 ```
 
-如果当前环境存在多个CUDA编译器，需要显式指定 CUDA 编译器及 Toolkit 根目录。
+If multiple CUDA compilers are present, explicitly specify the CUDA compiler and Toolkit root.
 ```bash
 cmake -C ../cmake/presets/basic.cmake \
    -DCMAKE_CUDA_COMPILER=/opt/nvidia/hpc_sdk/Linux_x86_64/23.9/compilers/bin/nvcc \
@@ -207,5 +207,5 @@ cmake -C ../cmake/presets/basic.cmake \
    ../cmake
 make -j4
 
-# VOLTA70 是V100显卡选项，其他显卡选项参考https://docs.lammps.org/Build_extras.html#available-architecture-settings
+# VOLTA70 targets V100 GPUs; for other GPUs, see https://docs.lammps.org/Build_extras.html#available-architecture-settings
 ```

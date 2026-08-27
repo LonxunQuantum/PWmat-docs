@@ -1,70 +1,70 @@
 ---
 sidebar_position: 3
-title: MatPL 可用参数
+title: MatPL Parameters
 ---
-# MatPL 可用参数
+# MatPL Parameters
 
-本节介绍了所有模型中可由用户定义的参数，可以分为`基础参数`和`高级参数`两类。基础参数需要用户指定，高级参数采用了默认值，用户可以在 json 文件中根据需求手动修改。在下面的参数中，"相对路径（relative path）" 表示相对于当前工作目录的路径，而 "绝对路径（absolute path）" 表示从根目录开始的文件或目录的完整路径。
+This section describes user-configurable parameters for all models. `Basic parameters` must be supplied, while `advanced parameters` have defaults that can be overridden in JSON. A relative path is resolved from the current working directory; an absolute path begins at the filesystem root.
 
-## 基础参数
+## Basic Parameters
 
 ### model_type
-该参数用于指定用于训练的模型类型。您可以使用`LINEAR`模型、`NN`模型、`DP`模型或 `NEP` 模型。
+Selects the model type: `LINEAR`, `NN`, `DP`, or `NEP`.
 
 ### atom_type
-该参数用于设置训练体系的元素类型。用户可以按照任意顺序指定元素的原子序数。例如，对于单元素系统如铜，可以设置为 [29]，而对于多元素系统如 CH4，则可以设置为 [1, 6]。您也可以使用元素类型的名称，例如["Cu"] 或者 ["H", "C"]。
+Sets the elements in any chosen order using atomic numbers or symbols. Examples: `[29]` or `["Cu"]` for copper, and `[1,6]` or `["H","C"]` for CH4.
 
 ### train_data
-该参数用于指定训练集数据路径。您可以使用相对路径或绝对路径。
-   - 对于 DP 和 NEP 模型，支持的文件格式有`extxyz` 、`pwmlff/npy`、`deepmd/npy`、`deepmd/raw`、`pwmat/movement`, `vasp/outcar`, `cp2k/md`
-   - 对于 LINEAR 和 NN 模型，仅支持`pwmat/movement`格式
+Specifies training-data paths, either relative or absolute.
+   - DP and NEP support `extxyz`, `pwmlff/npy`, `deepmd/npy`, `deepmd/raw`, `pwmat/movement`, `vasp/outcar`, and `cp2k/md`.
+   - LINEAR and NN support only `pwmat/movement`.
 
 ### valid_data
-该参数用于指定验证集数据路径。您可以使用相对路径或绝对路径。
-   - 对于 DP 和 NEP 模型，支持的文件格式有`extxyz` 、`pwmlff/npy`、`deepmd/npy`、`deepmd/raw`、`pwmat/movement`, `vasp/outcar`, `cp2k/md`
-   - 对于 LINEAR 和 NN 模型，仅支持`pwmat/movement`格式
+Specifies validation-data paths, either relative or absolute.
+   - DP and NEP support `extxyz`, `pwmlff/npy`, `deepmd/npy`, `deepmd/raw`, `pwmat/movement`, `vasp/outcar`, and `cp2k/md`.
+   - LINEAR and NN support only `pwmat/movement`.
 
 ### test_data
-该参数用于`test`命令做推理时指定测试集数据路径。您可以使用相对路径或绝对路径。
-   - 对于 DP 和 NEP 模型，支持的文件格式有`extxyz` 、`pwmlff/npy`、`deepmd/npy`、`deepmd/raw`、`pwmat/movement`, `vasp/outcar`, `cp2k/md`
-   - 对于 LINEAR 和 NN 模型，仅支持`pwmat/movement`格式
+Specifies test-data paths for the `test` command, either relative or absolute.
+   - DP and NEP support `extxyz`, `pwmlff/npy`, `deepmd/npy`, `deepmd/raw`, `pwmat/movement`, `vasp/outcar`, and `cp2k/md`.
+   - LINEAR and NN support only `pwmat/movement`.
 
 ### format
-该参数用于指定数据（`train_data`、`valid_data`、`test_data`）的格式，支持的数据格式有扩展的xyz格式 `extxyz` 、`pwmlff/npy`、`deepmd/npy`、`deepmd/raw`格式。此外也支持直接使用 PWmat, VASP, CP2K 轨迹文件， 对应 `format` 参数分别为 `pwmat/movement`, `vasp/outcar`, `cp2k/md`。默认格式为 `pwmat/movement`。细节请参考数据格式转换工具[`pwdata`](./pwdata/README.md)。
+Sets the format of `train_data`, `valid_data`, and `test_data`. Supported values include `extxyz`, `pwmlff/npy`, `deepmd/npy`, `deepmd/raw`, and direct trajectory formats `pwmat/movement`, `vasp/outcar`, and `cp2k/md`. The default is `pwmat/movement`. See [`pwdata`](./pwdata/README.md).
 :::info
-注意，输入数据的格式需要一致。
+All input datasets must use the same format.
 :::
 
 ### model_load_file
-- 该参数一般用于微调或者和继续训练时，指定初始待训模型路径，支持文件格式为后缀为 `.ckpt` 的模型文件。
-- 该参数用于`test`命令做推理时指定模型的路径，支持相对或者绝对路径。
+- For fine-tuning or continued training, specifies an initial `.ckpt` model.
+- For `test`, specifies the model path, either relative or absolute.
 
 ### nep_txt_file
-- 该参数一般用于微调或者和继续训练时，指定初始待训模型路径，支持文件格式为后缀为 `.txt` 的模型文件。力场文件可以是来自 GPUMD 的 nep4.txt 或 nep5.txt。
-- 这里的 txt 文件也可以是通用力场文件（89种元素类型）。在解析时会从中提取出在 [`atom_type`](#atom_type) 中指定的元素类型对应的参数，该功能一般用于从通用力场模型微调出小模型。此时，可以与`model->fitting_net`中的`fix_cij`、`fix_hiddenlayer`、`fix_outlayer` 配合使用。
+- For fine-tuning or continued training, specifies a `.txt` model such as GPUMD `nep4.txt` or `nep5.txt`.
+- The text file may be a universal force field covering 89 elements. MatPL extracts parameters for the elements in [`atom_type`](#atom_type), enabling fine-tuning to a smaller model. This can be combined with `fix_cij`, `fix_hiddenlayer`, and `fix_outlayer` under `model->fitting_net`.
 
 ### recover_train
-该参数用于从中断的训练任务中恢复训练。默认值为 `true`
+Whether to resume an interrupted training task. The default is `true`.
 
 ### reserve_work_dir
-该参数用于LINEAR 或者 NN 模型，用于指定在任务执行完成后是否保留工作目录 `work_dir`。默认值为 `False`，意味着在执行完成后该目录将被删除。
+For LINEAR and NN, whether to retain `work_dir` after execution. The default is `false`.
  <!-- ### max_neigh_num
-MatPL 会扫描训练集自动计算最大邻居数量。对于某些体系来说，这个值可能不足以容纳所有的邻居，导致特征生成失败。在这种情况下，将会弹出以下警告信息：
+MatPL scans the training set to estimate the maximum neighbor count. For some systems, this may be too small and feature generation may fail with the following warning:
 
 ```txt
 Error! maxNeighborNum too small
 ```
-在该情况下，请调大该值。 -->
+Increase the value in this case. -->
 
 ### save_step
-该参数用于设置每隔多少个iteration保存一次模型，默认值为 None，即只在每个epoch训练结束后保存一次模型。
+Sets the model-save interval in iterations. The default is `None`, so models are saved only after each epoch.
 
 ### max_save_num
-该参数用与 save_step 配合使用，用于设置最多保存 max_save_num 个最近的模型。默认值为 10， 仅在设置 save_step 后起作用。
+With `save_step`, sets the maximum number of recent models retained. The default is `10`.
 
-## NEP 模型超参数
+## NEP Model Hyperparameters
 
-完整的 NEP 模型参数设置如下：
+The complete NEP model configuration is:
 
 ```json
     "model": {
@@ -84,72 +84,72 @@ Error! maxNeighborNum too small
     }
 ```
 <!-- ### batch_max_types
-该参数用于设置batch内允许的最大元素数量，超过该数量的结构在本次训练中会被丢弃。一般用于大batchsize下训练通用力场（如89种元素的训练数据集），防止个别数据由于元素类型较多或近邻数量过大造成的显存溢出错误。默认不设置，即不控制。 -->
+Sets the maximum number of element types allowed in a batch. Structures exceeding it are discarded. This is useful for large-batch universal-force-field training, preventing GPU-memory overflow from structures with many element types or neighbors. By default, no limit is applied. -->
 
 ### cutoff
-该参数用于设置 `radial` 和 `angular` 的截断能。默认值为 `[8.0, 4.0]`。
+Sets radial and angular cutoff radii. The default is `[8.0, 4.0]`.
 
 ### n_max
-该参数用于设置 `radial` 和 `angular`分别对应的描述符数量，该值不小于0，不大于 19，默认值为 `[4, 4]`。
+Sets `n_max` for radial and angular descriptors. Each value must be between 0 and 19. The default is `[4,4]`.
 
 ### basis_size
-该参数用于设置 `radial` 和 `angular`对应的基组数量，该值不小于0，不大于 19默认值为 `[8, 8]`。
+Sets the radial and angular basis sizes. Each value must be between 0 and 19. The default is `[8,8]`.
 
 ### l_max
-该参数用于设置 angular 的展开阶，同时控制是否使用四体和五体描述符，默认值为 `[4, 2, 1]`，分别是三体、四体以及五体 描述符 对应的阶。这里 `2`表示使用四体 描述符，`1` 表示使用五体描述符。如果您只使用三体描述符，请设置为`[4, 0, 0]`；只是用三体和四体描述符，请设置为`[4, 2, 0]`。
+Sets angular expansion orders and enables four- and five-body descriptors. The default `[4,2,1]` contains the three-, four-, and five-body orders. Use `[4,0,0]` for three-body only or `[4,2,0]` for three- and four-body descriptors.
 
 :::info
-NEP 两体描述符的数量为 n_max[0]+1；三体描述符的数量为 (n_max[1] + 1)*l_max[0]，四体描述符、五体描述符数量相同，分别为 n_max[1] + 1。
+The numbers of two-, three-, four-, and five-body descriptors are `n_max[0]+1`, `(n_max[1]+1)*l_max[0]`, `n_max[1]+1`, and `n_max[1]+1`, respectively.
 :::
 
 ### network_size
-该参数用于设置 `NEP` 模型中隐藏层神经元个数，在 NEP 模型中只有一层隐藏层，默认值为 `40`。
-<!-- 这里支持使用多层神经网络，如您可以设置为`[50, 50, 50, 1]`这类网络，但是建议您使用默认值即可，更多网络层数在我们的测试中对模型拟合精度的提升有限，反而会造成推理负担，降低推理速度。 -->
+Sets the number of neurons in NEP's single hidden layer. The default is `40`.
+<!-- Multiple layers such as `[50,50,50,1]` are supported, but the default is recommended. In our tests, deeper networks provide little accuracy improvement while increasing inference cost. -->
 
 ### zbl
-该参数用于设置 Ziegler-Biersack-Littmark (ZBL) 势(`DOI: 10.1007/978-1-4615-8103-1_3`)的外截断半径 outer cutoff 值，内截断半径 inner cutoff固定为外截断半径的0.5倍。默认不设置。推荐该值的范围不超过 1.0 $\le$ zbl $\le$ 3.0。
+Sets the outer cutoff of the Ziegler–Biersack–Littmark (ZBL) potential (`DOI: 10.1007/978-1-4615-8103-1_3`); the inner cutoff is fixed at half the outer cutoff. It is disabled by default. A value in $1.0 \le zbl \le 3.0$ is recommended.
 
 ### use_typewise_cutoff_zbl
-按元素类型区分的 ZBL 截断半径。启用后，两元素间的外 ZBL 截断半径取 min(zbl, use_typewise_cutoff_zbl * 两元素共价半径之和 )，此时内截断半径固定为0.0。 参数默认不启用。该参数在`MatPL-2026.3(UPDATE1)版本`开始引入。
+Enables type-wise ZBL cutoffs. The outer cutoff for a pair is `min(zbl, use_typewise_cutoff_zbl × sum of covalent radii)`, and the inner cutoff is fixed at 0.0. Disabled by default; introduced in `MatPL-2026.3 Update 1`.
 
 ### fix_cij
-微调参数，该参数用于在训练中固定 NEP 两体和三体特征值对应的系数项，默认为false。设置为true之后，训练过程中将不再训练更新系数项。
+Fine-tuning option that freezes NEP two- and three-body feature coefficients. The default is `false`.
 
 ### fix_hiddenlayer
-微调参数，该参数用于在训练中固定 NEP 隐藏层参数，默认为false。设置为true之后，训练过程中将不再训练更新隐藏层参数。这里 NEP 的隐藏层指输入层的W0、B0项。
+Fine-tuning option that freezes NEP hidden-layer parameters `W0` and `B0`. The default is `false`.
 
 ### fix_outlayer
-微调参数，该参数用于在训练中固定 NEP 输出层参数，默认为false。设置为true之后，训练过程中将不再训练更新输出层参数。这里 NEP 的输出层指W1、B1项。
+Fine-tuning option that freezes NEP output-layer parameters `W1` and `B1`. The default is `false`.
 
-### NEP.txt 中的每行参数解读
+### Interpreting NEP.txt
 
-NEP.txt的文件头内容解析，如下是一个标准的NEP.txt文件头部内容。
+A standard `NEP.txt` header is shown below.
 
 ```txt
-nep5   2 O Hf           # 2 元素类型数量，后跟元素类型
-zbl 1 2                 # 训练开启 zbl 之后存在本行，否则不存在
-cutoff 6.0 6.0 108 108  # 两体cutoff 多体cutoff 两体最大近邻数量 多体最大近邻数量
-n_max  4 4              # 两体 n_max 参数 多体n_max参数
-basis_size 12 12        # 两体 basis_size 参数， 多体 basis_size 参数
-l_max  4 2 1            # l_max 参数： 4为三体值，2为四体值，1为五体值
-ANN    40 0             # 40 为隐藏层个数 0没有具体意义，只占位
+nep5   2 O Hf           # Number of element types, followed by their symbols
+zbl 1 2                 # Present only when ZBL is enabled during training
+cutoff 6.0 6.0 108 108  # Two-body cutoff, many-body cutoff, and their maximum neighbor counts
+n_max  4 4              # Two-body and many-body n_max
+basis_size 12 12        # Two-body and many-body basis_size
+l_max  4 2 1            # Three-, four-, and five-body l_max values
+ANN    40 0             # 40 hidden neurons; 0 is a placeholder
 ```
 
-接下来的行可以按照顺序分为`网络参数`、`两体特征系数`、`三体特征系数`、`归一化值`四个块。
+The remaining lines contain four blocks: `network parameters`, `two-body coefficients`, `three-body coefficients`, and `normalization values`.
 
-- 第一块数据网络参数。网络数量数量(Ei = tanh([qn*W0]+B0)*W1 + b1) = 原子类型数量 * （特征数量 * ANN[0] + ANN[0] + ANN[0]） + 原子类型数量。按照第一行的元素类型顺序，分别是对应元素的W0、B0、W1；接下来是每个元素类型对应 b1（单值）。如果是 gpumd 训练的力场，对应nep4，这里的b1 只有1个值，是所有原子类型的b1的均值。对于W0，每行的顺序对应维度为 [隐藏层ANN，特征值数量] 按照行存储的顺序。
+- Block 1 contains network parameters for $E_i=\tanh(q_nW0+B0)W1+b1$. Its size is `number of elements × (number of features × ANN[0] + ANN[0] + ANN[0]) + number of elements`. For each element in header order, it stores `W0`, `B0`, and `W1`, followed by one `b1` per element. A GPUMD-trained NEP4 file stores only one `b1`, the mean across elements. `W0` is flattened row-major from `[ANN hidden units, number of features]`.
 
-- 第二块两体系数。数量 = 元素数量的平方 * (n_max[0]+1) * (basis_size[0]+1)
+- Block 2 contains two-body coefficients: `number of elements² × (n_max[0]+1) × (basis_size[0]+1)`.
 
-- 第三块三体系数。数量 = 元素数量的平方 * (n_max[1]+1) * (basis_size[1]+1)
+- Block 3 contains three-body coefficients: `number of elements² × (n_max[1]+1) × (basis_size[1]+1)`.
 
-    对于两体或者三体块内的每个参数顺序：系数矩阵为[I, J, N, K]，I为中心原子类型，J为近邻原子类型，顺序与第一行中的元素类型顺序一致，N为n_max+1，K为basis_size+1
+    In either coefficient block, the matrix order is `[I,J,N,K]`: `I` is the central element, `J` is the neighbor element, both following header order; `N=n_max+1`; and `K=basis_size+1`.
 
-- 第四块归一化值。数量与特征值数量相同，顺序分别为两体、三体、四体、五体。这里特征值数量=两体+三体+四体+五体特征数量：两体项数量 = n_max[0] + 1，三体项数量 = (n_max[1] + 1) * l_max[0]，四体项数量 = n_max[1] + 1，五体项数量 = n_max[1] + 1
+- Block 4 contains one normalization value per feature, ordered by two-, three-, four-, and five-body terms. Their counts are `n_max[0]+1`, `(n_max[1]+1)*l_max[0]`, `n_max[1]+1`, and `n_max[1]+1`.
 
-## DP 模型超参数
+## DP Model Hyperparameters
 
-DP 模型的完整参数设置如下：
+The complete DP model configuration is:
 
 ```json
     "type_embedding":false,
@@ -170,44 +170,44 @@ DP 模型的完整参数设置如下：
 ```
 
 ### type_embedding
-该参数用于 DP 模型训练开启type embedding时设置相应参数。您也可以在'model'同级字典下设置`"type_embedding":true`，此时将采用 ["atomic_number", "atom_radius", "atom_mass", "electron_affin", "pauling"]设置。默认值为`false`，不开启type_embdding。
+Configures type embedding for DP training. You may also set `"type_embedding":true` alongside `model`, which uses `["atomic_number","atom_radius","atom_mass","electron_affin","pauling"]`. The default is `false`.
 
 #### physical_property
 
-该参数用于指定 `DP` 模型在做 type embedding 方式训练时需要的参数，我们这里提供了 8 个物理属性供用户选择。
+Selects physical properties for DP type embedding. Eight properties are available:
 
-    - atomic_number: 原子序数
-    - atom_mass: 原子质量
-    - atom_radius: 原子半径
-    - molar_vol: 摩尔体积
-    - melting_point: 熔点
-    - boiling_point: 沸点
-    - electron_affin: 电子亲和能
-    - pauling 为泡林电负性
+    - `atomic_number`: atomic number
+    - `atom_mass`: atomic mass
+    - `atom_radius`: atomic radius
+    - `molar_vol`: molar volume
+    - `melting_point`: melting point
+    - `boiling_point`: boiling point
+    - `electron_affin`: electron affinity
+    - `pauling`: Pauling electronegativity
 
-    "physical_property" 默认值为 ["atomic_number", "atom_radius", "atom_mass", "electron_affin", "pauling"]
+    The default `physical_property` is `["atomic_number","atom_radius","atom_mass","electron_affin","pauling"]`.
 
 ### Rmax
-DP 模型中平滑函数的最大截断半径。默认值为 $6.0 \text{\AA}$。
+Maximum cutoff radius of the DP smoothing function. The default is $6.0 \text{\AA}$.
 
 ### Rmin
-DP 模型中平滑函数的最小截断半径。默认值为 $0.5 \text{\AA}$。
+Minimum cutoff radius of the DP smoothing function. The default is $0.5 \text{\AA}$.
 
 ### M2
-该参数用于 DP 模型中的网络，确定嵌入网络的输出大小和拟合网络的输入大小。在示例中，嵌入网络的输出大小为(25 X 16)，拟合网络的输入大小为(25 X 16 = 400)。默认值为 16。
+Sets the DP embedding-network output dimension and therefore the fitting-network input dimension. In the example, these are `25 × 16` and `25 × 16 = 400`. The default is `16`.
 
 ### network_size
-该参数用于嵌入网络（embedding_net）和拟合网络（fitting_net）的结构。默认值分别为[25, 25, 25]和[50, 50, 50, 1]。对应的网络结构如下所示：
+Sets the embedding- and fitting-network structures. Defaults are `[25,25,25]` and `[50,50,50,1]`.
 
-嵌入网络的结构：
-输入层（输入数据维度）-> 隐藏层 1（25 个神经元）-> 隐藏层 2（25 个神经元）-> 输出层 3（25 个神经元）
+Embedding network:
+Input -> hidden layer 1 (25 neurons) -> hidden layer 2 (25 neurons) -> output layer (25 neurons)
 
-拟合网络的结构：
-输入层（M2 X 25）-> 隐藏层 1（50 个神经元）-> 隐藏层 2（50 个神经元）-> 隐藏层 3（50 个神经元）-> 输出层（1 个神经元）
+Fitting network:
+Input (`M2 × 25`) -> three hidden layers (50 neurons each) -> output (1 neuron)
 
-## NN 模型超参数
+## NN Model Hyperparameters
 
-NN 模型的完整参数设置如下：
+The complete NN model configuration is:
 
 ```json
     "model": {
@@ -223,22 +223,22 @@ NN 模型的完整参数设置如下：
 ```
 
 ### Rmax
-特征的最大截断半径。默认值为 $6.0 \text{\AA}$。
+Maximum feature cutoff radius. The default is $6.0 \text{\AA}$.
 
 ### Rmin
-特征的最小截断半径。默认值为 $0.5 \text{\AA}$。
+Minimum feature cutoff radius. The default is $0.5 \text{\AA}$.
 
 ### feature_type
-该参数用于特征类型。支持的选项有[1, 2]、[3, 4]、[5]、[6]、[7]和[8]。默认值为[3, 4]，即 2-b 和 3-b 高斯特征。有关不同特征类型的更详细信息，请参考[附录1](./models/nn/README.md)。
+Selects feature types. Supported values are `[1,2]`, `[3,4]`, `[5]`, `[6]`, `[7]`, and `[8]`. The default `[3,4]` selects two- and three-body Gaussian features. See [Appendix 1](./models/nn/README.md).
 
 ### network_size
-该参数用于拟合网络（fitting_net）的结构。默认值为[15, 15, 1]，其结构如下所示：
-输入层（输入数据维度）-> 隐藏层 1（15 个神经元）-> 隐藏层 2（15 个神经元）-> 输出层（1 个神经元）
+Sets the fitting-network structure. The default `[15,15,1]` gives:
+Input -> hidden layer 1 (15 neurons) -> hidden layer 2 (15 neurons) -> output (1 neuron)
 
 
-## Linear 模型超参数
+## Linear Model Hyperparameters
 
-Linear 模型的完整参数设置如下：
+The complete Linear model configuration is:
 
 ```json
     "model": {
@@ -251,17 +251,17 @@ Linear 模型的完整参数设置如下：
 ```
 
 ### Rmax
-特征的最大截断半径。默认值为 $6.0 \text{\AA}$。
+Maximum feature cutoff radius. The default is $6.0 \text{\AA}$.
 
 ### Rmin
-特征的最小截断半径。默认值为 $0.5 \text{\AA}$。
+Minimum feature cutoff radius. The default is $0.5 \text{\AA}$.
 
 ### feature_type
-该参数用于特征类型，与`NN 模型`中的设置相同。支持的选项有[1, 2]、[3, 4]、[5]、[6]、[7]和[8]。默认值为[3, 4]，即 2-b 和 3-b 高斯特征。有关不同特征类型的更详细信息，请参考[附录1](./models/nn/README.md)。
+Selects feature types using the same settings as the NN model. Supported values are `[1,2]`, `[3,4]`, `[5]`, `[6]`, `[7]`, and `[8]`. The default `[3,4]` selects two- and three-body Gaussian features. See [Appendix 1](./models/nn/README.md).
 
-## ADAM optimizer 优化器超参数
+## ADAM Optimizer Hyperparameters
 
-ADAM 优化器的完整参数设置如下:
+The complete ADAM configuration is:
 
 ```json
     "optimizer": {
@@ -292,87 +292,87 @@ ADAM 优化器的完整参数设置如下:
 ```
 
 ### optimizer
-该参数用于指定优化器名称，默认为`ADAM`。对 LKF 优化器，指定名称为 `'LKF'`。关于优化器的详细信息参考 [LKF](https://dl.acm.org/doi/abs/10.1609/aaai.v37i7.25957)，其中提供了有关优化器实现和特性的更深入的细节说明。 
+Selects the optimizer. The default is `ADAM`; use `LKF` for the LKF optimizer. See the [LKF paper](https://dl.acm.org/doi/abs/10.1609/aaai.v37i7.25957).
 
 ### reset_epoch
-训练重启时是否重置当前训练从第 0 个 epoch 开始，默认为 true。如果要求从ckpt保存时的断点开始继续训练，请设置 为 false，训练时将自动加载ckpt中保存的ADAM 一阶和二阶动量信息。
+Whether restarted training begins at epoch 0. The default is `true`. Set `false` to resume from a checkpoint and restore ADAM's first- and second-moment states.
 
 ### epochs
-该参数用于指定训练的轮数（epochs）。在机器学习中，一个 epoch 指的是整个训练数据集通过神经网络的完整传递，包括前向传播和反向传播。在每个 epoch 中，训练数据集分为多个 `小批量（mini-batches）` 样本，之后把每个批次输入到神经网络，进行前向传播、损失计算和参数更新的反向传播过程。训练的轮数决定了整个训练数据集在训练过程中被处理的次数。默认值为 `30`。
+Sets the number of epochs. Each epoch processes the entire dataset in mini-batches with forward propagation, loss calculation, and backpropagation. The default is `30`.
 
-通常需要通过调试和评估训练过程来选择适当的训练轮数。如果训练轮数过小，模型可能无法充分学习数据集的模式和特征，导致欠拟合。另一方面，如果训练轮数过大，模型可能会过拟合训练数据，在新数据上的泛化性能下降。
+Choose the epoch count by monitoring training and validation. Too few epochs may underfit; too many may overfit and reduce generalization.
 
 ### batch_size
-批大小（batch size）参数确定了在每个 epoch 的训练过程中，每个小批量（mini-batch）中包含的训练样本数量。默认值为 `1`。
+Sets the number of samples in each mini-batch. The default is `1`.
 
 ### print_freq
-该参数用于指定每经过多少个`小批量`迭代之后打印一次训练误差。默认值为 `10`。
+Sets the number of mini-batch iterations between training-error reports. The default is `10`.
 
 ### train_energy
-该参数用于指定是否训练 total energy，默认值为 `true`。
+Whether to train on total energy. The default is `true`.
 
 ### train_force
-该参数用于指定是否训练 force，默认值为 `true`。
+Whether to train on forces. The default is `true`.
 
 ### train_virial
-该参数用于指定是否训练 virial，默认值为 `false`。
+Whether to train on virials. The default is `false`.
 
 ### lambda_2
-该参数用于设置 Adam 优化器的 `L2` 正则化项，默认不设置。设置正则化项有助于减少模型的过拟合。
+Sets ADAM `L2` regularization. It is disabled by default and may reduce overfitting.
 
 ### learning_rate
-该参数是 Adam 优化器的初始学习率。默认值为 `0.001`。
+Initial ADAM learning rate. The default is `0.001`.
 
 ### stop_lr
-该参数是指停止学习率，表示当学习率降到该值时学习率将停止更新，后续训练学习率为该值。默认值为 `3.51e-08`。
+Minimum learning rate. Once reached, it remains fixed. The default is `3.51e-08`.
 
 ### stop_step
-该参数是指停止步数（stopping step），表示当达到该步数时学习率将停止更新，此时学习率值等于 stop_lr 指定的值。stop_step 默认值为 `1000000`。
+Step at which learning-rate decay stops and the rate equals `stop_lr`. The default is `1000000`.
 
 ### decay_step
-该参数表示衰减步数（decay step），它指定了学习率衰减的间隔。在每个衰减步数之后，学习率会根据一定的衰减率进行更新。默认值为 `5000`。
+Learning-rate decay interval. The default is `5000` steps.
 
-`learning_rate`, `stop_lr`, `stop_step`, `decay_step` 这四个变量用于更新学习率，其计算过程如下所示，可以使用以下的 Python 代码或数学公式表示：
+`learning_rate`, `stop_lr`, `stop_step`, and `decay_step` determine the schedule as follows:
 
 ```python
 decay_rate = np.exp(np.log(stop_lr/learning_rate) / (stop_step/decay_step))
 real_lr = learning_rate * np.power(decay_rate, (iter_num//decay_step))
 ```
 
-首先计算衰减率（decay_rate）：
+First calculate `decay_rate`:
 
 $$
 \text{decay\_rate} = \exp\left(\frac{\log(\text{stop\_lr}/\text{start\_lr})}{\text{stop\_step}/\text{decay\_step}}\right)
 $$
 
-更新学习率 learning rate：
+Then update the learning rate:
 
 $$
 \text{real\_lr} = \text{start\_lr} \cdot \text{decay\_rate}^{\lfloor \text{iter\_num}/\text{decay\_step} \rfloor}
 $$
 
-其中，iter_num 代表训练过程中的迭代次数。
+where `iter_num` is the training iteration.
 
-### Loss 中能量、受力权重 prefactor 设置
+### Energy and Force Prefactors in the Loss
 
-受力、能量、维里的precator 参数设置：
+Force, energy, and virial prefactors:
 
-- start_pre_fac_force ：训练开始时 force 损失的 prefactor，应大于或等于 0。默认值为 `100`。
+- `start_pre_fac_force`: force-loss prefactor at the start of training. Must be nonnegative; default `100`.
 
-- end_pre_fac_force ：训练结束时 force 损失的 prefactor，应大于或等于 0。默认值为 `1.0`。
+- `end_pre_fac_force`: force-loss prefactor at the end of training. Default `1.0`.
 
-- start_pre_fac_etot ：训练开始时 total energy 损失的 prefactor，应大于或等于 0。默认值为 `1.0`。
+- `start_pre_fac_etot`: total-energy prefactor at the start of training. Default `1.0`.
 
-- end_pre_fac_etot ：训练结束时 total energy 损失的 prefactor，应大于或等于 0。默认值为 `1.0`。
+- `end_pre_fac_etot`: total-energy prefactor at the end of training. Default `1.0`.
 
-- start_pre_fac_virial ：训练开始时 virial 损失的 prefactor，应大于或等于 0。默认值为 `0.1`。
+- `start_pre_fac_virial`: virial prefactor at the start of training. Default `0.1`.
 
-- end_pre_fac_virial ：训练结束时 virial 损失的 prefactor，应大于或等于 0。默认值为 `0.1`。
+- `end_pre_fac_virial`: virial prefactor at the end of training. Default `0.1`.
 
 
-`Loss prefactor 计算方式`:
+`Loss-prefactor calculation`:
 
-在 Adam 训练中，每一项 loss 的 prefactor 会根据当前学习率 `real_lr` 进行计算：
+During ADAM training, each loss prefactor depends on the current `real_lr`:
 
 ```python
 lr_ratio = real_lr / learning_rate
@@ -381,7 +381,7 @@ lr_ratio = min(max(lr_ratio, 0.0), 1.0)
 prefactor = end_prefactor + (start_prefactor - end_prefactor) * lr_ratio
 ```
 
-对应数学公式为：
+Equivalently:
 
 $$
 r =
@@ -403,35 +403,35 @@ p_x^{\mathrm{start}} - p_x^{\mathrm{end}}
 r
 $$
 
-其中，x 可以是 `force`, `etot`, `virial` 等 loss 项。
-因此训练开始时：
+where `x` may be `force`, `etot`, or `virial`.
+At the start of training:
 
 $$
 \text{real\_lr} \approx \text{learning\_rate}, \quad r \approx 1
 $$
 
-此时：
+Therefore:
 
 $$
 p_x \approx p_x^{\mathrm{start}}
 $$
 
-训练后期学习率降低时：
+Later, as the learning rate decreases:
 
 $$
 \text{real\_lr} \to 0, \quad r \to 0
 $$
 
-此时：
+Therefore:
 
 $$
 p_x \to p_x^{\mathrm{end}}
 $$
 
-`Loss 计算公式`:
+`Loss formula`:
 
 
-总 loss 由 force、total energy、virial 等部分组成。启用对应训练项时，其计算方式为：
+Total loss combines enabled force, total-energy, and virial terms:
 
 $$
 L =
@@ -444,7 +444,7 @@ p_{\mathrm{virial}}
 \frac{L_{\mathrm{Virial}}^{\mathrm{MSE}}}{N_{\mathrm{avg}}}
 $$
 
-- 其中各项 loss 均由 `MSELoss` 计算得到，MSE 形式为：
+- Each term uses `MSELoss`:
 
 $$
 L_{\mathrm{}}^{\mathrm{MSE}}
@@ -452,45 +452,45 @@ L_{\mathrm{}}^{\mathrm{MSE}}
 \frac{1}{n}\sum_{i}^{n}\left(Y_i-\hat{Y_i}\right)^2
 $$
 
-- $L_F$ 是 force loss；
-- $L_{Etot}$ 是 total energy loss；
-- $L_{Virial}$ 是 total virial loss；
-- $N_{\mathrm{avg}}$ 是当前 batch 中每个结构的平均原子数；
-- $p_F$, $p_{Etot}$, $p_{Virial}$ 分别是 force、energy、virial 的 prefactor。
+- $L_F$ is force loss.
+- $L_{Etot}$ is total-energy loss.
+- $L_{Virial}$ is total-virial loss.
+- $N_{\mathrm{avg}}$ is the mean atom count per structure in the current batch.
+- $p_F$, $p_{Etot}$, and $p_{Virial}$ are the corresponding prefactors.
 
 
-由于 `Etot`、`Virial` 是结构级 total quantity，因此在总 loss 中除以 `N_avg`，使它们的尺度更接近 per-atom 量，避免大体系天然产生更大的 loss 权重。
+Because `Etot` and `Virial` are structure-level totals, dividing them by `N_avg` makes their scale closer to per-atom quantities and prevents larger systems from receiving inherently greater weight.
 
-### 梯度裁剪
+### Gradient Clipping
 
-#### 按范数裁剪 max_norm & norm_type
+#### Norm-Based Clipping: max_norm and norm_type
 
-参数 max_norm 和 norm_type 配合使用，用于设置按照范数裁剪梯度。max_norm 默认值为 None，不使用按范数裁剪。
+`max_norm` and `norm_type` configure norm-based clipping. The default `max_norm=None` disables it.
 
-计算所有参数梯度的范数，如果超过max_norm （max_norm 为 浮点值），则按比例缩放梯度使范数等于max_norm。
+If the norm of all parameter gradients exceeds `max_norm`, gradients are scaled proportionally until the norm equals `max_norm`.
 
-作用：保持梯度方向的相对关系（所有梯度同比例缩放）；适合防止梯度爆炸的同时保留梯度间的平衡；norm_type可选（如L2范数、L1范数等）。
+This preserves relative gradient directions while preventing exploding gradients. `norm_type` selects the norm.
 
-norm_type，整形值，取值为 1或 2，1 表示用 L1 范数，2 表示用 L2 范数。默认值为2，启用了按范数裁剪时，将默认按L2范数裁剪。
+`norm_type` is integer `1` for L1 or `2` for L2. The default is `2`.
 
-L1 范数是梯度的绝对值之和：
+The L1 norm is the sum of absolute gradient values:
 $\|g\|_1 = \sum_{i=1}^{n} |g_i|$，
-如果 $\|g\|_1 > \text{max\_norm}$，则梯度会被缩放为：
+If $\|g\|_1 > \text{max\_norm}$, gradients are scaled to
 
 $$
 g_{\text{clipped}} = g \cdot \frac{\text{max\_norm}}{\|g\|_1}
 $$
 
-L2 范数是梯度的欧几里得范数：
+The L2 norm is the Euclidean gradient norm:
 $\|g\|_2 = \sqrt{\sum_{i=1}^{n} g_i^2}$，
-如果 $\|g\|_2 > \text{max\_norm}$，则梯度会被缩放为：
+If $\|g\|_2 > \text{max\_norm}$, gradients are scaled to
 
 $$
 g_{\text{clipped}} = g \cdot \frac{\text{max\_norm}}{\|g\|_2}
 $$
 
-#### 按值裁剪 clip_value
-按值裁剪梯度。直接将所有梯度元素裁剪到[-clip_value, clip_value]区间，超过阈值的梯度被截断。默认值为 None, 不使用按值裁剪。
+#### Value-Based Clipping: clip_value
+Clips each gradient component to `[-clip_value, clip_value]`. The default `None` disables it.
 
 $$
 g_i^{\text{(clipped)}} = 
@@ -501,31 +501,31 @@ g_i^{\text{(clipped)}} =
 \end{cases}
 $$
 
-### 周期性热重启的余弦退火更新学习率设置 t_0 & t_mult
+### Cosine Annealing with Warm Restarts: t_0 and t_mult
 
-参数 t_0 和 t_mult 配合使用，用于设置在 ADAM 优化器中使用余弦退火算法更新学习率，要求都是正整数。注意： 启用了余弦退火后，学习率的更新由调度器 optim.lr_scheduler.CosineAnnealingWarmRestarts 完全接管，在 decay_step 中的学习率更新策略将失效。
+Positive integers `t_0` and `t_mult` enable cosine annealing with warm restarts for ADAM. Once enabled, `optim.lr_scheduler.CosineAnnealingWarmRestarts` controls the learning rate and the `decay_step` schedule is disabled.
 
-- t_0：学习率第一次回到初始值（重启）的 Epoch 位置（即第一个周期的长度）。
-- t_mult：周期增长倍率，控制每次重启后下一个周期的拉长幅度。
+- `t_0`: length of the first cycle, in epochs.
+- `t_mult`: factor by which the cycle length grows after each restart.
 
-- 学习率重启位置的数学规律在训练过程中，第 $n$ 次周期结束、即将重启学习率前（即学习率下降到最低点）的 Epoch 位置（记为 $E_n$），可以通过以下规律计算：
-   - t_mult = 1 时（固定周期）：每个周期的长度保持不变，学习率在每间隔 t_0 个周期后重启一次
+- The epoch $E_n$ at which cycle $n$ ends and the learning rate reaches its minimum is calculated as follows:
+   - For `t_mult = 1`, cycles have fixed length `t_0`.
 
-   - t_mult > 1 时（周期递增）：每个周期的长度呈指数级拉长，第 $n$ 次重启前的 Epoch 符合等比数列求和通项公式：
+   - For `t_mult > 1`, cycle lengths grow geometrically:
    
    $$E_n = t_0 \times \frac{T_{mult}^n - 1}{T_{mult} - 1} \quad (n = 1, 2, 3, \dots)$$
 
-- 模型保存机制： 如果开启余弦退火策略，在训练过程中，每次重启学习率前（即上述计算出的 $E_n$ 位置，学习率处于最低点）的模型将自动保存在 model_record/saved_models 目录下。
+- When cosine annealing is enabled, the model at each $E_n$, immediately before restart, is saved under `model_record/saved_models`.
 
-如下图所示，该例中[初始学习率 learning_rate](#learning_rate) 为 0.001，t_0 = 1, t_mult = 2, [最小学习率 stop_lr](#stop_lr) = 3.51e-08，学习率分别在第1、3、7、15、... 等epoch 重启。
+In the figure below, [learning_rate](#learning_rate) is 0.001, `t_0=1`, `t_mult=2`, and [stop_lr](#stop_lr) is 3.51e-08. Restarts occur at epochs 1, 3, 7, 15, and so on.
 
 ![AL_T0_T_mult](./pictures/lr_test_1_2_6.png)
 
-### 学习率缩放
+### Learning-Rate Scaling
 
-`scale_lr` 用于控制是否按批大小和 GPU 数量缩放学习率，默认值为 `false`。关闭时不进行缩放，实际学习率等于 `learning_rate`。
+`scale_lr` controls scaling by batch size and GPU count. The default is `false`, so the effective rate equals `learning_rate`.
 
-开启后，默认使用 `sqrt` 缩放方式：
+When enabled, the default `sqrt` scaling is
 
 $$
 \mathrm{real\_lr}=\mathrm{learning\_rate}\times\sqrt{\mathrm{batch\_size}\times N_{\mathrm{GPU}}}
@@ -536,11 +536,11 @@ $$
 "scaling_method": "sqrt"
 ```
 
-该设置适用于 ADAM、ADAMW 和 SGD；增大 batch size 或 GPU 数量时，实际学习率会相应提高。
+This applies to ADAM, ADAMW, and SGD. Increasing batch size or GPU count increases the effective learning rate.
 
-## KF optimizer 优化器超参数
+## KF Optimizer Hyperparameters
 
-KF 优化器的完整参数设置如下：
+The complete KF configuration is:
 
 ```json
     "optimizer": {
@@ -561,43 +561,43 @@ KF 优化器的完整参数设置如下：
     }
 ```
 
-`optimizer`, `epochs`, `batch_size`, `print_freq`, `train_energy`, `train_force`,  `train_virial` 参数与 ADAM 优化器中的参数功能相同。
+`optimizer`, `epochs`, `batch_size`, `print_freq`, `train_energy`, `train_force`, and `train_virial` have the same meanings as for ADAM.
 
 ### block_size
-该参数是`LKF 优化器`的超参数，用于指定协方差矩阵 P 的块大小。较大的块大小会增加内存和 GPU 内存的消耗，导致训练速度较慢，而较小的块大小会影响收敛速度和准确性。默认值为 `5120`，如果是在 A100、H100 等高端显卡上，建议设置为 `10240`。
+Sets the block size of LKF covariance matrix `P`. Larger blocks consume more memory and train more slowly; smaller blocks may reduce convergence speed and accuracy. The default is `5120`; `10240` is recommended for A100 or H100 GPUs.
 
 ### p0_weight
-该参数是 `LKF`的超参数，用于正则化参数，默认值为`0.01`，即采用正则化。设置正则化项有助于减少模型的过拟合。该参数要求值小于 `1` ，经过测试 `0.01` 是较为合适的值。如果设置为 `1` 则表示不使用正则化。
+LKF regularization parameter. The default `0.01` reduces overfitting and must be below 1; setting it to `1` disables regularization.
 
 ### kalman_lambda
-该参数是`LKF`的超参数，称为记忆因子（memory factor）。它决定了对先前数据的权重或关注程度。值越大，越重视先前的数据。默认值为 `0.98`。
+LKF memory factor controlling the weight of previous data. Larger values retain more history. The default is `0.98`.
 
 ### kalman_nue
-该参数是`LKF`的超参数，kalman_nue 是遗忘率（forgetting rate），描述了 kalman_lambda 变化的速率。默认值为 `0.9987`。
+LKF forgetting rate controlling how quickly `kalman_lambda` changes. The default is `0.9987`.
 
 <!-- ### train_ei
-该参数用于指定是否训练 atomic energy，默认值为 `false`。
+Whether to train on atomic energies. The default is `false`.
 
 #### train_egroup
-该参数用于指定是否训练 energy group，默认值为 `false`。 -->
+Whether to train on energy groups. The default is `false`. -->
 
 ### pre_fac_etot
-该参数用于指定 total energy 对损失函数的权重或贡献。默认值为 `1.0`。
+Weight of total energy in the loss. The default is `1.0`.
 
 ### pre_fac_force
-该参数用于指定 force 对损失函数的权重或贡献。默认值为 `2.0`。
+Weight of force in the loss. The default is `2.0`.
 
 ### pre_fac_virial
-该参数用于指定 virial 对损失函数的权重或贡献。默认值为 `1.0`。
+Weight of virial in the loss. The default is `1.0`.
 
 <!-- ### pre_fac_ei
-该参数用于指定 atomic energy 对损失函数的权重或贡献。默认值为 `1.0`。 -->
+Weight of atomic energy in the loss. The default is `1.0`. -->
 
 <!-- ### pre_fac_egroup
-该参数用于指定 energy group 对损失函数的权重或贡献。默认值为 `0.1`。 --> 
+Weight of energy groups in the loss. The default is `0.1`. -->
 
 :::caution
-1. NEP的多卡训练不支持 LKF 或 GKF 优化器。
+1. Multi-GPU NEP training does not support LKF or GKF.
 
-2. 由于 KF 优化器中的 P矩阵规模是训练参数量 N/block_size 的平方，因此当训练元素类型较多时，容易出现显存爆炸以及收敛缓慢的情况。
+2. The size of covariance matrix `P` scales with the square of `N/block_size`, where `N` is the parameter count. Training many element types can therefore exhaust GPU memory and converge slowly.
 :::

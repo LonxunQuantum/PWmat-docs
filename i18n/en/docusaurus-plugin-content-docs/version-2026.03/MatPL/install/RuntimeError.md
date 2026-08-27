@@ -1,27 +1,27 @@
 ---
 sidebar_position: 4
-title: 常见运行错误
+title: Common Runtime Errors
 ---
-## 常见运行错误
-### 环境变量检查
-由于未正确加载或者未加载相关环境变量，导致的运行时错误，一般表现为找不到 `MatPL` 命令 或者 一些 `***.so`的动态库缺失。此时请检查下列环境变量是否都已经加载。
+## Common Runtime Errors
+### Check Environment Variables
+Runtime errors caused by missing or incorrectly loaded environment variables usually appear as a missing `MatPL` command or missing `***.so` shared libraries. Verify that all of the following environments have been loaded.
 ``` bash
-#python 环境，是否激活了python 环境
+# Python environment: verify that it has been activated
 source /the/path/etc/profile.d/conda.sh
 conda activate matpl-2025.3
 
-#intel 和 cuda 工具集是否加载
+# Intel and CUDA toolchains
 module load intel/2020 cuda/11.8
 
-#MatPL 的环境变量是否加载
+# MatPL environment variables
 source /the/path/MatPL-2025.3/env.sh
 ```
 
-### 问题：CUDA driver version is insufficient for CUDA runtime version
+### Issue: CUDA driver version is insufficient for CUDA runtime version
 
-#### 1. 错误现象
+#### 1. Symptom
 
-在运行 MatPL GPU 相关功能或自定义 CUDA 算子时，程序报如下错误：
+When running GPU features or custom CUDA operators in MatPL, the program reports the following error:
 
 ```text
 CUDA Error:
@@ -31,54 +31,54 @@ CUDA Error:
     Error text: CUDA driver version is insufficient for CUDA runtime version
 ```
 
-其中 `Error code: 35` 表示当前机器上的 NVIDIA 显卡驱动版本过低，不能支持程序运行时使用的 CUDA Runtime 版本。
+`Error code: 35` indicates that the NVIDIA driver installed on the machine is too old to support the CUDA Runtime used by the program.
 
-#### 2. 原因分析
+#### 2. Cause
 
-CUDA 程序运行时需要同时满足两个条件：
+Running a CUDA program requires both of the following conditions:
 
-1. 当前环境中加载的 CUDA Runtime 版本与程序编译、打包时使用的 CUDA 版本兼容；
-2. 机器上的 NVIDIA Driver 版本足够新，能够支持该 CUDA Runtime。
+1. The CUDA Runtime loaded in the current environment is compatible with the CUDA version used to compile and package the program.
+2. The NVIDIA driver is new enough to support that CUDA Runtime.
 
-如果显卡驱动版本过低，即使已经正确加载 conda 环境、CUDA module 和 MatPL 环境，也会在程序启动 CUDA kernel 时失败。
+If the driver is too old, CUDA kernel startup fails even when the Conda environment, CUDA module, and MatPL environment are loaded correctly.
 
-可以使用下面命令查看当前驱动信息：
+Use the following command to inspect the current driver:
 
 ```bash
 nvidia-smi
 ```
 
-例如，下面的驱动版本较旧，只支持到 CUDA 11.6：
+For example, the following older driver supports CUDA only up to version 11.6:
 
 ```text
 NVIDIA-SMI 510.39.01    Driver Version: 510.39.01    CUDA Version: 11.6
 ```
 
-如果当前 MatPL 离线包或编译环境使用的是 CUDA 12.4，则该驱动版本不足，会触发上述错误。
+If the MatPL offline package or build environment uses CUDA 12.4, this driver is insufficient and triggers the error above.
 
-#### 3. 解决方案
+#### 3. Solution
 
-请升级 NVIDIA 显卡驱动，使其支持当前 MatPL 环境使用的 CUDA Runtime 版本。
+Upgrade the NVIDIA driver to a version that supports the CUDA Runtime used by the current MatPL environment.
 
-例如，升级后驱动信息可以为：
+After upgrading, the driver information may look like this:
 
 ```text
 NVIDIA-SMI 550.100      Driver Version: 550.100      CUDA Version: 12.4
 ```
 
-升级完成后，重新登录节点或重启相关服务，再执行：
+After the upgrade, log in to the node again or restart the relevant services, then run:
 
 ```bash
 nvidia-smi
 ```
 
-确认 `Driver Version` 和 `CUDA Version` 已更新到兼容版本后，再重新运行 MatPL。
+Confirm that `Driver Version` and `CUDA Version` now show compatible versions before rerunning MatPL.
 
 :::caution
-该问题不能通过只切换 conda 环境或重新加载 CUDA module 解决。`CUDA Version` 是由 NVIDIA 驱动决定的兼容能力上限，如果驱动版本过低，需要由系统管理员升级显卡驱动。
+Switching Conda environments or reloading the CUDA module alone cannot resolve this issue. `CUDA Version` indicates the compatibility ceiling imposed by the NVIDIA driver. If the driver is too old, a system administrator must upgrade it.
 :::
 
-### 动态库加载错误-mkl库
+### Shared-Library Loading Error: MKL
 ``` bash
     exec(code, run_globals)
   File "/the/path/MatPL-2025.3/main.py", line 6, in <module>
@@ -92,33 +92,33 @@ nvidia-smi
 ImportError: libmkl_rt.so: cannot open shared object file: No such file or directory 
 ```
 
-`解决方法` 没有加载 Intel Math Kernel Library (MKL)，intel/2020 模块（ Intel Parallel Studio XE 2020 或 Intel oneAPI Toolkits 2020 版本中的一个模块化软件） 通常包含 Intel MKL 库。加载这个模块时，MKL 库将可用于你的编译和运行环境中。
+`Solution`: The Intel Math Kernel Library (MKL) has not been loaded. The `intel/2020` module—typically provided by Intel Parallel Studio XE 2020 or the Intel oneAPI Toolkits 2020—usually includes Intel MKL. Loading this module makes MKL available in the build and runtime environments.
 
 ``` bash
 module load intel/2020
 ```
 
-### Lammps 接口常见运行时错误
+### Common LAMMPS Interface Runtime Errors
 
-#### 环境变量检查
+#### Check Environment Variables
 
-由于未正确加载或者未加载相关环境变量，导致的运行时错误，一般表现为找不到 `lmp_mpi` 命令，或者 一些 `***.so`的动态库缺失。此时请检查下列环境变量是否都已经加载。
+Runtime errors caused by missing or incorrectly loaded environment variables usually appear as a missing `lmp_mpi` command or missing `***.so` shared libraries. Verify that the following environments have been loaded.
 
 ``` bash
-#1. 用于mpirun 命令
+# 1. Required for the mpirun command
 module load intel/2020
 
-#2. 加载lammps 环境变量
+# 2. Load the LAMMPS environment variables
 source /the/path/of/lammps/env.sh
 
-#3. 运行 lammps 命令
-# --bind-to numa 把进程绑定到socket中空闲的core中，避免绑定到默认core中，导致多任务提交后运行速度下降
+# 3. Run LAMMPS
+# --bind-to numa binds processes to available cores on each socket, avoiding contention on default cores when multiple jobs run
 mpirun -np 4 --bind-to numa lmp_mpi -in in.lammps
 ```
 
-#### Lammps NEP 模型
+#### LAMMPS NEP Model
 
-nep 模型在GPU接口中运行一段时间后，出现如下错误：
+After an NEP model has run through the GPU interface for some time, the following error may occur:
 ```txt
     ......
     97000   1293.8659     -70999.672      35.957737     -70963.715      13.66254       13.66254       12.50455       2334.1619    
@@ -149,9 +149,8 @@ CUDA Error:
 ===================================================================================
 ```
 
-`解决方法` 该错误一般是 MD 运行一段时间后，力场拟合精度下降，导致部分原子的邻居列表变化较大，超过了初始设置的最大邻居数目，调大最大邻居数设置即可。
-调整方法：
-在nep的力场文件，如下所示的nep_to_lmps.txt：
+`Solution`: This error usually occurs after the MD simulation has run for some time and the force-field fit becomes less accurate. The neighbor lists of some atoms then grow beyond the configured maximum. Increase the maximum number of neighbors as follows.
+In the NEP force-field file—for example, `nep_to_lmps.txt` shown below:
 ``` txt
 nep4   2 O Si
 cutoff 6.0 5.0
@@ -160,12 +159,12 @@ basis_size 12 12
 l_max  4 2 1
 ......
 ```
-在 `cutoff` 所在行，修改为如下
+Change the `cutoff` line to
 ``` txt
 cutoff 6.0 5.0 500 400
 ```
-这里 `500` 是 两体 (radial_cutoff) cutoff 对应的最大邻居数，`400` 是多体（angular_cutoff）项对应的最大邻居数。
+Here, `500` is the maximum neighbor count for the two-body (`radial_cutoff`) cutoff, and `400` is the maximum neighbor count for the many-body (`angular_cutoff`) term.
 
 :::caution
-请注意，如果出现该错误，请先检查 md 轨迹文件是否正常，是否 md 本身跑蹦了。
+If this error occurs, first check whether the MD trajectory is physically reasonable and whether the simulation itself has become unstable.
 :::

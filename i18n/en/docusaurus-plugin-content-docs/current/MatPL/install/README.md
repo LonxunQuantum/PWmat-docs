@@ -1,70 +1,70 @@
 ---
 sidebar_position: 1
-title: 安装手册
+title: Installation Guide
 ---
-# 安装手册
+# Installation Guide
 
-## 离线和在线安装
+## Offline and Online Installation
 
-MatPL-2026.3 提供了 [离线安装](./Installation-offline.md) 和 [在线安装](./Installation-online.md) 两种方式。相比于在线安装，离线安装将 Python 运行环境做了整体打包，用户不必要花费长时间去安装 python 运行环境。
+MatPL-2026.3 provides both [offline installation](./Installation-offline.md) and [online installation](./Installation-online.md). The offline package includes the complete Python runtime, eliminating the time required to install the Python environment separately.
 
-对于 [龙讯超算云](https://mcloud.lonxun.com/)(`Mcloud`) 用户、`龙讯一体机用户`，我们已经做了预装，只需要加载即可使用，加载方式如下所示。
+For users of [Lonxun Supercomputing Cloud](https://mcloud.lonxun.com/) (`Mcloud`) or a `Lonxun integrated appliance`, MatPL is preinstalled and only needs to be loaded as shown below.
 
 :::tip
-MatPL-2026.3 相比于MatPL-2025.3 核心区别是对 NEP 做了极致优化。在训练上，针对单卡，我们优化了梯度算子，单卡相比 MatPL2025.3版本 训练速度`提升3倍以上`。并且，引入了多节点多卡的大batch训练，并缓解了大batch训练时的精度下降问题，让大规模的训练集训练效率得到`巨幅提升`。
+The primary difference between MatPL-2026.3 and MatPL-2025.3 is the extensive optimization of NEP. For single-GPU training, optimized gradient operators provide a `more than threefold speedup` over MatPL-2025.3. Multi-node, multi-GPU large-batch training has also been introduced, together with measures that mitigate the loss of accuracy associated with large batches, substantially improving efficiency on large training datasets.
 
-由于本版本更新对纯CPU训练或者模拟没有收益，这里不提供 MatPL-2026.3 CPU 版本的在线或者离线安装包支持。纯CPU用户请使用 [MatPL-2025.3-cpu](http://doc.lonxun.com/2025.03/MatPL/install/) 即可。
+Because this release does not improve CPU-only training or simulation, no online or offline CPU package is provided for MatPL-2026.3. CPU-only users should use [MatPL-2025.3-cpu](http://doc.lonxun.com/2025.03/MatPL/install/).
 :::
 
-### 龙讯超算云(Mcloud)用户
+### Lonxun Supercomputing Cloud (Mcloud) Users
 
 ``` bash
-#加载 MatPL
+# Load MatPL
 source /share/app/MATPL/MatPL-2026.3/env.sh
 
-#或者采用以下方式分步加载
-#step1. 加载 python 运行环境
-# 加载conda
+# Alternatively, load it step by step as follows
+# Step 1: Load the Python runtime
+# Load Conda
 module load conda/3-2020.07
 eval "$(conda shell.bash hook)"
-# 激活python环境
+# Activate the Python environment
 conda activate matpl-2026.3
-#step2. 加载MatPL
+# Step 2: Load MatPL
 module load matpl/2026.3
 ```
 
 ```bash
-#加载 lammps
+# Load LAMMPS
 module load lammps4matpl/2026.3
-#对于 Linear 和 NN 模型的lammps 接口，我们提供了 cpu 版本的接口，使用fortran 实现，请加载
+# For Linear and NN models, load the CPU LAMMPS interface implemented in Fortran
 module load lammps4matpl/fortran
 ```
 
-### 龙讯一体机(GPU)用户
+### Lonxun Integrated Appliance (GPU) Users
 
 ``` bash
-#加载 MatPL 和 lammps
-module load cuda/11.8 openmpi/4.1.6 # lammps 运行需要openmpi
-# 请查询和替换为真实的安装路径
+# Load MatPL and LAMMPS
+module load cuda/11.8 openmpi/4.1.6 # OpenMPI is required to run LAMMPS
+# Replace this with the actual installation path
 source /share/app/MATPL/MatPL-2026.3/matpl-env.sh
 ```
 
 ```bash
-#对于 Linear 和 NN 模型的lammps 接口，我们提供了 cpu 版本的接口，使用fortran 实现，请加载
+# For Linear and NN models, load the CPU LAMMPS interface implemented in Fortran
 module load intel/2020
 source /share/app/MATPL/MatPL-2026.3/matpl-fortran-env.sh
 ```
 
-### 龙讯一体机(CPU)用户
+### Lonxun Integrated Appliance (CPU) Users
 
-本次版本升级对纯 CPU 训练或者模拟没有收益，所以不提供 MatPL-2026.3 CPU 版本的在线或者离线安装包支持。纯CPU用户请使用 [MatPL-2025.3](http://doc.lonxun.com/2025.03/MatPL/install/)。
+This release does not improve CPU-only training or simulation, so no online or offline CPU package is provided for MatPL-2026.3. CPU-only users should use [MatPL-2025.3](http://doc.lonxun.com/2025.03/MatPL/install/).
 
 
 :::tip
-`mcloud 超算平台 lammps4matpl/2026.3` 以及`离线安装包`中预装了以下lammps 常用功能：
+The `lammps4matpl/2026.3 module on the Mcloud platform` and the `offline installation package` include the following commonly used LAMMPS packages:
 
 `CG-SPICA`  `CLASS2`  `COLLOID` `COLVARS`  `COMPRESS`  `CORESHELL` `DIELECTRIC` `DIFFRACTION`  `DIPOLE`  `DPD-BASIC` `DPD-MESO` `DPD-REACT`  `DPD-SMOOTH`  `DRUDE` `EFF`  `ELECTRODE` `EXTRA-COMMAND`  `EXTRA-COMPUTE` `EXTRA-FIX`  `EXTRA-DUMP`  `EXTRA-MOLECULE`  `EXTRA-PAIR`  `FEP` `GRANULAR` `INTEL`  `INTERLAYER`  `KSPACE`  `LATBOLTZ`  `LEPTON`  `MANIFOLD`  `MANYBODY`  `MC`  `MEAM`  `MGPT`  `MISC`  `MOFFF` `MOLECULE` `MOLFILE`  `OPENMP`  `OPT` `ORIENT` `PERI` `PHONON` `PLUMED` `POEMS`  `PTM` `PYTHON` `QEQ`  `QMMM`  `QTB` `REACTION` `REAXFF` `REPLICA`  `RIGID` `SHOCK`  `SMTBQ` `SPH`  `SPIN`  `SRD` `TALLY`  `UEF` `VORONOI`  `YAFF` 
 
-您可以通过`lmp -h` 输出所有编译通过的pairstyle.
+Run `lmp -h` to list all compiled pair styles.
 :::
 

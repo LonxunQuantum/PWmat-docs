@@ -1,10 +1,10 @@
 ---
 sidebar_position: 1
-title: DP 操作演示
+title: DP Tutorial
 ---
-## DP 操作演示
+## DP Tutorial
 
-这里，我们以 MatPL [[源码根目录/example/HfO2/dp_demo]](https://github.com/LonxunQuantum/MatPL/blob/master/example/HfO2/dp_demo/) 为例（[HfO2 训练集来源](https://www.aissquare.com/datasets/detail?pageType=datasets&name=HfO2-dpgen&id=6)），演示 DP 模型的训练、测试、lammps模拟以及其他功能。案例目录结构如下所示。
+This tutorial uses the MatPL [[source root/example/HfO2/dp_demo]](https://github.com/LonxunQuantum/MatPL/blob/master/example/HfO2/dp_demo/) example ([source of the HfO2 training dataset](https://www.aissquare.com/datasets/detail?pageType=datasets&name=HfO2-dpgen&id=6)) to demonstrate training, testing, LAMMPS simulation, and other operations for a DP model. The example directory is organized as follows.
 
 ``` txt
 HfO2/
@@ -21,27 +21,27 @@ HfO2/
         ├── runcpu.job
         └── rungpu.job
 ```
-- pwdata 目录为训练数据目录
-- dp_train.json 是训练 DP 力场输入参数文件
-- dp_train.json 是测试 DP 力场输入参数文件
-- train.job 是slurm 提交训练任务例子
-- dp_lmps 目录下 为 DP 力场的 lammps md例子
-  - 力场文件 jit_dp.pt
-  - 初始结构 lmp.config 
-  - 控制文件 in.lammps
-  - runcpu.job 和 rungpu.job 是 slurm 脚本例子
+- `pwdata` is the training-data directory.
+- `dp_train.json` is the input file for training the DP force field.
+- `dp_train.json` is the input file for testing the DP force field.
+- `train.job` is an example Slurm job script for training.
+- The `dp_lmps` directory contains a LAMMPS MD example for the DP force field:
+  - Force-field file: `jit_dp.pt`
+  - Initial structure: `lmp.config`
+  - Control file: `in.lammps`
+  - Example Slurm scripts: `runcpu.job` and `rungpu.job`
 
-### train 训练
+### train
 
-在 dp_demo 目录下使用如下命令即可开始训练：
+Run the following command in the `dp_demo` directory to start training:
 ``` bash
 MatPL train dp_train.json
-# 或修改环境变量之后通过slurm 提交训练任务 sbatch train.job
+# Alternatively, update the environment variables and submit the training job through Slurm: sbatch train.job
 ```
 
-**输入文件解释**
+**Input file description**
 
-dp_train.json 中的内容如下所示，关于 DP 的参数解释，请参考 [DP 参数手册](../../parameterdetail.md#dp-模型超参数)：
+The contents of `dp_train.json` are shown below. For descriptions of the DP parameters, see the [DP Parameter Reference](../../parameterdetail.md#dp-model-hyperparameters):
 
 ```json
 {
@@ -73,14 +73,14 @@ dp_train.json 中的内容如下所示，关于 DP 的参数解释，请参考 [
 }
 ```
 
-训练结束后的力场文件目录请参考 [model_record 详解](../../matpl-cmd.md#train-文件目录)
+For details about the force-field directory generated after training, see [model_record details](../../matpl-cmd.md#train).
 
 
-### test 测试 
+### test
 ``` bash
 MatPL test dp_test.json
 ```
-test.json 中的内容如下所示，参数解释请参考 [参数手册](../../parameterdetail.md)
+The contents of `test.json` are shown below. For parameter descriptions, see the [Parameter Reference](../../parameterdetail.md).
 
 ``` json
 {
@@ -102,94 +102,93 @@ test.json 中的内容如下所示，参数解释请参考 [参数手册](../../
 }
 ```
 
-测试结束后的力场文件目录请参考 [test_result 详解](../../matpl-cmd.md#test-文件目录)
+For details about the force-field directory generated after testing, see [test_result details](../../matpl-cmd.md#test).
 
-### infer 推理单结构
+### infer a Single Structure
 ``` bash
 MatPL infer dp_model.ckpt atom.config pwmat/config
 MatPL infer dp_model.ckpt 0.lammpstrj lammps/dump Hf O
-# Hf O 为 lammps/dump格式的结构中的元素名称，Hf为结构中1号元素类型，O为元素中2号元素类型
+# Hf and O are the element names in the lammps/dump structure: Hf is atom type 1 and O is atom type 2
 ```
-推理成功后，将在窗口输出推理的总能、每原子能量、每原子受力和维里
+After successful inference, the terminal displays the total energy, per-atom energies, per-atom forces, and virial.
 
-### compress 模型压缩
+### compress a Model
 
-对于一个训练后 DP 力场做模型压缩，完整的模型压缩指令如下：
+To compress a trained DP force field, use the following command:
 
 ```json
 MatPL compress dp_model.ckpt -d 0.01 -o 3 -s cmp_dp_model
 ```
-- compress 是压缩命令
-- dp_model.ckpt为待压缩模型文件名称，为必须要提供的参数
-- -d 为S_ij 的网格划分大小，默认值为0.01
-- -o 为模型压缩阶数，3为三阶模型压缩，5为五阶模型压缩，默认值为3
-- -s 为压缩后的模型名称，默认名称为“cmp_dp_model”
+- `compress` is the compression command.
+- `dp_model.ckpt` is the name of the model file to compress and is required.
+- `-d` sets the grid spacing for `S_ij`; the default is `0.01`.
+- `-o` sets the compression order: `3` selects third-order compression and `5` selects fifth-order compression. The default is `3`.
+- `-s` sets the name of the compressed model. The default is `cmp_dp_model`.
 
-压缩后，将在当前目录得到一个名称为`cmp_dp_model.ckpt`的力场文件。
+After compression, a force-field file named `cmp_dp_model.ckpt` is created in the current directory.
 
-### script 转 MD 力场
-本命令用于将 dp_model.ckpt 文件转换为 lammps中可识别的 libtorch 格式。
+### script: Convert to an MD Force Field
+This command converts `dp_model.ckpt` to the LibTorch format recognized by LAMMPS.
 ```bash
 MatPL script dp_model.ckpt
-# 或转换经过模型压缩后的力场
+# Or convert a compressed force field
 MatPL script cmp_dp_model.ckpt
 ```
-转换后将在当前目录下生成一个 `jit_dp.pt`文件，改文件可用于后续的 lammps md。
+The conversion creates a `jit_dp.pt` file in the current directory for subsequent LAMMPS MD simulations.
 
 ### lammps MD
 
-**step1. 准备力场文件**
+**Step 1. Prepare the force-field file**
 
-将训练完成后生成的`dp_model.ckpt`力场文件用于 lammps 模拟，您需要
-提取力场文件，您只需要输入如下命令
+Before using the trained `dp_model.ckpt` file in a LAMMPS simulation, extract the deployable force field with the following command:
 ```
 MatPL script dp_model.ckpt
 ```
-转换成功之后，将得到一个力场文件`jit_dp.pt`。
+After successful conversion, you will obtain the `jit_dp.pt` force-field file.
 
-**step2. 准备输入控制文件**
+**Step 2. Prepare the input control file**
 
-您需要在lammps的输入控制文件中设置如下力场，这里以HfO2为例（[`HfO2/dp_demo/dp_lmps`](https://github.com/LonxunQuantum/MatPL/blob/master/example/HfO2/dp_demo/dp_lmps)
+Configure the force field in the LAMMPS input control file as shown below. This example uses HfO2 ([`HfO2/dp_demo/dp_lmps`](https://github.com/LonxunQuantum/MatPL/blob/master/example/HfO2/dp_demo/dp_lmps)).
 
 ``` bash
 pair_style   matpl/dp   jit_dp.pt
 pair_coeff   * *     8 72
 ```
 
-其中：
-- pair_style 设置力场文件路径，这里 `matpl/dp` 为固定格式，代表使用MatPL中力场，`jit_dp.pt`为力场文件路径
+Here:
+- `pair_style` sets the path to the force-field file. `matpl/dp` is the required style name for a MatPL force field, and `jit_dp.pt` is the force-field path.
 
-  这里也支持多模型的偏差值输出，该功能一般用于主动学习采用中。您可以指定多个模型，在模拟中将使用第1个模型做MD，其他模型参与偏差值计算，例如例子中所示，此时pair_style设置为如下:
+  The interface also supports model-deviation output from multiple models, a feature commonly used in active learning. You can specify several models: the first is used for MD, while the others participate in the deviation calculation. In that case, configure `pair_style` as follows:
   ```txt
   pair_style   matpl/dp    0_jit_dp.pt 1_jit_dp.pt 2_jit_dp.pt 3_jit_dp.pt  out_freq ${DUMP_FREQ} out_file model_devi.out 
   pair_coeff   * *     8 72
   ```
 
-- pair_coeff 指定待模拟结构中的原子类型对应的元素序号。例如，如果您的结构中 `1` 为 `O` 元素，`2` 为 `Hf` 元素，设置 `pair_coeff * * 8 72`即可。
+- `pair_coeff` maps the atom types in the simulated structure to atomic numbers. For example, if type `1` is `O` and type `2` is `Hf`, use `pair_coeff * * 8 72`.
 
-**step3 启动lammps模拟**
+**Step 3. Start the LAMMPS simulation**
 
 ``` bash
-# 加载 lammps 环境变量env.sh 文件，正确安装后，该文件位于 lammps 源码根目录下
+# Load the LAMMPS env.sh environment file; after installation, it is located in the LAMMPS source root
 source /the/path/of/lammps/env.sh
-# 执行lammps命令
+# Run LAMMPS
 mpirun -np N lmp -in in.lammps
 ```
-这里 N 为md中的使用的 CPU 核数，如果您的设备中存在可用的GPU资源（例如 M 张GPU卡）,则在运行中，N个lammps线程将平均分配到这M张卡上。我们建议您使用的 CPU 核数与您设置的 GPU 数量相同，多个线程在单个 GPU 上会由于资源竞争导致运行速度降低。
+Here, `N` is the number of CPU cores used for MD. If the system has `M` available GPUs, the `N` LAMMPS processes are distributed evenly across those GPUs. We recommend using the same number of CPU cores and GPUs, because multiple processes sharing one GPU compete for resources and reduce performance.
 
-此外，lammps 接口允许跨节点以及跨节点GPU卡并行，只需要指定节点数、GPU卡数即可。
+The LAMMPS interface also supports multi-node parallelism, including GPUs across nodes; specify the required numbers of nodes and GPUs in your job configuration.
 
-### ASE 接口
+### ASE Interface
 
-DP 模型提供了 ase 接口，使用方式如下脚本例子所示[gitee](https://gitee.com/pfsuo/MatPL/tree/main/example/ase_calculator/test_dp) 或 [github](https://github.com/LonxunQuantum/MatPL/tree/main/example/ase_calculator/test_dp)。 
+The DP model provides an ASE interface. See the example scripts on [Gitee](https://gitee.com/pfsuo/MatPL/tree/main/example/ase_calculator/test_dp) or [GitHub](https://github.com/LonxunQuantum/MatPL/tree/main/example/ase_calculator/test_dp).
 
 ```python
 from src.ase.calculate import MatPL_calculator
 calc = MatPL(model_file='dp_model.ckpt')
-atoms = ..... # create ase.atoms.Atoms
-atoms.calc = calc # or atoms.set_calculator(calc)
+atoms = ..... # Create ase.atoms.Atoms
+atoms.calc = calc # Or use atoms.set_calculator(calc)
 energy = atoms.get_potential_energy()
 forces = atoms.get_forces()
 stress = atoms.get_stress()
 ```
-注意，在使用本ase接口时确保已经导入了[MatPL的环境变量](../../install/README.md)。
+Before using the ASE interface, make sure the [MatPL environment variables](../../install/README.md) have been loaded.

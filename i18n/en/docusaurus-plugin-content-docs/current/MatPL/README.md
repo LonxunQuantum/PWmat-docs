@@ -3,54 +3,54 @@ sidebar_position: 4
 title: MatPL
 ---
 
-# MatPL 简介
+# Introduction to MatPL
 
-`Materials Potential Library (MatPL，原名 PWMLFF，当前版本MatPL-2026.3 )，是一套在 GNU GPL3.0 许可下的开源软件包。` 
+`Materials Potential Library (MatPL, formerly PWMLFF; current version: MatPL-2026.3) is an open-source software package distributed under the GNU GPL 3.0 license.`
 
-MatPL 提供了一套完备的软件、工具以及数据仓库，用于快速生成生成媲美从头算分子动力学（AIMD）的机器学习力场。包括模型训练平台 `MatPL`、`Lammps` 分子动力学接口、主动学习数据生成平台 `pwact`、数据格式转换工具 `pwdata`、数据和模型仓库。您可以通过下列链接访问它们的源码以及使用手册
+MatPL provides a comprehensive collection of software, tools, and data repositories for rapidly developing machine-learning force fields with accuracy comparable to ab initio molecular dynamics (AIMD). The ecosystem includes the `MatPL` model-training platform, a `LAMMPS` molecular-dynamics interface, the `pwact` active-learning data-generation platform, the `pwdata` format-conversion tool, and repositories for data and models. Use the links below to access their source code and documentation.
 
-**[gitee MatPL用户手册下载](https://gitee.com/pfsuo/PWmat-docs/blob/master/docs/MatPL/MatPL-2026.3-userdoc.pdf) 或访问 [github MatPL用户手册下载](https://github.com/LonxunQuantum/PWmat-docs/blob/dev-matpl/docs/MatPL/MatPL-2026.3-userdoc.pdf)**
+**[Download the MatPL User Manual from Gitee](https://gitee.com/pfsuo/PWmat-docs/blob/master/i18n/en/docusaurus-plugin-content-docs/current/MatPL/MatPL-2026.3-userdoc-EN.pdf) or [download it from GitHub](https://github.com/LonxunQuantum/PWmat-docs/blob/master/i18n/en/docusaurus-plugin-content-docs/current/MatPL/MatPL-2026.3-userdoc-EN.pdf)**
 
-此外，我们也在国家超算互联网节点上架了 [`MatPL 开源机器学习力场（免费）`](https://scnet.cn/ui/mall/detail/goods?type=software&shopId=1717790158329552898&common1=APP_SOFTWARE&id=2074441100162269185&resource=APP_SOFTWARE&keyword=MatPL)，欢迎大家试用。
+MatPL is also available as a free [`open-source machine-learning force-field application`](https://scnet.cn/ui/mall/detail/goods?type=software&shopId=1717790158329552898&common1=APP_SOFTWARE&id=2074441100162269185&resource=APP_SOFTWARE&keyword=MatPL) on the National Supercomputing Internet platform.
 
-**[1. MatPL机器学习平台](./models/README.md)**
+**[1. MatPL Machine-Learning Platform](./models/README.md)**
 
-👉[开源仓库地址](https://github.com/LonxunQuantum/MatPL)
+👉[Source repository](https://github.com/LonxunQuantum/MatPL)
 
-MatPL 用于快速训练机器学习力场，这些力场的精度可以与从头算分子动力学（AIMD）相媲美。对于 NEP 力场，支持跨节点多卡大 batchsize 高效训练。
+MatPL rapidly trains machine-learning force fields with accuracy comparable to AIMD. NEP models support efficient large-batch training across multiple GPUs and compute nodes.
 
-**[2. lammps 接口](./install/README.md)**
-
-
-👉[开源仓库地址](https://github.com/LonxunQuantum/lammps-MatPL)
-
-高效的分子动力学仿真软件，无缝集成了 MatPL 的 力场模型，并支持GPU加速。尤其是对于 NEP 力场，我们采用了 lammps KOKKOS GPU加速，有非常高的跨节点并行效率，支持超亿级原子的高速模拟（4090单卡模拟规模能到600万原子以上）。
-
-**[3. 主动学习工具 pwact](./pwact/README.md)**
+**[2. LAMMPS Interface](./install/README.md)**
 
 
-👉[开源仓库地址](https://github.com/LonxunQuantum/PWact)
+👉[Source repository](https://github.com/LonxunQuantum/lammps-MatPL)
 
-`PWact` 是开源的基于 MatPL 的一套自动化主动学习数据生成工具。它集成了 `MatPL`、`Lammps接口`以及常用的`PWMAT`、`VASP`、`CP2K`第一性原理软件，能够自动进行计算任务分发、监控、故障恢复、结果收集。通过使用PWact，用户能够低成本、快速地制备覆盖广泛相空间的训练数据集
+This high-performance molecular-dynamics interface integrates MatPL force-field models with GPU acceleration. The NEP interface uses LAMMPS KOKKOS acceleration, provides excellent multi-node parallel efficiency, and supports simulations with more than one hundred million atoms. A single RTX 4090 can handle systems containing more than six million atoms.
 
-**[4. 结构转换工具 pwdata](./pwdata/README.md)**
+**[3. PWact Active-Learning Tool](./pwact/README.md)**
 
-👉[开源仓库地址](https://github.com/LonxunQuantum/pwdata)
 
-`pwdata` 是 MatPL 的数据预处理工具，可用于提取特征和标签。同时提供`PWmat`、`VASP`、`CP2K`、`Lammps` 间的结构格式转换以及相应的扩胞、晶格缩放、原子位置微扰操作
+👉[Source repository](https://github.com/LonxunQuantum/PWact)
 
-<!-- ## [5. AIMD数据集以及模型仓库](https://github.com/LonxunQuantum/MatPL_library)
+`PWact` is an open-source MatPL-based platform for automated active-learning data generation. It integrates `MatPL`, the `LAMMPS interface`, and widely used first-principles packages such as `PWmat`, `VASP`, and `CP2K`. PWact automates job dispatch, monitoring, fault recovery, and result collection, enabling users to generate training datasets that cover broad regions of phase space quickly and cost-effectively.
 
-👉[开源仓库地址](https://github.com/LonxunQuantum/MatPL_library)
+**[4. PWdata Structure-Conversion Tool](./pwdata/README.md)**
 
-该数据仓库包含了常见体系的 `AIMD 数据集`、一些经过 `MatPL` 充分训练的力场模型，便于用户快速复用已有数据集和模型，以及在不同模型之间的横向比较和切换，节省数据制备和模型训练成本。 -->
+👉[Source repository](https://github.com/LonxunQuantum/pwdata)
+
+`pwdata` is MatPL's data-preprocessing tool for extracting features and labels. It converts structure formats among `PWmat`, `VASP`, `CP2K`, and `LAMMPS`, and supports supercell construction, lattice scaling, and atomic-position perturbation.
+
+<!-- ## [5. AIMD Dataset and Model Repository](https://github.com/LonxunQuantum/MatPL_library)
+
+👉[Source repository](https://github.com/LonxunQuantum/MatPL_library)
+
+This repository contains `AIMD datasets` for common systems and force-field models extensively trained with `MatPL`. Users can quickly reuse existing datasets and models, compare different models, and switch among them while reducing the cost of data preparation and model training. -->
 
 **[5. MatPL Examples](./examples/README.md)**
 
-MatPL 的测试结果以及使用 MatPL 的相关案例
+Test results and application examples for MatPL.
 
 **[MatPL Citation](https://chemrxiv.org/doi/full/10.26434/chemrxiv.15001665)**
 
 https://chemrxiv.org/doi/full/10.26434/chemrxiv.15001665
 
-<!-- **客服邮箱 support@pwmat.com** -->
+<!-- **Support: support@pwmat.com** -->

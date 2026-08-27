@@ -54,3 +54,33 @@ MatPL 的测试结果以及使用 MatPL 的相关案例
 https://chemrxiv.org/doi/full/10.26434/chemrxiv.15001665
 
 <!-- **客服邮箱 support@pwmat.com** -->
+
+
+<!-- How to release:
+1. 下载node.js,https://nodejs.org/en
+
+npm config set registry https://registry.npmmirror.com
+npm config get registry
+
+2. git clone git@github.com:LonxunQuantum/PWmat-docs.git
+
+3. npm install 
+
+4. npm install --save @easyops-cn/docusaurus-search-local
+
+powershell go to pwmlff-doc dir, then
+
+5. npm run start (npm run start -- --locale en) 
+
+npm run serve 用于查看中英文版本
+
+修改完后，设置一个version，第7步没有问题， 再推送到github仓库
+设置version前，如果用已有version，需要删除之前的两个version目录，一个version文件,并修改versions.json内容
+
+6. npm run docusaurus docs:version 2026.03
+
+7. npm run build 
+提交时候不要提交package-lock.json
+
+在versions.json 修改展示的版本顺序，修改完后需要重新编译 npm run build
+对于编译，npm run start 即在编译，修改了对应版本之后也需要编译，编译后提交。 -->

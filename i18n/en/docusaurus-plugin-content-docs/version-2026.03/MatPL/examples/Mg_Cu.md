@@ -1,31 +1,31 @@
 ---
 sidebar_position: 8
-title: 镁-铜合金力场
+title: Mg-Cu Alloy Force Field
 ---
 
-## 镁-铜合金力场
+## Mg-Cu Alloy Force Field
 Xingze Gen, Lin-Wang Wang, and Xiangying Meng. Comput. Mat. Sci. 246 (2025) 113486
 
-**拟合精度**
+**Fitting Accuracy**
 
 ![proportion_time](./pictures/MgCu_train.png)
 
-**Mg、Cu声子谱测试**
+**Mg and Cu Phonon-Spectrum Tests**
 
 ![proportion_time](./pictures/MgCu_pho.png)
 
-**屈服强度**
+**Yield Strength**
 
 ![proportion_time](./pictures/MgCu_gas.png)
 
-少量Cu含量可以提高合金的屈服强度，Cu含量越高合金屈服强度越低
+A small amount of Cu increases the alloy's yield strength, whereas higher Cu concentrations reduce it.
 
-**Mg-Cu合金晶粒数对强度的影响**
+**Effect of Grain Count on the Strength of Mg-Cu Alloys**
 
-**不同晶粒数结构建模**
+**Modeling Structures with Different Grain Counts**
 
 ![proportion_time](./pictures/MgCu_struct.png)
 
-**晶粒细化对合金强度影响较小**
+**Grain refinement has only a minor effect on alloy strength.**
 
 ![proportion_time](./pictures/MgCu_min.png)

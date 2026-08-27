@@ -1,10 +1,10 @@
 ---
 sidebar_position: 2
-title: NEP 操作演示
+title: NEP Tutorial
 ---
 
-## NEP 操作演示
-这里，我们以 MatPL [`源码根目录/example/HfO2/nep_demo`](https://github.com/LonxunQuantum/MatPL/tree/main/example/HfO2/nep_demo) 为例（[HfO2 训练集来源](https://www.aissquare.com/datasets/detail?pageType=datasets&name=HfO2-dpgen&id=6)），演示 NEP 模型的训练、测试、lammps 模拟以及其他功能。当前案例目录结构如下所示：
+## NEP Tutorial
+This tutorial uses the MatPL [`source root/example/HfO2/nep_demo`](https://github.com/LonxunQuantum/MatPL/tree/main/example/HfO2/nep_demo) example ([source of the HfO2 training dataset](https://www.aissquare.com/datasets/detail?pageType=datasets&name=HfO2-dpgen&id=6)) to demonstrate training, testing, LAMMPS simulation, and other operations for an NEP model. The current example directory is organized as follows:
 
 ``` txt
 nep_demo/
@@ -38,27 +38,27 @@ nep_demo/
 └── train_station.job
 ```
 
-- `nep_train.json` 和 `nep_test.json` 分别是 NEP 模型的训练和测试参数文件，其中的 `../pwdata/` 指向 `HfO2/pwdata` 训练数据目录。
-- `train_mcloud.job` 和 `train_station.job` 分别是 mcloud 和自建集群的 Slurm 训练任务示例。
-- `nep_lmps` 同时提供 CPU 和 NEP KOKKOS GPU 模拟的输入文件与作业脚本。
-- `nep_kokkos_lmps` 提供 NEP KOKKOS GPU 模拟示例。
-- `nep_lmps_deviation` 提供四模型偏差计算示例，用于主动学习流程。
-- 各 lammps 案例目录中，`lmp.config` 为初始结构，`nep_to_lmps.txt` 或 `nep*.txt` 为 NEP 力场文件，`*.lmp*` 为 lammps 输入文件，`*.job` 为 Slurm 作业脚本。
+- `nep_train.json` and `nep_test.json` are the NEP training and testing configurations. Their `../pwdata/` paths refer to the `HfO2/pwdata` training-data directory.
+- `train_mcloud.job` and `train_station.job` are example Slurm training scripts for Mcloud and a self-managed cluster, respectively.
+- `nep_lmps` provides input files and job scripts for both CPU and NEP Kokkos GPU simulations.
+- `nep_kokkos_lmps` provides an NEP Kokkos GPU simulation example.
+- `nep_lmps_deviation` provides a four-model deviation example for active-learning workflows.
+- In each LAMMPS example directory, `lmp.config` is the initial structure; `nep_to_lmps.txt` or `nep*.txt` are NEP force-field files; `*.lmp*` are LAMMPS input files; and `*.job` are Slurm job scripts.
 
 
-### train 训练
+### train
 
-在 nep_demo 目录下使用如下命令即可开始训练：
+Run the following command in the `nep_demo` directory to start training:
 ``` bash
 MatPL train nep_train.json
-# 或根据运行环境修改 Slurm 脚本后提交训练任务
+# Alternatively, adapt the Slurm script to the environment and submit it
 sbatch train_mcloud.job
-# 自建集群使用 sbatch train_station.job
+# On a self-managed cluster, use sbatch train_station.job
 ```
 
-**输入文件解释**
+**Input file description**
 
-nep_train.json 中的内容如下所示，关于 NEP 的参数解释，请参考 [NEP 参数手册](../../parameterdetail.md#nep-模型超参数)：
+The contents of `nep_train.json` are shown below. For descriptions of the NEP parameters, see the [NEP Parameter Reference](../../parameterdetail.md#nep-model-hyperparameters):
 ``` json
 {
     "model_type": "NEP",
@@ -99,19 +99,18 @@ nep_train.json 中的内容如下所示，关于 NEP 的参数解释，请参考
 }
 ```
 
-训练结束后的力场文件目录请参考 [model_record 详解](../../matpl-cmd.md#train-文件目录)
+For details about the force-field directory generated after training, see [model_record details](../../matpl-cmd.md#train).
 
-### 多节点多卡训练
-多节点多卡训练的目录结构与上面相同，案例请参考
-MatPL [`源码根目录/example/parallelnep`](https://github.com/LonxunQuantum/MatPL/tree/main/example/parallelnep) 为例（[HfO2 训练集来源](https://www.aissquare.com/datasets/detail?pageType=datasets&name=HfO2-dpgen&id=6)）。
+### Multi-Node, Multi-GPU Training
+Multi-node, multi-GPU training uses the same directory structure. See the MatPL [`source root/example/parallelnep`](https://github.com/LonxunQuantum/MatPL/tree/main/example/parallelnep) example ([source of the HfO2 training dataset](https://www.aissquare.com/datasets/detail?pageType=datasets&name=HfO2-dpgen&id=6)).
 
-该目录下提供了单节点单卡 `1node-1g-run.job` 、单节点多卡 `1node-4g-run.job` 、多节点多卡 `2node-8g-run.job` 三种启动脚本供参考，该脚本适用于 mcloud 用户。
-对于在线安装用户，MatPL-2026.3 的环境加载请参考文件`env.sh`。
+The directory provides three example launch scripts for Mcloud users: `1node-1g-run.job` for one GPU on one node, `1node-4g-run.job` for multiple GPUs on one node, and `2node-8g-run.job` for multiple nodes and GPUs.
+For an online installation, see `env.sh` for the MatPL-2026.3 environment setup.
 
-多节点多卡训练启动时要求提供`主机节点的地址`以及`可用端口`，建议通过如下shell 命令自动获取
+Multi-node, multi-GPU training requires the `address of the primary node` and an `available port`. We recommend obtaining them automatically with the following shell commands:
 ```bash
 MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
-# 动态分配空闲端口
+# Dynamically allocate an available port
 function get_free_port() {
     python -c 'import socket; s = socket.socket(socket.AF_INET, socket.SOCK_STREAM); s.bind(("", 0)); print(s.getsockname()[1]); s.close()'
 }
@@ -128,17 +127,17 @@ srun MATPL train train.json
 ```
 
 :::caution
-注意，NEP 多卡训练只支持使用 ADAM 优化器，不支持 LKF 或 GKF 优化器。
+Multi-GPU NEP training supports only the ADAM optimizer; LKF and GKF are not supported.
 :::
 
-### test 测试
+### test
 
-test 命令支持来自  MatPL `nep_model.ckpt` 力场文件，以及在 lammps 或 GPUMD 中使用的 `nep5.txt`、`nep4.txt` 格式文件。
+The `test` command accepts a MatPL `nep_model.ckpt` force field as well as `nep5.txt` and `nep4.txt` files used by LAMMPS or GPUMD.
 
 ``` bash
 MatPL test nep_test.json
 ```
-test.json 中的内容如下所示，参数解释请参考 [参数手册](../../parameterdetail.md)
+The contents of `test.json` are shown below. For parameter descriptions, see the [Parameter Reference](../../parameterdetail.md).
 ```json
 {
     "model_type": "NEP",
@@ -158,55 +157,55 @@ test.json 中的内容如下所示，参数解释请参考 [参数手册](../../
     ]
 }
 ```
-测试结束后的力场文件目录请参考 [test_result 详解](../../matpl-cmd.md#test-文件目录)
+For details about the output directory generated after testing, see [test_result details](../../matpl-cmd.md#test).
 
-### infer 推理单结构
+### infer a Single Structure
 
-infer 命令支持来自MatPL `nep_model.ckpt` 力场文件、`GPUMD 的 nep4.txt `文件、 lammps 和 GPUMD 中通用的`nep5.txt` 格式文件。
+The `infer` command accepts a MatPL `nep_model.ckpt` file, a GPUMD `nep4.txt` file, or a `nep5.txt` file shared by LAMMPS and GPUMD.
 
 ``` bash
 MatPL infer nep_model.ckpt atom.config pwmat/config
 MatPL infer gpumd_nep.txt 0.lammpstrj lammps/dump Hf O
-# Hf O 为 lammps/dump格式的结构中的元素名称，Hf为结构中1号元素类型，O为元素中2号元素类型
+# Hf and O are the element names in the lammps/dump structure: Hf is atom type 1 and O is atom type 2
 ```
-推理成功后，将在窗口输出推理的总能、每原子能量、每原子受力和维里
+After successful inference, the terminal displays the total energy, per-atom energies, per-atom forces, and virial.
 
-### totxt 转ckpt训练文件为nep5.txt
+### totxt: Convert a Trained Checkpoint to nep5.txt
 
-用于把 `MatPL` 训练的 `nep_model.ckpt` 文件转换为 txt 格式的`nep5.txt` 文件，该文件可用于 GPUMD 或 lammps-MatPL 中做分子动力学模拟。
+This command converts a `nep_model.ckpt` trained by MatPL to a text-format `nep5.txt` file for molecular-dynamics simulations in GPUMD or lammps-MatPL.
 
 ``` bash
 MatPL totxt nep_model.ckpt
 ```
-执行成功将在执行该命令的所在目录生成名称为`nep5.txt`文件
+When successful, it creates `nep5.txt` in the current directory.
 
 ### lammps MD
 
-HfO2 案例分别提供了单模型、NEP KOKKOS 和多模型偏差计算目录。下面按“准备力场—选择案例—修改输入—启动模拟”的顺序说明。
+The HfO2 example provides separate directories for a single model, NEP Kokkos, and multi-model deviation calculations. The workflow below proceeds through preparing the force field, choosing an example, editing the input, and launching the simulation.
 
-#### 1. 准备力场文件
+#### 1. Prepare the Force-Field File
 
-正常训练结束后，`model_record` 目录中会生成 `nep5.txt`，可直接用于 lammps。如果只有 `nep_model.ckpt`，可使用前文介绍的 `totxt` 命令转换：
+After normal training, `nep5.txt` is generated in `model_record` and can be used directly in LAMMPS. If only `nep_model.ckpt` is available, convert it with the `totxt` command described above:
 
 ```bash
 MatPL totxt nep_model.ckpt
 ```
 
-将生成的 `nep5.txt` 复制到相应案例目录，并按输入脚本中的文件名设置为 `nep_to_lmps.txt`。lammps-MatPL 同样支持 GPUMD 的 NEP4 和 NEP5 力场文件。
+Copy the generated `nep5.txt` to the selected example directory and name it `nep_to_lmps.txt` as referenced by the input script. lammps-MatPL also supports GPUMD NEP4 and NEP5 force-field files.
 
-#### 2. 选择 lammps 案例
+#### 2. Select a LAMMPS Example
 
-| 案例目录 | 用途 | 主要输入文件 |
+| Example directory | Purpose | Main input files |
 | --- | --- | --- |
-| [`nep_lmps`](https://github.com/LonxunQuantum/MatPL/tree/main/example/HfO2/nep_demo/nep_lmps) | CPU 和 NEP KOKKOS GPU 模拟 | `in.lmp-cpu-25`、`in.lmp-kk` |
-| [`nep_kokkos_lmps`](https://github.com/LonxunQuantum/MatPL/tree/main/example/HfO2/nep_demo/nep_kokkos_lmps) | NEP KOKKOS GPU 模拟 | `kkin.lmp` |
-| [`nep_lmps_deviation`](https://github.com/LonxunQuantum/MatPL/tree/main/example/HfO2/nep_demo/nep_lmps_deviation) | 四模型偏差计算 | `in.lmp-kk`、`nep0.txt`—`nep3.txt` |
+| [`nep_lmps`](https://github.com/LonxunQuantum/MatPL/tree/main/example/HfO2/nep_demo/nep_lmps) | CPU and NEP Kokkos GPU simulations | `in.lmp-cpu-25`, `in.lmp-kk` |
+| [`nep_kokkos_lmps`](https://github.com/LonxunQuantum/MatPL/tree/main/example/HfO2/nep_demo/nep_kokkos_lmps) | NEP Kokkos GPU simulation | `kkin.lmp` |
+| [`nep_lmps_deviation`](https://github.com/LonxunQuantum/MatPL/tree/main/example/HfO2/nep_demo/nep_lmps_deviation) | Four-model deviation calculation | `in.lmp-kk`, `nep0.txt`–`nep3.txt` |
 
-每个目录都分别提供了 `*_mcloud.job` 和 `*_station.job`，请根据运行环境选择并修改模块名称、软件路径、分区和 GPU 资源参数。
+Each directory provides both `*_mcloud.job` and `*_station.job`. Select the appropriate script and update module names, software paths, partitions, and GPU resource parameters for your environment.
 
-#### 3. 设置 lammps 输入文件
+#### 3. Configure the LAMMPS Input File
 
-NEP KOKKOS GPU 接口使用 half 近邻表并开启 Newton 通信。HfO2 单模型案例的核心设置如下：
+The NEP Kokkos GPU interface uses a half neighbor list with Newton communication enabled. The essential settings for the single-model HfO2 example are:
 
 ```lammps
 package kokkos neigh half comm device
@@ -216,9 +215,9 @@ pair_style   matpl/nep/kk nep_to_lmps.txt
 pair_coeff   * * 72 8
 ```
 
-`pair_coeff * *` 后的元素按 data 文件中的原子类型顺序排列。可使用元素名称，也可使用原子序数；本案例中 `1` 号类型为 Hf（`72`），`2` 号类型为 O（`8`）。
+List the elements after `pair_coeff * *` in the atom-type order used by the data file. Element symbols or atomic numbers are both accepted. In this example, type `1` is Hf (`72`) and type `2` is O (`8`).
 
-多模型案例使用第一个模型进行 MD，其他模型参与偏差计算：
+In the multi-model example, the first model drives MD while the others participate in the deviation calculation:
 
 ```lammps
 pair_style   matpl/nep/kk nep0.txt nep1.txt nep2.txt nep3.txt \
@@ -226,45 +225,45 @@ pair_style   matpl/nep/kk nep0.txt nep1.txt nep2.txt nep3.txt \
 pair_coeff   * * 72 8
 ```
 
-`out_freq` 用于设置偏差输出频率，`out_file` 用于设置输出文件名。完整 NPT 控制参数请直接参考案例中的 `in.lmp-kk`、`in.lmp-cpu-25` 或 `kkin.lmp`，无需重复复制输入脚本。
+`out_freq` sets the deviation-output frequency, and `out_file` sets the output filename. For complete NPT control parameters, refer directly to `in.lmp-kk`, `in.lmp-cpu-25`, or `kkin.lmp` in the examples.
 
-#### 4. 启动 lammps 模拟
+#### 4. Start the LAMMPS Simulation
 
-在案例目录中，可直接提交与运行环境对应的 Slurm 脚本，例如：
+From the example directory, submit the Slurm script appropriate for the runtime environment, for example:
 
 ```bash
 sbatch rungpu_mcloud.job
-# 或
+# or
 sbatch rungpu_station.job
 ```
 
-也可在加载 lammps 环境后直接运行：
+You can also run directly after loading the LAMMPS environment:
 
 ```bash
-# 单 GPU，nep_kokkos_lmps/kkin.lmp
+# One GPU: nep_kokkos_lmps/kkin.lmp
 mpirun -np 1 --bind-to numa lmp -k on g 1 -sf kk -pk kokkos -in kkin.lmp
 
-# 单节点 4 GPU，nep_lmps/in.lmp-kk
+# Four GPUs on one node: nep_lmps/in.lmp-kk
 mpirun -np 4 --bind-to numa lmp -k on g 4 -sf kk -pk kokkos -in in.lmp-kk
 
-# 2 节点，每节点 4 GPU
+# Two nodes with four GPUs per node
 mpirun -np 8 --bind-to numa --map-by ppr:4:node \
     lmp -k on g 4 -sf kk -pk kokkos -in in.lmp-kk
 ```
 
-如果使用 MatPL Pro 闭源版本，运行前还需要设置 `NEP_GPU_LIB_PATH` 和 `NEP_LICENSE_PATH`。多节点运行时，所有节点必须能访问共享库、License、输入文件和力场文件。
+When using the closed-source MatPL Pro version, set `NEP_GPU_LIB_PATH` and `NEP_LICENSE_PATH` before running. For multi-node jobs, every node must be able to access the shared library, license, input files, and force-field files.
 
-#### MatPL 热流计算
+#### MatPL Heat-Flux Calculation
 
-> **接口区别**：开放源码版本使用 `matpl/heatflux`；MatPL Pro 闭源版本使用 KOKKOS GPU 热流接口 `matpl/heatflux/kk`。请根据已安装的 lammps-MatPL 接口版本选择对应命令。
+> **Interface distinction:** The open-source version uses `matpl/heatflux`; the closed-source MatPL Pro version uses the Kokkos GPU heat-flux interface `matpl/heatflux/kk`. Select the command that matches the installed lammps-MatPL interface.
 
-开放源码版本的热流 compute 设置为：
+For the open-source version, configure the heat-flux compute as follows:
 
 ```lammps
 compute      flux all matpl/heatflux
 ```
 
-MatPL Pro 闭源版本的 `matpl/heatflux/kk` 直接在 GPU 上计算 MatPL 热流，无需使用传统的 `ke/atom + pe/atom + centroid/stress/atom + heat/flux` 后处理链：
+In the closed-source MatPL Pro version, `matpl/heatflux/kk` calculates MatPL heat flux directly on the GPU and does not require the conventional `ke/atom + pe/atom + centroid/stress/atom + heat/flux` post-processing chain:
 
 ```lammps
 package kokkos neigh half comm device
@@ -277,42 +276,42 @@ compute      flux all matpl/heatflux/kk
 fix          fluxout all matpl/heatflux/ave/kk 10 100 1000 flux file compute_HeatFlux.out
 ```
 
-`compute matpl/heatflux/kk` 输出包含 6 个分量的全局向量，依次为：
+`compute matpl/heatflux/kk` outputs a global vector with six components:
 
-1. `Jx`：x 方向总热流。
-2. `Jy`：y 方向总热流。
-3. `Jz`：z 方向总热流。
-4. `Jconv,x`：x 方向对流热流。
-5. `Jconv,y`：y 方向对流热流。
-6. `Jconv,z`：z 方向对流热流。
+1. `Jx`: total heat flux in the x direction.
+2. `Jy`: total heat flux in the y direction.
+3. `Jz`: total heat flux in the z direction.
+4. `Jconv,x`: convective heat flux in the x direction.
+5. `Jconv,y`: convective heat flux in the y direction.
+6. `Jconv,z`: convective heat flux in the z direction.
 
-因此，virial 热流贡献可由总热流减去对流热流得到，即 `(1-4, 2-5, 3-6)`。`fix matpl/heatflux/ave/kk` 用于对热流向量进行时间平均，并将结果写入 `compute_HeatFlux.out`。
+The virial contribution to heat flux is therefore the total heat flux minus the convective heat flux: `(1-4, 2-5, 3-6)`. `fix matpl/heatflux/ave/kk` time-averages the heat-flux vector and writes the results to `compute_HeatFlux.out`.
 
-#### 热流案例
+#### Heat-Flux Examples
 
-- [开放源码版本 Heat_flux 案例](https://github.com/LonxunQuantum/lammps-MatPL/tree/main/examples/Heat_flux)
-- [MatPL Pro 闭源版本 Heat_flux 案例](https://github.com/LonxunQuantum/lammps-MatPL/tree/MatPL-pro-v2026.6/examples/Heat_flux)
+- [Open-source Heat_flux example](https://github.com/LonxunQuantum/lammps-MatPL/tree/main/examples/Heat_flux)
+- [Closed-source MatPL Pro Heat_flux example](https://github.com/LonxunQuantum/lammps-MatPL/tree/MatPL-pro-v2026.6/examples/Heat_flux)
 
 
-### ASE 接口
-NEP 模型提供了 ase 接口，使用方式如下脚本例子所示[gitee](https://gitee.com/pfsuo/MatPL/tree/main/example/ase_calculator/test_nep) 或 [github](https://github.com/LonxunQuantum/MatPL/tree/main/example/ase_calculator/test_nep)。 
+### ASE Interface
+The NEP model provides an ASE interface. See the example scripts on [Gitee](https://gitee.com/pfsuo/MatPL/tree/main/example/ase_calculator/test_nep) or [GitHub](https://github.com/LonxunQuantum/MatPL/tree/main/example/ase_calculator/test_nep).
 
 ```python
 from src.ase.calculate import MatPL_calculator
 calc = MatPL(model_file='nep_model.ckpt or nep.txt')
-atoms = ..... # create ase.atoms.Atoms
-atoms.calc = calc # or atoms.set_calculator(calc)
+atoms = ..... # Create ase.atoms.Atoms
+atoms.calc = calc # Or use atoms.set_calculator(calc)
 energy = atoms.get_potential_energy()
 forces = atoms.get_forces()
 stress = atoms.get_stress()
 ```
-注意，在使用本ase接口时确保已经导入了[MatPL的环境变量](../../install/README.md)。
+Before using the ASE interface, make sure the [MatPL environment variables](../../install/README.md) have been loaded.
 
-<!-- ## NEP 模型的训练测试
+<!-- ## NEP Model Training Benchmarks
 
-替换为最新的结果、是否把测试这部分结果单独提取出来作为NEP的README(介绍NEP的原理) -->
+Replace with the latest results; consider moving the benchmark results to the NEP README that introduces the NEP methodology. -->
 
-<!-- 我们对多种体系进行了测试，所有测试中将数据集的80%作为训练集，20%作为验证集。我们在公开的HfO2训练集（包含𝑃21/c、Pbca、𝑃ca21和𝑃42/nmc相的2200个结构）上对NEP模型分别在LKF和演化算法（SNES, GPUMD）训练，它们在验证集上的误差下降如下图2中所示。随着训练epoch增加，基于LKF的NEP模型相比于SNES，可以更快收敛到更低误差（误差越低精度越高）。在铝的体系下（包括3984个结构）也有相似结果（图3）。此外，我们在LiGePS体系以及五元合金体系中也有类似结果，更详细数据请参考已上传的训练和测试数据。
+<!-- We tested multiple systems, using 80% of each dataset for training and 20% for validation. On the public HfO2 dataset (2,200 structures covering the P21/c, Pbca, Pca21, and P42/nmc phases), we trained NEP models with LKF and with the evolutionary SNES algorithm in GPUMD. Figure 2 shows the validation errors. As the epoch count increases, LKF-based NEP converges faster than SNES and reaches a lower error. The aluminum system (3,984 structures) shows similar behavior in Figure 3. Similar results were obtained for LiGePS and the five-component alloy; see the uploaded training and test data for details.
 
 <div>
   <div style={{ display: 'inline-block', marginRight: '10px' }}>
@@ -321,7 +320,7 @@ stress = atoms.get_stress()
   <div style={{ display: 'inline-block', marginRight: '10px' }}>
     <img src={require("./pictures/hfo2_lkf_snes_force.png").default} alt="hfo2_lkf_snes_force" width="300" />
   </div>
-  <p>HfO2体系（2200个结构）下，NEP模型在LKF和SNES优化器下的能量（左图）和力（右图）收敛情况。图中虚线为SNES算法训练能够达到的最低loss水平。</p>
+  <p>Energy (left) and force (right) convergence for NEP models trained with LKF and SNES on the HfO2 system (2,200 structures). The dashed line marks the lowest loss reached by SNES.</p>
 
   <div style={{ display: 'inline-block', marginRight: '10px' }}>
     <img src={require("./pictures/al_lkf_snes_energy.png").default} alt="al_lkf_snes_energy" width="300" />
@@ -329,13 +328,13 @@ stress = atoms.get_stress()
   <div style={{ display: 'inline-block', marginRight: '10px' }}>
     <img src={require("./pictures/al_lkf_snes_force.png").default} alt="al_lkf_snes_force" width="300" />
   </div>
-  <p>Al体系（3984个结构）下，NEP模型在LKF和SNES优化器下的能量（左图）和力（右图）收敛情况。图中虚线为SNES算法训练能够达到的最低loss水平。</p>
+  <p>Energy (left) and force (right) convergence for NEP models trained with LKF and SNES on the Al system (3,984 structures). The dashed line marks the lowest loss reached by SNES.</p>
 </div> -->
 
 <!-- 
-###  MATPL 中NEP模型与深度势能模型的精度对比
+### Accuracy Comparison Between NEP and Deep Potential in MatPL
 
-深度势能（deep potential, DP）模型是目前广泛使用的一种神经网络模型， MATPL 中实现了Pytorch版本的DP模型，该DP模型也可以使用LKF优化器。我们在多个体系下，使用LKF优化器对NEP模型和DP（ MATPL ）模型训练做了对比，结果如下图4中所示。在Al、HfO2、LiGePS（包含1万个结构）、[Ru、Rh、Ir、Pd、Ni]五元合金体系（包含9486个结构）下， MATPL 中的NEP模型比DP模型收敛都更快，精度也更高。特别的，对于五元合金，我们采用type embedding DP以减少元素种类对训练速度的影响（在之前的测试中，我们发现，对五种以上的元素的情况，在 MATPL 的DP训练中引入type embedding可以获得比普通DP更高的精度）。
+Deep Potential (DP) is a widely used neural-network model. MatPL implements DP in PyTorch and supports the LKF optimizer. We compared LKF training of NEP and MatPL DP models on several systems, as shown in Figure 4. For Al, HfO2, LiGePS (10,000 structures), and the five-component [Ru, Rh, Ir, Pd, Ni] alloy (9,486 structures), NEP converges faster and reaches higher accuracy than DP. For the five-component alloy, we used type-embedding DP to reduce the effect of the number of elements on training speed; earlier tests showed that type embedding can also improve DP accuracy for systems containing five or more elements.
 
 <div>
   <div style={{ display: 'inline-block', marginRight: '10px' }}>
@@ -352,17 +351,17 @@ stress = atoms.get_stress()
   <img src={require("./pictures/NEP_LiGePS.png").default} alt="LiGePS" width="300" />
   </div>
 </div>
-NEP和DP模型在LKF优化器下训练误差收敛情况 -->
+Training-error convergence of NEP and DP models with the LKF optimizer. -->
 
 
-<!-- ### 测试数据
-测试数据与模型已经上传, 您可以访问我们的 [百度云网盘下载 https://pan.baidu.com/s/1beFMBU1IehmNEpIQ9B8ybg?pwd=pwmt ](https://pan.baidu.com/s/1beFMBU1IehmNEpIQ9B8ybg?pwd=pwmt)， 或者我们的[开源数据集仓库](https://github.com/LonxunQuantum/MatPL_library/tree/main/PWMLFF_NEP_test_examples)。 -->
+<!-- ### Test Data
+The test data and models have been uploaded. Download them from [Baidu Netdisk](https://pan.baidu.com/s/1beFMBU1IehmNEpIQ9B8ybg?pwd=pwmt) or visit our [open-source dataset repository](https://github.com/LonxunQuantum/MatPL_library/tree/main/PWMLFF_NEP_test_examples). -->
 
 <!-- 
-## 关于lammps 接口的测试结果
-下图展示了 NEP 模型的 lammps CPU 和 GPU 接口在 `3090*4` 机器上做 NPT 系综 MD 模拟的速度。对于CPU 接口，速度正比与原子规模和CPU核数；对于GPU 接口, 速度正比与原子规模和GPU数量。
+## LAMMPS Interface Benchmark Results
+The figure below shows NPT-ensemble MD performance of the NEP LAMMPS CPU and GPU interfaces on a machine with `4 × RTX 3090` GPUs. CPU-interface performance scales with system size and CPU core count, while GPU-interface performance scales with system size and GPU count.
 
-根据测试结果，我们建议如果您需要模拟的体系规模在 $10^3$ 量级以下，建议您使用 CPU 接口即可。另外使用 GPU 接口时，建议您使用的 CPU 核数与 GPU 卡数相同。
+Based on these results, we recommend the CPU interface for systems below approximately $10^3$ atoms. When using the GPU interface, use the same number of CPU cores and GPUs.
 
 <div style={{ display: 'inline-block', marginRight: '10px' }}>
   <img src={require("./pictures/lmps_speed.png").default} alt="nep_net" width="500" />

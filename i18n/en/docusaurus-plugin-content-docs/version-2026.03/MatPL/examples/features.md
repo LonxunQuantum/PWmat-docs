@@ -1,16 +1,16 @@
 ---
 sidebar_position: 0
-title: NN 特征值对比
+title: Comparison of NN Descriptors
 ---
-## NN 特征值对比
+## Comparison of NN Descriptors
 
-[[文章 Accuracy evaluation of different machine learning force field features]](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb/pdf)
+[[Article: Accuracy evaluation of different machine learning force field features]](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb/pdf)
 
-这项工作比较了 `MatPL 中的特征类型` 在描述物理系统能力方面的差异。这些特征类型包括`余弦特征`、`高斯特征`、`矩张量势(MTP)特征`、`光谱邻域分析势特征`、具有`切比雪夫多项式特征`和`高斯多项式特征`的简化光滑深势以及原子簇展开特征。特征的详细介绍请参考[Feature Wiki](../models/nn/README.md)。
+This work compares the ability of the `descriptor types implemented in MatPL` to represent physical systems. The descriptors include `cosine descriptors`, `Gaussian descriptors`, `moment tensor potential (MTP) descriptors`, `spectral neighbor analysis potential descriptors`, simplified smooth deep potentials with `Chebyshev-polynomial descriptors` and `Gaussian-polynomial descriptors`, and atomic cluster expansion descriptors. See the [Feature Wiki](../models/nn/README.md) for details.
 
-对于硫系统，在300K和1500K下进行了NVT AIMD模拟，并在300K进行了2 ps的分子动力学模拟。通过这些模拟获得了2000个300K下的结构。对于1500K，进行了3 ps的分子动力学模拟，然后进行了2 ps的AIMD模拟，获得了1500K的训练数据集。硫环在模拟过程中破裂，呈现出了破裂键的系统结构。
+For sulfur, NVT AIMD simulations were performed at 300 K and 1500 K. A 2 ps simulation at 300 K produced 2,000 structures. At 1500 K, a 3 ps molecular-dynamics simulation was followed by 2 ps of AIMD to generate the training dataset. Sulfur rings broke during the simulations, providing configurations containing broken bonds.
 
-对于碳系统，选择了4种不同的碳结构相，进行了从300K到3500K的NVT AIMD模拟。为了覆盖更广泛的构型空间，还在训练数据集中添加了3500K的高温模拟结果。每种碳相进行了1000步的模拟，共获得了4000个结构作为训练数据集。
+For carbon, four distinct phases were selected for NVT AIMD simulations from 300 K to 3500 K. High-temperature configurations at 3500 K were added to broaden the configuration space. Each phase was simulated for 1,000 steps, producing a total of 4,000 training structures.
 
 |    System     | Description   | Temperature (K) | Steps (fs) |
 |:-------------:|:-------------:|:----------------:|:----------:|
@@ -21,20 +21,20 @@ title: NN 特征值对比
 |  Graphenylene |    64 atoms   |      300–3500    |    1000    |
 |    M-carbon   |    64 atoms   |      300–3500    |    1000    |
 
- **硫和碳系统的细节及其AIMD步骤**
+ **Details and AIMD steps for the sulfur and carbon systems**
  
- **部分实验结果**
+ **Selected Results**
 
 ![proportion_time](./pictures/exp_1_e_f_loss.png)
 
-不同特征类型的硫-300 K数据集(实线)和硫-1500 K数据集(虚线)对(a)总能量、(b)原子能量、(c)力、(d)损失函数的训练误差。
+Training errors for different descriptor types on the sulfur-300 K dataset (solid lines) and sulfur-1500 K dataset (dashed lines): (a) total energy, (b) atomic energy, (c) force, and (d) loss function.
 
 
 <!-- ![proportion_time](./pictures/exp_1_e_f_loss_2.png)
 
-硫-300 K和硫-1500 K组合数据集和不同特征类型对(a)总能量、(b)原子能量、(c)力、(d)损失函数的训练误差。 -->
+Training errors for different descriptor types on the combined sulfur-300 K and sulfur-1500 K datasets: (a) total energy, (b) atomic energy, (c) force, and (d) loss function. -->
 
 
 ![proportion_time](./pictures/exp_1_e_f_loss_3.png)
 
-碳系统与不同特征类型组合数据集对(a)总能量、(b)原子能量、(c)力、(d)损失函数的训练误差。
+Training errors for different descriptor types on the combined carbon-system dataset: (a) total energy, (b) atomic energy, (c) force, and (d) loss function.

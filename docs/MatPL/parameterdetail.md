@@ -536,7 +536,7 @@ $$
 "scaling_method": "sqrt"
 ```
 
-该设置适用于 ADAM、ADAMW 和 SGD；增大 batch size 或 GPU 数量时，实际学习率会相应提高。
+该设置适用于 ADAM、ADAMW；增大 batch size 或 GPU 数量时，实际学习率会相应提高。
 
 ## KF optimizer 优化器超参数
 

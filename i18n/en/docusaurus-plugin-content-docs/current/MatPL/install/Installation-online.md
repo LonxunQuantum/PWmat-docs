@@ -1,104 +1,103 @@
 ﻿---
 sidebar_position: 2
-title: 在线安装
+title: Online Installation
 ---
-## 在线安装
+## Online Installation
 
-对于 [龙讯超算云](https://mcloud.lonxun.com/)(`Mcloud`) 用户，已做预装，[加载即用](./README.md)
+For [Lonxun Supercomputing Cloud](https://mcloud.lonxun.com/) (`Mcloud`) users, MatPL is preinstalled and [ready to load](./README.md).
 
-在线安装需要您分别编译安装 MatPL-2026.3 和 MatPL-2026.3 lammps 接口。
+An online installation requires building and installing MatPL-2026.3 and its LAMMPS interface separately.
 
-- MatPL-2026.3 用于模型训练。要求待安装的机器提供 `gcc 编译器(8.n 以及以上)`、`CUDA(11.8及以上)`、`openmpi(4.1.4及以上)` 以及 `nvidia GPU` 硬件支持。对于 Python 环境，要求 python >= 3.11，torch >= 2.2.0+cu118。
+- MatPL-2026.3 is used for model training. The target machine must provide `GCC 8.x or later`, `CUDA 11.8 or later`, `OpenMPI 4.1.4 or later`, and an `NVIDIA GPU`. The Python environment requires Python >= 3.11 and PyTorch >= 2.2.0+cu118.
 
-- 如果需要使用 NN 和 Linear 模型，还需要加载 intel 相关编译器（ifort icc mkl）。对于 `intel/2020`编译套件，使用了它的 `ifort` 和 `icc` 编译器(`19.1.3`)、`mkl库`，如果单独加载，请确保版本不低于它们。
+- NN and Linear models additionally require the Intel toolchain (ifort, icc, and MKL). The `intel/2020` suite provides `ifort` and `icc` version `19.1.3` and MKL. If loading these components separately, use versions no older than these.
 
-- MatPL-2026.3 lammps 接口 是用于运行 NEP 和 DP 模型的lammps 接口。lammps接口安装和运行需要使用 openmpi，我们推荐 `openmpi/4.1.4` 版本以上。对于 lammps 接口，我们提供了两个版本的安装方式：
+- The MatPL-2026.3 LAMMPS interface runs NEP and DP models. Installation and execution require OpenMPI; version `4.1.4` or later is recommended. Two interface variants are available:
 
-  开放源码的接口安装方式，该接口速度与 GPUMD 速度持平；
+  The open-source interface, whose performance is comparable to GPUMD;
   
-  闭源接口的安装方式，闭源接口的速度是开放源码的接口速度两倍以上。
+  The closed-source interface, which is more than twice as fast as the open-source version.
 
-### MatPL 编译安装
+### Build and Install MatPL
 
-为了编译和运行 MatPL-2026.3，您需要下载源码、安装conda 环境，并在 conda 环境中安装 MatPL-2026.3 依赖的Python环境，之后编译源码。
+To build and run MatPL-2026.3, download the source, create a Conda environment, install the required Python dependencies in that environment, and then compile the source.
 
-在以下安装命令中，使用的`sh` 是指`bash`，安装时请注意，如果使用`sh`命令，请确保它是`bash`的链接，有少部分操作系统指向的是`dash`。
+In the commands below, `sh` means `bash`. If you invoke scripts with `sh`, verify that it links to `bash`; on some systems it links to `dash` instead.
 
-#### 下载源码
-我们提供了在线拉取代码和下载离线包两种方式编译。
+#### Download the Source
+You can clone the repository online or download a source archive.
 
-- 通过 github 或 gitee 在线拉取 MatPL 仓库代码
+- Clone the MatPL repository from GitHub or Gitee:
 ```bash
   git clone https://github.com/LonxunQuantum/MatPL.git MatPL-2026.3
-  或
+  or
   git clone https://gitee.com/pfsuo/MatPL.git MatPL-2026.3
 ```
 
-- 或下载 release 离线源码包，您可以直接浏览器输入下面的地址下载，或者加前缀 wget 下载:
+- Alternatively, download a release archive in a browser or with `wget`:
 ``` bash
   wget https://github.com/LonxunQuantum/MatPL/archive/refs/tags/MatPL-2026.3_update2.zip
-  或通过gitee下载
+  or download from Gitee
   wget https://gitee.com/pfsuo/MatPL/repository/archive/2026.3
 ```
-下载 release 离线源码包后，通过 unzip 命令解压。
+Extract the downloaded release archive with `unzip`.
 ``` bash
-  ## 解压后您将得到一个名称为 MatPL-MatPL-2026.3_update2 的源码目录
+  ## Extraction creates a source directory named MatPL-MatPL-2026.3_update2
   unzip MatPL-MatPL-2026.3_update2.zip
-  mv MatPL-MatPL-2026.3_update2 MatPL-2026.3 # 为了后续手册表述统一，这里将文件名重名为MatPL-2026.3 
+  mv MatPL-MatPL-2026.3_update2 MatPL-2026.3 # Rename it for consistency with the rest of this guide
 ```
 
-#### 创建 conda 虚拟环境
-安装 Anaconda3（已安装请跳过）。这里要求您已经装了 Anaconda3 ，然后创建一个新 python 虚拟环境（搜索引擎搜索 Linux 安装 anaconda3 教程）。
+#### Create a Conda Virtual Environment
+Install Anaconda3 if it is not already available, then create a new Python virtual environment. Consult an Anaconda3 installation guide for Linux if necessary.
 
-您可以使用该命令直接下载 Anaconda3 到服务器目录中：
+Download Anaconda3 directly to the server with:
 ```bash
 curl https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2023.07-1-Linux-x86_64.sh -o Anaconda3-2023.07-1-Linux-x86_64.sh
-## 如果下载失败，请在浏览器输入下面的下载地址，下载后上传的服务器
+## If the download fails, open the URL below in a browser and upload the downloaded file to the server
 ## https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2023.07-1-Linux-x86_64.sh 
-## 您也可以访问网页下载更多版本 https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/
+## Other versions are available at https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/
 ```
 
-#### 创建Python虚拟环境
-conda 安装完成后，创建虚拟环境，环境中需指定安装 `python3.11` 解释器，其他版本可能会出现依赖冲突或语法不支持等问题，之后的编译工作均在该虚拟环境中进行
+#### Create the Python Virtual Environment
+After installing Conda, create an environment with the `Python 3.11` interpreter. Other versions may cause dependency conflicts or unsupported syntax. Perform all subsequent compilation in this environment.
 
 ``` bash
 conda create -n matpl-2026.3 python=3.11 setuptools=68.0.0
-## python 版本我们建议3.11，更高级别的 python 可以在编译时存在一些错误，我们还未兼容。这里需要指定setuptools版本低于75.0.0，避免 numpy 和 fortran 做数据格式转换时的错误。
+## Python 3.11 is recommended; newer versions may cause build errors and are not yet supported. Use setuptools below 75.0.0 to avoid NumPy–Fortran data-conversion errors.
 ```
-虚拟环境安装完成后激活该环境
+Activate the environment after creation:
 ``` bash
 conda activate matpl-2026.3
 ```
 
-#### Python虚拟环境安装依赖包
-接下来安装 MATPL 所需的第三方依赖包，我们已经把所有依赖的第三方包写在requirement.txt中，只需要在该文件所在目录下执行 pip 命令即可完成所有的依赖包安装。操作过程如下。该步骤会安装pytorch等python环境较耗时，请您耐心等待。
+#### Install Dependencies in the Python Environment
+The required third-party packages are listed in `requirements.txt`. Run `pip` from the directory containing that file to install them. This step installs PyTorch and other packages and may take some time.
 
-- MatPL-2026.3/requirement.txt 是 MatPL GPU 版本的 python 环境
+- `MatPL-2026.3/requirements.txt` defines the Python environment for the GPU version.
 
-- MatPL-2026.3/requirements_cpu.txt 是 MatPL CPU 版本的 python 环境
+- `MatPL-2026.3/requirements_cpu.txt` defines the Python environment for the CPU version.
 
 ```bash
-#第一步 激活conda 环境
+# Step 1: Activate the Conda environment
 conda activate matpl-2026.3
-#第二步 进入源码根目录
-#在线下载的源码进入 MatPL-2026.3 目录
+# Step 2: Enter the source root
+# For a cloned repository, enter MatPL-2026.3
 cd MatPL-2026.3
-#对于 GPU 版本，请执行
+# For the GPU version
 pip install -r requirements.txt
-#对于 CPU 版本，请执行
+# For the CPU version
 pip install -r requirements_cpu.txt
 ```
 
-#### 编译安装-检查编译环境(GPU 版本)
-进入 requirement.txt 的同级目录 `src` 目录下。
-对于 GPU 版本，
-首先检查`gcc 编译器(8.n 以及以上)`、`CUDA(11.8及以上)`、`openmpi(4.1.4及以上)` 以及 `nvidia GPU` 硬件支持。`如果需要使用 NN 和 Linear 模型，还需要加载 intel 相关编译器（ifort icc mkl）。`由于大部分的编译不成功是由编译器版本问题造成的，我们提供了编译环境检测的脚本 `check_env.sh` ，位于 `'/src/check/check_env.sh'` 您可以执行该脚本来检查编译环境已经完成准备。
+#### Build and Install: Check the GPU Build Environment
+Enter the `src` directory alongside `requirements.txt`.
+For the GPU version, verify `GCC 8.x or later`, `CUDA 11.8 or later`, `OpenMPI 4.1.4 or later`, and NVIDIA GPU hardware. `NN and Linear models additionally require the Intel toolchain (ifort, icc, and MKL).` Because compiler-version problems cause most build failures, use `/src/check/check_env.sh` to verify the environment.
 
 ``` bash
 cd src
 bash ./check/check_env.sh
 ```
-执行后，将输出您的编译环境信息。
+The script prints information about the build environment.
 ```txt
 ========================================
       Environment Check Starting
@@ -133,8 +132,8 @@ bash ./check/check_env.sh
 ========================================
 ```
 
-#### 编译安装-检查编译环境(CPU 版本)
-安装 GPU 版本请跳过该步。对于 CPU 版本，不需要 CUDA 支持，检测脚本为 check_env_cpu.sh，位于 `'/src/check/check_env_cpu.sh'`。命令执行后会列出需要的编译器版本以及当前检测到的版本：
+#### Build and Install: Check the CPU Build Environment
+Skip this step for the GPU version. The CPU version does not require CUDA. Run `/src/check/check_env_cpu.sh` to list the required and detected compiler versions:
 ```
 ========================================
       CPU Environment Check Starting
@@ -160,24 +159,23 @@ bash ./check/check_env.sh
 ========================================
 ```
 
-#### 编译安装-编译代码
+#### Build and Install: Compile the Code
 
-如果您的环境满足上述检测，接下来进行代码编译。
-执行如下命令开始编译：
+If the environment passes the checks above, compile the code with:
 ```bash
 bash clean.sh
 bash build.sh [-jN] [-m nn]
 ```
-- -jN 这里N为并行编译的核数，例如 sh build.sh -j4 将采用4核编译。默认采用单核编译，即 bash build.sh
+- `-jN`: `N` is the number of parallel compilation cores. For example, `sh build.sh -j4` uses four cores. The default `bash build.sh` uses one core.
 
-- -m nn 指定后将 fortran 代码也纳入编译（需要intel编译器支持），用于 linear 和 NN 模型。`默认不编译 fortran 代码`。
+- `-m nn`: Also compiles the Fortran code for Linear and NN models and requires the Intel compiler. `Fortran code is not compiled by default.`
 
 :::tip
-如果您在编译过程中出错，请在[MATPL 常见安装错误总结](./InstallError.md) 中查询。
+If compilation fails, consult [Common MatPL Installation Errors](./InstallError.md).
 
-如果仍未解决您的问题，请将您的机器环境信息、编译错误日志以及您执行的编译操作过程描述 发送到邮箱 `matpl@pwmat.com`、`wuxingxing@pwmat.com` 或 `support@pwmat.com`，我们将及时联系您处理。
+If the issue remains unresolved, email the machine-environment details, build log, and the commands you ran to `matpl@pwmat.com`, `wuxingxing@pwmat.com`, or `support@pwmat.com`.
 :::
-编译完成后，最后输出如下信息：
+After a successful build, output similar to the following appears:
 ```
 [100%] Linking CXX shared library ../../lib/libCalcOps_bind.so
 [100%] Built target CalcOps_bind
@@ -197,43 +195,43 @@ Or manually set environment variables:
   export PATH=/data/home/wuxingxing/codespace/MatPL-2025.12-tmp/src/bin:$PATH
 =================================
 ```
-编译完成后，将在代码的根目录下生成一个env.sh文件，包含 MatPL 的环境变量，执行以下命令即可完成加载
+The build creates `env.sh` in the source root. Load the MatPL environment variables with:
 ```bash
   source /the/path/of/MatPL-2026.3/env.sh
 ```
 
-也可以通过如下命令加载
+You can also set them manually:
 ```
   export PYTHONPATH=/the/path/of/MatPL-2026.3:$PYTHONPATH
   export PATH=/the/path/of/MatPL-2026.3/src/bin:$PATH
 ```
 
-#### 加载使用
-使用 MatPL 前需要加载它的依赖环境，加载 python 环境、cuda、MatPL 环境变量（CPU版本不需要加载CUDA）。
+#### Load and Use MatPL
+Before using MatPL, load the Python environment, CUDA, and the MatPL environment variables. The CPU version does not require CUDA.
 
 ```bash
 conda activate matpl-2026.3
 module load cuda/11.8-share
 source /the/path/of/MatPL-2026.3/env.sh
 ```
-之后即可使用 MatPL 命令开始训练，使用教程请参考 [教学案例](../models/README.md)
+You can then start training with MatPL commands. See the [tutorials](../models/README.md) for usage examples.
 
-### MatPL lammps 2026.3 开放源码版本接口编译安装
+### Build and Install the Open-Source MatPL LAMMPS 2026.3 Interface
 
-MatPL-2026.3 lammps 接口支持 NEP（包含 QNEP）、DP 和 D3。对于 NN 和 Linear 力场，提供了 fortran 版本的接口，安装请参考 [lammps-fortran 编译安装](#lammps-matpl-fortran-编译安装)。
+The MatPL-2026.3 LAMMPS interface supports NEP (including QNEP), DP, and D3. A Fortran interface is available for NN and Linear force fields; see the [2025.3 Fortran LAMMPS interface guide](http://doc.lonxun.com/2025.03/MatPL/install/Installation-online/#lammps-matpl-fortran-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85).
 
-MatPL-2026.3 lammps 接口安装过程中，需要您下载 lammps 源码、加载编译器、编译源码，过程如下所示。
+To install the interface, download the LAMMPS source, load the build environment, and compile it as described below.
 
-#### 下载 MatPL-2026.3 lammps 接口源码
+#### Download the MatPL-2026.3 LAMMPS Interface Source
 
-MatPL-2026.3 lammps 开放源码版本接口位于 [GitHub 仓库](https://github.com/LonxunQuantum/lammps-MatPL)，可通过以下命令下载：
+The open-source MatPL-2026.3 LAMMPS interface is hosted in this [GitHub repository](https://github.com/LonxunQuantum/lammps-MatPL). Clone it with:
 
 ```bash
 git clone https://github.com/LonxunQuantum/lammps-MatPL.git
 cd lammps-MatPL
 ```
 
-MatPL-2026.3 lammps 力场接口源码目录如下所示：
+The source tree is organized as follows:
 
 ```txt
 ├── .gitignore
@@ -254,27 +252,27 @@ MatPL-2026.3 lammps 力场接口源码目录如下所示：
 └── README.md
 ```
 
-- `KOKKOS`、`nep_gpu`、`nep_cpu.cpp`、`nep_cpu.h`、`pair_nep.cpp` 和 `pair_nep.h` 是 NEP lammps 接口源码，支持 NEP KOKKOS GPU 加速。`compute_qnep_bec_atom.cpp` 和 `compute_qnep_bec_atom.h` 用于输出 QNEP 的逐原子 Born 有效电荷张量。
+- `KOKKOS`, `nep_gpu`, `nep_cpu.cpp`, `nep_cpu.h`, `pair_nep.cpp`, and `pair_nep.h` contain the NEP LAMMPS interface with NEP Kokkos GPU acceleration. `compute_qnep_bec_atom.cpp` and `compute_qnep_bec_atom.h` output per-atom Born effective-charge tensors for QNEP.
 
-- `MATPLDP` 为 DP 接口源码；`MATPLD3` 为 D3 接口源码，D3 需要 CUDA 支持，不能与 `matpl/nep/kk` 同时使用。
+- `MATPLDP` contains the DP interface; `MATPLD3` contains the D3 interface. D3 requires CUDA and cannot be used together with `matpl/nep/kk`.
 
-- `examples` 为力场 MD 示例，`test` 和 `test_qnep` 分别为 NEP 和 QNEP 测试用例。
+- `examples` contains force-field MD examples; `test` and `test_qnep` contain NEP and QNEP tests, respectively.
 
-- `kknep-patch.sh` 用于将上述接口源码复制到 lammps 源码目录，并修改 `cmake/CMakeLists.txt`，之后使用 cmake 编译。
+- `kknep-patch.sh` copies the interface source into the LAMMPS source tree and modifies `cmake/CMakeLists.txt` before compilation with CMake.
 
-- 与 MatPL-2025.3 版本相比，NEP KOKKOS 接口将近邻表计算交给 KOKKOS 在 GPU 上执行，能量和力计算则由定制的 C++/CUDA 算子完成，同时减少了显存占用并提高了推理速度。
+- Compared with MatPL-2025.3, the NEP Kokkos interface uses Kokkos to build neighbor lists on the GPU, while custom C++/CUDA operators evaluate energies and forces. This reduces GPU memory usage and improves inference performance.
 
-- 当前仓库支持 LAMMPS 2023、2024 和 2025 发布版，推荐使用 `stable_2Aug2023_update4`、`stable_29Aug2024_update4` 或 `stable_22Jul2025_update4`。
+- The repository supports the 2023, 2024, and 2025 LAMMPS releases. Recommended versions are `stable_2Aug2023_update4`, `stable_29Aug2024_update4`, and `stable_22Jul2025_update4`.
 
-#### 复制 MatPL-2026.3 lammps 接口源码到 LAMMPS 源码目录
+#### Copy the MatPL-2026.3 Interface into the LAMMPS Source Tree
 
-`kknep-patch.sh` 位于 `lammps-MatPL` 仓库根目录。在仓库根目录执行以下命令，脚本会自动将接口文件复制到 LAMMPS 源码目录，并修改 `cmake/CMakeLists.txt`：
+Run `kknep-patch.sh` from the `lammps-MatPL` repository root. The script copies the interface files into the LAMMPS source tree and updates `cmake/CMakeLists.txt`:
 
 ```bash
 bash kknep-patch.sh /the/rootpath/of/lammps
 ```
 
-复制完成后，会输出如下日志：
+On success, it prints output similar to the following:
 ```txt
 ...
 Patch process completed successfully!
@@ -314,12 +312,12 @@ Then, add the following option in cmake:
 <!-- For the D3 interface, please add the following option in cmake. Note that D3 requires CUDA support and cannot be used in combination with matpl/nep/kk.
 -DPKG_MATPLD3=yes \ -->
 
-#### 加载编译环境以及编译
-文件复制完成后，需要在编译前加载环境。lammps 接口编译，依赖的编译器环境有 `cuda`、`gcc`、`cmake`、`openmpi`，我们推荐 `openmpi/4.1.4` 版本及以上，`cuda-11.6`及以上、`cmake 3.n `及以上，`gcc8.n`及以上 。
+#### Load the Build Environment and Compile
+After copying the files, load the build environment. The LAMMPS interface requires `CUDA`, `GCC`, `CMake`, and `OpenMPI`. We recommend OpenMPI 4.1.4 or later, CUDA 11.6 or later, CMake 3.x or later, and GCC 8.x or later.
 
-之后按照日志中 的提示，进入lammps 根目录，创建build 目录，在下面执行 如下cmake命令即可编译：
+Following the instructions printed by the script, enter the LAMMPS root, create a `build` directory, and run the following CMake command:
 ```bash
-# cd lammps rootdir
+# Enter the LAMMPS root
 mkdir build & cd build
 cmake -C ../cmake/presets/basic.cmake \
     -DPKG_MESONT=no \
@@ -337,19 +335,19 @@ cmake -C ../cmake/presets/basic.cmake \
 cmake --build . --parallel 4 #(number of parallel compilation cores)
 ```
 
-默认只安装了NEP的接口，如果需要安装 DP 接口，需要加载 `MKL 库`、`pytorch 中的libtorch` 路径以及在编译时使用 `C++ STD17标准`。
+Only the NEP interface is enabled by default. To build the DP interface, load `MKL`, provide the `LibTorch path from PyTorch`, and compile with the `C++17 standard`.
 ```bash
 export Torch_DIR=$(python -c "import torch; print(torch.utils.cmake_prefix_path)")/Torch
 
-#在 cmake 命令中开启 DP 的编译：
+# Enable the DP interface in the CMake command:
 -DTorch_DIR=${Torch_DIR} \
 -DCMAKE_CXX_STANDARD=17 \
 -DPKG_MATPLDP=yes \
 ```
 
-<!-- `-DPKG_MATPLD3=yes` 是来自[github SevenNet](https://github.com/MDIL-SNU/SevenNet/tree/main/sevenn/pair_e3gnn) 下的代码。这里 D3 不能与 matpl/nep/kk 混合使用。 -->
+<!-- `-DPKG_MATPLD3=yes` enables code from [SevenNet on GitHub](https://github.com/MDIL-SNU/SevenNet/tree/main/sevenn/pair_e3gnn). D3 cannot be used together with matpl/nep/kk. -->
 
-编译完成将在窗口输出如下信息，并在lammps源码根目录生成一个env.sh文件，使用lammps前加载该文件即可。
+After compilation, output similar to the following appears and `env.sh` is generated in the LAMMPS source root. Load this file before using LAMMPS.
 
 ``` txt
 [ 98%] Building CUDA object CMakeFiles/lammps.dir/data/home/wuxingxing/codespace/suzhou/lmpversions/lammps-23-4-opt/src/nep_gpu/utilities/gpu_vector.cu.o
@@ -360,49 +358,49 @@ export Torch_DIR=$(python -c "import torch; print(torch.utils.cmake_prefix_path)
 [100%] Built target lmp
 ```
 
-#### lammps 加载使用
-使用 MatPL-2026.3 lammps时， 需要加载它的依赖环境，加载 opnmpi、cuda、lammps环境变量。
+#### Load and Use LAMMPS
+Before using MatPL-2026.3 LAMMPS, load OpenMPI, CUDA, and the LAMMPS environment variables.
 ```bash
 module load cuda/11.8 openmpi/4.1.6
-# lammps 环境变量,用于指定 lmp 位置
+# Add the lmp executable to PATH
 export PATH=/the/path/of/lammpsroot/dir/build:$PATH
 ```
 
-<!-- 详细的使用请参考 
-- [MatPL 操作演示：NEP lammps](../models/nep/nep-tutorial.md#lammps-md)
-- [MatPL 操作演示：DP lammps](../models/dp/dp-tutorial.md#3-lammps-模拟) -->
+<!-- For detailed usage, see:
+- [MatPL tutorial: NEP LAMMPS](../models/nep/nep-tutorial.md#lammps-md)
+- [MatPL tutorial: DP LAMMPS](../models/dp/dp-tutorial.md#lammps-md) -->
 
-### MatPL lammps 2026.3 闭源版本接口编译安装
+### Build and Install the Closed-Source MatPL LAMMPS 2026.3 Interface
 
-MatPL lammps 2026.3 闭源版本将 lammps 接口代码与 NEP GPU 推理核函数分离：`pair_nep.cpp`、KOKKOS 包装层和 `nep_gpu_loader.h` 等 C++ 接口代码会编译到 lammps 中，优化后的 NEP GPU 推理核函数则以预编译共享库 `libnep_gpu.so` 的形式提供。运行时，接口通过 `dlopen` 动态加载共享库，并验证 License 文件。
+The closed-source MatPL LAMMPS 2026.3 interface separates the LAMMPS interface code from the NEP GPU inference kernels. C++ interface components such as `pair_nep.cpp`, the Kokkos wrapper, and `nep_gpu_loader.h` are compiled into LAMMPS, while the optimized NEP GPU kernels are supplied as the precompiled `libnep_gpu.so` shared library. At runtime, the interface loads the library dynamically with `dlopen` and validates the license file.
 
-因此，使用闭源版本时不需要编译 NEP GPU 推理库，只需下载 lammps 接口源码、与 CUDA 版本匹配的预编译共享库以及有效的 License，然后编译 C++ 接口代码即可。
+You therefore do not compile the NEP GPU inference library. Download the LAMMPS interface source, the precompiled library matching the CUDA version, and a valid license, then compile only the C++ interface code.
 
-#### 下载闭源版本接口文件
+#### Download the Closed-Source Interface Files
 
-闭源版本的接口源码、预编译共享库和评估 License 可从 [MatPL-pro-v2026.6 Release](https://github.com/LonxunQuantum/lammps-MatPL/releases/tag/MatPL-pro-v2026.6) 下载。
+Download the interface source, precompiled libraries, and evaluation license from the [MatPL-pro-v2026.6 release](https://github.com/LonxunQuantum/lammps-MatPL/releases/tag/MatPL-pro-v2026.6).
 
-| 文件 | CUDA / 精度 |
+| File | CUDA / Precision |
 | --- | --- |
-| [`libnep_gpu_cu118.so`](https://github.com/LonxunQuantum/lammps-MatPL/releases/download/MatPL-pro-v2026.6/libnep_gpu_cu118.so) | CUDA 11.8，默认混合精度 |
-| [`libnep_gpu_cu118_fp64.so`](https://github.com/LonxunQuantum/lammps-MatPL/releases/download/MatPL-pro-v2026.6/libnep_gpu_cu118_fp64.so) | CUDA 11.8，FP64 |
-| [`libnep_gpu_cu128.so`](https://github.com/LonxunQuantum/lammps-MatPL/releases/download/MatPL-pro-v2026.6/libnep_gpu_cu128.so) | CUDA 12.8，默认混合精度 |
+| [`libnep_gpu_cu118.so`](https://github.com/LonxunQuantum/lammps-MatPL/releases/download/MatPL-pro-v2026.6/libnep_gpu_cu118.so) | CUDA 11.8, default mixed precision |
+| [`libnep_gpu_cu118_fp64.so`](https://github.com/LonxunQuantum/lammps-MatPL/releases/download/MatPL-pro-v2026.6/libnep_gpu_cu118_fp64.so) | CUDA 11.8, FP64 |
+| [`libnep_gpu_cu128.so`](https://github.com/LonxunQuantum/lammps-MatPL/releases/download/MatPL-pro-v2026.6/libnep_gpu_cu128.so) | CUDA 12.8, default mixed precision |
 | [`libnep_gpu_cu128_fp64.so`](https://github.com/LonxunQuantum/lammps-MatPL/releases/download/MatPL-pro-v2026.6/libnep_gpu_cu128_fp64.so) | CUDA 12.8，FP64 |
-| [`summer_holiday.lic 或 2026.lic`](https://github.com/LonxunQuantum/lammps-MatPL/releases/download/MatPL-pro-v2026.6/summer_holiday.lic) |  License |
-| [Source code (zip)](https://github.com/LonxunQuantum/lammps-MatPL/archive/refs/tags/MatPL-pro-v2026.6.zip) | lammps 接口源码 |
-| [Source code (tar.gz)](https://github.com/LonxunQuantum/lammps-MatPL/archive/refs/tags/MatPL-pro-v2026.6.tar.gz) | lammps 接口源码 |
+| [`summer_holiday.lic or 2026.lic`](https://github.com/LonxunQuantum/lammps-MatPL/releases/download/MatPL-pro-v2026.6/summer_holiday.lic) | License |
+| [Source code (zip)](https://github.com/LonxunQuantum/lammps-MatPL/archive/refs/tags/MatPL-pro-v2026.6.zip) | LAMMPS interface source |
+| [Source code (tar.gz)](https://github.com/LonxunQuantum/lammps-MatPL/archive/refs/tags/MatPL-pro-v2026.6.tar.gz) | LAMMPS interface source |
 
-根据运行环境选择一个共享库即可：
+Select one shared library for the runtime environment:
 
-- `cu118` 共享库需要 CUDA 11.x 运行时（`libcudart.so.11.0`）。
-- `cu128` 共享库需要 CUDA 12.x 运行时（`libcudart.so.12`）。
-- 不带 `_fp64` 后缀的共享库为默认混合精度版本；使用 `_fp64` 共享库时，lammps 接口也必须使用 `-DPREC_NEPINFER=ON` 编译。
+- A `cu118` library requires the CUDA 11.x runtime (`libcudart.so.11.0`).
+- A `cu128` library requires the CUDA 12.x runtime (`libcudart.so.12`).
+- Libraries without `_fp64` use the default mixed precision. When using an `_fp64` library, compile the LAMMPS interface with `-DPREC_NEPINFER=ON`.
 
-> **注意**：共享库的 CUDA 主版本必须与运行时的 `libcudart` 主版本一致。CUDA 11.x 和 CUDA 12.x 共享库不能交叉使用。
+> **Note:** The CUDA major version of the shared library must match that of the runtime `libcudart`. CUDA 11.x and CUDA 12.x libraries are not interchangeable.
 
-#### 闭源版本接口源码目录
+#### Closed-Source Interface Source Tree
 
-Source code 压缩包解压后，根目录结构如下：
+After extracting the source archive, the root directory has the following structure:
 
 ```txt
 ├── .gitignore
@@ -419,8 +417,8 @@ Source code 压缩包解压后，根目录结构如下：
 ├── nep_gpu/
 │   ├── cuda-11.8/
 │   ├── cuda-12.8/
-│   └── 2026.lic # 2026年底到期
-│   └── summer_holiday.lic # 2026年8月底到期
+│   └── 2026.lic # Expires at the end of 2026
+│   └── summer_holiday.lic # Expires at the end of August 2026
 ├── nep_gpu_loader.h
 ├── pair_nep.cpp
 ├── pair_nep.h
@@ -428,51 +426,51 @@ Source code 压缩包解压后，根目录结构如下：
 └── test/
 ```
 
-其中：
+The main components are:
 
-- `kknep-patch.sh` 用于备份并修改 lammps 的 `cmake/CMakeLists.txt`，同时复制 NEP CPU 接口、`nep_gpu_loader.h`、KOKKOS 包装层以及 MatPL 热流接口文件。
-- `nep_gpu_loader.h` 负责在运行时加载 `libnep_gpu.so`，因此编译 lammps 时不需要将闭源共享库直接链接到 lammps。
-- `KOKKOS` 目录包含 NEP KOKKOS 接口、MatPL 热流 compute 和时间平均 fix。
-- `examples` 和 `test` 分别包含使用示例和测试脚本。
+- `kknep-patch.sh` backs up and modifies LAMMPS `cmake/CMakeLists.txt`, then copies the NEP CPU interface, `nep_gpu_loader.h`, the Kokkos wrapper, and MatPL heat-flux interface files.
+- `nep_gpu_loader.h` loads `libnep_gpu.so` at runtime, so the closed-source library does not need to be linked directly into LAMMPS during compilation.
+- `KOKKOS` contains the NEP Kokkos interface, the MatPL heat-flux compute, and the time-averaging fix.
+- `examples` and `test` contain usage examples and test scripts, respectively.
 
-#### 编译环境
+#### Build Environment
 
-推荐使用以下软件环境：
+The following software versions are recommended:
 
-| 组件 | 推荐版本 | 说明 |
+| Component | Recommended version | Notes |
 | --- | --- | --- |
-| lammps | `stable_2Aug2023_update4`、`stable_29Aug2024_update4` 或 `stable_22Jul2025_update4` | `kknep-patch.sh` 支持 2023—2025 发布版 |
-| CUDA Toolkit | 11.8 或 12.8 | 必须与下载的共享库主版本匹配 |
-| GCC | 8.3 及以上 | 需要 C++17 支持 |
-| OpenMPI | 4.1.x | 用于多进程和多节点并行 |
-| CMake | 3.18 及以上 | lammps 编译系统 |
+| LAMMPS | `stable_2Aug2023_update4`, `stable_29Aug2024_update4`, or `stable_22Jul2025_update4` | `kknep-patch.sh` supports the 2023–2025 releases |
+| CUDA Toolkit | 11.8 or 12.8 | Must match the major version of the downloaded library |
+| GCC | 8.3 or later | C++17 support is required |
+| OpenMPI | 4.1.x | Used for multi-process and multi-node parallelism |
+| CMake | 3.18 or later | LAMMPS build system |
 
-以 CUDA 11.8 和 CUDA 12.8 为例，加载编译环境：
+For example, load build environments for CUDA 11.8 or CUDA 12.8 as follows:
 
 ```bash
-# CUDA 11.8，对应 libnep_gpu_cu118*.so
+# CUDA 11.8, for libnep_gpu_cu118*.so
 module --ignore-cache load openmpi/4.1.6 cuda/11.8-share gcc/8.3.1 cmake/3.31.6
 
-# CUDA 12.8，对应 libnep_gpu_cu128*.so
+# CUDA 12.8, for libnep_gpu_cu128*.so
 module --ignore-cache load openmpi/4.1.6 cuda/12.8-share gcc/11.2.1 cmake/3.31.6
 ```
 
-> 上述 `module` 名称是集群环境中的使用示例，请根据实际软件环境调整。
+> The `module` names above are examples for a cluster environment. Adjust them to match the installed software.
 
-#### 复制接口文件到 lammps 源码
+#### Copy the Interface Files into the LAMMPS Source Tree
 
-进入 Source code 解压后的根目录，执行：
+Enter the root of the extracted source and run:
 
 ```bash
 cd /the/path/of/lammps-MatPL-MatPL-pro-v2026.6
 bash kknep-patch.sh /the/path/of/lammps
 ```
 
-脚本会将接口文件复制到 lammps 源码的 `src` 目录，并在 `cmake/CMakeLists.txt` 中增加 `PKG_NEP_KK` 编译选项。脚本结束时输出 `Patch process completed successfully!` 表示复制成功。
+The script copies the interface files into the LAMMPS `src` directory and adds the `PKG_NEP_KK` build option to `cmake/CMakeLists.txt`. The message `Patch process completed successfully!` confirms completion.
 
-#### 使用 cmake 编译 lammps
+#### Build LAMMPS with CMake
 
-进入 lammps 源码目录，创建独立的构建目录：
+Enter the LAMMPS source directory and create a separate build directory:
 
 ```bash
 cd /the/path/of/lammps
@@ -493,90 +491,90 @@ cmake -C ../cmake/presets/basic.cmake \
 cmake --build . --parallel 8
 ```
 
-`-DKokkos_ARCH_AMPERE86=ON` 只是 A6000、RTX 3090 等 SM 8.6 GPU 的示例。请根据 GPU 型号替换 KOKKOS 架构选项，例如 A100 使用 `-DKokkos_ARCH_AMPERE80=ON`，RTX 4090 使用 `-DKokkos_ARCH_ADA89=ON`，H100 使用 `-DKokkos_ARCH_HOPPER90=ON`。
+`-DKokkos_ARCH_AMPERE86=ON` is an example for SM 8.6 GPUs such as the A6000 and RTX 3090. Select the Kokkos architecture for the actual GPU: `-DKokkos_ARCH_AMPERE80=ON` for A100, `-DKokkos_ARCH_ADA89=ON` for RTX 4090, or `-DKokkos_ARCH_HOPPER90=ON` for H100.
 
-如果使用 `_fp64.so` 共享库，需要在上述 cmake 命令中另外加入：
+When using an `_fp64.so` library, add the following option to the CMake command:
 
 ```bash
 -DPREC_NEPINFER=ON \
 ```
 
-#### 配置共享库和 License
+#### Configure the Shared Library and License
 
-编译完成后，使用 `NEP_GPU_LIB_PATH` 指定预编译共享库的完整路径，使用 `NEP_LICENSE_PATH` 指定 License 文件路径：
+After compilation, set `NEP_GPU_LIB_PATH` to the full path of the precompiled library and `NEP_LICENSE_PATH` to the license file:
 
 ```bash
-# lammps 可执行文件
+# LAMMPS executable
 export PATH=/the/path/of/lammps/build:$PATH
 
-# CUDA 11.8 默认混合精度版本示例
+# CUDA 11.8 default mixed-precision example
 export NEP_GPU_LIB_PATH=/the/path/of/libnep_gpu_cu118.so
 export NEP_LICENSE_PATH=/the/path/of/summer_holiday.lic
 ```
 
-也可以将共享库所在目录加入 `LD_LIBRARY_PATH`，并将共享库重命名为 `libnep_gpu.so`：
+Alternatively, rename the library to `libnep_gpu.so` and add its directory to `LD_LIBRARY_PATH`:
 
 ```bash
 export LD_LIBRARY_PATH=/the/path/of/libnep_gpu_dir:$LD_LIBRARY_PATH
 ```
 
-`NEP_GPU_LIB_PATH` 的优先级高于系统共享库搜索路径，因此推荐直接指定 `.so` 文件。`NEP_LICENSE_PATH` 也建议直接指向下载的 `summer_holiday.lic`。
+`NEP_GPU_LIB_PATH` takes precedence over the system library search path, so specifying the `.so` file directly is recommended. Similarly, point `NEP_LICENSE_PATH` directly to the downloaded `summer_holiday.lic`.
 
-> **License 说明**：Release 中的 `summer_holiday.lic` 为最多支持 16 块 GPU 的非商业评估 License，有效期至 2026 年 8 月 31 日。商业使用或 License 续期请联系 `matpl@pwmat.com`。
+> **License:** The `summer_holiday.lic` included in the release is a non-commercial evaluation license for up to 16 GPUs and expires on August 31, 2026. For commercial use or renewal, contact `matpl@pwmat.com`.
 
-### 运行 lammps
+### Run LAMMPS
 
-#### 运行命令
+#### Run Commands
 
-在运行 lammps 前，请确保已设置 `NEP_GPU_LIB_PATH` 和 `NEP_LICENSE_PATH`，并且输入文件、原子结构文件和 NEP 力场文件均已准备完成。
+Before running LAMMPS, make sure `NEP_GPU_LIB_PATH` and `NEP_LICENSE_PATH` are set and that the input, structure, and NEP force-field files are ready.
 
 ```bash
-# 单 GPU
+# One GPU
 mpirun -np 1 --bind-to numa lmp -k on g 1 -sf kk -pk kokkos -in input.in
 
-# 单节点多 GPU（4 卡）
+# Multiple GPUs on one node (four GPUs)
 mpirun -np 4 --bind-to numa lmp -k on g 4 -sf kk -pk kokkos -in input.in
 
-# 多节点（2 节点，每节点 4 卡）
+# Multiple nodes (two nodes with four GPUs each)
 mpirun -np 8 --bind-to numa --map-by ppr:4:node lmp -k on g 4 -sf kk -pk kokkos -in input.in
 ```
 
-多节点运行时，必须在每个计算节点设置相同的 `NEP_GPU_LIB_PATH` 和 `NEP_LICENSE_PATH`，并确保所有节点都能访问共享库、License、输入文件和力场文件。
+For multi-node execution, set the same `NEP_GPU_LIB_PATH` and `NEP_LICENSE_PATH` on every compute node and ensure that all nodes can access the shared library, license, input files, and force-field files.
 
-#### lammps 输入脚本
+#### LAMMPS Input Script
 
-NEP KOKKOS 接口需要使用 half 近邻表并开启 Newton 通信：
+The NEP Kokkos interface requires a half neighbor list with Newton communication enabled:
 
 ```lammps
 package kokkos neigh half comm device
 newton on
 ```
 
-单模型推理的 `pair_style` 设置如下：
+For single-model inference, configure `pair_style` as follows:
 
 ```lammps
 pair_style   matpl/nep/kk nep.txt
 pair_coeff   * * Hf O
 ```
 
-`pair_coeff * *` 后的元素名与 data 文件中的原子类型一一对应，并映射到 NEP 力场文件中的元素顺序。
+The element names after `pair_coeff * *` correspond one-to-one with the atom types in the data file and map to the element order in the NEP force-field file.
 
-#### 多模型偏差计算
+#### Multi-Model Deviation Calculation
 
-在主动学习流程中，可同时加载多个 NEP 力场文件并输出模型偏差：
+In an active-learning workflow, load several NEP force fields simultaneously to output model deviations:
 
 ```lammps
 pair_style   matpl/nep/kk nep1.txt nep2.txt nep3.txt out_freq 10 out_file explr.error
 pair_coeff   * * Hf O
 ```
 
-- 多个 `nep*.txt` 文件用于启用模型偏差计算。
-- `out_freq N` 表示每 `N` 步输出一次偏差，默认值为 `1`。
-- `out_file name` 用于指定偏差输出文件，默认文件名为 `explr.error`。
+- Multiple `nep*.txt` files enable model-deviation calculation.
+- `out_freq N` outputs the deviation every `N` steps; the default is `1`.
+- `out_file name` sets the deviation-output file; the default is `explr.error`.
 
-#### NPT 运行示例
+#### NPT Example
 
-以 HfO2 NEP 力场为例，完整的 NPT 输入脚本如下：
+The following is a complete NPT input script for an HfO2 NEP force field:
 
 ```lammps
 package kokkos neigh half comm device
@@ -607,11 +605,11 @@ timestep        0.002
 run             1000
 ```
 
-#### MatPL 热流计算
+#### MatPL Heat-Flux Calculation
 
-> **接口区别**：开放源码版本只支持 `matpl/heatflux`；闭源版本支持 KOKKOS GPU 热流接口 `matpl/heatflux/kk`。下面的命令仅适用于闭源版本。
+> **Interface distinction:** The open-source version supports only `matpl/heatflux`; the closed-source version supports the Kokkos GPU heat-flux interface `matpl/heatflux/kk`. The commands below apply only to the closed-source version.
 
-`matpl/heatflux/kk` 直接在 GPU 上计算 MatPL 热流，无需使用传统的 `ke/atom + pe/atom + centroid/stress/atom + heat/flux` 后处理链：
+`matpl/heatflux/kk` calculates MatPL heat flux directly on the GPU and does not require the conventional `ke/atom + pe/atom + centroid/stress/atom + heat/flux` post-processing chain:
 
 ```lammps
 package kokkos neigh half comm device
@@ -624,45 +622,45 @@ compute      flux all matpl/heatflux/kk
 fix          fluxout all matpl/heatflux/ave/kk 10 100 1000 flux file compute_HeatFlux.out
 ```
 
-`compute matpl/heatflux/kk` 输出包含 6 个分量的全局向量，依次为：
+`compute matpl/heatflux/kk` outputs a global vector with six components:
 
-1. `Jx`：x 方向总热流。
-2. `Jy`：y 方向总热流。
-3. `Jz`：z 方向总热流。
-4. `Jconv,x`：x 方向对流热流。
-5. `Jconv,y`：y 方向对流热流。
-6. `Jconv,z`：z 方向对流热流。
+1. `Jx`: total heat flux in the x direction.
+2. `Jy`: total heat flux in the y direction.
+3. `Jz`: total heat flux in the z direction.
+4. `Jconv,x`: convective heat flux in the x direction.
+5. `Jconv,y`: convective heat flux in the y direction.
+6. `Jconv,z`: convective heat flux in the z direction.
 
-因此，virial 热流贡献可由总热流减去对流热流得到，即 `(1-4, 2-5, 3-6)`。`fix matpl/heatflux/ave/kk` 用于对热流向量进行时间平均，并将结果写入 `compute_HeatFlux.out`。
+The virial contribution to heat flux is therefore the total heat flux minus the convective heat flux: `(1-4, 2-5, 3-6)`. `fix matpl/heatflux/ave/kk` time-averages the heat-flux vector and writes the result to `compute_HeatFlux.out`.
 
-#### 更多运行示例
+#### More Examples
 
-- [H2O 多节点多 GPU 示例](https://github.com/LonxunQuantum/lammps-MatPL/tree/MatPL-pro-v2026.6/examples/H2O)
-- [HfO2 多节点多 GPU 示例](https://github.com/LonxunQuantum/lammps-MatPL/tree/MatPL-pro-v2026.6/examples/HfO2)
-- [石墨烯热流计算与验证示例](https://github.com/LonxunQuantum/lammps-MatPL/tree/MatPL-pro-v2026.6/examples/Heat_flux)
+- [H2O multi-node, multi-GPU example](https://github.com/LonxunQuantum/lammps-MatPL/tree/MatPL-pro-v2026.6/examples/H2O)
+- [HfO2 multi-node, multi-GPU example](https://github.com/LonxunQuantum/lammps-MatPL/tree/MatPL-pro-v2026.6/examples/HfO2)
+- [Graphene heat-flux calculation and validation example](https://github.com/LonxunQuantum/lammps-MatPL/tree/MatPL-pro-v2026.6/examples/Heat_flux)
 
-#### 常见问题
+#### Troubleshooting
 
-| 错误信息或现象 | 原因 | 处理方法 |
+| Error or symptom | Cause | Solution |
 | --- | --- | --- |
-| `Failed to load NEP GPU library` | 找不到共享库 | 检查 `NEP_GPU_LIB_PATH`，或将共享库目录加入 `LD_LIBRARY_PATH` |
-| `Symbol not found: nep_*` | 接口代码与共享库版本不匹配 | 使用同一 Release 中的 Source code 和 `libnep_gpu*.so` |
-| `NEP GPU license check failed` 或 `License file not found` | License 不存在、路径错误或已过期 | 检查 `NEP_LICENSE_PATH`、文件权限和有效期 |
-| 加载 `.so` 时报 `libcudart` 错误 | CUDA 主版本不匹配 | CUDA 11.x 使用 `cu118` 库，CUDA 12.x 使用 `cu128` 库 |
-| GPU 与 License 绑定不匹配或 GPU 数量超限 | 当前硬件不在 License 授权范围内 | 使用 `nvidia-smi --query-gpu=uuid` 检查 GPU，必要时限制 `CUDA_VISIBLE_DEVICES` 或更新 License |
+| `Failed to load NEP GPU library` | The shared library cannot be found | Check `NEP_GPU_LIB_PATH` or add the library directory to `LD_LIBRARY_PATH` |
+| `Symbol not found: nep_*` | The interface and library versions do not match | Use the source and `libnep_gpu*.so` from the same release |
+| `NEP GPU license check failed` or `License file not found` | The license is missing, incorrectly addressed, or expired | Check `NEP_LICENSE_PATH`, file permissions, and the expiration date |
+| A `libcudart` error occurs while loading the `.so` | CUDA major versions do not match | Use a `cu118` library with CUDA 11.x and a `cu128` library with CUDA 12.x |
+| The GPU does not match the license or the GPU count exceeds the limit | The current hardware is outside the licensed scope | Inspect GPUs with `nvidia-smi --query-gpu=uuid`; restrict `CUDA_VISIBLE_DEVICES` or update the license if necessary |
 
 
-<!-- ### Lammps-MatPL (fortran) 编译安装 
+<!-- ### Build and Install Lammps-MatPL (Fortran)
 
-lammps-MatPL (fortran 版本) 用于 MatPL 的 NN 和 Linear 力场，未提供 GPU 加速。
+lammps-MatPL (Fortran version) supports MatPL NN and Linear force fields without GPU acceleration.
 
-lammps-MatPL (fortran 版本) 力场接口源码位于 MatPL 源码目录 `lmps/lammps-fortran` 下，您也可以通过 [github fortran 分支下载](https://github.com/LonxunQuantum/lammps-MatPL/tree/fortran) 下载 lammps-MatPL (fortran 版本) 源码，或下载 release 包。
+The source is located under `lmps/lammps-fortran` in the MatPL source tree. You can also download it from the [Fortran branch on GitHub](https://github.com/LonxunQuantum/lammps-MatPL/tree/fortran) or from a release archive.
 
-安装过程请参考 [2025.3 fortran lammps 接口安装](http://doc.lonxun.com/2025.03/MatPL/install/Installation-online/#lammps-matpl-fortran-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85)
+For installation, see the [2025.3 Fortran LAMMPS interface guide](http://doc.lonxun.com/2025.03/MatPL/install/Installation-online/#lammps-matpl-fortran-%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85).
 
-详细的使用，请参考 
-- [MatPL 操作演示：Linear lammps](../models/linear/linear-tutorial.md#lammps-md)
-- [MatPL 操作演示：NN lammps](../models/nn/nn-tutorial.md#lammps-md)
+For detailed usage, see:
+- [MatPL tutorial: Linear LAMMPS](../models/linear/linear-tutorial.md#lammps-md)
+- [MatPL tutorial: NN LAMMPS](../models/nn/nn-tutorial.md#lammps-md)
 
 
-MatPL 相关软件的常见 [安装错误](./InstallError.md) 和 [运行时错误](./RuntimeError.md)   -->
+See also common [installation errors](./InstallError.md) and [runtime errors](./RuntimeError.md) for MatPL software. -->

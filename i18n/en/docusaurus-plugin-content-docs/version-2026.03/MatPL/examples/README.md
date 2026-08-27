@@ -1,54 +1,54 @@
 ---
 sidebar_position: 7
-title: MatPL 文献案例
+title: MatPL Literature Examples
 ---
 
-# MatPL 文献案例
-在本章节，我们整理了使用MatPL做的一些测试工作，以及使用MatPL的已发表论文，为用户提供参考。
+# MatPL Literature Examples
+This chapter collects selected MatPL benchmarks and published studies that used MatPL as references for users.
 
-## 部分文献汇总
-这里对案例中的文献做了整理总结，详情请参考相应文献对应的章节。
+## Selected Literature
+The publications associated with these examples are summarized below. See each corresponding section for details.
 
-[一、Comparison of Features ](./features.md)
+[1. Comparison of Features](./features.md)
 
-本例中比较了 `MatPL 中的特征类型` 在描述物理系统能力方面的差异。这些特征类型包括`余弦特征`、`高斯特征`、`矩张量势(MTP)特征`、`光谱邻域分析势特征`、具有`切比雪夫多项式特征`和`高斯多项式特征`的简化光滑深势以及原子簇展开特征。文章使用`线性回归模型` 在`无定形硫体系`和`碳体系`下，评估了针对密度泛函理论结果的`原子群能量`、`总能量`和`力`的训练均方根误差(RMSE)。特征的详细介绍请参考[Feature Wiki](../models/nn/README.md)。
+This example compares the ability of the `feature types implemented in MatPL` to represent physical systems. These include `cosine features`, `Gaussian features`, `Moment Tensor Potential (MTP) features`, `Spectral Neighbor Analysis Potential features`, simplified smooth Deep Potential descriptors with `Chebyshev-polynomial` and `Gaussian-polynomial features`, and Atomic Cluster Expansion features. Using a `linear regression model`, the study evaluates training root-mean-square errors (RMSEs) for `atomic-group energies`, `total energies`, and `forces` against density-functional-theory results for `amorphous sulfur` and `carbon` systems. For details about the features, see the [Feature Wiki](../models/nn/README.md).
 
-更多的测试细节也可以参考 [龙讯公众号文章](https://mp.weixin.qq.com/s/JjkivADrvUdOE_C9qCuA9g) 以及 [[文献 Accuracy evaluation of different machine learning force field features ]](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb)
+For more benchmark details, see the [Lonxun WeChat article](https://mp.weixin.qq.com/s/JjkivADrvUdOE_C9qCuA9g) and the paper [[Accuracy evaluation of different machine learning force field features]](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb).
 
-<!-- ### [二、LKF And ADAM](./LKF%20vs%20Adam.md)
+<!-- ### [2. LKF and ADAM](./LKF%20vs%20Adam.md)
 
-PWMFF中实现了 [[重组层扩展卡尔曼滤波（LKF）优化器]](https://arxiv.org/abs/2212.06989)，旨在加速训练神经网络力场。LKF是全局扩展卡尔曼滤波（GKF）的改进版本，通过采用分割大层和聚集小层的策略来降低计算成本。该策略利用稀疏对角块矩阵逼近密集权重误差协方差矩阵，从而提高了计算效率。作者在`13`个常见体系上进行了数值实验，并与 ADAM 优化器进行了比较。 -->
-<!-- 实验结果表明，LKF 相对于 ADAM `收敛更快且精度稍高`。此外，作者还从理论上证明了权值的更新是收敛的，从而克服了梯度爆炸问题。总体而言，LKF对权值初始化不敏感，对神经网络力场的训练具有较好的效果。 -->
+PWMLFF implements the [[Reorganized-Layer Extended Kalman Filter (LKF) optimizer]](https://arxiv.org/abs/2212.06989) to accelerate neural-network force-field training. LKF improves on the Global Kalman Filter (GKF) by splitting large layers and grouping small layers to reduce computational cost. It approximates the dense weight-error covariance matrix with a sparse block-diagonal matrix, improving efficiency. The authors performed numerical experiments on `13` common systems and compared LKF with the ADAM optimizer. -->
+<!-- The results show that LKF `converges faster and achieves slightly higher accuracy` than ADAM. The authors also prove theoretically that the weight updates converge, overcoming the exploding-gradient problem. Overall, LKF is insensitive to weight initialization and performs well for neural-network force-field training. -->
 
-<!-- ### [三、Active Learning](./Active%20Learning.md)
-[PWact](../pwact/README.md) (Active learning based on MatPL) 是我们开发的一款开源的基于 MatPL 的一套自动化主动学习平台，用于高效的数据采样。在PWact中实现了常用的基于多模型委员会查询（Committee Query）的主动学习策略，以及我们基于卡尔曼滤波算法提出的不确定性度量算法（Kalman Prediction Uncertainty， KPU）。基于 KPU 的主动学习还在内测阶段，暂未开放给用户访问。在本例中，我们做了两种主动学习采样的对比。 -->
-
-
-<!-- ### [四、通用模型（大模型）](./GNN.md)
-基于 GNN 的各类通用模型正在快速涌现，这类通用模型可以“开箱即用”，也可以做作为“基础模型”，通过微调、蒸馏、主动学习等手段，快速应用到各个专业领域内，极大降低力场构建代价。我们对最近开源的 [[MACE (文献链接)]](https://arxiv.org/abs/2401.00096) 做了一些微调测试。 -->
+<!-- ### [3. Active Learning](./Active%20Learning.md)
+[PWact](../pwact/README.md) (active learning based on MatPL) is our open-source automated active-learning platform for efficient data sampling. PWact implements the widely used multi-model Committee Query strategy and our Kalman-filter-based uncertainty metric, Kalman Prediction Uncertainty (KPU). KPU-based active learning is still in internal testing and is not yet publicly available. This example compares the two sampling approaches. -->
 
 
-[二、使用机器学习力场模拟液态硅到晶体硅的生长过程（案例）](./Si.md)
-
-[[文献 Liquid to crystal Si growth simulation using machine learning force field]](https://pubs.aip.org/aip/jcp/article/153/7/074501/1064762/Liquid-to-crystal-Si-growth-simulation-using)
-
-本案例 使用PMLFF模拟了远离平衡态的硅熔体生长过程，发现基于第一性原理分解的原子能量 (`PWmat 特性`) 构建的 MLFF 可以准确再现第一性原理模拟的生长过程。
-提出了一种校正ML-FF训练中存在的系统偏差的方法，这对于准确模拟相变温度等关键结果非常重要。
-结果表明，ML-FF可以准确模拟硅熔体生长过程，为使用ML-FF进行远离平衡态模拟提供了证据。
+<!-- ### [4. Universal Models (Large Models)](./GNN.md)
+GNN-based universal models are emerging rapidly. They can be used out of the box or as foundation models adapted to specialized domains through fine-tuning, distillation, and active learning, substantially reducing the cost of force-field development. We performed several fine-tuning tests on the recently released [[MACE (paper)]](https://arxiv.org/abs/2401.00096). -->
 
 
-![硅生长过程](./pictures/si.gif)
+[2. Simulating Liquid-to-Crystal Silicon Growth with a Machine-Learning Force Field](./Si.md)
 
-[三、基于机器学习的铁-氢系统力场及其对α-Fe裂纹传播中氢的作用研究（案例）](./Fe.md)
+[[Paper: Liquid-to-crystal Si growth simulation using machine learning force field]](https://pubs.aip.org/aip/jcp/article/153/7/074501/1064762/Liquid-to-crystal-Si-growth-simulation-using)
 
-[[文献 Machine learning force field for Fe-H system and investigation on role of hydrogen on the crack propagation in α-Fe ]](https://www.osti.gov/pages/biblio/1882447-machine-learning-force-field-fe-system-investigation-role-hydrogen-crack-propagation-fe)
+This example uses PMLFF to simulate silicon-melt growth far from equilibrium. It shows that an MLFF trained on atomic energies decomposed from first-principles calculations (a `PWmat feature`) can accurately reproduce the growth process observed in first-principles simulations.
+The work proposes a method for correcting systematic bias during ML-FF training, which is important for accurately predicting key quantities such as phase-transition temperatures.
+The results demonstrate that an ML-FF can accurately simulate silicon-melt growth and support its use for far-from-equilibrium simulations.
 
-案例主要介绍了使用机器学习力场来研究氢对α-铁裂纹传播影响的研究。具体内容包括： 1. 基于密度泛函理论计算结果，构建了铁-氢体系的机器学习力场，该力场采用了神经网络模型，并训练了原子能量。该力场表现出了良好的统计和动力学性质。 2. 通过分子动力学模拟，研究氢浓度对含裂纹的α-铁模型试样裂纹传播的影响。研究发现氢浓度在裂纹尖端处越高，裂纹传播速度越快，这表明氢对裂纹的传播具有促进作用。 3. 在含有晶界的试样中，观察到裂纹尖端处形成了微孔洞，这有助于释放裂纹尖端的拉伸应力，从而促进裂纹的传播。但微孔洞的形成似乎与氢的存在关系不大。 4. 研究还发现，在x方向周期性较短的结构中，裂纹传播速度较快，这可能是由于x方向的协同效应导致的。 5. 与嵌入原子力场的结果相比，机器学习力场显示出了氢对裂纹传播的显著影响，这表明准确描述氢-金属相互作用的力场的重要性。 6. 研究结果表明，氢在裂纹尖端聚集对氢脆性裂纹的传播起着关键作用，需要进一步深入研究不同条件下氢脆性的行为。
 
-<!-- 案例细节可以参考 [龙讯公众号文章](https://mp.weixin.qq.com/s/WdxQCJ0fMVAL7cjw-g5x-g) 以及 [文献 Revealing Morphology Evolution of Lithium Dendrites by Large-Scale Simulation Based on Machine Learning Force Field](https://onlinelibrary.wiley.com/doi/abs/10.1002/aenm.202202892) -->
+![Silicon growth process](./pictures/si.gif)
 
-![裂纹传播过程](./pictures/fe1.gif)
-![裂纹传播过程2](./pictures/fe2.gif)
+[3. Machine-Learning Force Field for Fe–H and the Role of Hydrogen in Crack Propagation in α-Fe](./Fe.md)
+
+[[Paper: Machine learning force field for Fe-H system and investigation on role of hydrogen on the crack propagation in α-Fe]](https://www.osti.gov/pages/biblio/1882447-machine-learning-force-field-fe-system-investigation-role-hydrogen-crack-propagation-fe)
+
+This example studies how hydrogen affects crack propagation in α-iron using a machine-learning force field. Its main findings are: 1. A neural-network force field for the Fe–H system was trained on atomic energies from density-functional-theory calculations and exhibits good statistical and dynamical properties. 2. Molecular-dynamics simulations show that increasing the hydrogen concentration at a crack tip accelerates crack propagation, indicating that hydrogen promotes cracking. 3. In samples containing grain boundaries, microvoids form near the crack tip, relieving tensile stress and facilitating crack growth; their formation, however, appears largely unrelated to hydrogen. 4. Crack propagation is faster in structures with a shorter periodic length along the x direction, possibly because of cooperative effects along x. 5. Compared with embedded-atom-potential results, the machine-learning force field reveals a pronounced influence of hydrogen, highlighting the importance of accurately describing hydrogen–metal interactions. 6. Hydrogen accumulation at the crack tip plays a key role in hydrogen-embrittlement crack propagation, motivating further investigation under different conditions.
+
+<!-- For details, see the [Lonxun WeChat article](https://mp.weixin.qq.com/s/WdxQCJ0fMVAL7cjw-g5x-g) and the paper [Revealing Morphology Evolution of Lithium Dendrites by Large-Scale Simulation Based on Machine Learning Force Field](https://onlinelibrary.wiley.com/doi/abs/10.1002/aenm.202202892). -->
+
+![Crack propagation](./pictures/fe1.gif)
+![Crack propagation, second view](./pictures/fe2.gif)
 <!-- <div>
   <div style={{ display: 'inline-block', marginRight: '10px' }}>
     <img src={require("./pictures/fe1.gif").default} alt="cu_ffc_333" width="251" />
@@ -58,19 +58,19 @@ PWMFF中实现了 [[重组层扩展卡尔曼滤波（LKF）优化器]](https://a
   </div>
 </div> -->
 
-[四、基于机器学习力场的分子动力学模拟揭示锂枝晶的形态演化（案例）](./Li.md)
+[4. Morphological Evolution of Lithium Dendrites Revealed by Machine-Learning Force-Field MD](./Li.md)
 
-案例细节可以参考 [[龙讯公众号文章]](https://mp.weixin.qq.com/s/kapzIrPvL2AcGTUzdHgglg) 以及 [[文献 Revealing Morphology Evolution of Lithium Dendrites by Large-Scale Simulation Based on Machine Learning Force Field ]](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb)
+For details, see the [[Lonxun WeChat article]](https://mp.weixin.qq.com/s/kapzIrPvL2AcGTUzdHgglg) and the paper [[Revealing Morphology Evolution of Lithium Dendrites by Large-Scale Simulation Based on Machine Learning Force Field]](https://iopscience.iop.org/article/10.1088/1367-2630/acf2bb).
 
-案例利用机器学习力场结合自洽连续溶剂模型，对锂枝晶在工作电解质环境中的形态演化进行了模拟。结果表明，枝晶形态演化可分为两个阶段。第一阶段由表面原子能量的降低驱动，导致原本单晶的枝晶发生局部取向重排，形成多个晶域。第二阶段由内部原子能量的降低驱动，促使晶域沿晶界滑移，并降低晶界能量。此外，文章还讨论了不同暴露表面取向对枝晶形态变化的影响。总的来说，降低表面能和晶界能驱动了枝晶形态的演化。
+This example combines a machine-learning force field with a self-consistent continuum-solvation model to simulate the morphological evolution of lithium dendrites in an operating electrolyte. The evolution occurs in two stages. In the first, a decrease in surface-atom energy drives local orientational rearrangement of an initially single-crystal dendrite, producing multiple crystalline domains. In the second, a decrease in internal atomic energy drives those domains to slide along grain boundaries and lowers the grain-boundary energy. The study also examines how different exposed-surface orientations affect dendrite morphology. Overall, reductions in surface and grain-boundary energies drive the morphological evolution.
 
-![锂枝晶在工作电解质环境中的形态演化](./pictures/li.gif)
+![Morphological evolution of lithium dendrites in an operating electrolyte](./pictures/li.gif)
 
 <!-- #### GNN
 #### NEP -->
 
-[五、镁-铜合金力场（案例）](./Mg_Cu.md)
+[5. Mg–Cu Alloy Force Field](./Mg_Cu.md)
 
-[六、非晶硅机器学习力场计算非晶硅热导率（案例）](./Si_temp.md)
+[6. Thermal Conductivity of Amorphous Silicon with a Machine-Learning Force Field](./Si_temp.md)
 
 

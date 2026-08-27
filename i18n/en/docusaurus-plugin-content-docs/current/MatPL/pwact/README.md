@@ -1,135 +1,135 @@
 ---
 sidebar_position: 5
-title: pwact 主动学习
+title: PWact Active Learning
 ---
 
-# PWact 主动学习
-## PWact 平台介绍
-机器学习力场相比于传统方法，能够更快和精确地预测材料性质和反应机理，当前最先进的基于深度学习的分子动力学已经能够做到百亿原子体系的模拟。但是由于机器学习方法的插值特性，对于训练集之外的相空间，MLFF 很难做出准确预测。由于训练数据通常是使用昂贵的第一性原理计算生成的，现实中很难获取到大量的从头算数据集，生成具有足够代表性的训练数据但不依赖大量从头算数据，对于提升模型的外推能力至关重要。[PWact](https://github.com/LonxunQuantum/PWact) (Active learning based on PWmat Machine Learning Force Field) 是开源的基于 MatPL 的一套自动化主动学习平台，用于高效的数据采样。
+# PWact Active Learning
+## PWact Platform Overview
+Machine-learning force fields can predict material properties and reaction mechanisms faster and more accurately than conventional approaches; state-of-the-art deep-learning molecular dynamics can now simulate systems containing tens of billions of atoms. However, because machine-learning models are fundamentally interpolative, an MLFF may be inaccurate in regions of phase space not represented by its training set. Training data are normally generated with expensive first-principles calculations, making large *ab initio* datasets difficult to obtain. Creating sufficiently representative data without relying on excessive first-principles calculations is therefore essential for improving extrapolation. [PWact](https://github.com/LonxunQuantum/PWact) (Active Learning Based on PWmat Machine Learning Force Fields) is an open-source, MatPL-based automated active-learning platform for efficient data sampling.
 
-PWact 平台包含主任务和任务分发器两部分
+PWact consists of a primary workflow and a task dispatcher.
 
-![PWact 平台架构](./pictures/Arch_design_slurm_zh.png)
+![PWact platform architecture](./pictures/Arch_design_slurm_zh.png)
 
-主任务包括 `预训练数据制备` 以及 `主动学习` 两个模块。负责预训练数据制备和主动学习过程中的计算任务生成、以及结果收集。任务分发器接收到任务调度请求之后，根据计算资源使用状态以及任务申请资源情况将任务调度到对应的计算节点上，待任务执行完毕之后，收集计算节点的执行结果返回给主任务程序。
+The primary workflow contains `pretraining-data preparation` and `active learning`. It generates computational tasks and collects their results. When the dispatcher receives a scheduling request, it assigns the task to a compute node according to current resource usage and the resources requested. After execution, it collects the results and returns them to the primary workflow.
 
-### 预训练数据制备
+### Pretraining-Data Preparation
 
-![预训练数据制备流程](./pictures/init_arch_zh.png)
+![Pretraining-data preparation workflow](./pictures/init_arch_zh.png)
 
-预训练数据制备流程包括驰豫 `(支持 PWmat、VASP、CP2K)`、扩胞、缩放晶格、微扰以及运行 MD 四个模块，并支持对这些模块的组合使用。对于 MD ， `(支持 PWmat、VASP、CP2K)`的 AIMD作为预训练集。同时，也支持使用大模型运行MD ，之后通过 direct 采样过滤掉相似构型后作为预训练集，这里同样支持使用 PWmat、VASP、CP2K 对过滤后的结构做标注（自洽计算获取能量和受力）。
+The preparation workflow supports relaxation `(PWmat, VASP, and CP2K)`, supercell construction, lattice scaling, perturbation, and MD, and these operations can be combined. AIMD trajectories from PWmat, VASP, or CP2K can serve as pretraining data. PWact can also run MD with a foundation model and use DIRECT sampling to remove similar configurations. The filtered structures can then be labeled with PWmat, VASP, or CP2K through self-consistent calculations of energies and forces.
 
- - direct 采样：Qi J, Ko T W, Wood B C, et al. Robust training of machine learning interatomic potentials with dimensionality reduction and stratified sampling[J]. npj Computational Materials, 2024, 10(1): 43.
+ - DIRECT sampling: Qi J, Ko T W, Wood B C, et al. Robust training of machine learning interatomic potentials with dimensionality reduction and stratified sampling[J]. npj Computational Materials, 2024, 10(1): 43.
 
-### 主动学习
+### Active Learning
 
-![主动学习流程](./pictures/active_arch_zh.png)
+![Active-learning workflow](./pictures/active_arch_zh.png)
 
-主动学习流程包括`训练`、`构型探索`以及`标注`模块。首先，训练模块做模型训练；之后将训练好的模型送入探索模块。探索模块调用力场模型做分子动力学模拟，模拟结束后把得到的分子运动轨迹送入查询器做不确定性度量；查询完成后，把待标注构型点送入标注模块；最后标注模块做自洽计算，得到能量和力，作为标签与对应构型一起送入已标注数据库中；重复上述步骤，直到收敛。
+The active-learning workflow contains `training`, `configuration exploration`, and `labeling`. First, the training module trains a model and passes it to exploration. Exploration runs molecular dynamics with the force field and sends the resulting trajectories to a query engine for uncertainty estimation. Selected configurations are passed to labeling, which performs self-consistent calculations to obtain energy and force labels and adds the labeled structures to the database. This cycle repeats until convergence.
 
-- 对于模型训练，我们这里支持 MatPL 中的 DP model、DP model with compress 以及 DP model with type embedding，以及 NEP 模型。
+- Model training supports MatPL DP, compressed DP, type-embedding DP, and NEP models.
 
-- 对于不确定性度量，提供了常用了基于多模型委员会查询的方法，并且也提供了我们最新设计的 单模型的基于卡尔曼滤波的不确定性度量方法 KPU (Kalman Prediction Uncertainty, KPU)。该方法能够在接近委员会查询精度的情况下，将模型训练的计算开销减少到 1/N, N为委员会查询模型数量，欢迎用户尝试。对于 KPU 方法，仅适用于DP模型。
+- For uncertainty estimation, PWact provides the widely used multi-model Committee Query method and our single-model Kalman Prediction Uncertainty (KPU) method. KPU approaches Committee Query accuracy while reducing model-training cost to $1/N$, where $N$ is the number of committee models. KPU currently applies only to DP models.
     
-- 【可选项】通过 direct 采样方法 降低候选集中的相似结构数量。
+- **Optional:** Use DIRECT sampling to reduce the number of similar structures in the candidate set.
 
-- 对于标注，支持 PWmat、VASP、CP2K 或 使用大模型推理。
+- Labeling supports PWmat, VASP, CP2K, or foundation-model inference.
 
-### 依赖应用
+### Dependencies
 
-- PWact 作业调度采用 [SLURM](https://slurm.schedmd.com/documentation.html) 集群管理和作业调度系统，需要您的计算集群上已安装 SLURM。
+- PWact uses [Slurm](https://slurm.schedmd.com/documentation.html) for cluster and job scheduling, so Slurm must be installed on the compute cluster.
 
-- PWact 的 DFT 计算支持 [PWmat](https://www.pwmat.com/gpu-download) 、[VASP](https://www.vasp.at/)、 [CP2K](https://www.cp2k.org/)，需要您的计算机群已安装PWMAT、VASP或CP2K。
+- DFT calculations support [PWmat](https://www.pwmat.com/gpu-download), [VASP](https://www.vasp.at/), and [CP2K](https://www.cp2k.org/). Install at least one of them on the cluster.
 
-<!-- 对于DFTB, 我们已经在 PWMAT 中集成了 DFTB，您可以在[`PWMAT手册的DFTB_DETAIL章节`](http://www.pwmat.com/pwmat-resource/Manual_cn.pdf)查看详细使用说明([`集成了DFTB的PWmat版本下载地址`](https://www.pwmat.com/modulefiles/pwmat-resource/mstation-download/cuda-11.6-mstation-beta.zip))。 -->
+<!-- DFTB is integrated into PWmat. See the [`DFTB_DETAIL section of the PWmat manual`](http://www.pwmat.com/pwmat-resource/Manual_cn.pdf) for details and [`download the PWmat build with DFTB`](https://www.pwmat.com/modulefiles/pwmat-resource/mstation-download/cuda-11.6-mstation-beta.zip). -->
 
-- PWact 使用的力场模型使用 [MatPL](https://github.com/LonxunQuantum/MatPL)训练 , MatPL 安装方式参考 [MatPL 在线手册](../install/README.md)。
+- Force-field models are trained with [MatPL](https://github.com/LonxunQuantum/MatPL). See the [MatPL installation guide](../install/README.md).
 
-- PWact Lammps 分子动力学模拟 基于 [lammps-MatPL](https://github.com/LonxunQuantum/lammps-MatPL)，安装方式参考 [MatPL 在线手册](../install/README.md)。
+- LAMMPS molecular dynamics uses [lammps-MatPL](https://github.com/LonxunQuantum/lammps-MatPL). See the [MatPL installation guide](../install/README.md).
 
-- Direct 采样和大模型采样，目前在 [龙讯超算云](https://mcloud.lonxun.com/)(`Mcloud`) 做了预装，支持 direct 采样和 eqv2 大模型。对于用户自己的环境，需要自己安装相应环境，并提供处理脚本。
+- DIRECT sampling and foundation-model sampling are preinstalled on [Lonxun Supercomputing Cloud](https://mcloud.lonxun.com/) (`Mcloud`), with support for DIRECT and the EquiformerV2 model. In other environments, install the required software and provide the processing scripts.
 
-### 安装流程
+### Installation
 
-PWact 支持pip 命令安装与源码安装两种安装方式。
+PWact can be installed with `pip` or from source.
 
-#### pip 命令安装
-安装包已上传至pypi 官网，支持直接使用pip install 安装。
+#### Install with pip
+The package is available on PyPI and can be installed directly with `pip`.
 ```bash
 pip install pwact
 
-#安装 pwact,如果已安装，则升级到最新版本
+# Install PWact, or upgrade an existing installation
 pip install pwact --upgrade
 
-# 列出所有可安装版本 
+# List available versions
 pip index versions pwact
-# 输出结果示例：
+# Example output:
 # pwact (0.4.8)
 # Available versions: 0.4.8, 0.4.7, 0.4.6, 0.4.5, 0.4.4, 0.4.2, 0.3.4, 0.3.3, 0.2.4, 0.1.28, 0.1.10
 
-# 安装指定版本
+# Install a specific version
 pip install pwact==n.m.o
 
 ```
 
-#### github源码安装
-源码安装适用于需要修改源码的用户，否则建议您通过 pip安装 即可。
-源码下载
+#### Install from GitHub Source
+Install from source only when you need to modify the code; otherwise, use `pip`.
+Download the source:
 ```bash
 git clone https://github.com/LonxunQuantum/PWact.git
-或者
+or
 git clone https://gitee.com/pfsuo/pwact.git
-gitee更新可能没有github及时，建议优先从github下载
+Gitee may update later than GitHub, so GitHub is recommended
 ```
 
-源码下载后，进入源码的根目录（与setup.py同一级）执行命令
+After downloading, enter the source root containing `setup.py` and run:
 ```bash
 pip install .
-#或者加开发者选项, 安装时不复制文件，而是直接从源码文件读取，任何对源码的修改都会立即生效
+# Or use editable mode so changes to the source take effect immediately
 # pip install -e .
-# 从源码安装执行完毕后，需要把pwact加入环境变量
+# After installing from source, add PWact to PYTHONPATH if needed
 # export PYTHONPATH=/the/path/pwact:$PYTHONPATH
 ```
 
-PWact 开发语言采用 Python ，支持 Python 3.9 以及以上的版本。建议用户直接使用 MatPL 的 [Python 运行环境](../install/README.md) 即可。
+PWact is written in Python and supports Python 3.9 or later. We recommend using MatPL's [Python environment](../install/README.md).
 
-如果您需要为 PWact 单独创建虚拟环境，只需要安装以下依赖包即可（与您的 Python 版本相匹配， 支持Python 3.9 以及以上）。
+To create a separate virtual environment for PWact, install the following packages in a Python 3.9-or-later environment:
 ```bash
     pip install numpy pandas tqdm pwdata
 ```
 
 
-### 命令列表
+### Command List
 
-PWact 起始命令为`pwact`，包括一系列功能命令，所有功能命令都对大小写不敏感。例如`INIT_BULK`、`Init_BUlk` 或`init_bulk` 都是等价的。
+PWact commands begin with `pwact`. Subcommands are case-insensitive, so `INIT_BULK`, `Init_BUlk`, and `init_bulk` are equivalent.
 
-#### 输出可用命令列表
+#### List Available Commands
 
 ```bash
 pwact  [ -h / --help / help ]
 
-#输出具体命令 cmd_name 对应的参数列表
+# List options for a specific cmd_name
 pwact cmd_name -h
 ```
 
-#### 初始训练集制备
+#### Prepare an Initial Training Set
 
 ```bash
 pwact init_bulk param.json resource.json
 ```
 
-#### 主动学习
+#### Active Learning
 
 ```bash
 pwact run param.json resource.json
 ```
 
-对于上述两个命令，json 文件名称可以用户修改，但是要求 [`param.json`](#输入文件-paramjson) 和 [`resouce.json`](#输入文件-resourcejson) 的输入顺序不能变。
+You may rename the JSON files used by these commands, but the argument order of [`param.json`](#paramjson) and [`resource.json`](#resourcejson) must remain unchanged.
 
 
-#### gather_pwdata 命令
+#### gather_pwdata Command
 
-搜索主动学习目录下所有探索到的所有结构，并将结果保存到 final_pwdata 目录下，数据格式与主动学习中设置的 `data_format` 格式相同。目录结构如下所示，final_pwdata_list.txt 保存了当前目录下每个iter数据的目录。
+This command searches the active-learning directory for all explored structures and saves them under `final_pwdata` in the configured `data_format`. `final_pwdata_list.txt` lists the data directory for each iteration.
 ```txt
 final_pwdata/
 final_pwdata_list.txt  iter.0000  iter.0001  iter.0002 ...
@@ -138,35 +138,35 @@ final_pwdata_list.txt  iter.0000  iter.0001  iter.0002 ...
 ```bash
 pwact gather_pwdata -i .
 ```
-这里 `-i` 指定主动学习的根目录所在路径（案例中对应run_iter目录）。
+Here, `-i` specifies the active-learning root, corresponding to the `run_iter` directory in the examples.
 
-#### kill 命令
+#### kill Command
 
-结束正在执行的 `init_bulk` 任务，如 驰豫（relax）、AIMD 任务
+Stop running `init_bulk` tasks such as relaxation and AIMD:
 
 ```bash
-# 进入到执行 pwact init_bulk 命令时的所在目录
+# Enter the directory from which pwact init_bulk was started
 pwact kill init_bulk
 ```
 
-结束正在执行的 `run` 任务，包括正在运行的训练、探索（MD）或者标记任务
+Stop running `run` tasks, including training, exploration (MD), and labeling:
 ```bash
-# 进入到执行 pwact run 命令时的所在目录
+# Enter the directory from which pwact run was started
 pwact kill run
 ```
-上面的 kill 命令功能您也可以通过手动操作替代，需要您第一步，结束正在执行的主进程，即执行 pwact init_bulk 或 pwact run 的窗口；第二步，需要您手动结束正在执行的slurm任务。
+You can perform the same operation manually by first terminating the primary `pwact init_bulk` or `pwact run` process and then canceling the associated Slurm jobs.
 
-考虑到手动操作可能会误结束您的其他进程，建议您使用命令结束。
+Because manual termination may affect unrelated processes, the `kill` command is recommended.
 
-使用命令结束进程后，建议您查看命令输出信息，并使用 slurm 命令查看是否有未结束的进程。
+After stopping the workflow, inspect the command output and use Slurm commands to check for remaining jobs.
 
-#### filter 命令
+#### filter Command
 
-测试指定上、下限设置下的选点情况
+Test structure selection with specified lower and upper thresholds:
 ```bash
 pwact filter -i iter.0000/explore/md -l 0.01 -u 0.02 -s 
 ```
-该命令将检测位于iter.0000/explore/md目录下（该轮次探索到的所有轨迹）使用下限0.01 和上限 0.02 的选点结果(如下面的例子所示)， -s 为可选项，用于指定是否将详细的选点信息做保存。
+This command evaluates all trajectories under `iter.0000/explore/md` using a lower threshold of `0.01` and an upper threshold of `0.02`, as shown below. The optional `-s` flag saves detailed selection information.
 
 ```txt
 Image select result (lower 0.01 upper 0.02):
@@ -179,30 +179,30 @@ Candidate configurations: 44
 Error configurations: 908, details in file fail.csv
 ```
 
-### 输入文件解读
+### Input Files
 
-PWact 包括两个输入文件 `param.json` 和 `resource.json`，用于初始数据集制备或者主动学习。PWact 对于两个 JSON 文件中键的大小写输入不敏感。
+PWact uses `param.json` and `resource.json` for initial-dataset preparation and active learning. JSON keys in both files are case-insensitive.
 
-#### 输入文件 param.json
+#### param.json
 
-[初始训练集制备 init_param.josn](./init_param_zh#参数列表)
+[Initial training-set preparation: init_param.json](./init_param_zh)
 
-对构型（VASP、PWmat 格式）进行驰豫、扩胞、缩放、微扰和 AIMD（PWMAT、VASP、CP2K）设置。
+Configures relaxation, supercell construction, scaling, perturbation, and AIMD (PWmat, VASP, or CP2K) for VASP- or PWmat-format structures.
 
-[主动学习 run_param.josn](./run_param_zh#参数列表)
+[Active learning: run_param.json](./run_param_zh)
 
-主动学习流程中的训练设置（网络结构、优化器）、探索设置（lammps 设置、选点策略）以及标记设置（VASP/PWmat 自洽计算设置）。
+Configures training (network architecture and optimizer), exploration (LAMMPS and selection strategy), and labeling (VASP/PWmat self-consistent calculations).
 
-#### 输入文件 resource.json
+#### resource.json
 
 [resource.json](./resource_zh#resourcejson)
 
-计算集群资源设置，包括对训练、分子动力学（MD）、DFT 计算（SCF、Relax、AIMD）使用的计算节点、CPU、GPU 资源设置，以及对应的运行软件（Lammps、VASP、PWMAT、MatPL）。
+Configures cluster resources for training, molecular dynamics, and DFT calculations (SCF, relaxation, and AIMD), including compute nodes, CPUs, GPUs, and software such as LAMMPS, VASP, PWmat, and MatPL.
 
-### 主动学习案例
+### Active-Learning Examples
 
-- [硅的主动学习](./example_si_init_zh)
+- [Active learning for silicon](./example_si_init_zh)
 
-- [硅的主动学习(bigmodel+direct)](./example_si_direct_bigmodel.md)
+- [Active learning for silicon (foundation model + DIRECT)](./example_si_direct_bigmodel.md)
 
-- [金银合金的主动学习](./example_auag_init_zh.md)
+- [Active learning for an Au–Ag alloy](./example_auag_init_zh.md)

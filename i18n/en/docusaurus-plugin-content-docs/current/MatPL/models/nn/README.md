@@ -3,13 +3,13 @@ sidebar_position: 3
 title: NN
 ---
 
-## NN 模型
+## NN Model
 
-**[操作演示](./nn-tutorial.md)**
+**[Tutorial](./nn-tutorial.md)**
 
-### Neural Network(NN) 模型介绍
+### Neural Network (NN) Model Overview
 
-Neural Network(NN) 中实现了如下 `8` 种具有平移、旋转和置换不变性的特征类型
+The Neural Network (NN) model implements the following `8` feature types, all invariant under translation, rotation, and permutation:
 ```
         1. 2-body(2b)
         2. 3-body(3b)
@@ -21,21 +21,21 @@ Neural Network(NN) 中实现了如下 `8` 种具有平移、旋转和置换不�
         8. DP-Gaussian(dp2)
 ```
 
-特征（或描述符）是描述原子局部环境的量。它们需要保持平移、旋转和置换对称性。特征通常用作各种回归器（线性模型、神经网络等）的输入，这些回归器输出原子能量和力。由于特征是空间坐标的可微函数，因此可以计算力：
+Features (or descriptors) characterize the local atomic environment and must preserve translational, rotational, and permutational symmetry. They are commonly used as inputs to regressors such as linear models and neural networks, which predict atomic energies and forces. Because the features are differentiable functions of spatial coordinates, forces can be calculated as
 
 $$
 \mathbf{F}_i = - \frac{d E_{\text{tot}}}{d \mathbf{R}_i} = - \sum_{j,\alpha} \frac{\partial E_j}{\partial G_{j,\alpha}} \frac{\partial G_{j,\alpha}}{\partial \mathbf{R}_i}
 $$
 
-其中，$j$ 是在截断半径内的近邻原子的索引，$\alpha$ 是特征的索引。
+where $j$ indexes neighboring atoms within the cutoff radius and $\alpha$ indexes the features.
 
 ### 2-b and 3-b features with piecewise cosine functions (feature 1 & 2)
 
-给定一个中心原子，利用分段余弦函数来描述其局部环境。通过下面的图表，可以大致了解它们的原理。
+For a given central atom, piecewise cosine functions are used to describe its local environment. The following diagram illustrates the basic idea.
 
 ![features](./pictures/piecewise_cos.png)
 
-我们首先定义分段余弦函数，分别用于两体和三体特征。给定内部和外部截断 $R_{\text{inner}}$ 和 $R_{\text{outer}}$，基函数的阶数 $M$，分段函数的宽度 $h$，以及中心原子 $i$ 和近邻原子 $j$ 之间的原子间距 $R_{ij}$，我们定义基函数为
+We first define piecewise cosine functions for the two-body and three-body features. Given inner and outer cutoffs $R_{\text{inner}}$ and $R_{\text{outer}}$, basis order $M$, segment width $h$, and interatomic distance $R_{ij}$ between central atom $i$ and neighboring atom $j$, the basis function is
 
 $$
 \phi_\alpha (R_{ij}) =
@@ -45,35 +45,35 @@ $$
 \end{cases}
 $$
 
-其中
+where
 
 $$
 R_\alpha = R_{\text{inner}} + (\alpha - 1) h,\ \alpha = 1, 2, ..., M
 $$
 
-中心原子 $i$ 的 **两体特征** 表达式为
+The **two-body feature** of central atom $i$ is
 
 $$
 G_{\alpha,i} = \sum_{m} \phi_{\alpha}(R_{ij})
 $$
 
-而 **三体特征** 表达式为
+and the **three-body feature** is
 
 $$
 G_{\alpha\beta\gamma,i} = \sum_{j,k} \phi_{\alpha}(R_{ij}) \phi_{\beta}(R_{ik}) \phi_{\gamma}(R_{jk})
 $$
 
-其中 $\sum_{m}$ 和 $\sum_{m,n}$ 分别表示在中心原子 $i$ 的截断半径 $R_{\text{outer}}$ 内的所有原子的求和。
+where $\sum_{m}$ and $\sum_{m,n}$ denote sums over all atoms within the cutoff radius $R_{\text{outer}}$ of central atom $i$, respectively.
 
-这两个特征通常是成对使用的。
+These two features are usually used together.
 
-_参考文献_：
+_Reference_:
 
 Huang, Y., Kang, J., Goddard, W. A. & Wang, L.-W. Density functional theory based neural network force fields from energy decompositions. Phys. Rev. B 99, 064103 (2019)
 
 ### 2-b and 3-b Gaussian feature (feature 3 & 4)
 
-这两个特征是 Behler-Parrinello 神经网络中首次使用的特征。给定截断半径 $R_c$ 及中心原子 $i$ 和近邻原子 $j$ 之间的原子间距 $R_{ij}$，定义截断函数 $f_c$
+These features were first used in the Behler–Parrinello neural network. Given cutoff radius $R_c$ and interatomic distance $R_{ij}$ between central atom $i$ and neighboring atom $j$, the cutoff function $f_c$ is defined as
 
 $$
 f_c(R_{ij}) =
@@ -83,63 +83,63 @@ f_c(R_{ij}) =
 \end{cases}
 $$
 
-中心原子 $i$ 的 **两体高斯** 特征定义为
+The **two-body Gaussian** feature of central atom $i$ is defined as
 
 $$
 G_i = \sum_{j \neq i} e^{(-\eta(R_{ij} - R_s)^2)} f_c(R_{ij})
 $$
 
-其中 $\eta$ 和 $R_s$ 是用户定义的参数。
+where $\eta$ and $R_s$ are user-defined parameters.
 
-中心原子 $i$ 的 **三体高斯** 特征定义为
+The **three-body Gaussian** feature of central atom $i$ is defined as
 
 $$
 G_i = 2^{1-\zeta} \sum_{j,k \neq i} (1 + \lambda \cos \theta_{ijk})^\zeta e^{-\eta(R_{ij}^2 + R_{ik}^2 + R_{jk}^2)} f_c(R_{ij}) f_c(R_{ik}) f_c(R_{jk})
 $$
 
-其中
+where
 
 $$
 \cos \theta_{ijk} = \frac{\mathbf{R}_{ij} \cdot \mathbf{R}_{ik}}{|\mathbf{R}_{ij}| |\mathbf{R}_{ik}|}
 $$
 
-$\eta$、$\zeta$ 和 $\lambda = \pm 1$ 是用户定义的参数。
+$\eta$, $\zeta$, and $\lambda = \pm 1$ are user-defined parameters.
 
-这两个特征通常是成对使用的。
+These two features are usually used together.
 
-_参考文献_：
+_Reference_:
 
 J. Behler and M. Parrinello, Generalized Neural-Network Representation of High Dimensional Potential-Energy Surfaces. Phys. Rev. Lett. 98, 146401 (2007)
 
 ### Moment Tensor Potential (feature 5)
 
-在 MTP 中，中心原子 $i$ 的局部环境由
+In MTP, the local environment of central atom $i$ is defined by
 
 $$
 \mathbf{n}_i = (z_i, z_j, \mathbf{r}_{ij})
 $$
 
-定义，其中 $z_i$ 是中心原子的原子类型，$z_j$ 是近邻原子的原子类型，$\mathbf{r}_{ij}$ 是近邻原子的相对坐标。接下来，每个原子的能量贡献被展开为
+where $z_i$ is the atom type of the central atom, $z_j$ is the atom type of a neighbor, and $\mathbf{r}_{ij}$ is the relative coordinate of that neighbor. The energy contribution of each atom is then expanded as
 
 $$
 E_i(\mathbf{n}_i) = \sum_\alpha c_\alpha B_\alpha(\mathbf{n}_i)
 $$
 
-其中 $B_\alpha$ 是用户选择的基函数，$c_\alpha$ 是待拟合的参数。
+where $B_\alpha$ is a user-selected basis function and $c_\alpha$ is a parameter to be fitted.
 
-为了构造基函数，我们引入矩张量 $M_{\mu\nu}$ 来定义基函数
+To construct the basis functions, we introduce the moment tensor $M_{\mu\nu}$:
 
 $$
 M_{\mu\nu}(\mathbf{n}_i) = \sum_j f_\mu(|\mathbf{r}_{ij}|, z_i, z_j) \bigotimes_\nu \mathbf{r}_{ij}
 $$
 
-这些矩张量包含径向和角度部分。径向部分可以展开为
+These moment tensors contain radial and angular components. The radial component can be expanded as
 
 $$
 f_\mu(|\mathbf{r}_{ij}|, z_i, z_j) = \sum_\beta c^{(\beta)}_{\mu,z_i,z_j} Q^{(\beta)}(|\mathbf{r}_{ij}|)
 $$
 
-其中 $Q^{(\beta)}(|\mathbf{r}_{ij}|)$ 是径向基函数。具体地，
+where $Q^{(\beta)}(|\mathbf{r}_{ij}|)$ is a radial basis function. Specifically,
 
 $$
 Q^{(\beta)}(|\mathbf{r}_{ij}|) =
@@ -149,39 +149,39 @@ Q^{(\beta)}(|\mathbf{r}_{ij}|) =
 \end{cases}
 $$
 
-其中 $\phi^{(\beta)}$ 是定义在区间 $[R_{\text{min}}, R_{\text{cut}}]$ 上的多项式（例如切比雪夫多项式）。
+where $\phi^{(\beta)}$ is a polynomial, such as a Chebyshev polynomial, defined on $[R_{\text{min}}, R_{\text{cut}}]$.
 
-角度部分由 $\bigotimes_\nu \mathbf{r}_{ij}$ 给出，它表示对 $\mathbf{r}_{ij}$ 进行 $\nu$ 次张量积，包含了近邻 $\mathbf{n}_i$ 的角度信息。$\nu$ 决定了矩张量的秩。当 $\nu=0$ 时，得到一个常数标量；当 $\nu=1$ 时，得到一个向量（秩-1 张量）；当 $\nu=2$ 时，得到一个矩阵（秩-2 张量）；以此类推。
+The angular component is given by $\bigotimes_\nu \mathbf{r}_{ij}$, the $\nu$-fold tensor product of $\mathbf{r}_{ij}$, and contains the angular information of neighborhood $\mathbf{n}_i$. The value of $\nu$ determines the rank of the moment tensor: $\nu=0$ gives a constant scalar, $\nu=1$ a vector (rank-1 tensor), $\nu=2$ a matrix (rank-2 tensor), and so on.
 
-最后，我们定义矩张量的级数为
+Finally, the level of a moment tensor is defined as
 
 $$
 \text{lev}(M_{\mu\nu}) = 2 + 4\mu + \nu
 $$
 
-这是一个经验公式。
+This is an empirical formula.
 
-_参考文献_：
+_Reference_:
 
 I.S. Novikov, etal, The MLIP package: moment tensor potential with MPI and active learning. Mach. Learn.: Sci. Technol, 2, 025002 (2021)
 
 ### Spectral Neighbor Analysis Potential (feature 6)
 
-在 SNAP 中，不使用高斯基函数。因此不计算两个原子局域环境图之间的距离和核函数。它首先定义一个原子局域环境，然后使用球谐函数（或 4D 球，带有旋转矩阵）来展开原子局域环境。然后使用双谱，使其具有旋转不变性。从某种意义上说，它类似于 MTP，但它使用一种特殊的方法来缩并方向指数，使其具有旋转不变性。它通常与线性回归一起使用。
+SNAP does not use Gaussian basis functions, so it does not calculate distances or kernel functions between two atomic-environment maps. Instead, it first defines a local atomic environment and expands it in spherical harmonics—or on a 4D hypersphere using rotation matrices. A bispectrum is then used to enforce rotational invariance. In this sense, SNAP resembles MTP, but uses a specialized contraction of directional indices to achieve rotational invariance. It is commonly paired with linear regression.
 
-首先，它定义位于 $\mathbf{r}$ 处的中心原子 $i$ 的邻近原子周围的原子局域环境为三维空间中的 $\delta$ 函数之和：
+First, the local environment around the neighbors of central atom $i$ at $\mathbf{r}$ is defined as a sum of $\delta$ functions in three-dimensional space:
 
 $$
 \rho(\mathbf{r}) = \delta(\mathbf{r}) + \sum_{\mathbf{r}_{ki} < R_C} f_C(\mathbf{r}_{ki}) \omega_k \delta(\mathbf{r} - \mathbf{r}_{ki})
 $$
 
-其中 $\mathbf{r}_{ki}$ 是原子 $i$ 的第 $k$ 个近邻的位置，$\omega_k$ 是第 $k$ 个近邻的权重，径向函数 $f_C(\mathbf{r}_{ki})$ 确保每个近邻的贡献在截断半径 $R_C$ 附近平滑地变为零：
+where $\mathbf{r}_{ki}$ is the position of the $k$-th neighbor of atom $i$, $\omega_k$ is its weight, and radial function $f_C(\mathbf{r}_{ki})$ ensures that each neighbor's contribution smoothly approaches zero near cutoff radius $R_C$:
 
 $$
 f_C(\mathbf{r}) = 0.5 \left[ \cos\left( \frac{\pi r}{R_C} \right) + 1 \right]
 $$
 
-这个原子局域环境函数的角部分可以用球谐函数展开，球谐函数定义在 $l = 0, 1, 2, ...$ 和 $m = -l, -l+1, ..., l-1, l$ 的基础上。径向分布通常由一组径向基函数表示。然而，在这里，径向信息 $\mathbf{r}$ 被映射到 4D 超球面函数 $U^j_{mm'}(\theta_0,\theta,\phi)$ 中，其中所有点（邻近原子）落入 3D 球面（在 4D 空间中），定向（角度）信息由三个角度给出：
+The angular component of this local-environment function can be expanded in spherical harmonics defined for $l = 0, 1, 2, ...$ and $m = -l, -l+1, ..., l-1, l$. A radial distribution is normally represented by a set of radial basis functions. Here, however, radial information $\mathbf{r}$ is mapped to the 4D hyperspherical function $U^j_{mm'}(\theta_0,\theta,\phi)$, where all points (neighboring atoms) lie on a 3D sphere embedded in 4D space and orientation is represented by three angles:
 
 $$
 \mathbf{r} \equiv \begin{pmatrix} x \\ y \\ z \end{pmatrix} \rightarrow
@@ -192,31 +192,31 @@ $$
 \end{matrix}
 $$
 
-因此，上述原子局域环境函数可以用这些 4D 超球面函数 $U^j_{mm'}(\theta_0,\theta,\phi)$ 展开，展开系数为 $u^j_{mm'}$：
+The local-environment function can therefore be expanded in these 4D hyperspherical functions $U^j_{mm'}(\theta_0,\theta,\phi)$ with coefficients $u^j_{mm'}$:
 
 $$
 \rho(\mathbf{r}) = \sum_{j=0,\frac{1}{2},1,...}^\infty \sum_{m=-j,-j+1}^{j} \sum_{m'=-j,-j+1}^{j} u^j_{mm'} U^j_{mm'}(\theta_0,\theta,\phi)
 $$
 
-使用上述原子局域环境函数，可以计算 $u^j_{mm'}$：
+Using the local-environment function above, $u^j_{mm'}$ is calculated as
 
 $$
 u^j_{mm'} = U^j_{mm'}(0,0,0) + \sum_{\mathbf{r}_{ki} < R_C} f_C(\mathbf{r}_{ki}) \omega_k U^j_{mm'}(\theta_0(k),\theta(k),\phi(k))
 $$
 
-其中，$k$ 是邻近原子的索引，$\theta_0(k),\theta(k),\phi(k)$ 是原子 $i$ 的第 $k$ 个近邻的位置矢量的三个角度。注意，$u^j_{mm'}$ 是由于其指数 $m, m'$ 而具有方向依赖性。它们可以与下面的缩并公式（使用三个 $u^j_{mm'}$）缩并：
+where $k$ indexes neighboring atoms and $\theta_0(k),\theta(k),\phi(k)$ are the three angles of the position vector of atom $i$'s $k$-th neighbor. Because of the indices $m$ and $m'$, $u^j_{mm'}$ is direction dependent. Three such terms can be contracted using
 
 $$
 F(j_1,j_2,j) = \sum_{m_1,m_1'=-j_1}^{j} \sum_{m_2,m_2'=-j_2}^{j} \sum_{m,m'=-j}^{j} (u^{j}_{mm'})^* u^{j_1}_{m_1 m_1'} u^{j_2}_{m_2 m_2'} \times C_{j_1 m_1 j_2 m_2}^{j m} C_{j_1 m_1' j_2 m_2'}^{j m'}
 $$
 
-这里，$C_{j_1 m_1 j_2 m_2}^{j m} C_{j_1 m_1' j_2 m_2'}^{j m}$ 是 Clebsch-Gordan 系数，最终的标量特征是 $F(j_1,j_2,j)$。通过设置不同的 $j_1,j_2,j$，可以产生不同的特征。注意，在这些特征中，没有径向函数索引，而是有三个角动量索引。这是因为我们已经将径向距离信息转换为 3D 球面中的第三个角度信息。
+Here, $C_{j_1 m_1 j_2 m_2}^{j m} C_{j_1 m_1' j_2 m_2'}^{j m}$ are Clebsch–Gordan coefficients, and the final scalar feature is $F(j_1,j_2,j)$. Different choices of $j_1,j_2,j$ produce different features. These features have no radial-function index; instead, they contain three angular-momentum indices because radial-distance information has been transformed into the third angular coordinate on the 3D sphere.
 
 ### DP-Chebyshev (feature 7)
 
-这个特征类似于 DP 的嵌入网络。它使用切比雪夫多项式作为基础。
+This feature resembles the DP embedding network and uses Chebyshev polynomials as its basis.
 
-首先，我们将 $S(\mathbf{r}_{ij})$ 定义为加权的距离的倒数函数：
+First, $S(\mathbf{r}_{ij})$ is defined as a weighted inverse-distance function:
 
 $$
 S(\mathbf{r}) = \frac{f_C(\mathbf{r})}{r}
@@ -231,41 +231,41 @@ f_C(\mathbf{r}) =
 \end{cases}
 $$
 
-这里，$R_{C_2}$ 是一个平滑的截断参数，它允许在由 $R_C$ 定义的局部区域的边界上平滑地将 $\mathbf{r}_i$ 的分量减小到零。这个平滑函数比之前使用的 $R_{C_2}$ 更复杂一些。$S(\mathbf{r}_{ji})$ 减小了远离中心原子 $i$ 的原子的权重。然后，我们定义径向函数 $g_M(s)$ 为*深度势能切比雪夫特征*中的切比雪夫多项式 $C_M$：
+Here, $R_{C_2}$ is a smooth cutoff parameter that allows the components of $\mathbf{r}_i$ to approach zero smoothly at the boundary of the local region defined by $R_C$. This smoothing function is more elaborate than the one used previously. $S(\mathbf{r}_{ji})$ reduces the weight of atoms farther from central atom $i$. We then define radial function $g_M(s)$ using Chebyshev polynomial $C_M$ for the *Deep Potential Chebyshev feature*:
 
 $$
 g_M(s) = C_M(2R_{\min} S - 1)
 $$
 
-这里，$R_{\min}$ 是最小 $r$ 的输入。
+Here, $R_{\min}$ is the minimum input value of $r$.
 
-为了构造这样的特征，我们首先计算四个分量的向量：
+To construct this feature, we first calculate a four-component vector:
 
 $$
 T_M(k) = \sum_{\mathbf{r}_{ji} < R_C} \hat{X}_{ji}(k) S(\mathbf{r}_{ji}) g_M(S(\mathbf{r}_{ji}))
 $$
 
-这里，$k = 0,1,2,3$（四分量向量）。它们是由通常的 $x,y,z$ 分量构成的，再加上 $S$ 分量：
+Here, $k = 0,1,2,3$ indexes the four components: the usual $x,y,z$ components plus an $S$ component:
 
 $$
 \{ x_{ji}, y_{ji}, z_{ji}\} \rightarrow \{ S(\mathbf{r}_{ji}), \hat{x}_{ji}, \hat{y}_{ji}, \hat{z}_{ji} \}
 $$
 
-其中 $\hat{x}_{ji} = \frac{x_{ji}}{r_{ji}}, \hat{y}_{ji} = \frac{y_{ji}}{r_{ji}}, \hat{z}_{ji} = \frac{z_{ji}}{r_{ji}}$ 是 $\mathbf{r}_{ji}$ 的单位向量。
+Here, $\hat{x}_{ji} = \frac{x_{ji}}{r_{ji}}, \hat{y}_{ji} = \frac{y_{ji}}{r_{ji}}, \hat{z}_{ji} = \frac{z_{ji}}{r_{ji}}$ are the components of the unit vector along $\mathbf{r}_{ji}$.
 
-从这些 4D 向量中，我们可以缩并分量索引以得到标量特征：
+The component indices of these 4D vectors can then be contracted to obtain a scalar feature:
 
 $$
 F(M_1,M_2) = \sum_{k=0}^3 T_{M_1}(k) T_{M_2}(k)
 $$
 
-这里，$M_1$ 也编码了除切比雪夫外的原子类型的数量。因此，如果最大切比雪夫阶数是 $M$，特征的数量是 $M \cdot n_{\text{type}} \cdot (M \cdot n_{\text{type}} + 1) / 2$。我们可以通过设置不同的 $M$ 来产生不同的特征。
+In addition to the Chebyshev order, $M_1$ also encodes the atom type. Therefore, if the maximum Chebyshev order is $M$, the number of features is $M \cdot n_{\text{type}} \cdot (M \cdot n_{\text{type}} + 1) / 2$. Different values of $M$ produce different feature sets.
 
 ### DP-Gaussian (feature 8)
 
-这个特征类似于 DP-Chebyshev，但我们使用高斯函数代替切比雪夫多项式，并且位置和宽度参数由用户指定。
+This feature is similar to DP-Chebyshev, but replaces the Chebyshev polynomials with Gaussian functions whose position and width parameters are specified by the user.
 
-类似于 DP-Chebyshev，4D 向量构造如下：
+As in DP-Chebyshev, the 4D vector is constructed as follows:
 
 $$
 T_M(k) = \sum_{\mathbf{r}_{ji} < R_C} \hat{X}_{ji}(k) g_M(\mathbf{r}_{ji})
@@ -283,10 +283,10 @@ $$
 f_C(\mathbf{r}) = \frac{1}{2} \cos\left( \frac{\pi r}{R_C} \right) + \frac{1}{2}
 $$
 
-缩并过程如下：
+The contraction is
 
 $$
 F(M_1,M_2) = \sum_{k=0}^3 T_{M_1}(k) T_{M_2}(k)
 $$
 
-这里，$M_1$ 也编码了除切比雪夫外的原子类型的数量。因此，如果最大切比雪夫阶数是 $M$，特征的数量是 $M \cdot n_{\text{type}} \cdot (M \cdot n_{\text{type}} + 1) / 2$。我们可以通过设置不同的 $M$ 来产生不同的特征。
+In addition to the Gaussian-function index, $M_1$ also encodes the atom type. Therefore, if the maximum basis order is $M$, the number of features is $M \cdot n_{\text{type}} \cdot (M \cdot n_{\text{type}} + 1) / 2$. Different values of $M$ produce different feature sets.

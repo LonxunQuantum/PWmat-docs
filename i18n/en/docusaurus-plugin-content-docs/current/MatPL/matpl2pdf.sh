@@ -1,7 +1,7 @@
 #!/bin/bash
 ## wuxing
 date=$(date +"%Y-%m-%d")
-output="MatPL-2026.3-userdoc.pdf"
+output="MatPL-2026.3-userdoc-EN.pdf"
 
 echo "创建合并文档..."
 
@@ -26,7 +26,7 @@ cat > latex_header.tex << 'EOF'
 EOF
 
 # 创建临时Markdown文件
-echo "% MatPL 用户手册" > temp.md
+echo "% MatPL User Manual-EN" > temp.md
 echo "% MatPL Team" >> temp.md
 echo "% $date" >> temp.md
 echo "" >> temp.md
@@ -176,7 +176,7 @@ echo "转换为PDF..."
 pandoc temp.md -o "$output" \
   --pdf-engine=xelatex \
   --template eisvogel \
-  -V title="MatPL用户手册" \
+  -V title="MatPL User Manual-EN" \
   -V author="wuxingxing@pwmat.com" \
   -V date="$date" \
   -V geometry="top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm" \

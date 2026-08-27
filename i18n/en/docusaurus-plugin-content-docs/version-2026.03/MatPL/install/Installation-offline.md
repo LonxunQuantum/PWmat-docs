@@ -1,56 +1,56 @@
 ﻿---
 sidebar_position: 1
-title: 离线安装
+title: Offline Installation
 ---
-## 离线安装
+## Offline Installation
 
-对于 [龙讯超算云](https://mcloud.lonxun.com/)(`Mcloud`) 用户，已做预装，[加载即用](./README.md)。离线包提供了 GPU 版本。
+For [Lonxun Supercomputing Cloud](https://mcloud.lonxun.com/) (`Mcloud`) users, MatPL is preinstalled and [ready to load](./README.md). The offline package provides a GPU version.
 
-- 离线安装包集成了 MatPL-2026.3、 MatPL-2026.3 lammps 接口源码(开源版本)和依赖的Python环境。要求待安装的机器提供 `gcc 编译器(8.n 以及以上)`、`CUDA(11.8及以上)`、`openmpi(4.1.4及以上)` 以及 `nvidia GPU` 硬件支持。`如果需要使用 NN 和 Linear 模型，还需要加载 intel 相关编译器（ifort icc mkl）。`
+- The offline package bundles MatPL-2026.3, the open-source MatPL-2026.3 LAMMPS interface, and the required Python environment. The target machine must provide `GCC 8.x or later`, `CUDA 11.8 or later`, `OpenMPI 4.1.4 or later`, and an `NVIDIA GPU`. `NN and Linear models additionally require the Intel toolchain (ifort, icc, and MKL).`
 
-- 由于 MatPL-2026.3 对纯CPU训练或者模拟没有收益，所以不提供 MatPL-2026.3 CPU 版本的在线或者离线安装包支持。纯CPU用户请使用 [MatPL-2025.3](http://doc.lonxun.com/2025.03/MatPL/install/) 即可。
+- Because MatPL-2026.3 does not improve CPU-only training or simulation, no online or offline CPU package is provided. CPU-only users should use [MatPL-2025.3](http://doc.lonxun.com/2025.03/MatPL/install/).
 
-- 离线安装包中的pytorch 版本为2.2，当前离线包最新版本为 `matpl-2026.3-update3`，相比于updata1，对 NEP 模型 新增了 zbl type wise；对lammps NEP kokkos 在NVIDIA 显卡做了加速，并扩展了lammps kokkos 的6分量 virial 为 9分量，以支持热流计算功能；内置 lammps 版本为 stable_22Jul2025_update4。
+- The offline package includes PyTorch 2.2. The latest package is `matpl-2026.3-update3`. Compared with update1, it adds type-wise ZBL support to NEP, accelerates LAMMPS NEP Kokkos on NVIDIA GPUs, and extends the six-component LAMMPS Kokkos virial to nine components to support heat-flux calculations. The bundled LAMMPS version is `stable_22Jul2025_update4`.
 
-<!-- - `离线安装补丁包`：如果已经安装过MatPL-2026.3，后续的更新可以通过我们提供的补丁包安装即可（避免安装耗时、庞大的python执行环境）。补丁包中只包含了更新的代码内容，约6MB左右的，只对有更新的模块做编译，因此安装编译耗时更短。 -->
+<!-- - `Offline update package`: If MatPL-2026.3 is already installed, subsequent updates can be applied with the provided patch package, avoiding reinstallation of the large Python runtime. The package contains only updated code (approximately 6 MB) and recompiles only changed modules, reducing installation time. -->
 
-### 下载离线安装包
-方法一（推荐）邮件获取，建议您发送邮件到 `matpl@pwmat.com`、`wuxingxing@pwmat.com` 或 `support@pwmat.com` 获取离线安装包。相比于百度网盘，通过邮件链接下载的速度更快（几十倍以上）。
+### Download the Offline Package
+Method 1 (recommended): Request the package by email from `matpl@pwmat.com`, `wuxingxing@pwmat.com`, or `support@pwmat.com`. Downloads from the emailed link are significantly faster than from Baidu Netdisk.
 
-方法二 请访问百度网盘下载，链接如果失效请邮件联系 `matpl@pwmat.com`、`wuxingxing@pwmat.com` 或 `support@pwmat.com`：
-👉 [离线安装包下载](https://pan.baidu.com/s/1dyaLxTKbOIu8JRZB3WvOfQ?pwd=pwmt)，提取码: pwmt。
+Method 2: Download from Baidu Netdisk. If the link expires, contact `matpl@pwmat.com`, `wuxingxing@pwmat.com`, or `support@pwmat.com`:
+👉 [Download the offline package](https://pan.baidu.com/s/1dyaLxTKbOIu8JRZB3WvOfQ?pwd=pwmt). Access code: `pwmt`.
 
-<!-- 👉 [离线补丁包下载 patch-packages](https://pan.baidu.com/s/1veyMqqX5g0Ie5NEL3xU0Zw?pwd=pwmt)，提取码: pwmt。 -->
+<!-- 👉 [Download offline patch packages](https://pan.baidu.com/s/1veyMqqX5g0Ie5NEL3xU0Zw?pwd=pwmt). Access code: pwmt. -->
 
-方法三 请访问 [Github tag MatPL-2026.3_update3](https://github.com/LonxunQuantum/MatPL/releases/tag/MatPL-2026.3_update3) 下载以下文件：
+Method 3: Visit the [MatPL-2026.3_update3 GitHub release](https://github.com/LonxunQuantum/MatPL/releases/tag/MatPL-2026.3_update3) and download the following files:
 ```txt
 matpl-2026.3-update3.sh.tar.gz.part_aa  matpl-2026.3-update3.sh.tar.gz.part_ab  matpl-2026.3-update3.sh.tar.gz.part_ac  matpl-2026.3-update3.sh.tar.gz.part_ad  matpl-2026.3-update3.sh.tar.gz.part_ae
 ```
 
-### 解压安装包
+### Extract the Package
 
-离线安装包内容较大，我们拆分成了多个小文件，解压安装方式如下所示：
+Because the offline package is large, it is split into several smaller files. Reassemble and extract it as follows:
 
 ```bash
-#合并4个文件到1个压缩文件
+# Combine the parts into one archive
 cat matpl-2026.3-update3.sh.tar.gz.part_aa  matpl-2026.3-update3.sh.tar.gz.part_ab  matpl-2026.3-update3.sh.tar.gz.part_ac  matpl-2026.3-update3.sh.tar.gz.part_ad  matpl-2026.3-update3.sh.tar.gz.part_ae > matpl-2026.3-update3.sh.tar.gz
-#解压文件
+# Extract the archive
 tar -xzvf matpl-2026.3-update3.sh.tar.gz
 ```
-解压后得到如下文件：
+Extraction produces the following files:
 `matpl-2026.3-update3.sh`， `check_offenv.sh`
 
-<!-- 补丁包不需要解压操作，直接bash 命令安装即可。 -->
+<!-- Patch packages do not need to be extracted and can be installed directly with bash. -->
 
-### 检查编译器版本
+### Check Compiler Versions
 
-大部分的安装失败问题都源于编译器的版本不匹配，我们提供了检查编译器版本的脚本`check_offenv.sh` 供用户检查环境，执行如下命令
+Most installation failures result from incompatible compiler versions. Use the provided `check_offenv.sh` script to inspect the environment:
 
 ```bash
 bash check_offenv.sh
 ```
 
-命令执行后会列出需要的编译器版本以及当前检测到的版本，如下是一个正确的环境配置检查结果：
+The script lists the required compiler versions and those detected in the current environment. A valid result looks like this:
 
 ```txt
 ========================================
@@ -81,39 +81,39 @@ bash check_offenv.sh
 ========================================
 ```
 
-### 执行安装命令
-环境检查完毕后，执行如下命令即可完成安装：
+### Run the Installation Command
+After the environment check, install the package with:
 
 ```bash
 bash matpl-2026.3-update3.sh [-jN] [-m nn] [-a ARCH] [-d] [-u] [-h]
 ```
 
-<!-- 如果是补丁包，执行如下命令：
+<!-- For a patch package, run:
 ```bash
-bash 补丁包名称.sh [-jN] [-m nn] [-a ARCH] [-d] [-u] [-h]
+bash patch-package-name.sh [-jN] [-m nn] [-a ARCH] [-d] [-u] [-h]
 ``` -->
 
-- `-jN` 这里 `N` 为并行编译的核数，例如 `bash matpl-2026.3-update3.sh -j4` 将采用 4 核编译。默认采用单核编译。
+- `-jN`: `N` is the number of parallel compilation cores. For example, `bash matpl-2026.3-update3.sh -j4` uses four cores. The default is one core.
 
-- `-m nn` 指定后将 Fortran 代码也纳入编译，需要 Intel ifort、icc、MKL 支持，用于 Linear 和 NN 模型。默认不编译 Fortran 代码。
+- `-m nn`: Also compiles the Fortran code for Linear and NN models. This requires Intel ifort, icc, and MKL. Fortran code is not compiled by default.
 
-- `-a ARCH` 指定编译 `lammps-2026.3` 时使用的 Kokkos CUDA 架构，默认是 `AMPERE86`。例如：
+- `-a ARCH`: Selects the Kokkos CUDA architecture used to build `lammps-2026.3`. The default is `AMPERE86`. For example:
   ```bash
   bash matpl-2026.3-update3.sh -a AMPERE80
   ```
-  `ARCH` 是 Kokkos CUDA architecture suffix，例如 `AMPERE80`、`AMPERE86`、`ADA89`、`HOPPER90`。更多架构说明请参考：https://docs.lammps.org/Build_extras.html#kokkos
+  `ARCH` is a Kokkos CUDA architecture suffix, such as `AMPERE80`, `AMPERE86`, `ADA89`, or `HOPPER90`. For additional architectures, see https://docs.lammps.org/Build_extras.html#kokkos.
 
-- `-d` 开启 `lammps-2026.3` 的 64 位精度 NEP 推理编译选项：
+- `-d`: Enables 64-bit-precision NEP inference when building `lammps-2026.3`:
   ```bash
   -DPREC_NEPINFER=ON
   ```
-  开启后 `lammps-2026.3` 将编译到 `build-64` 目录；默认不开启，默认编译目录为 `build`。
+  When enabled, `lammps-2026.3` is built in `build-64`. By default, this option is disabled and the build directory is `build`.
 
-- `-u` 仅用于解压安装包， 以满足部分用户环境限制只能分步编译安装的情形。解压后是一个 `lammps-2026.3` 源码目录、`MatPL-2026.3` 源码目录和 `matpl-2026.3` Python 环境目录。
+- `-u`: Extracts the package without building it, for environments that require installation in separate stages. The extracted contents include the `lammps-2026.3` source directory, the `MatPL-2026.3` source directory, and the `matpl-2026.3` Python environment.
 
-是否安装成功检查：
+To verify the installation:
 
-编译完成后，`MatPL-2026.3` 目录下生成如下目录结构：
+After compilation, the `MatPL-2026.3` directory has the following structure:
 
 ```txt
 MatPL-2026.3
@@ -123,33 +123,33 @@ MatPL-2026.3
     └── matpl-env.sh
 ```
 
-- `MatPL-2026.3` 为机器学习力场训练平台。
-- `matpl-2026.3` 为 Python 环境。
-- `lammps-2026.3` 为支持 DP 和 NEP 力场的 LAMMPS 力场接口。
-- `matpl-env.sh` 为 MatPL-2026.3 和 `lammps-2026.3` 的所有环境变量。
+- `MatPL-2026.3` is the machine-learning force-field training platform.
+- `matpl-2026.3` is the Python environment.
+- `lammps-2026.3` is the LAMMPS interface for DP and NEP force fields.
+- `matpl-env.sh` defines all environment variables for MatPL-2026.3 and `lammps-2026.3`.
 
-### 加载使用
+### Load the Environment
 
-MatPL 在使用时需要先加载编译时使用的 CUDA （对于GPU版本），如果训练 NN 或 Linear 还需要加载 mkl库。之后执行如下命令 即可完成 python 环境、 MatPL-2026.3 和 lammps 的加载。
+Before using the GPU version of MatPL, load the same CUDA environment used during compilation. NN or Linear training also requires MKL. Then run the following command to load the Python environment, MatPL-2026.3, and LAMMPS:
 ```bash
 source /the/path/of/MatPL-2026.3/matpl-env.sh
 
-#对于 fortran 版本的lammps接口：
+# For the Fortran LAMMPS interface:
 source /the/path/of/MatPL-2026.3/matpl-fortran-env.sh
 ```
 
-也可分步骤加载：
+You can also load each component separately:
 ```bash
-## step1. 加载python环境
+## Step 1. Load the Python environment
 source /the/path/MatPL-2026.3/matpl-2026.3/bin/activate
-## step2. 加载MatPL-2026.3
+## Step 2. Load MatPL-2026.3
 source /the/path/MatPL-2026.3/MatPL-2026.3/env.sh
-## step3. 加载 lammps
+## Step 3. Load LAMMPS
 source /the/path/MatPL-2026.3/lammps-2026.3/env.sh
 ```
 
-### lammps 离线安装包功能介绍
+### LAMMPS Packages Included in the Offline Installation
 
-本lammps 离线安装包已经预装了下面lammps 常用功能：
+The LAMMPS offline package includes the following commonly used packages:
 
-`CG-SPICA`  `CLASS2`  `COLLOID` `COLVARS`  `COMPRESS`  `CORESHELL` `DIELECTRIC` `DIFFRACTION`  `DIPOLE`  `DPD-BASIC` `DPD-MESO` `DPD-REACT`  `DPD-SMOOTH`  `DRUDE` `EFF`  `ELECTRODE` `EXTRA-COMMAND`  `EXTRA-COMPUTE` `EXTRA-FIX`  `EXTRA-DUMP`  `EXTRA-MOLECULE`  `EXTRA-PAIR`  `FEP` `GRANULAR` `INTEL`  `INTERLAYER`  `KSPACE`  `LATBOLTZ`  `LEPTON`  `MANIFOLD`  `MANYBODY`  `MC`  `MEAM`  `MGPT`  `MISC`  `MOFFF` `MOLECULE` `MOLFILE`  `OPENMP`  `OPT` `ORIENT` `PERI` `PHONON` `PLUMED` `POEMS`  `PTM` `PYTHON` `QEQ`  `QMMM`  `QTB` `REACTION` `REAXFF` `REPLICA`  `RIGID` `SHOCK`  `SMTBQ` `SPH`  `SPIN`  `SRD` `TALLY`  `UEF` `VORONOI`  `YAFF` 
+`CG-SPICA`  `CLASS2`  `COLLOID` `COLVARS`  `COMPRESS`  `CORESHELL` `DIELECTRIC` `DIFFRACTION`  `DIPOLE`  `DPD-BASIC` `DPD-MESO` `DPD-REACT`  `DPD-SMOOTH`  `DRUDE` `EFF`  `ELECTRODE` `EXTRA-COMMAND`  `EXTRA-COMPUTE` `EXTRA-FIX`  `EXTRA-DUMP`  `EXTRA-MOLECULE`  `EXTRA-PAIR`  `FEP` `GRANULAR` `INTEL`  `INTERLAYER`  `KSPACE`  `LATBOLTZ`  `LEPTON`  `MANIFOLD`  `MANYBODY`  `MC`  `MEAM`  `MGPT`  `MISC`  `MOFFF` `MOLECULE` `MOLFILE`  `OPENMP`  `OPT` `ORIENT` `PERI` `PHONON` `PLUMED` `POEMS`  `PTM` `PYTHON` `QEQ`  `QMMM`  `QTB` `REACTION` `REAXFF` `REPLICA`  `RIGID` `SHOCK`  `SMTBQ` `SPH`  `SPIN`  `SRD` `TALLY`  `UEF` `VORONOI`  `YAFF`

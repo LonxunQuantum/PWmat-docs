@@ -3,16 +3,16 @@ sidebar_position: 2
 title: DP
 ---
 
-## DP 模型
+## DP Model
 
-**[操作演示](./dp-tutorial.md)**
+**[Tutorial](./dp-tutorial.md)**
 
-### DP 模型介绍
+### DP Model Overview
 
-![DP 网络结构](./pictures/dpnet.png)
+![DP network architecture](./pictures/dpnet.png)
 
 
-DP 模型请参考文献：
+For the DP model, see the following references:
 
 - [SC’20] Weile Jia, Han Wang, Mohan Chen, Denghui Lu, Lin Lin, Roberto Car, E Weinan, Linfeng Zhang*, "Pushing the Limit of Molecular Dynamics with Ab Initio Accuracy to 100 Million Atoms with Machine Learning," SC20: International Conference for High Performance Computing, Networking, Storage and Analysis, 2020, pp. 1-14, doi: 10.1109/SC41405.2020.00009.(CCF-A)(Gordon Bell Prize)
 
@@ -25,13 +25,13 @@ DP 模型请参考文献：
 ### type embedding
 
 
-由于 DP 模型的 Embedding Net 数目是元素类型数目$N$的$N^2$倍。一方面，当体系中元素类型较多时制约了模型的训练速度，以及推理速度。另一方面，这也制约了 DP 模型在通用大模型方面的潜力。考虑到$N^2$个 Embedding net 其实隐含了对元素类型的编码，因此我们通过调整$S_{ij}$，将元素类型的物理属性信息与$S_{ij}$做拼接，则只需要一个 Embedding net 即可达到与$N^2$相似效果。
+A DP model contains $N^2$ Embedding Nets, where $N$ is the number of element types. When a system contains many element types, this design limits both training and inference speed and restricts the potential of DP as a general-purpose large model. Because the $N^2$ Embedding Nets implicitly encode element types, we modify $S_{ij}$ by concatenating it with the physical properties of the corresponding element type. This enables a single Embedding Net to achieve results comparable to those of $N^2$ networks.
 
-对于$S_{ij}$，$i$为中心原子，这里将$j$对应的元素类型的[物理属性](../../parameterdetail.md#physical_property)与$S_{ij}$做拼接，组成一个长度为 1+物理属性数量的 Vector 送入 Embedding Net。在我们[五元合金(钌、铑、铱、钯、镍)数据集](https://github.com/LonxunQuantum/MatPL_library/tree/main/alloy/Ru_Rh_Ir_Pd_Ni)以及[LiGePS 四元数据集(1200K)](https://github.com/LonxunQuantum/MatPL_library/tree/main/LiGePS)的测试中，基于这种 Type embedding 方法的 DP 模型，能够在达到或者超过标准的 DP 模型预测精度的同时，对训练时间减少 27%，详细结果见[性能测试](#type_performance)。
+For $S_{ij}$, $i$ is the central atom. The [physical properties](../../parameterdetail.md#physical_property) of the element type corresponding to $j$ are concatenated with $S_{ij}$ to form a vector of length $1 +$ the number of physical properties, which is then passed to the Embedding Net. Tests on our [five-component alloy (Ru, Rh, Ir, Pd, and Ni) dataset](https://github.com/LonxunQuantum/MatPL_library/tree/main/alloy/Ru_Rh_Ir_Pd_Ni) and [quaternary LiGePS dataset (1200 K)](https://github.com/LonxunQuantum/MatPL_library/tree/main/LiGePS) show that a DP model using this type-embedding method matches or exceeds the prediction accuracy of a standard DP model while reducing training time by 27%. See the [performance benchmarks](#type_performance) for details.
 
-**使用方法**
+**Usage**
 
-用户只需要在控制训练的 json 文件中加入$type\_embedding$参数，即可开启模型训练，将使用默认物理属性训练，参见项目案例 **example/LiGePS/ligeps.json**。
+To enable type embedding with the default physical properties, add the $type\_embedding$ parameter to the JSON training configuration. See **example/LiGePS/ligeps.json** in the project examples.
 
 ```json
 {
@@ -39,155 +39,155 @@ DP 模型请参考文献：
 }
 ```
 
-用户也可以在该 Json 文件的 [model 参数](../../parameterdetail.md#physical_property) 中指定所需要的物理属性。
+You can also specify the required physical properties in the [model parameters](../../parameterdetail.md#physical_property) of the JSON file.
 
-### 性能测试-精度{#type_performance}
+### Performance Benchmark: Accuracy{#type_performance}
 
 
-[五元合金混合数据集(9486 个构型)](https://github.com/LonxunQuantum/MatPL_library/tree/main/alloy/Ru_Rh_Ir_Pd_Ni)下，Type embedding 方法相对于标准的 DP 模型在验证集上的预测精度对比:
+Comparison of validation-set prediction accuracy between the type-embedding method and a standard DP model on the [mixed five-component alloy dataset (9,486 configurations)](https://github.com/LonxunQuantum/MatPL_library/tree/main/alloy/Ru_Rh_Ir_Pd_Ni):
 
-![五元合金体系验证集上的能量和受力误差下降](./pictures/menual_valid_alloy_dp_type_ef_rmse.png)
+![Reduction in energy and force errors on the validation set for the five-component alloy system](./pictures/menual_valid_alloy_dp_type_ef_rmse.png)
 
 <!-- <table>
   <tr>
     <td>
       <img src={require("./pictures/menual_valid_alloy_dp_type_energy_rmse.png").default} alt="menual_valid_alloy_dp_type_energy_rmse" width="400" />
-      <p>图1: 五元合金体系验证集上的能量误差下降</p>
+      <p>Figure 1: Reduction in validation-set energy error for the five-component alloy system</p>
     </td>
     <td>
       <img src={require("./pictures/manual_train_alloy_dp_type_force_rmse.png").default} alt="manual_train_alloy_dp_type_force_rmse" width="400" />
-      <p>图2: 五元合金体系验证集上的力误差下降</p>
+      <p>Figure 2: Reduction in validation-set force error for the five-component alloy system</p>
     </td>
   </tr>
 </table> -->
 
-[四元 LiGePS 构型的数据集（10000 个构型 1200K）](https://github.com/LonxunQuantum/MatPL_library/tree/main/LiGePS)下 Type embedding 方法相对于标准的 DP 模型在验证集上的预测精度对比:
+Comparison of validation-set prediction accuracy between the type-embedding method and a standard DP model on the [quaternary LiGePS dataset (10,000 configurations at 1200 K)](https://github.com/LonxunQuantum/MatPL_library/tree/main/LiGePS):
 
-![四元LiGePS体系验证集上的能量和受力误差下降](./pictures/manumal_valid_ligeps_dp_type_ef_rmse.png)
+![Reduction in energy and force errors on the validation set for the quaternary LiGePS system](./pictures/manumal_valid_ligeps_dp_type_ef_rmse.png)
 
 <!-- <table>
   <tr>
     <td>
       <img src={require("./pictures/manumal_valid_ligeps_dp_type_energy_rmse.png").default} alt="manumal_valid_ligeps_dp_type_energy_rmse" width="400" />
-      <p>图1: 四元LiGePS体系验证集上的能量误差下降</p>
+      <p>Figure 1: Reduction in validation-set energy error for the quaternary LiGePS system</p>
     </td>
     <td>
       <img src={require("./pictures/manumal_valid_ligeps_dp_type_force_rmse.png").default} alt="manumal_valid_ligeps_dp_type_force_rmse" width="400" />
-      <p>图2: 四元LiGePS体系验证集上的力误差下降</p>
+      <p>Figure 2: Reduction in validation-set force error for the quaternary LiGePS system</p>
     </td>
   </tr>
 </table> -->
 
-### 性能测试-训练时间
+### Performance Benchmark: Training Time
 
-![四元LiGePS体系验证集上的能量和受力误差下降](./pictures/manual_train_alloy_ligeps_dp_type_time.png)
+![Training-time comparison for the alloy and LiGePS systems](./pictures/manual_train_alloy_ligeps_dp_type_time.png)
 
 <!-- <table>
   <tr>
     <td>
       <img src={require("./pictures/manual_train_alloy_dp_type_time.png").default} alt="manual_train_alloy_dp_type_time" width="400" />
-      <p>图1: 五元合金体系训练总时间</p>
+      <p>Figure 1: Total training time for the five-component alloy system</p>
     </td>
     <td>
       <img src={require("./pictures/manumal_valid_ligeps_dp_type_time.png").default} alt="manumal_valid_ligeps_dp_type_time" width="400" />
-      <p>图2: 四元LiGePS体系训练总时间</p>
+      <p>Figure 2: Total training time for the quaternary LiGePS system</p>
     </td>
   </tr>
 </table> -->
-在 Lammps 中的力场调用方式与前述标准的 DP 模型调用方法相同。
+The force field is invoked in LAMMPS in the same way as the standard DP model described above.
 
-### 多项式模型压缩
+### Polynomial Model Compression
 
-DP 模型的 Embedding net 网络数目是原子类型数目$N$的$N^2$倍，随着原子类型增多，Embedding net 数目会快速增加，导致用于反向传播求导的计算图的规模会增加，成为 DP 模型做推理的瓶颈之一。如下我们对于一个五元合金系统在 DP 模型的推理过程的时间统计所示，对于 Embedding net 计算以及梯度计算的时间占比超过 90%，这存在大量的优化空间。Embedding net 的输入为一个$S_{ij}$的单值，输出为$m$个值（$m$为 Embedding net 最后一层神经元数目）。因此，可以将 Embedding net 通过$m$个单值函数代替。
+A DP model contains $N^2$ Embedding Nets, where $N$ is the number of atom types. As the number of types increases, the number of Embedding Nets grows rapidly, enlarging the computational graph used for backpropagation and becoming an inference bottleneck. The timing breakdown below for DP inference on a five-component alloy shows that Embedding Net evaluation and gradient computation account for more than 90% of the total time, leaving substantial room for optimization. An Embedding Net takes a scalar $S_{ij}$ as input and outputs $m$ values, where $m$ is the number of neurons in its final layer. It can therefore be replaced by $m$ scalar functions.
 
-这里实现论文[Lu D, Jiang W, Chen Y, et al. DP compress: A model compression scheme for generating efficient deep potential models](https://pubs.acs.org/doi/10.1021/acs.jctc.2c00102?fig=fig3&ref=pdf)中使用的[五阶多项式](#5order_cmp)压缩方法，同时我们也提供了基于 Hermite 插值方法的[三阶多项式](#3order_cmp)压缩方法供用户自由选择。
+MatPL implements the [fifth-order polynomial](#5order_cmp) compression method described in [Lu D, Jiang W, Chen Y, et al., *DP compress: A model compression scheme for generating efficient deep potential models*](https://pubs.acs.org/doi/10.1021/acs.jctc.2c00102?fig=fig3&ref=pdf). It also provides a [third-order polynomial](#3order_cmp) method based on Hermite interpolation.
 
 ![proportion_time](./pictures/proportion_time_inference.png)
 
-**使用方法**
+**Usage**
 
-对于一个训练后 DP 模型做模型压缩，完整的模型压缩指令如下：
+To compress a trained DP model, use the following command:
 
 ```json
 MatPL compress dp_model.ckpt -d 0.01 -o 3 -s cmp_dp_model
 ```
-* compress 是压缩命令
-* dp_model.ckpt为待压缩模型文件名称，为必须要提供的参数
-* -d 为S_ij 的网格划分大小，默认值为0.01
-* -o 为模型压缩阶数，3为三阶模型压缩，5为五阶模型压缩，默认值为3
-* -s 为压缩后的模型名称，默认名称为“cmp_dp_model”
+* `compress` is the compression command.
+* `dp_model.ckpt` is the required model file to compress.
+* `-d` sets the grid spacing for $S_{ij}$; the default is `0.01`.
+* `-o` sets the compression order: `3` for third order or `5` for fifth order. The default is `3`.
+* `-s` sets the compressed model name. The default is `cmp_dp_model`.
 
-模型压缩之后，在 lammps 中做分子动力学模拟使用方式与标准的[DP 模型](./dp-tutorial.md/#lammps-md)相同。
+After compression, the model is used for molecular-dynamics simulations in LAMMPS in the same way as a standard [DP model](./dp-tutorial.md/#lammps-md).
 
-<!-- ### 性能测试{#cmp_time} -->
+<!-- ### Performance Test{#cmp_time} -->
 
 <!--
- type embedding的模型压缩还没有加入到lammps中，所以先不写
+ Model compression for type embedding has not yet been added to LAMMPS, so it is omitted here.
  -->
 
-**模型压缩精度**
+**Model compression accuracy**
 
-我们在 Bulk 铜和五元合金体系上对 DP 模型做了模型压缩，并在测试集上分别做了测试。结果如下图中所示，对于铜体系，我们加入了对二阶插值方法的精度对比，相比于三阶和五阶方法，二阶方法的精度达不到要求。
+We compressed DP models for bulk copper and a five-component alloy and evaluated them on their respective test sets. The results are shown below. For copper, second-order interpolation is included for comparison; unlike the third- and fifth-order methods, it does not provide sufficient accuracy.
 
-![模型压缩不同阶精度对比](./pictures/cu_alloy_compress_dp_valid_abs_error.png)
+![Accuracy comparison for different model-compression orders](./pictures/cu_alloy_compress_dp_valid_abs_error.png)
 
 <!-- <table>
   <tr>
     <td>
       <img src={require("./pictures/cu_compress_dp_valid_abs_error.png").default} alt="cu_compress_dp_valid_abs_error" width="500" />
-      <p>图1: Bulk铜体系DP模型二阶、三阶与五阶多项式压缩对比</p>
+      <p>Figure 1: Comparison of second-, third-, and fifth-order polynomial compression for the bulk-copper DP model</p>
     </td>
     <td>
       <img src={require("./pictures/alloy_compress_dp_valid_abs_error.png").default} alt="alloy_compress_dp_valid_abs_error" width="400" />
-      <p>图2: 五元合金体系DP模型三阶与五阶多项式压缩对比</p>
+      <p>Figure 2: Comparison of third- and fifth-order polynomial compression for the five-component alloy DP model</p>
     </td>
   </tr>
 </table> -->
 
-<!-- #### 不同的 dx 计算时间开销统计？ -->
+<!-- #### Timing statistics for different dx values? -->
 
-<!-- ### 推理速度 -->
+<!-- ### Inference Speed -->
 
-<!-- 我们统计了五元合金体系下 DP 模型三阶多项式压缩以及未压缩时，在整个测试集上的推理时间。经过多项式压缩后明显减少了反向求导（autograd）时间，这是因为多项式方法能够显著减少 Embedding net 在 pytorch 自动求导时的计算图大小。
+<!-- We measured inference time over the complete test set for an uncompressed DP model and a third-order polynomial-compressed model of the five-component alloy system. Polynomial compression substantially reduces autograd time because it significantly shrinks the Embedding Net computational graph used by PyTorch automatic differentiation.
 
 <table>
   <tr>
     <td>
       <img src={require("./pictures/alloy_compress_forward_time.png").default}  alt="alloy_compress_forward_time" width="400" />
-      <p>图1: 五元合金体系三阶多项式压缩（dx=0.01）与未压缩对比</p>
+      <p>Figure 1: Third-order polynomial compression (dx=0.01) versus the uncompressed model for the five-component alloy system</p>
     </td>
   </tr>
 </table> -->
 
-<!-- #### 在 Lammps 中的速度提升 -->
+<!-- #### Speedup in LAMMPS -->
 
-### 多项式模型压缩过程
+### Polynomial Model Compression Procedure
 
-#### 网格划分
+#### Grid Construction
 
-我们扫描全部训练集，得到 $s_{ij}$ 的最大值，由于 $s_{ij}$ 是原子 $i$ 和 $j$ 的三维坐标距离 $r_{ij}$ 函数，当 $r_{ij} = r_{\text{cut}}$ 时取最小值。根据 $s_{ij}$ 取值范围按照 $dx$ 值等分为 $L$ 份，则共有 $L+1$ 个插值点，分别记为 $x_1, x_2, \cdots, x_{L+1}$。在实际的使用中，由于训练集的不完备，可能存在一些 $s_{ij}$ 值超出训练集之外，这里我们在上述网格之外，继续增加了 $s_{ij}$ 到 $10 \times s_{ij}$ 的网格，网格大小设置为 $10 \times dx$。
+We scan the entire training set to obtain the maximum value of $s_{ij}$. Because $s_{ij}$ is a function of the three-dimensional distance $r_{ij}$ between atoms $i$ and $j$, it reaches its minimum when $r_{ij} = r_{\text{cut}}$. The range of $s_{ij}$ is divided into $L$ equal intervals of width $dx$, yielding $L+1$ interpolation points denoted by $x_1, x_2, \cdots, x_{L+1}$. In practice, an incomplete training set may not cover every $s_{ij}$ encountered during inference. The grid is therefore extended from the original upper limit to $10 \times s_{ij}$ using a spacing of $10 \times dx$.
 
-#### 三阶多项式{#3order_cmp}
+#### Third-Order Polynomial{#3order_cmp}
 
-对于每个 $[x_l, x_{l+1})$ 区间，采用如下的三阶多项式替代 Embedding net:
+For each interval $[x_l, x_{l+1})$, the Embedding Net is replaced by the following third-order polynomial:
 
 $$
 g^l_m(x) = a^l_m x^3 + b^l_m x^2 + c^l_m x + d^l_m
 $$
 
-这里 $m$ 为 Embedding net 最后一层神经元数量，即 Embedding net 输出值数目，多项式的自变量 $x$ 值应为 $s_{ij} - x_l$。在每个网格点上，都需要满足如下两个限定条件：
+Here, $m$ is the number of neurons in the final layer of the Embedding Net—that is, the number of output values—and the polynomial variable $x$ is $s_{ij} - x_l$. The following two conditions must hold at every grid point:
 
-1. 多项式值与 Embedding net 输出值一致：
+1. The polynomial value equals the Embedding Net output:
    $$
    y_l = \mathcal{G}_m(x_l)
    $$
 
-2. 多项式一阶导数与 Embedding net 对 $s_{ij}$ 的一阶导一致：
+2. The first derivative of the polynomial equals the first derivative of the Embedding Net with respect to $s_{ij}$:
    $$
    y'_l = \mathcal{G}'_m(x_l)
    $$
 
-解得对应系数为
+The resulting coefficients are
 
 $$
 a^l_m = \frac{1}{\Delta t^3} \left[ (y'_{l+1} + y'_l) \Delta t - 2h \right]
@@ -205,36 +205,36 @@ $$
 d^l_m = y_l
 $$
 
-其中 $h = y_{l+1} - y_l$，$\Delta t = x_{l+1} - x_l$。
+where $h = y_{l+1} - y_l$ and $\Delta t = x_{l+1} - x_l$.
 
-#### 五阶多项式{#5order_cmp}
+#### Fifth-Order Polynomial{#5order_cmp}
 
-我们也实现了 [DP Compress](https://pubs.acs.org/doi/10.1021/acs.jctc.2c00102?fig=fig3&ref=pdf) 中的五阶多项式压缩方法。
+We also implement the fifth-order polynomial compression method from [DP Compress](https://pubs.acs.org/doi/10.1021/acs.jctc.2c00102?fig=fig3&ref=pdf).
 
-对于五阶多项式，对 $s_{ij}$ 的划分方法与三阶方法相同，采用如下的多项式代替 Embedding net：
+For the fifth-order polynomial, $s_{ij}$ is partitioned in the same way as for the third-order method, and the Embedding Net is replaced by the following polynomial:
 
 $$
 g^l_m(x) = a^l_m x^5 + b^l_m x^4 + c^l_m x^3 + d^l_m x^2 + e^l_m x + f^l_m
 $$
 
-注意：此时多项式的自变量 $x$ 值应为 $s_{ij} - x_l$。在每个网格点上，都需要满足如下三个限定条件：
+Note that the polynomial variable $x$ is $s_{ij} - x_l$. The following three conditions must hold at every grid point:
 
-1. 多项式值与 Embedding net 输出值一致：
+1. The polynomial value equals the Embedding Net output:
    $$
    y_l = \mathcal{G}_m(x_l)
    $$
 
-2. 多项式一阶导数与 Embedding net 对 $s_{ij}$ 的一阶导一致：
+2. The first derivative of the polynomial equals the first derivative of the Embedding Net with respect to $s_{ij}$:
    $$
    y'_l = \mathcal{G}'_m(x_l)
    $$
 
-3. 多项式二阶导数与 Embedding net 对 $s_{ij}$ 的二阶导一致：
+3. The second derivative of the polynomial equals the second derivative of the Embedding Net with respect to $s_{ij}$:
    $$
    y''_l = \mathcal{G}''_m(x_l)
    $$
 
-由此可得六个系数值分别为：
+The six coefficients are therefore:
 
 $$
 a^l_m = \frac{1}{2\Delta t^5} \left[ 12h - 6(y'_{l+1} + y'_l) \Delta t + (y''_{l+1} - y''_l) \Delta t^2 \right]
@@ -260,34 +260,34 @@ $$
 f^l_m = y_l
 $$
 
-其中 $h = y_{l+1} - y_l$，$\Delta t = x_{l+1} - x_l$。
+where $h = y_{l+1} - y_l$ and $\Delta t = x_{l+1} - x_l$.
 
-#### 模型压缩公式验证
+#### Verification of the Model Compression Formula
 
-Model compress 方案，将 $s_{ij}$ 取值范围分成 $L$ 等份，则共有 $L+1$ 个插值点，分别记为 $x_1, x_2, \cdots, x_{L+1}$。对于每个 $[x_l, x_{l+1})$ 区间，采用如下的五阶多项式替代 embedding network：
+The model-compression scheme divides the range of $s_{ij}$ into $L$ equal intervals, giving $L+1$ interpolation points denoted by $x_1, x_2, \cdots, x_{L+1}$. For each interval $[x_l, x_{l+1})$, the embedding network is replaced by the following fifth-order polynomial:
 
 $$
 g^l_m(x) = a^l_m x^5 + b^l_m x^4 + c^l_m x^3 + d^l_m x^2 + e^l_m x + f^l_m
 $$
 
-注意：此时多项式的自变量 $x$ 值应为 $s_{ij} - x_l$。在每个网格点上，都需要满足如下三个边界条件：
+Note that the polynomial variable $x$ is $s_{ij} - x_l$. The following three boundary conditions must hold at every grid point:
 
-1. 函数值一致：
+1. The function values are equal:
    $$
    y_l = \mathcal{G}_m(x_l)
    $$
 
-2. 函数一阶导数一致：
+2. The first derivatives are equal:
    $$
    y'_l = \mathcal{G}'_m(x_l)
    $$
 
-3. 函数二阶导数一致：
+3. The second derivatives are equal:
    $$
    y''_l = \mathcal{G}''_m(x_l)
    $$
 
-由此可得六个系数值分别为：
+The six coefficients are therefore:
 
 $$
 a^l_m = \frac{1}{2\Delta t^5} \left[ 12h - 6(y'_{l+1} + y'_l) \Delta t + (y''_{l+1} - y''_l) \Delta t^2 \right]
@@ -313,11 +313,11 @@ $$
 f^l_m = y_l
 $$
 
-其中 $h = y_{l+1} - y_l$，$\Delta t = x_{l+1} - x_l$。
+where $h = y_{l+1} - y_l$ and $\Delta t = x_{l+1} - x_l$.
 <!-- 
-## 验证
+## Verification
 
-需满足的条件是当$s_{ij}=x_l,\,x_{l+1}$时，函数值、一阶导数、二阶导数值均与 embedding network 的值相等，此时对应的$x$值分别为$0,\,\Delta t$。五阶多项式函数值为
+The required condition is that when $s_{ij}=x_l,\,x_{l+1}$, the function value and its first and second derivatives equal those of the embedding network. The corresponding values of $x$ are $0,\,\Delta t$. The fifth-order polynomial value is
 
 $$
 \begin{aligned}
@@ -328,7 +328,7 @@ $$
 \end{aligned}
 $$
 
-一阶导数为
+The first derivative is
 
 $$
 \begin{aligned}
@@ -339,7 +339,7 @@ g^l_m(x)  &=\frac{x^4}{2\Delta t^5}5[12h-6(y'_{l+1}+y'_l)\Delta t+(y''_{l+1}-y''
 \end{aligned}
 $$
 
-二阶导数为
+The second derivative is
 
 $$
 \begin{aligned}
@@ -349,7 +349,7 @@ g^l_m(x)&=\frac{x^3}{2\Delta t^5}20[12h-6(y'_{l+1}+y'_l)\Delta t+(y''_{l+1}-y''_
 \end{aligned}
 $$
 
-当 $x=0$ 时，显然满足需求；下面验证当 $x=\Delta t$ 时的结果，函数值为
+When $x=0$, the conditions are satisfied directly. For $x=\Delta t$, the function value is
 
 $$
 \begin{aligned}
@@ -362,7 +362,7 @@ g^l_m(\Delta t&)=\frac{1}{2}[12h-6(y'_{l+1}+y'_l)\Delta t+(y''_{l+1}-y''_l)\Delt
 \end{aligned}
 $$
 
-一阶导数值为
+The first derivative is
 
 $$
 \begin{aligned}
@@ -375,7 +375,7 @@ g^l_m(\Delta t)&=\frac{5}{2\Delta t}[12h-6(y'_{l+1}+y'_l)\Delta t+(y''_{l+1}-y''
 \end{aligned}
 $$
 
-二阶导数值为
+The second derivative is
 
 $$
 \begin{aligned}

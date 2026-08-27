@@ -1,13 +1,13 @@
 ---
 sidebar_position: 4
-title: MatPL 案例实操
+title: MatPL Tutorials
 slug: /Models
 ---
-# MatPL 案例实操
+# MatPL Tutorials
 
-👉[开源仓库地址](https://github.com/LonxunQuantum/MatPL)
+👉[Source repository](https://github.com/LonxunQuantum/MatPL)
 
-包括 `8` 种具有平移、旋转和置换不变性的特征类型
+MatPL includes `8` descriptor types with translational, rotational, and permutational invariance:
 ```
         1. 2-body(2b)
         2. 3-body(3b)
@@ -19,14 +19,14 @@ slug: /Models
         8. DP-Gaussian(dp2)
 ```
 
-`4` 种训练模型
+`4` trainable model types:
 ```
         1. Linear
         2. Neural Network(NN)
         3. DP se_e2_a(Pytorch)
-        4. Neuroevolution Potential(NEP) (支持跨节点多卡训练以及大规模超快 lammps MD)
+        4. Neuroevolution Potential (NEP) (supports multi-GPU, multi-node training and ultra-fast large-scale LAMMPS MD)
 ```
-`2` 种高效的训练优化器
+`2` efficient training optimizers:
 ```
         1. Adaptive Moment Estimation (ADAM)
         2. Reorganized Layer Extended Kalman Filtering (LKF)
