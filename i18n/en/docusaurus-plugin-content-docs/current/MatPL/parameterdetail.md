@@ -521,6 +521,35 @@ In the figure below, [learning_rate](#learning_rate) is 0.001, `t_0=1`, `t_mult=
 
 ![AL_T0_T_mult](./pictures/lr_test_1_2_6.png)
 
+### Statistics of the first five restart epochs for each group
+
+| Combination (T_0, T_mult) | 1st restart | 2nd restart | 3rd restart | 4th restart | 5th restart |
+| :-----------------------: | :---------: | :---------: | :---------: | :---------: | :---------: |
+|          (1, 2)           |      1      |      3      |      7      |     15      |     31      |
+|          (1, 6)           |      1      |      7      |     43      |    259      |    1555     |
+|          (2, 2)           |      2      |      6      |     14      |     30      |     62      |
+|          (2, 4)           |      2      |     10      |     42      |    170      |    682      |
+|          (2, 1)           |      2      |      4      |      6      |      8      |     10      |
+
+
+### Detailed calculation process
+
+1. **(1, 2)**: The cycle lengths are `1, 2, 4, 8, 16...` respectively  
+   → Restart points: `1`, `1+2=3`, `3+4=7`, `7+8=15`, `15+16=31`
+
+2. **(1, 6)**: The cycle lengths are `1, 6, 36, 216, 1296...` respectively  
+   → Restart points: `1`, `1+6=7`, `7+36=43`, `43+216=259`, `259+1296=1555`
+
+3. **(2, 2)**: The cycle lengths are `2, 4, 8, 16, 32...` respectively  
+   → Restart points: `2`, `2+4=6`, `6+8=14`, `14+16=30`, `30+32=62`
+
+4. **(2, 4)**: The cycle lengths are `2, 8, 32, 128, 512...` respectively  
+   → Restart points: `2`, `2+8=10`, `10+32=42`, `42+128=170`, `170+512=682`
+
+5. **(2, 1)**: The cycle length is constant at `2, 2, 2, 2, 2...`  
+   → Restart points: `2, 4, 6, 8, 10` (arithmetic progression)
+
+
 ### Learning-Rate Scaling
 
 `scale_lr` controls scaling by batch size and GPU count. The default is `false`, so the effective rate equals `learning_rate`.
