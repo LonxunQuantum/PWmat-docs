@@ -321,145 +321,26 @@ ADAM 优化器的完整参数设置如下:
 该参数用于设置 Adam 优化器的 `L2` 正则化项，默认不设置。设置正则化项有助于减少模型的过拟合。
 
 ### learning_rate
-该参数是 Adam 优化器的初始学习率。默认值为 `0.001`。
+该参数设置优化器的基础学习率，默认值为 `0.001`。对于 NEP 的 Adam/AdamW 训练，实际峰值学习率为 `learning_rate × lr_scale`；`scale_lr=false` 时 `lr_scale=1`，开启缩放时按 `scale_method` 计算。
+
+同时设置 `t_0` 和 `t_mult` 时，NEP 使用余弦退火周期重启。`t_0` 是首周期的 epoch 数（内部乘以每个 epoch 的更新步数），后续周期长度每次乘以 `t_mult`。每个周期内学习率从峰值逐渐降向 `stop_lr`，重启时回到峰值。未设置这两个参数时，使用下面 `decay_step` 一节的分段指数衰减。
 
 ### stop_lr
-该参数是指停止学习率，表示当学习率降到该值时学习率将停止更新，后续训练学习率为该值。默认值为 `3.51e-08`。
+最低学习率，默认值为 `3.51e-08`。未开启周期重启时，累计更新步数超过 `stop_step` 后，学习率固定为 `stop_lr`。开启周期重启时，它是每个余弦周期的最低学习率。
 
 ### stop_step
-该参数是指停止步数（stopping step），表示当达到该步数时学习率将停止更新，此时学习率值等于 stop_lr 指定的值。stop_step 默认值为 `1000000`。
+仅在未开启周期重启时生效，默认值为 `1000000`，单位是累计优化器更新步数。学习率衰减至该步数后固定为 `stop_lr`；NEP 的 Adam/AdamW 损失权重也在该步数达到 `end_pre_fac_*`。开启周期重启时，该参数不参与学习率或损失权重计算。
 
 ### decay_step
-该参数表示衰减步数（decay step），它指定了学习率衰减的间隔。在每个衰减步数之后，学习率会根据一定的衰减率进行更新。默认值为 `5000`。
-
-`learning_rate`, `stop_lr`, `stop_step`, `decay_step` 这四个变量用于更新学习率，其计算过程如下所示，可以使用以下的 Python 代码或数学公式表示：
+仅在未开启周期重启时生效，默认值为 `5000`。学习率每累计 `decay_step` 次优化器更新下降一级。令 `k` 为从 0 开始的累计更新步数、`peak_lr = learning_rate × lr_scale`，计算方式为：
 
 ```python
-decay_rate = np.exp(np.log(stop_lr/learning_rate) / (stop_step/decay_step))
-real_lr = learning_rate * np.power(decay_rate, (iter_num//decay_step))
+decay_rate = exp(log(stop_lr / peak_lr) / (stop_step / decay_step))
+if k > stop_step:
+    real_lr = stop_lr
+else:
+    real_lr = peak_lr * decay_rate ** (k // decay_step)
 ```
-
-首先计算衰减率（decay_rate）：
-
-$$
-\text{decay\_rate} = \exp\left(\frac{\log(\text{stop\_lr}/\text{start\_lr})}{\text{stop\_step}/\text{decay\_step}}\right)
-$$
-
-更新学习率 learning rate：
-
-$$
-\text{real\_lr} = \text{start\_lr} \cdot \text{decay\_rate}^{\lfloor \text{iter\_num}/\text{decay\_step} \rfloor}
-$$
-
-其中，iter_num 代表训练过程中的迭代次数。
-
-### Loss 中能量、受力权重 prefactor 设置
-
-受力、能量、维里的precator 参数设置：
-
-- start_pre_fac_force ：训练开始时 force 损失的 prefactor，应大于或等于 0。默认值为 `100`。
-
-- end_pre_fac_force ：训练结束时 force 损失的 prefactor，应大于或等于 0。默认值为 `1.0`。
-
-- start_pre_fac_etot ：训练开始时 total energy 损失的 prefactor，应大于或等于 0。默认值为 `1.0`。
-
-- end_pre_fac_etot ：训练结束时 total energy 损失的 prefactor，应大于或等于 0。默认值为 `1.0`。
-
-- start_pre_fac_virial ：训练开始时 virial 损失的 prefactor，应大于或等于 0。默认值为 `0.1`。
-
-- end_pre_fac_virial ：训练结束时 virial 损失的 prefactor，应大于或等于 0。默认值为 `0.1`。
-
-
-`Loss prefactor 计算方式`:
-
-在 Adam 训练中，每一项 loss 的 prefactor 会根据当前学习率 `real_lr` 进行计算：
-
-```python
-lr_ratio = real_lr / learning_rate
-lr_ratio = min(max(lr_ratio, 0.0), 1.0)
-
-prefactor = end_prefactor + (start_prefactor - end_prefactor) * lr_ratio
-```
-
-对应数学公式为：
-
-$$
-r =
-\mathrm{clip}
-\left(
-\frac{\text{real\_lr}}{\text{learning\_rate}},
-0,
-1
-\right)
-$$
-
-$$
-p_x =
-p_x^{\mathrm{end}}
-+
-\left(
-p_x^{\mathrm{start}} - p_x^{\mathrm{end}}
-\right)
-r
-$$
-
-其中，x 可以是 `force`, `etot`, `virial` 等 loss 项。
-因此训练开始时：
-
-$$
-\text{real\_lr} \approx \text{learning\_rate}, \quad r \approx 1
-$$
-
-此时：
-
-$$
-p_x \approx p_x^{\mathrm{start}}
-$$
-
-训练后期学习率降低时：
-
-$$
-\text{real\_lr} \to 0, \quad r \to 0
-$$
-
-此时：
-
-$$
-p_x \to p_x^{\mathrm{end}}
-$$
-
-`Loss 计算公式`:
-
-
-总 loss 由 force、total energy、virial 等部分组成。启用对应训练项时，其计算方式为：
-
-$$
-L =
-p_F L_F^{\mathrm{MSE}}
-+
-p_{\mathrm{etot}}
-\frac{L_{\mathrm{Etot}}^{\mathrm{MSE}}}{N_{\mathrm{avg}}}
-+
-p_{\mathrm{virial}}
-\frac{L_{\mathrm{Virial}}^{\mathrm{MSE}}}{N_{\mathrm{avg}}}
-$$
-
-- 其中各项 loss 均由 `MSELoss` 计算得到，MSE 形式为：
-
-$$
-L_{\mathrm{}}^{\mathrm{MSE}}
-=
-\frac{1}{n}\sum_{i}^{n}\left(Y_i-\hat{Y_i}\right)^2
-$$
-
-- $L_F$ 是 force loss；
-- $L_{Etot}$ 是 total energy loss；
-- $L_{Virial}$ 是 total virial loss；
-- $N_{\mathrm{avg}}$ 是当前 batch 中每个结构的平均原子数；
-- $p_F$, $p_{Etot}$, $p_{Virial}$ 分别是 force、energy、virial 的 prefactor。
-
-
-由于 `Etot`、`Virial` 是结构级 total quantity，因此在总 loss 中除以 `N_avg`，使它们的尺度更接近 per-atom 量，避免大体系天然产生更大的 loss 权重。
 
 ### 梯度裁剪
 
@@ -550,22 +431,69 @@ $$
    → 重启点：`2, 4, 6, 8, 10`（等差数列）
 
 
-### 学习率缩放
+### 学习率缩放（scale_lr / scaling_method）
 
-`scale_lr` 用于控制是否按批大小和 GPU 数量缩放学习率，默认值为 `false`。关闭时不进行缩放，实际学习率等于 `learning_rate`。
+`scale_lr` 控制是否缩放基础学习率，默认 `false`。关闭时缩放系数为 1；开启时，训练开始根据缩放方式计算一次系数，实际峰值学习率为 `learning_rate × 缩放系数`。这不会改变 `stop_lr`。
 
-开启后，默认使用 `sqrt` 缩放方式：
+`scaling_method` 指定缩放方式，默认 `sqrt`。当前代码也支持同义参数名 `scale_method`；推荐新配置使用 `scale_method`，已有配置中的 `scaling_method` 仍可使用。如果两个名称同时出现且取值不同，程序会报错。
 
-$$
-\mathrm{real\_lr}=\mathrm{learning\_rate}\times\sqrt{\mathrm{batch\_size}\times N_{\mathrm{GPU}}}
-$$
+令 $B$ 为每个训练进程的本地批大小、$P$ 为训练进程总数（GPU 训练时通常为总 GPU 数）、$A$ 为训练集的平均原子数，可选取值如下：
+
+| `scaling_method` / `scale_method` | 缩放系数 |
+| --- | ---: |
+| `linear_gpu` | $P$ |
+| `sqrt_batch` | $\sqrt{B}$ |
+| `sqrt_gpu` | $\sqrt{P}$ |
+| `sqrt`（默认） | $\sqrt{BP}$ |
+| `sqrt_batch_gpu_atom` | $\sqrt{BPA}$ |
+
+对于 NEP 的 LMDB 数据，如果 `batch_size` 按结构帧数指定，$B$ 就是每个进程设置的帧数；如果使用 `"mix:<原子数>"`，代码以 `max(1, mix值 / 训练集平均原子数)` 估算 $B$，因此不能直接把 `mix` 数值代入上表。缩放方式只在 `scale_lr=true` 时起作用。
 
 ```json
 "scale_lr": true,
-"scaling_method": "sqrt"
+"scale_method": "sqrt"
 ```
 
-该设置适用于 ADAM、ADAMW；增大 batch size 或 GPU 数量时，实际学习率会相应提高。
+### Loss 中能量、受力权重 prefactor 设置
+
+以下参数分别指定受力、总能量和维里损失的起始权重与终止权重，均应大于或等于 0：
+
+- `start_pre_fac_force`：默认 `100`；`end_pre_fac_force`：默认 `1.0`。
+- `start_pre_fac_etot`：默认 `1.0`；`end_pre_fac_etot`：默认 `1.0`。
+- `start_pre_fac_virial`：默认 `0.1`；`end_pre_fac_virial`：默认 `0.1`。
+
+**开启周期性重启时**，Adam/AdamW 训练使用本次参数更新实际采用的学习率 $\eta_k$。令 $\eta_{\mathrm{peak}}=\texttt{learning\_rate}\times\texttt{lr\_scale}$，则：
+
+$$
+r_k=\operatorname{clip}\!\left(\frac{\eta_k}{\eta_{\mathrm{peak}}},0,1\right),
+\qquad
+p_x(k)=p_x^{\mathrm{end}}+
+\left(p_x^{\mathrm{start}}-p_x^{\mathrm{end}}\right)r_k.
+$$
+
+每次学习率重启到峰值时，prefactor 回到起始权重；在周期末接近终止权重。由于 `stop_lr` 通常大于零，周期末的 prefactor 可能略高于 `end_pre_fac_*`。
+
+**未开启周期性重启时**，令 $k$ 为从 0 开始的累计优化器更新步数，prefactor 按 `stop_step` 线性变化：
+
+$$
+q_k=\operatorname{clip}\!\left(\frac{k}{\texttt{stop\_step}},0,1\right),
+\qquad
+p_x(k)=p_x^{\mathrm{start}}+
+\left(p_x^{\mathrm{end}}-p_x^{\mathrm{start}}\right)q_k.
+$$
+
+达到 `stop_step` 后保持终止权重。例如受力权重默认从 `100` 降到 `1.0`，此时 $p_F(k)=100-99q_k$。
+
+启用相应训练项时，总损失为：
+
+$$
+L=p_F L_F^{\mathrm{MSE}}
++p_{\mathrm{etot}}\frac{L_{\mathrm{Etot}}^{\mathrm{MSE}}}{N_{\mathrm{avg}}}
++p_{\mathrm{virial}}\frac{L_{\mathrm{Virial}}^{\mathrm{MSE}}}{N_{\mathrm{avg}}},
+$$
+
+其中 $N_{\mathrm{avg}}$ 是当前 batch 中每个结构的平均原子数；未启用的损失项不参与计算。prefactor 是损失系数，不能单独用数值大小判断各项对参数梯度的实际贡献。
+
 
 ## KF optimizer 优化器超参数
 

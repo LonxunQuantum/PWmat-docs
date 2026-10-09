@@ -321,145 +321,26 @@ Whether to train on virials. The default is `false`.
 Sets ADAM `L2` regularization. It is disabled by default and may reduce overfitting.
 
 ### learning_rate
-Initial ADAM learning rate. The default is `0.001`.
+Sets the base learning rate, default `0.001`. For NEP Adam/AdamW training, the actual peak rate is `learning_rate × lr_scale`; `lr_scale=1` when `scale_lr=false`, or is determined by `scale_method` when scaling is enabled.
+
+When both `t_0` and `t_mult` are set, NEP uses cosine annealing with warm restarts. `t_0` is the first cycle length in epochs (internally multiplied by the number of updates per epoch), and each subsequent cycle length is multiplied by `t_mult`. Within a cycle, the learning rate approaches `stop_lr` before returning to the peak at the restart. Without these parameters, the stepwise exponential decay described under `decay_step` applies.
 
 ### stop_lr
-Minimum learning rate. Once reached, it remains fixed. The default is `3.51e-08`.
+The minimum learning rate, default `3.51e-08`. Without periodic restarts, the rate stays at `stop_lr` after the cumulative update count exceeds `stop_step`. With periodic restarts, it is the minimum of each cosine cycle.
 
 ### stop_step
-Step at which learning-rate decay stops and the rate equals `stop_lr`. The default is `1000000`.
+Effective only when periodic restarts are disabled. The default is `1000000` cumulative optimizer updates. After this count, the learning rate stays at `stop_lr`; NEP Adam/AdamW loss prefactors also reach their `end_pre_fac_*` values. With periodic restarts enabled, this parameter does not enter the learning-rate or loss-prefactor calculation.
 
 ### decay_step
-Learning-rate decay interval. The default is `5000` steps.
-
-`learning_rate`, `stop_lr`, `stop_step`, and `decay_step` determine the schedule as follows:
+Effective only when periodic restarts are disabled; default `5000`. The learning rate drops one level after every `decay_step` optimizer updates. Let `k` be the zero-based cumulative update count and `peak_lr = learning_rate × lr_scale`:
 
 ```python
-decay_rate = np.exp(np.log(stop_lr/learning_rate) / (stop_step/decay_step))
-real_lr = learning_rate * np.power(decay_rate, (iter_num//decay_step))
+decay_rate = exp(log(stop_lr / peak_lr) / (stop_step / decay_step))
+if k > stop_step:
+    real_lr = stop_lr
+else:
+    real_lr = peak_lr * decay_rate ** (k // decay_step)
 ```
-
-First calculate `decay_rate`:
-
-$$
-\text{decay\_rate} = \exp\left(\frac{\log(\text{stop\_lr}/\text{start\_lr})}{\text{stop\_step}/\text{decay\_step}}\right)
-$$
-
-Then update the learning rate:
-
-$$
-\text{real\_lr} = \text{start\_lr} \cdot \text{decay\_rate}^{\lfloor \text{iter\_num}/\text{decay\_step} \rfloor}
-$$
-
-where `iter_num` is the training iteration.
-
-### Energy and Force Prefactors in the Loss
-
-Force, energy, and virial prefactors:
-
-- `start_pre_fac_force`: force-loss prefactor at the start of training. Must be nonnegative; default `100`.
-
-- `end_pre_fac_force`: force-loss prefactor at the end of training. Default `1.0`.
-
-- `start_pre_fac_etot`: total-energy prefactor at the start of training. Default `1.0`.
-
-- `end_pre_fac_etot`: total-energy prefactor at the end of training. Default `1.0`.
-
-- `start_pre_fac_virial`: virial prefactor at the start of training. Default `0.1`.
-
-- `end_pre_fac_virial`: virial prefactor at the end of training. Default `0.1`.
-
-
-`Loss-prefactor calculation`:
-
-During ADAM training, each loss prefactor depends on the current `real_lr`:
-
-```python
-lr_ratio = real_lr / learning_rate
-lr_ratio = min(max(lr_ratio, 0.0), 1.0)
-
-prefactor = end_prefactor + (start_prefactor - end_prefactor) * lr_ratio
-```
-
-Equivalently:
-
-$$
-r =
-\mathrm{clip}
-\left(
-\frac{\text{real\_lr}}{\text{learning\_rate}},
-0,
-1
-\right)
-$$
-
-$$
-p_x =
-p_x^{\mathrm{end}}
-+
-\left(
-p_x^{\mathrm{start}} - p_x^{\mathrm{end}}
-\right)
-r
-$$
-
-where `x` may be `force`, `etot`, or `virial`.
-At the start of training:
-
-$$
-\text{real\_lr} \approx \text{learning\_rate}, \quad r \approx 1
-$$
-
-Therefore:
-
-$$
-p_x \approx p_x^{\mathrm{start}}
-$$
-
-Later, as the learning rate decreases:
-
-$$
-\text{real\_lr} \to 0, \quad r \to 0
-$$
-
-Therefore:
-
-$$
-p_x \to p_x^{\mathrm{end}}
-$$
-
-`Loss formula`:
-
-
-Total loss combines enabled force, total-energy, and virial terms:
-
-$$
-L =
-p_F L_F^{\mathrm{MSE}}
-+
-p_{\mathrm{etot}}
-\frac{L_{\mathrm{Etot}}^{\mathrm{MSE}}}{N_{\mathrm{avg}}}
-+
-p_{\mathrm{virial}}
-\frac{L_{\mathrm{Virial}}^{\mathrm{MSE}}}{N_{\mathrm{avg}}}
-$$
-
-- Each term uses `MSELoss`:
-
-$$
-L_{\mathrm{}}^{\mathrm{MSE}}
-=
-\frac{1}{n}\sum_{i}^{n}\left(Y_i-\hat{Y_i}\right)^2
-$$
-
-- $L_F$ is force loss.
-- $L_{Etot}$ is total-energy loss.
-- $L_{Virial}$ is total-virial loss.
-- $N_{\mathrm{avg}}$ is the mean atom count per structure in the current batch.
-- $p_F$, $p_{Etot}$, and $p_{Virial}$ are the corresponding prefactors.
-
-
-Because `Etot` and `Virial` are structure-level totals, dividing them by `N_avg` makes their scale closer to per-atom quantities and prevents larger systems from receiving inherently greater weight.
 
 ### Gradient Clipping
 
@@ -523,7 +404,6 @@ In the figure below, [learning_rate](#learning_rate) is 0.001, `t_0=1`, `t_mult=
 
 ### Statistics of the first five restart epochs for each group
 
-
 | Combination (T_0, T_mult) | 1st restart | 2nd restart | 3rd restart | 4th restart | 5th restart |
 | :-----------------------: | :---------: | :---------: | :---------: | :---------: | :---------: |
 |          (1, 2)           |      1      |      3      |      7      |     15      |     31      |
@@ -551,22 +431,68 @@ In the figure below, [learning_rate](#learning_rate) is 0.001, `t_0=1`, `t_mult=
    → Restart points: `2, 4, 6, 8, 10` (arithmetic progression)
 
 
-### Learning-Rate Scaling
+### Learning-Rate Scaling (scale_lr / scaling_method)
 
-`scale_lr` controls scaling by batch size and GPU count. The default is `false`, so the effective rate equals `learning_rate`.
+`scale_lr` controls whether the base learning rate is scaled; its default is `false`. When disabled, the scale factor is 1. When enabled, a factor is calculated once at training initialization, and the actual peak rate is `learning_rate × scale factor`. This does not change `stop_lr`.
 
-When enabled, the default `sqrt` scaling is
+`scaling_method` selects the scaling rule and defaults to `sqrt`. The current code also accepts the synonymous key `scale_method`. Prefer `scale_method` in new configurations; existing `scaling_method` configurations remain valid. Setting both keys to different values raises an error.
 
-$$
-\mathrm{real\_lr}=\mathrm{learning\_rate}\times\sqrt{\mathrm{batch\_size}\times N_{\mathrm{GPU}}}
-$$
+Let $B$ be the local batch size per training process, $P$ the total number of training processes (usually the total GPU count in GPU training), and $A$ the mean atom count in the training set. The supported values are:
+
+| `scaling_method` / `scale_method` | Scale factor |
+| --- | ---: |
+| `linear_gpu` | $P$ |
+| `sqrt_batch` | $\sqrt{B}$ |
+| `sqrt_gpu` | $\sqrt{P}$ |
+| `sqrt` (default) | $\sqrt{BP}$ |
+| `sqrt_batch_gpu_atom` | $\sqrt{BPA}$ |
+
+For NEP LMDB data, when `batch_size` specifies a number of structures, $B$ is that per-process frame count. With `"mix:<atom count>"`, the code estimates $B$ as `max(1, mix value / mean atom count in the training set)`; do not substitute the raw `mix` value for $B$ in the table. The selected method has no effect unless `scale_lr=true`.
 
 ```json
 "scale_lr": true,
-"scaling_method": "sqrt"
+"scale_method": "sqrt"
 ```
 
-This applies to ADAM, ADAMW, and SGD. Increasing batch size or GPU count increases the effective learning rate.
+### Energy and Force Prefactors in the Loss
+
+The following parameters set the initial and final weights of force, total-energy, and virial losses. All values must be nonnegative:
+
+- `start_pre_fac_force`: default `100`; `end_pre_fac_force`: default `1.0`.
+- `start_pre_fac_etot`: default `1.0`; `end_pre_fac_etot`: default `1.0`.
+- `start_pre_fac_virial`: default `0.1`; `end_pre_fac_virial`: default `0.1`.
+
+**With periodic restarts enabled**, Adam/AdamW training uses the learning rate $\eta_k$ actually applied to the current optimizer update. Let $\eta_{\mathrm{peak}}=\texttt{learning\_rate}\times\texttt{lr\_scale}$. Then:
+
+$$
+r_k=\operatorname{clip}\!\left(\frac{\eta_k}{\eta_{\mathrm{peak}}},0,1\right),
+\qquad
+p_x(k)=p_x^{\mathrm{end}}+
+\left(p_x^{\mathrm{start}}-p_x^{\mathrm{end}}\right)r_k.
+$$
+
+At each learning-rate restart, the prefactor returns to its initial weight; near the end of a cycle, it approaches its final weight. Because `stop_lr` is usually positive, the prefactor near the cycle minimum may remain slightly above `end_pre_fac_*`.
+
+**Without periodic restarts**, let $k$ be the zero-based cumulative optimizer update count. The prefactor changes linearly with `stop_step`:
+
+$$
+q_k=\operatorname{clip}\!\left(\frac{k}{\texttt{stop\_step}},0,1\right),
+\qquad
+p_x(k)=p_x^{\mathrm{start}}+
+\left(p_x^{\mathrm{end}}-p_x^{\mathrm{start}}\right)q_k.
+$$
+
+The final weight is maintained after `stop_step`. For example, the default force weight changes from `100` to `1.0`, giving $p_F(k)=100-99q_k$.
+
+For enabled training targets, the total loss is:
+
+$$
+L=p_F L_F^{\mathrm{MSE}}
++p_{\mathrm{etot}}\frac{L_{\mathrm{Etot}}^{\mathrm{MSE}}}{N_{\mathrm{avg}}}
++p_{\mathrm{virial}}\frac{L_{\mathrm{Virial}}^{\mathrm{MSE}}}{N_{\mathrm{avg}}},
+$$
+
+where $N_{\mathrm{avg}}$ is the mean atom count per structure in the current batch. Disabled targets do not contribute. The numerical size of a prefactor alone does not establish the corresponding term's contribution to the parameter gradients.
 
 ## KF Optimizer Hyperparameters
 
